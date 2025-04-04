@@ -77,7 +77,7 @@ public class TileGenerator : MonoBehaviour
 }
 public enum GameTileContentType
 {
-    Neutral,
-    Own,
-    Obstructed
+    Neutral,  //White
+    Own,      //Yellow  
+    Obstructed//Black
 }
