@@ -42,3 +42,11 @@ public class Tile : MonoBehaviour
         
     }
 }
+
+
+public enum GameTileContentType
+{
+    Neutral,  //White
+    Own,      //Yellow  
+    Obstructed//Black
+}
