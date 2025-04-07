@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    GameTileContentType Type;
+    public GameTileContentType Type;
 
     [SerializeField] GameObject NeutralTile, OwnTile, ObstructedTile;
-
-    private void Start()
-    {
-
-        //NeutralTile.SetActive(false);
-        //OwnTile.SetActive(false);
-        //ObstructedTile.SetActive(false);
-    }
+    public bool isEmpty = true;
 
 
     public void SetType(GameTileContentType type)
@@ -41,8 +34,7 @@ public class Tile : MonoBehaviour
 
         
     }
-}
-
+} 
 
 public enum GameTileContentType
 {
