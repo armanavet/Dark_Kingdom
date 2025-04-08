@@ -1,72 +1,71 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.Rendering.DebugUI;
+//using 
 
 public class TowerPlacement : MonoBehaviour
 {
-    [SerializeField] GameObject previewPrefab;
-    [SerializeField] GameObject prefabToPlace;
-    GameObject canPlaceOutLine;
-    GameObject canNotPlaceOutLine;
-    [SerializeField] LayerMask layerMask;
-    Transform towerParent;
+    [SerializeField] Transform towerParent;
+    [SerializeField] Transform towersUIPanel;
+    [SerializeField] float PanelYHidden;
+    float PanelYInitial;
+    GameObject toPlacePrefab;
     Transform towerPreview;
-    Tile tile;
-    bool isPreview;
 
-
+    private void Start()
+    {
+        PanelYInitial = towersUIPanel.transform.position.y;
+    }
     private void Update()
     {
-
-        if(isPreview)
-            TowerPreviewPlacement();
-    }
-
-
-    void TowerPreviewPlacement()
-    {
-        
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+        if (Input.GetMouseButtonDown(0))
         {
-            towerPreview.position = hit.transform.position;
-            tile = hit.transform.GetComponent<Tile>();
-            Debug.Log(tile.Type);
-            if (tile.Type == GameTileContentType.Own && tile.isEmpty)
-            {
-                canNotPlaceOutLine.SetActive(false);
-                canPlaceOutLine.SetActive(true);
-            }
-            else
-            {
-                canPlaceOutLine.SetActive(false);
-                canNotPlaceOutLine.SetActive(true);
-            }
-
+            PlaceTower();
         }
     }
-    public void ButtonStartPreview()
+    void PlaceTower()
     {
-        isPreview = true;
-        towerPreview = Instantiate(previewPrefab, towerParent).transform;
-        Transform[] children = towerPreview.GetComponentsInChildren<Transform>(true); // 'true' includes inactive
-
-        foreach (Transform child in children)
+        if (towerPreview != null)
         {
-            if (child.CompareTag("CanPlace"))
+            TowerPreview previewInstance = towerPreview.GetComponent<TowerPreview>();
+            if (previewInstance.canPlace)
             {
-                canPlaceOutLine = child.gameObject;
-
+                    previewInstance.tile.isEmpty = false;
+                    Destroy(previewInstance.gameObject);
+                    Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent);
+                    ShowPanel();
+                
             }
-            if (child.CompareTag("CanNotPlace"))
+            if (Input.GetKeyDown("escape"))
             {
-                canNotPlaceOutLine = child.gameObject;
+                Destroy(previewInstance.gameObject);
+                ShowPanel();
+
             }
         }
-        canPlaceOutLine.SetActive(false);
-        canNotPlaceOutLine.SetActive(false);
 
     }
+    public void ButtonGetPrefabToPlace(GameObject toPlaceObject) 
+    {
+        toPlacePrefab = toPlaceObject;
+    }
+    public void ButtonStartPreview(GameObject previewObject)
+    {
+        HidePanel();
+        towerPreview = Instantiate(previewObject).transform;
 
+    }
+    void HidePanel()
+    {
+        DOTween.Kill("ShowPanel");
+        towersUIPanel.DOMoveY(PanelYHidden, 1).SetId("HidePanel").SetEase(Ease.OutQuad);
+    }
+    void ShowPanel()
+    {
+        DOTween.Kill("HidePanel");
+        towersUIPanel.DOMoveY(PanelYInitial, 1).SetId("ShowPanel").SetEase(Ease.OutQuad);
+    }
 }
