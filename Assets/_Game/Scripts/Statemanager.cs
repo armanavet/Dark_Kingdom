@@ -15,6 +15,8 @@ public class Statemanager : MonoBehaviour
     int CurentWave = 1;
     float Timer;
 
+    bool toMakeX2Faster = false;
+
     #region Singleton
     private static Statemanager _instance;
     public static Statemanager Instance
@@ -46,7 +48,16 @@ public class Statemanager : MonoBehaviour
     {
         WaveText.text = CurentWave.ToString();
         TimerText.text = Mathf.Round(Timer).ToString();
-        Timer -= Time.deltaTime;
+        
+        if (toMakeX2Faster)
+        {
+            Timer -= Time.deltaTime *2;
+
+        }
+        else
+        {
+            Timer -= Time.deltaTime;
+        }
         EvaluateGameState();
     }
 
@@ -60,7 +71,7 @@ public class Statemanager : MonoBehaviour
             PassiveStateText.SetActive(false);
             EnemiesText.text = "Enemies Are Attacking";
         }
-        else if (Input.GetKeyUp(KeyCode.N) && Active)
+        else if (Input.GetKeyUp(KeyCode.N) && ActiveState)
         {
             CurentWave++;
             ActiveState = false;
@@ -69,5 +80,10 @@ public class Statemanager : MonoBehaviour
             PassiveStateText.SetActive(true);
             Timer = TimeUntilNextWave[CurentWave - 1];
         }
+    }
+
+    public void ButtonToMakeX2Faster()
+    {
+        toMakeX2Faster = !toMakeX2Faster;
     }
 }
