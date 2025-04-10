@@ -7,17 +7,16 @@ using UnityEngine;
 
 public class Statemanager : MonoBehaviour
 {
-    static int Wave;
-    static float Timer;
-    [SerializeField] TextMeshProUGUI WaveText;
-    [SerializeField] TextMeshProUGUI TimerText;
-    [SerializeField] TextMeshProUGUI EnemiesText;
+    [SerializeField] TextMeshProUGUI WaveText, TimerText, EnemiesText;
+    [SerializeField] GameObject ActiveStateText, PassiveStateText;
     [SerializeField] float[] TimeUntilNextWave;
-    public static bool Active = false;
-    public static bool Passive = true;
-    [SerializeField] GameObject ActiveText, PassiveText;
-    private static Statemanager _instance;
+    public static bool ActiveState = false;
+    public static bool PassiveState = true;
+    int CurentWave = 1;
+    float Timer;
 
+    #region Singleton
+    private static Statemanager _instance;
     public static Statemanager Instance
     {
         get
@@ -34,40 +33,41 @@ public class Statemanager : MonoBehaviour
     {
         _instance = this;
     }
+    #endregion
+
     void Start()
     {
-        Wave = 1;
         Timer = TimeUntilNextWave[0];
-        ActiveText.SetActive(false);
-        PassiveText.SetActive(true);
+        ActiveStateText.SetActive(false);
+        PassiveStateText.SetActive(true);
     }
+
     void Update()
     {
-        WaveText.text = Wave.ToString();
+        WaveText.text = CurentWave.ToString();
         TimerText.text = Mathf.Round(Timer).ToString();
-        Timer -=Time.deltaTime;
-        EnumGameState();
+        Timer -= Time.deltaTime;
+        EvaluateGameState();
     }
-    public static void EnumGameState()
+
+    void EvaluateGameState()
     {
-        if (Timer <= 0 && Passive)
+        if (Timer <= 0 && PassiveState)
         {
-            Active = true;
-            Passive = false;
-            _instance.ActiveText.SetActive(true);
-            _instance.PassiveText.SetActive(false);
-            _instance.EnemiesText.text = "Enemies Attack";
+            ActiveState = true;
+            PassiveState = false;
+            ActiveStateText.SetActive(true);
+            PassiveStateText.SetActive(false);
+            EnemiesText.text = "Enemies Are Attacking";
         }
         else if (Input.GetKeyUp(KeyCode.N) && Active)
         {
-            Wave++;
-            Active = false;
-            Passive = true;
-            _instance.PassiveText.SetActive(true);
-            _instance.ActiveText.SetActive(false);
-            Timer = _instance.TimeUntilNextWave[Wave];
+            CurentWave++;
+            ActiveState = false;
+            PassiveState = true;
+            ActiveStateText.SetActive(false);
+            PassiveStateText.SetActive(true);
+            Timer = TimeUntilNextWave[CurentWave - 1];
         }
     }
 }
-
-
