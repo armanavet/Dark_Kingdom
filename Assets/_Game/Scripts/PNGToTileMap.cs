@@ -8,7 +8,7 @@ public class PNGToTileMap : MonoBehaviour
 {
     public Texture2D sourceImage;
     public GameObject TilePrefab;
-    public string savePrefabPath = "Assets/GeneratedTilemap.prefab";
+    public string savePrefabPath = "Assets/_Game/Prefabs/GeneratedTilemap.prefab";
 
     GameObject GridParent;
     float ColorTolerance = 0.1f;
