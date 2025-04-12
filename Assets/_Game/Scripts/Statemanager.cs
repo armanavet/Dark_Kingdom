@@ -10,12 +10,10 @@ public class Statemanager : MonoBehaviour
     [SerializeField] TextMeshProUGUI WaveText, TimerText, EnemiesText;
     [SerializeField] GameObject ActiveStateText, PassiveStateText;
     [SerializeField] float[] TimeUntilNextWave;
-    public static bool ActiveState = false;
-    public static bool PassiveState = true;
     int CurentWave = 1;
     float Timer;
-
-    bool toMakeX2Faster = false;
+    [HideInInspector] public States State = States.Passive;
+    int timeMultiplier = 1;
 
     #region Singleton
     private static Statemanager _instance;
@@ -46,44 +44,40 @@ public class Statemanager : MonoBehaviour
 
     void Update()
     {
-        WaveText.text = CurentWave.ToString();
+        WaveText.text = "Wave: " + CurentWave.ToString();
         TimerText.text = Mathf.Round(Timer).ToString();
-        
-        if (toMakeX2Faster)
-        {
-            Timer -= Time.deltaTime *2;
-
-        }
-        else
-        {
-            Timer -= Time.deltaTime;
-        }
+        Timer -= Time.deltaTime * timeMultiplier;
         EvaluateGameState();
     }
 
     void EvaluateGameState()
     {
-        if (Timer <= 0 && PassiveState)
+        if (Timer <= 0 && State == States.Passive)
         {
-            ActiveState = true;
-            PassiveState = false;
+            State = States.Active;
+            timeMultiplier = 1;
             ActiveStateText.SetActive(true);
             PassiveStateText.SetActive(false);
             EnemiesText.text = "Enemies Are Attacking";
         }
-        else if (Input.GetKeyUp(KeyCode.N) && ActiveState)
+        else if (Input.GetKeyUp(KeyCode.N) && State == States.Active)
         {
             CurentWave++;
-            ActiveState = false;
-            PassiveState = true;
+            State = States.Passive;
             ActiveStateText.SetActive(false);
             PassiveStateText.SetActive(true);
-            Timer = TimeUntilNextWave[CurentWave - 1];
+            Timer = (CurentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[CurentWave - 1] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
         }
     }
 
-    public void ButtonToMakeX2Faster()
+    public void ButtonToMakeFaster(int multiplier)
     {
-        toMakeX2Faster = !toMakeX2Faster;
+        timeMultiplier = (timeMultiplier == multiplier) ? (timeMultiplier = 1) : (timeMultiplier = multiplier);
     }
+}
+
+public enum States
+{
+    Active,
+    Passive
 }
