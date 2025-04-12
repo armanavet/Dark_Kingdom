@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.Rendering.DebugUI;
+//using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.UI;
 //using 
 
 public class TowerPlacement : MonoBehaviour
@@ -14,16 +15,25 @@ public class TowerPlacement : MonoBehaviour
     float PanelYInitial;
     GameObject toPlacePrefab;
     Transform towerPreview;
+    Button[] towerButtons;
 
     private void Start()
     {
         PanelYInitial = towersUIPanel.transform.position.y;
+        towerButtons = towersUIPanel.GetComponentsInChildren<Button>();
     }
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            
             PlaceTower();
+        }
+        if (towerPreview != null && Input.GetMouseButtonDown(1))
+        {
+            Destroy(towerPreview.gameObject);
+            toPlacePrefab = null;
+            ShowPanel();
         }
     }
     void PlaceTower()
@@ -33,39 +43,47 @@ public class TowerPlacement : MonoBehaviour
             TowerPreview previewInstance = towerPreview.GetComponent<TowerPreview>();
             if (previewInstance.canPlace)
             {
-                    previewInstance.tile.isEmpty = false;
-                    Destroy(previewInstance.gameObject);
-                    Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent);
-                    ShowPanel();
-                
-            }
-            if (Input.GetKeyDown("escape"))
-            {
+                previewInstance.tile.isEmpty = false;
                 Destroy(previewInstance.gameObject);
+                Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent);
+                toPlacePrefab = null;
                 ShowPanel();
-
             }
         }
-
     }
     public void ButtonGetPrefabToPlace(GameObject toPlaceObject) 
     {
-        toPlacePrefab = toPlaceObject;
+        if (toPlacePrefab == null)
+        {
+            toPlacePrefab = toPlaceObject;
+        }
     }
     public void ButtonStartPreview(GameObject previewObject)
     {
-        HidePanel();
-        towerPreview = Instantiate(previewObject).transform;
+        
+        if (towerPreview == null)
+        {
+            HidePanel();
+            towerPreview = Instantiate(previewObject).transform;
+        }
 
     }
     void HidePanel()
     {
         DOTween.Kill("ShowPanel");
-        towersUIPanel.DOMoveY(PanelYHidden, 1).SetId("HidePanel").SetEase(Ease.OutQuad);
+        towersUIPanel.DOMoveY(PanelYHidden, 1).SetId("HidePanel").SetEase(Ease.OutQuad); 
+        foreach (var button in towerButtons)
+        {
+            button.interactable = false;
+        }
     }
     void ShowPanel()
     {
         DOTween.Kill("HidePanel");
         towersUIPanel.DOMoveY(PanelYInitial, 1).SetId("ShowPanel").SetEase(Ease.OutQuad);
+        foreach (var button in towerButtons)
+        {
+            button.interactable = true;
+        }
     }
 }
