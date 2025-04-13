@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3521541609654697657}
   - component: {fileID: 970170176700552755}
   - component: {fileID: 3824141108081378807}
-  - component: {fileID: 5453545930103999777}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -153,27 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   Map: {fileID: 0}
-  minZoom: 0
-  maxZoom: 0
-  zoomSpeed: 0
---- !u!65 &5453545930103999777
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1350857646180522678}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  minZoom: 4
+  maxZoom: 15
+  minFieldOfView: 55
+  maxFieldOfView: 65
+  zoomSpeed: 150
+  rotationSpeed: 0.2

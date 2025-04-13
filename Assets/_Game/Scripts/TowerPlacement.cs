@@ -21,6 +21,8 @@ public class TowerPlacement : MonoBehaviour
     {
         PanelYInitial = towersUIPanel.transform.position.y;
         towerButtons = towersUIPanel.GetComponentsInChildren<Button>();
+        
+        
     }
     private void Update()
     {
@@ -46,6 +48,7 @@ public class TowerPlacement : MonoBehaviour
                 previewInstance.tile.isEmpty = false;
                 Destroy(previewInstance.gameObject);
                 Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent);
+                Economics.Instance.ChangeGoldAmount(-toPlacePrefab.GetComponent<Tower>().TowerPrice);
                 toPlacePrefab = null;
                 ShowPanel();
             }
@@ -65,6 +68,7 @@ public class TowerPlacement : MonoBehaviour
         {
             HidePanel();
             towerPreview = Instantiate(previewObject).transform;
+           
         }
 
     }

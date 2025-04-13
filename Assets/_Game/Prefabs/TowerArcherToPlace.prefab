@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3578200552871301636}
+  - component: {fileID: 6635209425835521595}
   m_Layer: 0
-  m_Name: TowerToPlace
-  m_TagString: Untagged
+  m_Name: TowerArcherToPlace
+  m_TagString: ArcherTower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +33,22 @@ Transform:
   - {fileID: 7000621743857730590}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6635209425835521595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006865380794792360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08bb524387e5ba04896cfa9ab9d75bb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TowerName: Archer Tower
+  TowerPrice: 50
+  ButtonTag: ArcherTower
+  TowerButton: {fileID: 0}
 --- !u!1001 &7398724931002393589
 PrefabInstance:
   m_ObjectHideFlags: 0
