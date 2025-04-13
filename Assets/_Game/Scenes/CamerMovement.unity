@@ -551,7 +551,7 @@ MonoBehaviour:
   towerParent: {fileID: 698751833}
   towersUIPanel: {fileID: 1467819712}
   PanelYHidden: -80
---- !u!1001 &787962498
+--- !u!1001 &1043977074
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -632,7 +632,22 @@ PrefabInstance:
     - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
         type: 3}
       propertyPath: zoomSpeed
-      value: 80
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
+        type: 3}
+      propertyPath: rotationSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
+        type: 3}
+      propertyPath: maxFieldOfView
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
+        type: 3}
+      propertyPath: minFieldOfView
+      value: 55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -903,7 +918,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 787962498}
+  - {fileID: 1043977074}
   - {fileID: 1976706856}
   - {fileID: 1829886756}
   - {fileID: 698751833}
