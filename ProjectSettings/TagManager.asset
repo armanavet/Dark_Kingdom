@@ -6,6 +6,10 @@ TagManager:
   tags:
   - CanPlace
   - CanNotPlace
+  - ArcherTower
+  - WizardTower
+  - ArtilleryTower
+  - GoldMine
   layers:
   - Default
   - TransparentFX

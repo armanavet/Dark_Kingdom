@@ -21,6 +21,8 @@ public class TowerPlacement : MonoBehaviour
     {
         PanelYInitial = towersUIPanel.transform.position.y;
         towerButtons = towersUIPanel.GetComponentsInChildren<Button>();
+        
+        
     }
     private void Update()
     {
@@ -38,14 +40,18 @@ public class TowerPlacement : MonoBehaviour
     }
     void PlaceTower()
     {
+
         if (towerPreview != null)
         {
             TowerPreview previewInstance = towerPreview.GetComponent<TowerPreview>();
             if (previewInstance.canPlace)
             {
+
                 previewInstance.tile.isEmpty = false;
                 Destroy(previewInstance.gameObject);
-                Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent);
+                Tower tower = Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent).GetComponent<Tower>();
+                Economics.Instance.OnEconomicStructureChange(tower, tower.GoldGenerated);
+                Economics.Instance.ChangeGoldAmount(-tower.TowerPrice);
                 toPlacePrefab = null;
                 ShowPanel();
             }
@@ -65,6 +71,7 @@ public class TowerPlacement : MonoBehaviour
         {
             HidePanel();
             towerPreview = Instantiate(previewObject).transform;
+           
         }
 
     }
