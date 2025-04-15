@@ -49,6 +49,7 @@ MonoBehaviour:
   TowerPrice: 80
   ButtonTag: WizardTower
   TowerButton: {fileID: 0}
+  Type: 1
 --- !u!1 &5650140594748238044
 GameObject:
   m_ObjectHideFlags: 0

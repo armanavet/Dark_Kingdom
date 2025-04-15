@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bb524387e5ba04896cfa9ab9d75bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerName: Gold Mine
+  TowerName: GoldMine
   TowerPrice: 100
+  GoldGenerated: 1
   ButtonTag: GoldMine
+  Type: 4
   TowerButton: {fileID: 0}
 --- !u!1001 &1754843339613738280
 PrefabInstance:

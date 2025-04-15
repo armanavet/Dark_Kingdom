@@ -49,6 +49,7 @@ MonoBehaviour:
   TowerPrice: 150
   ButtonTag: ArtilleryTower
   TowerButton: {fileID: 0}
+  Type: 2
 --- !u!1001 &5226545691095292499
 PrefabInstance:
   m_ObjectHideFlags: 0
