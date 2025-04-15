@@ -33,7 +33,6 @@ public class Economics : MonoBehaviour
 
     private void Start()
     {
-        CurrentGold = 0;
         GoldQuantity.text = CurrentGold.ToString();
         foreach (var item in towers)
         {
@@ -52,8 +51,10 @@ public class Economics : MonoBehaviour
     }
     void ChangeUiButtonVisibility()
     {
+
         foreach (var item in towers)
         {
+            if (item.TowerButton == null) continue;
             if (item.TowerPrice > CurrentGold)
             {
                 item.TowerButton.interactable = false;
@@ -72,16 +73,12 @@ public class Economics : MonoBehaviour
 
     public void OnEconomicStructureChange(Tower structure, int gold)
     {
-        Debug.Log("mta OnEconomicStructureChange");
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
         if (EconomicBuilding.ContainsKey(structure))
         {
-            Debug.Log("chack if");
             EconomicBuilding.Remove(structure);
             return;
         }
-        Debug.Log("if anca");
-        
         EconomicBuilding.Add(structure, gold);
     }
 

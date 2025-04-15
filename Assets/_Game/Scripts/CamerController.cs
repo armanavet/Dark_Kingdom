@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class CamerController : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class CamerController : MonoBehaviour
     [SerializeField] float maxFieldOfView;
     [SerializeField] float zoomSpeed;
     [SerializeField] float rotationSpeed;
-
+    [SerializeField] bool m;
     private void Start()
     {
         mainCamera = Camera.main;
@@ -39,22 +40,22 @@ public class CamerController : MonoBehaviour
         Vector3 forward = transform.forward;
         right.y = 0;
         forward.y = 0;
-        if (Input.mousePosition.x >= Screen.width)
-        {
-            movementX += 1;
-        }
-        else if (Input.mousePosition.x <= 0)
-        {
-            movementX -= 1;
-        }
-        if (Input.mousePosition.y >= Screen.height)
-        {
-            movementZ += 1;
-        }
-        else if (Input.mousePosition.y <= 0)
-        {
-            movementZ -= 1;
-        }
+        //if (Input.mousePosition.x >= Screen.width)
+        //{
+        //    movementX += 1;
+        //}
+        //else if (Input.mousePosition.x <= 0)
+        //{
+        //    movementX -= 1;
+        //}
+        //if (Input.mousePosition.y >= Screen.height)
+        //{
+        //    movementZ += 1;
+        //}
+        //else if (Input.mousePosition.y <= 0)
+        //{
+        //    movementZ -= 1;
+        //}
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
         newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - sizeOfMap.x * 0.25f), (Map.transform.position.x + sizeOfMap.x * 0.25f));
         newPosition.z = Mathf.Clamp(newPosition.z, (Map.transform.position.z - sizeOfMap.z * 0.5f), (Map.transform.position.z + sizeOfMap.z * 0.25f));
