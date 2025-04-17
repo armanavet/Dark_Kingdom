@@ -9,6 +9,7 @@ public class CamerController : MonoBehaviour
     Camera mainCamera;
     float fieldOfView;
     float initialCursorPosition;
+    Vector2 initialMousePosition;
     [SerializeField] float speed;
     [SerializeField] BoxCollider Map;
     Vector3 sizeOfMap;
@@ -18,7 +19,7 @@ public class CamerController : MonoBehaviour
     [SerializeField] float maxFieldOfView;
     [SerializeField] float zoomSpeed;
     [SerializeField] float rotationSpeed;
-    [SerializeField] bool m;
+    [SerializeField] float mouseMovmentSpeedDifference;
     private void Start()
     {
         mainCamera = Camera.main;
@@ -40,22 +41,21 @@ public class CamerController : MonoBehaviour
         Vector3 forward = transform.forward;
         right.y = 0;
         forward.y = 0;
-        //if (Input.mousePosition.x >= Screen.width)
-        //{
-        //    movementX += 1;
-        //}
-        //else if (Input.mousePosition.x <= 0)
-        //{
-        //    movementX -= 1;
-        //}
-        //if (Input.mousePosition.y >= Screen.height)
-        //{
-        //    movementZ += 1;
-        //}
-        //else if (Input.mousePosition.y <= 0)
-        //{
-        //    movementZ -= 1;
-        //}
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            initialMousePosition = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            Vector2 newMausePos = Input.mousePosition;
+            Vector2 finalMousePos = newMausePos - initialMousePosition;
+
+            movementX = -finalMousePos.x / mouseMovmentSpeedDifference;
+            movementZ = -finalMousePos.y / mouseMovmentSpeedDifference;
+            initialMousePosition = Input.mousePosition;
+
+        }
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
         newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - sizeOfMap.x * 0.25f), (Map.transform.position.x + sizeOfMap.x * 0.25f));
         newPosition.z = Mathf.Clamp(newPosition.z, (Map.transform.position.z - sizeOfMap.z * 0.5f), (Map.transform.position.z + sizeOfMap.z * 0.25f));
@@ -95,6 +95,7 @@ public class CamerController : MonoBehaviour
             float rotation = Input.mousePosition.x - initialCursorPosition;
             rotation = Mathf.Clamp(rotation,-1,1);
             transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y + rotation * rotationSpeed * Time.deltaTime, transform.localEulerAngles.z);
+            initialCursorPosition = Input.mousePosition.x;
         }
 
     }

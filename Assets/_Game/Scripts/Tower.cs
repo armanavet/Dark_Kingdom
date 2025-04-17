@@ -11,7 +11,8 @@ public class Tower : MonoBehaviour
     public string ButtonTag;
     public TowerType Type;
     public Button TowerButton;
-
+    public int SellPrice;
+    public int UpgradePrice;
 }
 
 public enum TowerType

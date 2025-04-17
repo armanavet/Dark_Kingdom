@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class TowerPanel : MonoBehaviour
 {
-    [SerializeField] GameObject Object;
-    
+    Tower tower;
+
+    private void Start()
+    {
+        tower = GetComponent<Tower>();
+    }
     public void ButtonTowerSell(){
-        Debug.Log("mta");
-        //Destroy(Object);
+       
+        Economics.Instance.OnEconomicStructureChange(tower);
+        Debug.Log(tower.SellPrice);
+        Economics.Instance.ChangeGoldAmount(tower.SellPrice);
+        Destroy(gameObject);
+
     }
     public void ButtonTowerUpgrade() {
-    
+
+        Debug.Log(tower.UpgradePrice);
+        Economics.Instance.ChangeGoldAmount(-tower.UpgradePrice);
     }
 }

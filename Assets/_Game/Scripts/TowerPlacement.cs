@@ -50,7 +50,7 @@ public class TowerPlacement : MonoBehaviour
                 previewInstance.tile.isEmpty = false;
                 Destroy(previewInstance.gameObject);
                 Tower tower = Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent).GetComponent<Tower>();
-                Economics.Instance.OnEconomicStructureChange(tower, tower.GoldGenerated);
+                Economics.Instance.OnEconomicStructureChange(tower);
                 Economics.Instance.ChangeGoldAmount(-tower.TowerPrice);
                 toPlacePrefab = null;
                 ShowPanel();

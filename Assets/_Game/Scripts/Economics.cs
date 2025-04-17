@@ -9,7 +9,7 @@ public class Economics : MonoBehaviour
     [SerializeField] int CurrentGold;
     [SerializeField] List<Tower> towers;
     [SerializeField] TextMeshProUGUI GoldQuantity;
-    Dictionary<Tower, int> EconomicBuilding = new Dictionary<Tower, int>();
+    List<Tower> EconomicBuilding = new List<Tower>();
     float timer = 0;
     #region 
     private static Economics _instance;
@@ -71,31 +71,22 @@ public class Economics : MonoBehaviour
         GoldQuantity.text = CurrentGold.ToString();
     }
 
-    public void OnEconomicStructureChange(Tower structure, int gold)
+    public void OnEconomicStructureChange(Tower structure)
     {
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
-        if (EconomicBuilding.ContainsKey(structure))
+        if (EconomicBuilding.Contains(structure))
         {
             EconomicBuilding.Remove(structure);
             return;
         }
-        EconomicBuilding.Add(structure, gold);
-    }
-
-    public void OnEconomicStructureUpgarde(Tower structure, int gold)
-    {
-        if (!EconomicBuilding.ContainsKey(structure)) return;
-
-        EconomicBuilding[structure] = gold;
-        
-
+        EconomicBuilding.Add(structure);
     }
 
     void GenerateGold()
     {
-        foreach (var item in EconomicBuilding.Keys)
+        foreach (var building in EconomicBuilding)
         {
-            ChangeGoldAmount(EconomicBuilding[item]);
+            ChangeGoldAmount(building.GoldGenerated);
         }
 
        
