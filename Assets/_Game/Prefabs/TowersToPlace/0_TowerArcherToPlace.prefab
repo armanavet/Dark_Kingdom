@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2074499638913403738}
   - component: {fileID: 7564417631401360312}
   - component: {fileID: 3473497077900827831}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SellUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 3478870617297237045}
   - component: {fileID: 820433285573626886}
   - component: {fileID: 9167816691274389883}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,13 +250,13 @@ GameObject:
   - component: {fileID: 8514930772131493350}
   - component: {fileID: 1856900598874938}
   - component: {fileID: 8282960532437153925}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: WorldCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5319822399164765688
 RectTransform:
   m_ObjectHideFlags: 0
@@ -351,8 +351,9 @@ GameObject:
   - component: {fileID: 3578200552871301636}
   - component: {fileID: 6635209425835521595}
   - component: {fileID: 7834484294431754817}
-  m_Layer: 0
-  m_Name: TowerArcherToPlace
+  - component: {fileID: 1117339861032107339}
+  m_Layer: 6
+  m_Name: 0_TowerArcherToPlace
   m_TagString: ArcherTower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -407,6 +408,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9dc8e5144131c42ba65aab5b7f63b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradeButton: {fileID: 6795227476563511694}
+--- !u!65 &1117339861032107339
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006865380794792360}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.4439036, z: 1}
+  m_Center: {x: 0, y: 0.6982369, z: 0}
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,7 +442,7 @@ GameObject:
   - component: {fileID: 4786931031682330804}
   - component: {fileID: 4729776865396793280}
   - component: {fileID: 6795227476563511694}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: UpgradeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,9 +464,9 @@ RectTransform:
   - {fileID: 1463852706642054138}
   m_Father: {fileID: 1119978617278319866}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 142.5, y: -37.5}
   m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4786931031682330804
@@ -552,7 +575,7 @@ GameObject:
   - component: {fileID: 7784985812101053472}
   - component: {fileID: 289870501903538163}
   - component: {fileID: 3090189162442189803}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SellButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -574,9 +597,9 @@ RectTransform:
   - {fileID: 3478870617297237045}
   m_Father: {fileID: 1119978617278319866}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 47.5, y: -37.5}
   m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7784985812101053472
@@ -684,7 +707,7 @@ GameObject:
   - component: {fileID: 1463852706642054138}
   - component: {fileID: 430220686058492034}
   - component: {fileID: 3384854976835800724}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -889,6 +912,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WatchTower_SecondAge_Level1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 58cc9ed8ff696f344ab7274a4e0ad7b3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

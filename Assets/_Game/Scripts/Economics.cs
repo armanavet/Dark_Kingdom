@@ -6,12 +6,11 @@ using TMPro;
 
 public class Economics : MonoBehaviour
 {
-    [SerializeField] int CurrentGold;
-    [SerializeField] List<Tower> towers;
-    [SerializeField] TextMeshProUGUI GoldQuantity;
+    [SerializeField] int currentGold;
+    public int CurrentGold { get => currentGold; }
     List<Tower> EconomicBuilding = new List<Tower>();
     float timer = 0;
-    #region 
+    #region Singleton 
     private static Economics _instance;
     public static Economics Instance
     {
@@ -31,17 +30,8 @@ public class Economics : MonoBehaviour
     }
     #endregion
 
-    private void Start()
-    {
-        GoldQuantity.text = CurrentGold.ToString();
-        foreach (var item in towers)
-        {
-            item.TowerButton = GameObject.FindGameObjectWithTag(item.ButtonTag).GetComponent<Button>();
-        }
-    }
     private void Update()
     {
-        ChangeUiButtonVisibility();
         timer += Time.deltaTime;
         if(timer >= 1)
         {
@@ -49,26 +39,10 @@ public class Economics : MonoBehaviour
             timer = 0;
         }
     }
-    void ChangeUiButtonVisibility()
-    {
-
-        foreach (var item in towers)
-        {
-            if (item.TowerButton == null) continue;
-            if (item.TowerPrice > CurrentGold)
-            {
-                item.TowerButton.interactable = false;
-            }
-            else
-            {
-                item.TowerButton.interactable = true;
-            }
-        }
-    }
+    
     public void ChangeGoldAmount(int amount)
     {
-        CurrentGold += amount;
-        GoldQuantity.text = CurrentGold.ToString();
+        currentGold += amount;
     }
 
     public void OnEconomicStructureChange(Tower structure)

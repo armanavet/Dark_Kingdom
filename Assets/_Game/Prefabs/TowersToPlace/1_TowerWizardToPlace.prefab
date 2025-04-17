@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2966124940193732391}
   - component: {fileID: 6640512905184197915}
   - component: {fileID: 2259165792152255915}
-  m_Layer: 0
-  m_Name: TowerWizardToPlace
+  - component: {fileID: 5486271771280478872}
+  m_Layer: 6
+  m_Name: 1_TowerWizardToPlace
   m_TagString: WizardTower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,6 +68,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9dc8e5144131c42ba65aab5b7f63b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradeButton: {fileID: 8131868137957260993}
+--- !u!65 &5486271771280478872
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212775143613245743}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.4335995, z: 1}
+  m_Center: {x: 0, y: 0.6739296, z: 0}
 --- !u!1 &1535471789287636228
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,7 +102,7 @@ GameObject:
   - component: {fileID: 476948524694625453}
   - component: {fileID: 6491521319166235816}
   - component: {fileID: 9015420138045434723}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SellUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +206,7 @@ GameObject:
   - component: {fileID: 6688104627160623543}
   - component: {fileID: 800226607830440215}
   - component: {fileID: 8131868137957260993}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: UpgradeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,9 +228,9 @@ RectTransform:
   - {fileID: 1814200326041998343}
   m_Father: {fileID: 3891747951206674573}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 142.5, y: -37.5}
   m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6688104627160623543
@@ -315,7 +338,7 @@ GameObject:
   - component: {fileID: 1356398166189177867}
   - component: {fileID: 8511935670566212631}
   - component: {fileID: 7990451111636476672}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,13 +560,13 @@ GameObject:
   - component: {fileID: 7399190946427390663}
   - component: {fileID: 8086529960391581430}
   - component: {fileID: 407014820677558995}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: WorldCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4874035228709155332
 RectTransform:
   m_ObjectHideFlags: 0
@@ -639,7 +662,7 @@ GameObject:
   - component: {fileID: 6995738022923267900}
   - component: {fileID: 1134048026495955004}
   - component: {fileID: 4506243045775711694}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SellButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -661,9 +684,9 @@ RectTransform:
   - {fileID: 1356398166189177867}
   m_Father: {fileID: 3891747951206674573}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 47.5, y: -37.5}
   m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6995738022923267900
@@ -771,7 +794,7 @@ GameObject:
   - component: {fileID: 1814200326041998343}
   - component: {fileID: 250582589958542848}
   - component: {fileID: 5085193743573584317}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

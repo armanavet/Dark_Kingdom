@@ -32,7 +32,6 @@ public class CamerController : MonoBehaviour
         CameraZoom();
         CameraRotate();
     }
-
     void CameraMove()
     {
         float movementX = Input.GetAxisRaw("Horizontal");
@@ -41,7 +40,6 @@ public class CamerController : MonoBehaviour
         Vector3 forward = transform.forward;
         right.y = 0;
         forward.y = 0;
-        
         if (Input.GetMouseButtonDown(0))
         {
             initialMousePosition = Input.mousePosition;
@@ -54,7 +52,6 @@ public class CamerController : MonoBehaviour
             movementX = -finalMousePos.x / mouseMovmentSpeedDifference;
             movementZ = -finalMousePos.y / mouseMovmentSpeedDifference;
             initialMousePosition = Input.mousePosition;
-
         }
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
         newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - sizeOfMap.x * 0.25f), (Map.transform.position.x + sizeOfMap.x * 0.25f));
@@ -71,7 +68,6 @@ public class CamerController : MonoBehaviour
         fieldOfView = Mathf.Clamp(fieldOfView, minFieldOfView,maxFieldOfView);
         mainCamera.fieldOfView = fieldOfView;
     }
-
     //void CameraZoom()
     //{
     //    float scroll = Input.GetAxis("Mouse ScrollWheel");
