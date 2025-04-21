@@ -6,12 +6,11 @@ using TMPro;
 
 public class Economics : MonoBehaviour
 {
-    [SerializeField] int CurrentGold;
-    [SerializeField] List<Tower> towers;
-    [SerializeField] TextMeshProUGUI GoldQuantity;
-    Dictionary<Tower, int> EconomicBuilding = new Dictionary<Tower, int>();
+    [SerializeField] int currentGold;
+    public int CurrentGold { get => currentGold; }
+    List<Tower> EconomicBuilding = new List<Tower>();
     float timer = 0;
-    #region 
+    #region Singleton 
     private static Economics _instance;
     public static Economics Instance
     {
@@ -31,18 +30,8 @@ public class Economics : MonoBehaviour
     }
     #endregion
 
-    private void Start()
-    {
-        CurrentGold = 0;
-        GoldQuantity.text = CurrentGold.ToString();
-        foreach (var item in towers)
-        {
-            item.TowerButton = GameObject.FindGameObjectWithTag(item.ButtonTag).GetComponent<Button>();
-        }
-    }
     private void Update()
     {
-        ChangeUiButtonVisibility();
         timer += Time.deltaTime;
         if(timer >= 1)
         {
@@ -50,55 +39,29 @@ public class Economics : MonoBehaviour
             timer = 0;
         }
     }
-    void ChangeUiButtonVisibility()
-    {
-        foreach (var item in towers)
-        {
-            if (item.TowerPrice > CurrentGold)
-            {
-                item.TowerButton.interactable = false;
-            }
-            else
-            {
-                item.TowerButton.interactable = true;
-            }
-        }
-    }
+    
     public void ChangeGoldAmount(int amount)
     {
-        CurrentGold += amount;
-        GoldQuantity.text = CurrentGold.ToString();
+        currentGold += amount;
     }
 
-    public void OnEconomicStructureChange(Tower structure, int gold)
+    public void OnEconomicStructureChange(Tower structure)
     {
-        Debug.Log("mta OnEconomicStructureChange");
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
-        if (EconomicBuilding.ContainsKey(structure))
+        if (EconomicBuilding.Contains(structure))
         {
-            Debug.Log("chack if");
             EconomicBuilding.Remove(structure);
             return;
         }
-        Debug.Log("if anca");
-        
-        EconomicBuilding.Add(structure, gold);
-    }
-
-    public void OnEconomicStructureUpgarde(Tower structure, int gold)
-    {
-        if (!EconomicBuilding.ContainsKey(structure)) return;
-
-        EconomicBuilding[structure] = gold;
-        
-
+        EconomicBuilding.Add(structure);
     }
 
     void GenerateGold()
     {
-        foreach (var item in EconomicBuilding.Keys)
+        foreach (var building in EconomicBuilding)
         {
-            ChangeGoldAmount(EconomicBuilding[item]);
+            if (building == null) continue;
+            ChangeGoldAmount(building.GoldGenerated);
         }
 
        

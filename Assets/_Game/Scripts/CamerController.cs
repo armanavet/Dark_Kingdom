@@ -2,27 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class CamerController : MonoBehaviour
 {
     Camera mainCamera;
     float fieldOfView;
     float initialCursorPosition;
+    Vector2 initialMousePosition;
     [SerializeField] float speed;
-    [SerializeField] BoxCollider Map;
-    Vector3 sizeOfMap;
+    [SerializeField] GetMapSize Map;
     [SerializeField] float minZoom;
     [SerializeField] float maxZoom;
     [SerializeField] float minFieldOfView;
     [SerializeField] float maxFieldOfView;
     [SerializeField] float zoomSpeed;
     [SerializeField] float rotationSpeed;
-
+    [SerializeField] float mouseMovmentSpeedDifference;
     private void Start()
     {
         mainCamera = Camera.main;
         fieldOfView = mainCamera.fieldOfView;
-        sizeOfMap = Map.size;
     }
     private void Update()
     {
@@ -30,7 +30,6 @@ public class CamerController : MonoBehaviour
         CameraZoom();
         CameraRotate();
     }
-
     void CameraMove()
     {
         float movementX = Input.GetAxisRaw("Horizontal");
@@ -39,38 +38,39 @@ public class CamerController : MonoBehaviour
         Vector3 forward = transform.forward;
         right.y = 0;
         forward.y = 0;
-        if (Input.mousePosition.x >= Screen.width)
+        if (Input.GetMouseButtonDown(0))
         {
-            movementX += 1;
+            initialMousePosition = Input.mousePosition;
         }
-        else if (Input.mousePosition.x <= 0)
+        if (Input.GetMouseButton(0))
         {
-            movementX -= 1;
-        }
-        if (Input.mousePosition.y >= Screen.height)
-        {
-            movementZ += 1;
-        }
-        else if (Input.mousePosition.y <= 0)
-        {
-            movementZ -= 1;
+            Vector2 newMausePos = Input.mousePosition;
+            Vector2 finalMousePos = newMausePos - initialMousePosition;
+
+            movementX = -finalMousePos.x / mouseMovmentSpeedDifference;
+            movementZ = -finalMousePos.y / mouseMovmentSpeedDifference;
+            initialMousePosition = Input.mousePosition;
         }
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
-        newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - sizeOfMap.x * 0.25f), (Map.transform.position.x + sizeOfMap.x * 0.25f));
-        newPosition.z = Mathf.Clamp(newPosition.z, (Map.transform.position.z - sizeOfMap.z * 0.5f), (Map.transform.position.z + sizeOfMap.z * 0.25f));
+        newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - Map.Lenght * 0.25f), (Map.transform.position.x + Map.Lenght * 0.25f));
+        newPosition.z = Mathf.Clamp(newPosition.z, (Map.transform.position.z - Map.Width * 0.5f), (Map.transform.position.z + Map.Width * 0.25f));
         transform.position = newPosition;
     }
     void CameraZoom()
     {
-        //Vector3 zoom = transform.position + transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
-        Vector3 zoom = transform.position - new Vector3(0,Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime,0);
-        zoom.y = Mathf.Clamp(zoom.y, minZoom, maxZoom);
-        transform.position = zoom;
-        fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
-        fieldOfView = Mathf.Clamp(fieldOfView, minFieldOfView,maxFieldOfView);
-        mainCamera.fieldOfView = fieldOfView;
+        Vector3 zoom = transform.position + transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
+        //transform.position = 
+        //Vector3 zoom = transform.position - new Vector3(0,Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime,0);
+        if (zoom.y > minZoom && zoom.y < maxZoom) 
+        {
+            transform.position = zoom;
+            fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
+            fieldOfView = Mathf.Clamp(fieldOfView, minFieldOfView, maxFieldOfView);
+            mainCamera.fieldOfView = fieldOfView;
+        }
+        //zoom.y = Mathf.Clamp(zoom.y, minZoom, maxZoom);
+        
     }
-
     //void CameraZoom()
     //{
     //    float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -94,6 +94,7 @@ public class CamerController : MonoBehaviour
             float rotation = Input.mousePosition.x - initialCursorPosition;
             rotation = Mathf.Clamp(rotation,-1,1);
             transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y + rotation * rotationSpeed * Time.deltaTime, transform.localEulerAngles.z);
+            initialCursorPosition = Input.mousePosition.x;
         }
 
     }
