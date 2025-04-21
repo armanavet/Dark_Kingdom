@@ -796,6 +796,7 @@ MonoBehaviour:
   TowerButton: {fileID: 0}
   SellPrice: 112
   UpgradePrice: 225
+  TowerPanel: {fileID: 7195541497489861293}
 --- !u!114 &1336978072523930404
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -28,15 +28,12 @@ public class TowerPanel : MonoBehaviour
         }
     }
     public void ButtonTowerSell()
-    {      
-        Economics.Instance.OnEconomicStructureChange(tower);
-        Debug.Log(tower.SellPrice);
+    {
         Economics.Instance.ChangeGoldAmount(tower.SellPrice);
-        Destroy(gameObject);
+        tower.TowerDestroyHandle();
     }
     public void ButtonTowerUpgrade() 
     {
-        Debug.Log(tower.UpgradePrice);
         Economics.Instance.ChangeGoldAmount(-tower.UpgradePrice);
     }
 }

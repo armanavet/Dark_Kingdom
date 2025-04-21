@@ -10,9 +10,18 @@ public class Tower : MonoBehaviour
     public int GoldGenerated;
     public string ButtonTag;
     public TowerType Type;
-    public Button TowerButton;
     public int SellPrice;
     public int UpgradePrice;
+    public GameObject TowerPanel;
+    [HideInInspector] public Tile tile;
+
+    public void TowerDestroyHandle()
+    {
+        Economics.Instance.OnEconomicStructureChange(this);
+        tile.isEmpty = true;
+        Destroy(gameObject);
+
+    }
 }
 
 public enum TowerType

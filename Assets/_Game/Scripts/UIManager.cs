@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] LayerMask layerMask;
     float PanelYInitial;
     Button[] towerButtons;
-    Transform previewsHit;
+    GameObject previewsHit;
 
     #region Singleton 
     private static UIManager _instance;
@@ -58,26 +59,37 @@ public class UIManager : MonoBehaviour
     {
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-       
+        
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
-            Debug.Log("mta");
+            GameObject towerPanel = hit.transform.GetComponent<Tower>().TowerPanel;
+
+
+            if (towerPanel == null) {
+               
+                return;
+            }
+            //if (towerPanel.activeSelf) {
+            //    towerPanel.SetActive(false);
+            //    return;
+            //}
             if (previewsHit == null)
             {
-                Debug.Log("mta null");
-                previewsHit = hit.transform;
-            } else if(previewsHit.GetComponentInChildren<Canvas>() != null )
-            {
-                Debug.Log("mta canvas voch null ");
-                previewsHit.GetComponentInChildren<Canvas>().gameObject.SetActive(false); 
+                previewsHit = towerPanel;
             }
-            if (hit.transform.GetComponentInChildren<Canvas>())
+            previewsHit.SetActive(false);
+            towerPanel.SetActive(true);
+            previewsHit = towerPanel;
+            
+
+
+        } 
+        else
+        {
+            if (previewsHit != null)
             {
-                Debug.Log("mta canvas true");
-                hit.transform.GetComponentInChildren<Canvas>().gameObject.SetActive(true);
+                previewsHit.gameObject.SetActive(false);
             }
-            
-            
         }
     }
     void ChangeUiButtonVisibility()

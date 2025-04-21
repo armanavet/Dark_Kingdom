@@ -60,6 +60,7 @@ public class Economics : MonoBehaviour
     {
         foreach (var building in EconomicBuilding)
         {
+            if (building == null) continue;
             ChangeGoldAmount(building.GoldGenerated);
         }
 

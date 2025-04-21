@@ -9,16 +9,16 @@ public class PNGToTileMap : MonoBehaviour
     public Texture2D sourceImage;
     public GameObject TilePrefab;
     public string savePrefabPath = "Assets/_Game/Prefabs/GeneratedTilemap.prefab";
-
     GameObject GridParent;
     float ColorTolerance = 0.1f;
-
     public void GenerateGrid()
     {
         GridParent = new GameObject("GeneratedGrid");
-
+        GetMapSize script = GridParent.AddComponent<GetMapSize>();
         int Width = sourceImage.width;
         int Height = sourceImage.height;
+        script.Lenght = Height;
+        script.Width = Width;
         Debug.Log(Width + " " + Height);
         Vector2 offset = new Vector2((Width - 1) * 0.5f, (Height - 1) * 0.5f);
 
