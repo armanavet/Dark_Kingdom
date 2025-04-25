@@ -7,18 +7,18 @@ public abstract class Tower : MonoBehaviour
 {
     [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<int> UpgradePrices;
+
     public int maxLevel = 2;
-    [HideInInspector] public Tile tile;
     public int levelOFTower = 0;
     public int TowerPrice;
-    [HideInInspector] public int SellPrice;
-    [HideInInspector] public int UpgradePrice;
     public string TowerName;
     public TowerType Type;
     public GameObject TowerPanel;
 
+    [HideInInspector] public Tile tile;
+    [HideInInspector] public int SellPrice;
+    [HideInInspector] public int UpgradePrice;
     [HideInInspector] public int GoldGenerated = 0;
-
 
 
     private void Start()
@@ -31,8 +31,6 @@ public abstract class Tower : MonoBehaviour
         Economics.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
         Destroy(gameObject);
-
-
     }
     public abstract void Upgrade();
 }

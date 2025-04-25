@@ -17,8 +17,9 @@ public class GoldMineTower : Tower
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
             Economics.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
             GoldGenerated = GoldGenerationList[levelOFTower];
+            levelOFTower++;
+            
         }
     }
 }
