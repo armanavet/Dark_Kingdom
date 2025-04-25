@@ -749,9 +749,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2512111831403486953}
-  - component: {fileID: 8142794801495485859}
   - component: {fileID: 1336978072523930404}
   - component: {fileID: 4053734959697410459}
+  - component: {fileID: 5555515663387599563}
   m_Layer: 6
   m_Name: 2_TowerArtilleryToPlace
   m_TagString: ArtilleryTower
@@ -776,27 +776,6 @@ Transform:
   - {fileID: 7723504538975823901}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8142794801495485859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8319324873643679177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08bb524387e5ba04896cfa9ab9d75bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TowerName: Artillery Tower
-  TowerPrice: 150
-  GoldGenerated: 0
-  ButtonTag: ArtilleryTower
-  Type: 2
-  TowerButton: {fileID: 0}
-  SellPrice: 112
-  UpgradePrice: 225
-  TowerPanel: {fileID: 7195541497489861293}
 --- !u!114 &1336978072523930404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -831,6 +810,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.504205, z: 1}
   m_Center: {x: 0, y: 0.7510935, z: 0}
+--- !u!114 &5555515663387599563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8319324873643679177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c760762337c03b42bb29066029b9f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SellPrices: 78000000820000008c00000096000000
+  UpgradePrices: a0000000aa000000b4000000
+  maxLevel: 2
+  tile: {fileID: 0}
+  levelOFTower: 0
+  TowerPrice: 150
+  SellPrice: 0
+  UpgradePrice: 0
+  TowerName: ArtilleryTower
+  Type: 3
+  TowerPanel: {fileID: 7195541497489861293}
+  GoldGenerated: 0
 --- !u!1001 &5226545691095292499
 PrefabInstance:
   m_ObjectHideFlags: 0

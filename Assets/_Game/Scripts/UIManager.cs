@@ -69,10 +69,6 @@ public class UIManager : MonoBehaviour
                
                 return;
             }
-            //if (towerPanel.activeSelf) {
-            //    towerPanel.SetActive(false);
-            //    return;
-            //}
             if (previewsHit == null)
             {
                 previewsHit = towerPanel;

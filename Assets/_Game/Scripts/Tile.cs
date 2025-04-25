@@ -8,8 +8,11 @@ public class Tile : MonoBehaviour
 
     [SerializeField] GameObject NeutralTile, OwnTile, ObstructedTile;
     public bool isEmpty = true;
-
-
+    public Vector2Int coordinates;
+    public void SetCoordinates(int x, int y)
+    {
+        coordinates = new Vector2Int(x, y);
+    }
     public void SetType(GameTileContentType type)
     {
         Type = type;

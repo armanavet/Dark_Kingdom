@@ -8,7 +8,7 @@ public class Economics : MonoBehaviour
 {
     [SerializeField] int currentGold;
     public int CurrentGold { get => currentGold; }
-    List<Tower> EconomicBuilding = new List<Tower>();
+    [SerializeField]List<Tower> EconomicBuilding = new List<Tower>();
     float timer = 0;
     #region Singleton 
     private static Economics _instance;
