@@ -349,9 +349,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3578200552871301636}
-  - component: {fileID: 6635209425835521595}
   - component: {fileID: 7834484294431754817}
   - component: {fileID: 1117339861032107339}
+  - component: {fileID: 2554583891899901409}
   m_Layer: 6
   m_Name: 0_TowerArcherToPlace
   m_TagString: ArcherTower
@@ -376,28 +376,6 @@ Transform:
   - {fileID: 5319822399164765688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6635209425835521595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006865380794792360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08bb524387e5ba04896cfa9ab9d75bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TowerName: Archer Tower
-  TowerPrice: 50
-  GoldGenerated: 0
-  ButtonTag: ArcherTower
-  Type: 0
-  TowerButton: {fileID: 0}
-  SellPrice: 37
-  UpgradePrice: 75
-  TowerPanel: {fileID: 2936775719731518850}
-  tile: {fileID: 0}
 --- !u!114 &7834484294431754817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +410,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4439036, z: 1}
   m_Center: {x: 0, y: 0.6982369, z: 0}
+--- !u!114 &2554583891899901409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006865380794792360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SellPrices: 25000000570000009600000018010000
+  UpgradePrices: 4b00000096000000c8000000
+  maxLevel: 2
+  tile: {fileID: 0}
+  levelOFTower: 0
+  TowerPrice: 50
+  SellPrice: 0
+  UpgradePrice: 0
+  TowerName: Archer Tower
+  Type: 1
+  TowerPanel: {fileID: 2936775719731518850}
+  GoldGenerated: 0
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0

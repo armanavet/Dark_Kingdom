@@ -18,7 +18,7 @@ public class TowerPanel : MonoBehaviour
     }
     void ChangeButtonVisibility()
     {
-        if (Economics.Instance.CurrentGold < tower.UpgradePrice)
+        if (Economics.Instance.CurrentGold < tower.UpgradePrice || tower.levelOFTower > tower.maxLevel)
         {
             UpgradeButton.interactable = false;
         } 
@@ -30,10 +30,10 @@ public class TowerPanel : MonoBehaviour
     public void ButtonTowerSell()
     {
         Economics.Instance.ChangeGoldAmount(tower.SellPrice);
-        tower.TowerDestroyHandle();
+        tower.Destroy();
     }
-    public void ButtonTowerUpgrade() 
+    public void ButtonTowerUpgrade()
     {
-        Economics.Instance.ChangeGoldAmount(-tower.UpgradePrice);
+        tower.Upgrade();
     }
 }

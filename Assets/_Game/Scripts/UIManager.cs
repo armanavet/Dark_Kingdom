@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+//using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class UIManager : MonoBehaviour
     float PanelYInitial;
     Button[] towerButtons;
     GameObject previewsHit;
-
+    Transform activePanel;
+    bool isPanelActive = false;
     #region Singleton 
     private static UIManager _instance;
     public static UIManager Instance
@@ -44,7 +46,6 @@ public class UIManager : MonoBehaviour
     {
         PanelYInitial = towersUIPanel.transform.position.y;
         towerButtons = towersUIPanel.GetComponentsInChildren<Button>();
-
     }
     private void Update()
     {
@@ -54,34 +55,34 @@ public class UIManager : MonoBehaviour
         {
             TowerPanelShowAndHide();
         }
+        if (isPanelActive && activePanel != null)
+        {
+            Vector3 direction = activePanel.transform.position - Camera.main.transform.position;
+            Quaternion rotation = Quaternion.LookRotation(direction * 0.5f* Time.deltaTime);
+            activePanel.transform.rotation = rotation;
+        }
+        
     }
     void TowerPanelShowAndHide()
     {
-        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             GameObject towerPanel = hit.transform.GetComponent<Tower>().TowerPanel;
-
-
+            Transform panel = towerPanel.transform.Find("SellUI");
             if (towerPanel == null) {
-               
                 return;
             }
-            //if (towerPanel.activeSelf) {
-            //    towerPanel.SetActive(false);
-            //    return;
-            //}
             if (previewsHit == null)
             {
                 previewsHit = towerPanel;
             }
             previewsHit.SetActive(false);
             towerPanel.SetActive(true);
+            activePanel = panel;
+            isPanelActive = true;
             previewsHit = towerPanel;
-            
-
 
         } 
         else
@@ -89,6 +90,7 @@ public class UIManager : MonoBehaviour
             if (previewsHit != null)
             {
                 previewsHit.gameObject.SetActive(false);
+                isPanelActive = false;
             }
         }
     }

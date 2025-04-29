@@ -11,7 +11,7 @@ public class CamerController : MonoBehaviour
     float initialCursorPosition;
     Vector2 initialMousePosition;
     [SerializeField] float speed;
-    [SerializeField] GetMapSize Map;
+    [SerializeField] GetMapSize Map; 
     [SerializeField] float minZoom;
     [SerializeField] float maxZoom;
     [SerializeField] float minFieldOfView;

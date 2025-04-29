@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2966124940193732391}
-  - component: {fileID: 6640512905184197915}
   - component: {fileID: 2259165792152255915}
   - component: {fileID: 5486271771280478872}
+  - component: {fileID: 1543937721329535402}
   m_Layer: 6
   m_Name: 1_TowerWizardToPlace
   m_TagString: WizardTower
@@ -36,27 +36,6 @@ Transform:
   - {fileID: 4874035228709155332}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6640512905184197915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1212775143613245743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08bb524387e5ba04896cfa9ab9d75bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TowerName: Wizard tower
-  TowerPrice: 80
-  GoldGenerated: 0
-  ButtonTag: WizardTower
-  Type: 1
-  TowerButton: {fileID: 0}
-  SellPrice: 60
-  UpgradePrice: 120
-  TowerPanel: {fileID: 6915444093387794395}
 --- !u!114 &2259165792152255915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +70,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4335995, z: 1}
   m_Center: {x: 0, y: 0.6739296, z: 0}
+--- !u!114 &1543937721329535402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212775143613245743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 247fec6ad501b9941b2dfd0c8497b731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SellPrices: 280000002c0000002e00000032000000
+  UpgradePrices: 580000006000000068000000
+  maxLevel: 2
+  tile: {fileID: 0}
+  levelOFTower: 0
+  TowerPrice: 80
+  SellPrice: 0
+  UpgradePrice: 0
+  TowerName: WizardTower
+  Type: 2
+  TowerPanel: {fileID: 6915444093387794395}
+  GoldGenerated: 0
 --- !u!1 &1535471789287636228
 GameObject:
   m_ObjectHideFlags: 0
