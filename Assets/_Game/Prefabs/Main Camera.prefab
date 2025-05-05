@@ -156,5 +156,6 @@ MonoBehaviour:
   maxZoom: 15
   minFieldOfView: 55
   maxFieldOfView: 65
-  zoomSpeed: 150
-  rotationSpeed: 0.2
+  zoomSpeed: 170
+  rotationSpeed: 60
+  mouseMovmentSpeedDifference: 15

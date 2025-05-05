@@ -30,7 +30,7 @@ public class TowerPreview : MonoBehaviour
         {
             transform.position = hit.transform.position;
             tile = hit.transform.GetComponent<Tile>();
-            if (tile.Type == GameTileContentType.Own && tile.isEmpty)
+            if (tile.Type == TileType.Own && tile.isEmpty)
             {
                 canPlace = true;
                 canNotPlaceOutLine.SetActive(false);

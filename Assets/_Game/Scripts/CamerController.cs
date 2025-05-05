@@ -11,7 +11,7 @@ public class CamerController : MonoBehaviour
     float initialCursorPosition;
     Vector2 initialMousePosition;
     [SerializeField] float speed;
-    [SerializeField] GetMapSize Map; 
+    [SerializeField] GameBoard Map; 
     [SerializeField] float minZoom;
     [SerializeField] float maxZoom;
     [SerializeField] float minFieldOfView;
@@ -52,7 +52,7 @@ public class CamerController : MonoBehaviour
             initialMousePosition = Input.mousePosition;
         }
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
-        newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - Map.Lenght * 0.25f), (Map.transform.position.x + Map.Lenght * 0.25f));
+        newPosition.x = Mathf.Clamp(newPosition.x, (Map.transform.position.x - Map.Length * 0.25f), (Map.transform.position.x + Map.Length * 0.25f));
         newPosition.z = Mathf.Clamp(newPosition.z, (Map.transform.position.z - Map.Width * 0.5f), (Map.transform.position.z + Map.Width * 0.25f));
         transform.position = newPosition;
     }
