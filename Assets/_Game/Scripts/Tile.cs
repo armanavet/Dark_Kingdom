@@ -12,15 +12,15 @@ public class Tile : MonoBehaviour
     [SerializeField] int distanceToDestination = 0;
     public Tile NextOnPath => nextOnPath;
     public Vector2Int coordinates;
-    public Direction pathDirection;
     public Vector3 exitPoint;
+    public Direction pathDirection;
     public bool isEmpty = true; 
     bool isPath => distanceToDestination != int.MaxValue;
 
-    public Tile GrowPathNorth() => GrowPathTo(this.north, Direction.South);
-    public Tile GrowPathSouth() => GrowPathTo(this.south, Direction.North);
-    public Tile GrowPathEast() => GrowPathTo(this.east, Direction.West);
-    public Tile GrowPathWest() => GrowPathTo(this.west, Direction.East);
+    public Tile GrowPathNorth() => GrowPathTo(north, Direction.South);
+    public Tile GrowPathSouth() => GrowPathTo(south, Direction.North);
+    public Tile GrowPathEast() => GrowPathTo(east, Direction.West);
+    public Tile GrowPathWest() => GrowPathTo(west, Direction.East);
 
     private void Start()
     {
@@ -81,7 +81,7 @@ public class Tile : MonoBehaviour
 
     Tile GrowPathTo(Tile nextTile, Direction direction)
     {
-        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath) return null;
+        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath || !nextTile.isEmpty) return null;
 
         arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);

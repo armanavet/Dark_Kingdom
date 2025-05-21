@@ -30,6 +30,7 @@ public abstract class Tower : MonoBehaviour
     {
         Economics.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
+        GameBoard.Instance.BuildPathToDestination();
         Destroy(gameObject);
     }
     public abstract void Upgrade();
