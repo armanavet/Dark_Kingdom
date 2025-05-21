@@ -2,7 +2,7 @@
 - Project name: Dark_Kingdom
 - Unity version: Unity 2022.3.50f1
 - Active game object:
-  - Name: GameStateUI
-  - Tag: Untagged
-  - Layer: Default
+  - Name: Cube
+  - Tag: Enamy
+  - Layer: Enemy
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

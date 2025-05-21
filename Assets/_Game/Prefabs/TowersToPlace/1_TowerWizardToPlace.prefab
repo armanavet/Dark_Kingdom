@@ -85,15 +85,23 @@ MonoBehaviour:
   SellPrices: 280000002c0000002e00000032000000
   UpgradePrices: 580000006000000068000000
   maxLevel: 2
-  tile: {fileID: 0}
   levelOFTower: 0
   TowerPrice: 80
-  SellPrice: 0
-  UpgradePrice: 0
   TowerName: WizardTower
   Type: 2
   TowerPanel: {fileID: 6915444093387794395}
+  tile: {fileID: 0}
+  SellPrice: 0
+  UpgradePrice: 0
   GoldGenerated: 0
+  TarggetPoint: 2
+  EnemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  shel: {fileID: 3035664297334619729, guid: 84d7992f1d222cb4aaaf5babf91a8695, type: 3}
+  mortal: {fileID: 1144549494783277767}
+  shellBlastRadius: 1
+  shellDamage: 30
 --- !u!1 &1535471789287636228
 GameObject:
   m_ObjectHideFlags: 0
