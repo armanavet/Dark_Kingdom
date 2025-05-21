@@ -35,6 +35,7 @@ public class TowerPlacement : MonoBehaviour
                 Tower tower = Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent).GetComponent<Tower>();
                 //Economics.Instance.OnEconomicStructureChange(tower);
                 Economics.Instance.ChangeGoldAmount(-tower.TowerPrice);
+                GameBoard.Instance.BuildPathToDestination();
                 tower.tile = previewInstance.tile;
                 toPlacePrefab = null;
                 UIManager.Instance.ShowPanel();

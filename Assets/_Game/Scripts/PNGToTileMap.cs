@@ -14,10 +14,10 @@ public class PNGToTileMap : MonoBehaviour
     public void GenerateGrid()
     {
         GridParent = new GameObject("GeneratedGrid");
-        GetMapSize script = GridParent.AddComponent<GetMapSize>();
+        GameBoard script = GridParent.AddComponent<GameBoard>();
         int Width = sourceImage.width;
         int Height = sourceImage.height;
-        script.Lenght = Height;
+        script.Length = Height;
         script.Width = Width;
         Debug.Log(Width + " " + Height);
         Vector2 offset = new Vector2((Width - 1) * 0.5f, (Height - 1) * 0.5f);
@@ -28,7 +28,7 @@ public class PNGToTileMap : MonoBehaviour
             for (int x = 0; x < Width; x++)
             {
                 Color pixelColor = sourceImage.GetPixel(x, y);
-                GameTileContentType gameTileContentType = GetTileType(pixelColor);
+                TileType TileType = GetTileType(pixelColor);
 
                 GameObject tileObj = Instantiate(TilePrefab, GridParent.transform);
                 tileObj.transform.localPosition = new Vector3(x - offset.x, 0, y - offset.y);
@@ -37,7 +37,7 @@ public class PNGToTileMap : MonoBehaviour
                 Tile tile = tileObj.GetComponent<Tile>();
                 if (tile != null)
                 {
-                    tile.SetType(gameTileContentType);
+                    tile.SetType(TileType);
                     tile.SetCoordinates(x,y);
                     script.tiles.Add(tile);
                 }
@@ -46,12 +46,12 @@ public class PNGToTileMap : MonoBehaviour
 
     }
 
-    GameTileContentType GetTileType(Color color)
+    TileType GetTileType(Color color)
     {
-        if (isColorClose(color, Color.white)) return GameTileContentType.Neutral;
-        if (isColorClose(color, Color.yellow)) return GameTileContentType.Own;
-        if (isColorClose(color, Color.black)) return GameTileContentType.Obstructed;
-        return GameTileContentType.Neutral;
+        if (isColorClose(color, Color.white)) return TileType.Neutral;
+        if (isColorClose(color, Color.yellow)) return TileType.Own;
+        if (isColorClose(color, Color.black)) return TileType.Obstructed;
+        return TileType.Neutral;
     }
 
     bool isColorClose(Color a, Color b)
