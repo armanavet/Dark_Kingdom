@@ -8,6 +8,25 @@ public class GameBoard : MonoBehaviour
     [HideInInspector] public int Width;
     public List<Tile>  tiles = new List<Tile>();
     Queue<Tile> SearchFrontier = new Queue<Tile>();
+    #region Singleton 
+    private static GameBoard _instance;
+    public static GameBoard Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = GameObject.FindObjectOfType<GameBoard>();
+            }
+
+            return _instance;
+        }
+    }
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
 
 
     #region Singleton 

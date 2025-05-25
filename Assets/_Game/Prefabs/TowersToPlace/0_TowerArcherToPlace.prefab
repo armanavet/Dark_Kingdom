@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &498062216014893714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1574947597934629292}
+  m_Layer: 6
+  m_Name: Turret
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1574947597934629292
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498062216014893714}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.943, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3578200552871301636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1480519335892533317
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,6 +403,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1574947597934629292}
   - {fileID: 7000621743857730590}
   - {fileID: 5319822399164765688}
   m_Father: {fileID: 0}
@@ -425,15 +457,24 @@ MonoBehaviour:
   SellPrices: 25000000570000009600000018010000
   UpgradePrices: 4b00000096000000c8000000
   maxLevel: 2
-  tile: {fileID: 0}
   levelOFTower: 0
   TowerPrice: 50
-  SellPrice: 0
-  UpgradePrice: 0
   TowerName: Archer Tower
   Type: 1
   TowerPanel: {fileID: 2936775719731518850}
+  tile: {fileID: 0}
+  SellPrice: 0
+  UpgradePrice: 0
   GoldGenerated: 0
+  TarggetPoint: 2
+  EnemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  DamagePerSecund: 60
+  Turret: {fileID: 1574947597934629292}
+  Arrow: {fileID: 1242083742202517421, guid: bac3663ceb79b5c4d8a19363a2427ad3, type: 3}
+  arrowSpeed: 8
+  attackSpeed: 1
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0
