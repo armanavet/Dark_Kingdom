@@ -14,7 +14,10 @@ public class Tile : MonoBehaviour
     public Vector2Int coordinates;
     public Direction pathDirection;
     public Vector3 exitPoint;
-    public bool isEmpty = true; 
+    public bool isEmpty = true;
+    [HideInInspector]public int TilePrice => 50;
+
+    float ColorTolerance = 0.1f;
     bool isPath => distanceToDestination != int.MaxValue;
 
     public Tile GrowPathNorth() => GrowPathTo(this.north, Direction.South);
@@ -25,6 +28,7 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         arrow.gameObject.SetActive(false);
+        //TilePrice = 50;
     }
 
     public void SetCoordinates(int x, int y)
@@ -39,7 +43,6 @@ public class Tile : MonoBehaviour
         ObstructedTile.SetActive(false);
         switch (type)
         {
-
             case TileType.Neutral:
                 NeutralTile.SetActive(true);
                 break;
@@ -49,7 +52,6 @@ public class Tile : MonoBehaviour
             case TileType.Obstructed:
                 ObstructedTile.SetActive(true);
                 break;
-
             default: break;
         }
     }
@@ -82,7 +84,6 @@ public class Tile : MonoBehaviour
     Tile GrowPathTo(Tile nextTile, Direction direction)
     {
         if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath) return null;
-
         arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
@@ -91,6 +92,72 @@ public class Tile : MonoBehaviour
         nextTile.pathDirection = direction;
         nextTile.exitPoint = nextTile.transform.position + direction.GetHalfVector();
         return nextTile;
+    }
+
+    public void MakeNeutralYellow(List<Tile> tiles, int width, int height)
+    {
+        Tile tile;
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                int neighborX = coordinates.x + dx;
+                int neighborY = coordinates.y + dy;
+
+                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height)
+                {
+                    int index = neighborY * width + neighborX;
+                    tile = tiles[index];
+                    if (tile.Type == TileType.Neutral)
+                    {
+                        tile.SetType(TileType.Own);
+                    }
+
+                }
+            }
+        }
+    }
+    public bool MakeObstructedYellow(List<Tile> tiles, int width, int height)
+    {
+        if (this.Type != TileType.Obstructed)
+            return false;
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                int neighborX = coordinates.x + dx;
+                int neighborY = coordinates.y + dy;
+
+                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height)
+                {
+                    int index = neighborY * width + neighborX;
+                    Tile tile = tiles[index];
+                    if (tile.Type == TileType.Own)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+    public TileType GetTileType(Color color)
+    {
+        if (isColorClose(color, Color.white)) return TileType.Neutral;
+        if (isColorClose(color, Color.yellow)) return TileType.Own;
+        if (isColorClose(color, Color.black)) return TileType.Obstructed;
+        return TileType.Neutral;
+    }
+    bool isColorClose(Color a, Color b)
+    {
+        return (Mathf.Abs(a.r - b.r) < ColorTolerance && Mathf.Abs(a.g - b.g) < ColorTolerance && Mathf.Abs(a.b - b.b) < ColorTolerance);
     }
 }
 

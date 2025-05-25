@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +9,8 @@ public class TowerPlacement : MonoBehaviour
     [SerializeField] Transform towerParent;
     GameObject toPlacePrefab;
     Transform towerPreview;
+    //test
+    public GameBoard gb;
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -30,13 +32,13 @@ public class TowerPlacement : MonoBehaviour
             TowerPreview previewInstance = towerPreview.GetComponent<TowerPreview>();
             if (previewInstance.canPlace)
             {
-                previewInstance.tile.isEmpty = false;
-                Destroy(previewInstance.gameObject);
+                    previewInstance.tile.isEmpty = false;
+                    Destroy(previewInstance.gameObject);
                 Tower tower = Instantiate(toPlacePrefab,towerPreview.position,Quaternion.identity,towerParent).GetComponent<Tower>();
-                //Economics.Instance.OnEconomicStructureChange(tower);
                 Economics.Instance.ChangeGoldAmount(-tower.TowerPrice);
-                tower.tile = previewInstance.tile;
-                toPlacePrefab = null;
+                    tower.tile = previewInstance.tile;
+                    toPlacePrefab = null;
+                    tower.tile.MakeNeutralYellow(GameBoard.Instance.tiles, GameBoard.Instance.Width, GameBoard.Instance.Length);
                 UIManager.Instance.ShowPanel();
             }
         }
