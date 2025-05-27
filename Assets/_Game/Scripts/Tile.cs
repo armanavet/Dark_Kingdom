@@ -10,6 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject NeutralTile, OwnTile, ObstructedTile;
     [SerializeField] Tile north, south, east, west, nextOnPath;
     [SerializeField] int distanceToDestination = 0;
+    public int? DistanceToDestinationOriginal { get; private set; }
     public Tile NextOnPath => nextOnPath;
     public Vector2Int coordinates;
     public Vector3 exitPoint;
@@ -69,6 +70,7 @@ public class Tile : MonoBehaviour
     public void BecomeDestination()
     {
         distanceToDestination = 0;
+        DistanceToDestinationOriginal = 0;
         nextOnPath = null;
         exitPoint = transform.localPosition;
     }
@@ -86,6 +88,7 @@ public class Tile : MonoBehaviour
         arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
+        nextTile.DistanceToDestinationOriginal ??= distanceToDestination + 1;
         nextTile.nextOnPath = this;
         nextTile.arrow.rotation = Quaternion.LookRotation(nextTile.arrow.forward, (arrow.position - nextTile.arrow.position).normalized);
         nextTile.pathDirection = direction;
