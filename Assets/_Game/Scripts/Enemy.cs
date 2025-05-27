@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] Transform model;
     [SerializeField] float speed;
-    [SerializeField] Tile startingTile;
+    Tile startingTile;
     OriginalTileState tileFrom, tileTo;
     Vector3 positionFrom, positionTo;
     Direction direction;
@@ -17,41 +17,26 @@ public class Enemy : MonoBehaviour
     EnemyState state;
     Queue<OriginalTileState> path;
 
-    bool gameStarted = false;
-
-    private void Start()
-    {
-        
-    }
-
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            float offset = 0;
-            OnSpawn(startingTile, offset);
-            transform.position = startingTile.transform.position;
-            gameStarted = true;
-        }
-        if (gameStarted)
-        {
-            state = tileFrom.tile.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-            if (state == EnemyState.Moving) Move();
-            else if (state == EnemyState.Attacking) Attack();
-        }
+        state = tileFrom.currentState.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Moving) Move();
+        else if (state == EnemyState.Attacking) Attack();
     }
 
     public void OnSpawn(Tile tile, float positionOffset)
     {
-        progress = 0;
+        startingTile = tile;
         path = FindPath();
         if (path.Count > 0)
         {
-            tileFrom = new OriginalTileState(tile);
+
+            tileFrom = path.Dequeue();
             tileTo = path.Dequeue();
             this.positionOffset = positionOffset;
             PrepareInitialMove();
         }
+        progress = 0;
     }
 
     void PrepareInitialMove()
@@ -69,7 +54,7 @@ public class Enemy : MonoBehaviour
     Queue<OriginalTileState> FindPath()
     {
         path = new Queue<OriginalTileState>();
-        Tile tile = startingTile.NextOnPath;
+        Tile tile = startingTile;
         while (tile != null)
         {
             path.Enqueue(new OriginalTileState(tile));
@@ -81,10 +66,10 @@ public class Enemy : MonoBehaviour
     void Move()
     {
         progress += Time.deltaTime * progressFactor * speed;
-        if (progress > 1 && path.Count > 0)
+        if (progress > 1)
         {
             tileFrom = tileTo;
-            tileTo = path.Dequeue();
+            tileTo = path.Count > 0 ? path.Dequeue() : tileTo;
             progress = 0;
             PrepareNextMove();
         }
@@ -147,18 +132,20 @@ public class Enemy : MonoBehaviour
     void Attack()
     {
         model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        WaveSpawner.Instance.EnemyCount--;
+        Destroy(gameObject);
     }
 
     struct OriginalTileState
     {
-        public Tile tile;
+        public Tile currentState;
         public Vector3 position;
         public Vector3 exitPoint;
         public Direction pathDirection;
 
         public OriginalTileState(Tile tile)
         {
-            this.tile = tile;
+            currentState = tile;
             position = tile.transform.localPosition;
             exitPoint = tile.exitPoint;
             pathDirection = tile.pathDirection;
