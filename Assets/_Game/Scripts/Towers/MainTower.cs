@@ -7,7 +7,7 @@ public class MainTower : Tower
     [SerializeField] List<int> GoldGenerationList;
     private void Start()
     {
-        Economics.Instance.OnEconomicStructureChange(this);
+        EconomyManager.Instance.OnEconomyManagertructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
     }
     public override void Upgrade()
@@ -15,7 +15,7 @@ public class MainTower : Tower
         if (levelOFTower < UpgradePrices.Count)
         {
             UpgradePrice = UpgradePrices[levelOFTower];
-            Economics.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++; 
             GoldGenerated = GoldGenerationList[levelOFTower];
         }

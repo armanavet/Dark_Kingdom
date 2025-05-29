@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WizardTower : Tower
+public class ArtilleryTower : Tower
 {
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
@@ -120,7 +120,7 @@ public class WizardTower : Tower
         {
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
-            Economics.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++;
         }
     }

@@ -4,21 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Economics : MonoBehaviour
+public class EconomyManager : MonoBehaviour
 {
     [SerializeField] int currentGold;
     public int CurrentGold { get => currentGold; }
     [SerializeField]List<Tower> EconomicBuilding = new List<Tower>();
     float timer = 0;
     #region Singleton 
-    private static Economics _instance;
-    public static Economics Instance
+    private static EconomyManager _instance;
+    public static EconomyManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<Economics>();
+                _instance = GameObject.FindObjectOfType<EconomyManager>();
             }
 
             return _instance;
@@ -45,7 +45,7 @@ public class Economics : MonoBehaviour
         currentGold += amount;
     }
 
-    public void OnEconomicStructureChange(Tower structure)
+    public void OnEconomyManagertructureChange(Tower structure)
     {
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
         if (EconomicBuilding.Contains(structure))
