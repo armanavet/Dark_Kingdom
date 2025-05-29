@@ -28,8 +28,8 @@ public static class DirectionHelper
     public static DirectionChange ChangeDirectionTo(this Direction current, Direction next)
     {
         if (current == next) return DirectionChange.None;
-        else if (current + 1 == next) return DirectionChange.TurnRight;
-        else if (current - 1 == next) return DirectionChange.TurnLeft;
+        else if (current + 1 == next || current - 3 == next) return DirectionChange.TurnRight;
+        else if (current - 1 == next || current + 3 == next) return DirectionChange.TurnLeft;
         else return DirectionChange.TurnAround;
     }
 
@@ -55,7 +55,7 @@ public enum Direction
 public enum DirectionChange
 {
     None,
-    TurnAround,
     TurnRight,
-    TurnLeft
+    TurnLeft,
+    TurnAround
 }

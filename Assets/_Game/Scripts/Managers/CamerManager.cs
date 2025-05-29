@@ -4,7 +4,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
-public class CamerController : MonoBehaviour
+public class CamerManager : MonoBehaviour
 {
     Camera mainCamera;
     float fieldOfView;

@@ -18,10 +18,10 @@ public class Tile : MonoBehaviour
     public bool isEmpty = true; 
     bool isPath => distanceToDestination != int.MaxValue;
 
-    public Tile GrowPathNorth() => GrowPathTo(north, Direction.South);
-    public Tile GrowPathSouth() => GrowPathTo(south, Direction.North);
-    public Tile GrowPathEast() => GrowPathTo(east, Direction.West);
-    public Tile GrowPathWest() => GrowPathTo(west, Direction.East);
+    public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
+    public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
+    public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
+    public Tile GrowPathWest(bool ignoreTowers) => GrowPathTo(west, Direction.East, ignoreTowers);
 
     private void Start()
     {
@@ -81,9 +81,10 @@ public class Tile : MonoBehaviour
         nextOnPath = null;
     }
 
-    Tile GrowPathTo(Tile nextTile, Direction direction)
+    Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
-        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath || !nextTile.isEmpty) return null;
+        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath) return null;
+        if (!ignoreTowers && !nextTile.isEmpty) return null;
 
         arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);
