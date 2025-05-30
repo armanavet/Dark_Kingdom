@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour, IDebuffable
         Destroy(gameObject);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         
     }

@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Debuff")]
 public class Debuff : ScriptableObject
 {
-    public int Duration;
-    public int DurationLeft;
-    public int Damage;
+    public float Duration;
+    public float DurationLeft;
+    public float Damage;
     public float Slow;
     public DebuffType Type;
     public StackingType Stacking;
