@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] float delayBetweenSpawns;
     [SerializeField] int spawnerDestroyTime;
     [SerializeField] int spawnDistanceFromCenter;
-    [SerializeField, FloatRangeSliderAttribute(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
+    [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
     bool cantFindPath => spawnPoint.NextOnPath == null;
     List<GameObject> enemyPath = new List<GameObject>();
     Tile spawnPoint;
