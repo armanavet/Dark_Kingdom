@@ -37,6 +37,7 @@ public class DebuffManager : MonoBehaviour
     {
         var activeDebuffs = ActiveDebuffs[target];
         activeDebuffs.Remove(debuff);
+        if (debuff.Slow > 0) target.ApplySlow(0);
         if (activeDebuffs.Count == 0)
         {
             ActiveDebuffs.Remove(target);
