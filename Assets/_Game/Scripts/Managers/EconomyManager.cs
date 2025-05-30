@@ -63,8 +63,6 @@ public class EconomyManager : MonoBehaviour
             if (building == null) continue;
             ChangeGoldAmount(building.GoldGenerated);
         }
-
-       
     }
 }
 

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDebuffable
 {
     [SerializeField] Transform model;
-    [SerializeField] float speed;
+    [SerializeField] float maxSpeed;
     Tile tileFrom, tileTo;
     Vector3 positionFrom, positionTo;
     Direction direction;
@@ -13,7 +13,13 @@ public class Enemy : MonoBehaviour
     float directionAngleFrom, directionAngleTo;
     float progress, progressFactor;
     float positionOffset;
+    float currentSpeed;
     EnemyState state;
+
+    void Start()
+    {
+        currentSpeed = maxSpeed;
+    }
 
     void Update()
     {
@@ -45,7 +51,7 @@ public class Enemy : MonoBehaviour
 
     void Move()
     {
-        progress += Time.deltaTime * progressFactor * speed;
+        progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
             tileFrom = tileTo;
@@ -114,6 +120,16 @@ public class Enemy : MonoBehaviour
         model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         WaveManager.Instance.OnEnemyDeath();
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        
+    }
+
+    public void ApplySlow(float slow)
+    {
+        currentSpeed = maxSpeed * (1 - slow);
     }
 }
 
