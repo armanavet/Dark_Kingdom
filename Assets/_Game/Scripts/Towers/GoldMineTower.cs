@@ -7,7 +7,7 @@ public class GoldMineTower : Tower
     [SerializeField] List<int> GoldGenerationList;
     private void Start()
     {
-        Economics.Instance.OnEconomicStructureChange(this);
+        EconomyManager.Instance.OnEconomyManagertructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
         maxHP = HP[levelOFTower];
         currentHP = maxHP;
@@ -18,7 +18,7 @@ public class GoldMineTower : Tower
         {
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
-            Economics.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             GoldGenerated = GoldGenerationList[levelOFTower];
             levelOFTower++;
             

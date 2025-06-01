@@ -7,7 +7,7 @@ public class MainTower : Tower
     [SerializeField] List<int> GoldGenerationList;
     private void Start()
     {
-        Economics.Instance.OnEconomicStructureChange(this);
+        EconomyManager.Instance.OnEconomyManagertructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
         maxHP = HP[levelOFTower];
         currentHP = maxHP;
@@ -18,7 +18,7 @@ public class MainTower : Tower
         {
             float hpPercent=currentHP/maxHP;
             UpgradePrice = UpgradePrices[levelOFTower];
-            Economics.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++; 
             maxHP = HP[levelOFTower];
             currentHP = maxHP*hpPercent;

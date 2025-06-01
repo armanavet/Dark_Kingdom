@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         ChangeUiButtonVisibility();
-        GoldQuantity.text = Economics.Instance.CurrentGold.ToString();
+        GoldQuantity.text = EconomyManager.Instance.CurrentGold.ToString();
         if (Input.GetMouseButtonDown(0))
         {
             TowerPanelShowAndHide();
@@ -98,7 +98,7 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < towers.Length; i++)
         {
-            if (towers[i].TowerPrice > Economics.Instance.CurrentGold)
+            if (towers[i].TowerPrice > EconomyManager.Instance.CurrentGold)
             {
                 towerButtons[i].interactable = false;
             }

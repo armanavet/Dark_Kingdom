@@ -1,71 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDebuffable
 {
     [SerializeField] Transform model;
-    [SerializeField] float speed;
-    [SerializeField] Tile startingTile;
-    OriginalTileState tileFrom, tileTo;
+    [SerializeField] float maxSpeed;
+    Tile tileFrom, tileTo;
     Vector3 positionFrom, positionTo;
     Direction direction;
     DirectionChange directionChange;
     float directionAngleFrom, directionAngleTo;
     float progress, progressFactor;
     float positionOffset;
+    float currentSpeed;
     EnemyState state;
-    Queue<OriginalTileState> path;
-    [SerializeField] float damage;
-    float help;
-    public float Maxhelp;
-    bool gameStarted = false;
 
-    private void Start()
+    void Start()
     {
-       help=Maxhelp;
+        currentSpeed = maxSpeed;
     }
 
     void Update()
     {
-        if (help <= 0)
-        {
-            Destroy(gameObject);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            float offset = 0;
-            OnSpawn(startingTile, offset);
-            transform.position = startingTile.transform.position;
-            gameStarted = true;
-        }
-        if (gameStarted)
-        {
-            state = tileFrom.tile.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-            if (state == EnemyState.Moving) Move();
-            else if (state == EnemyState.Attacking) Attack(damage);
-        }
+        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Moving) Move();
+        else if (state == EnemyState.Attacking) Attack();
     }
 
-    public void OnSpawn(Tile tile, float positionOffset)
+    public void OnSpawn(Tile startingTile, float positionOffset)
     {
+        tileFrom = startingTile;
+        tileTo = tileFrom.NextOnPath;
+        this.positionOffset = positionOffset;
+        PrepareInitialMove();
         progress = 0;
-        path = FindPath();
-        if (path.Count > 0)
-        {
-            tileFrom = new OriginalTileState(tile);
-            tileTo = path.Dequeue();
-            this.positionOffset = positionOffset;
-            PrepareInitialMove();
-        }
-        //help = model.transform.localScale.x * 100;
-        //Maxhelp = help;
     }
 
     void PrepareInitialMove()
     {
-        positionFrom = tileFrom.position;
+        positionFrom = tileFrom.transform.position;
         positionTo = tileFrom.exitPoint;
         direction = tileFrom.pathDirection;
         directionChange = DirectionChange.None;
@@ -75,25 +49,13 @@ public abstract class Enemy : MonoBehaviour
         progressFactor = 2;
     }
 
-    Queue<OriginalTileState> FindPath()
-    {
-        path = new Queue<OriginalTileState>();
-        Tile tile = startingTile.NextOnPath;
-        while (tile != null)
-        {
-            path.Enqueue(new OriginalTileState(tile));
-            tile = tile.NextOnPath;
-        }
-        return path;
-    }
-
     void Move()
     {
-        progress += Time.deltaTime * progressFactor * speed;
-        if (progress > 1 && path.Count > 0)
+        progress += Time.deltaTime * progressFactor * currentSpeed;
+        if (progress > 1)
         {
             tileFrom = tileTo;
-            tileTo = path.Dequeue();
+            tileTo = tileFrom.NextOnPath;
             progress = 0;
             PrepareNextMove();
         }
@@ -153,30 +115,22 @@ public abstract class Enemy : MonoBehaviour
         transform.localPosition = positionFrom;
     }
 
-    struct OriginalTileState
+    void Attack()
     {
-        public Tile tile;
-        public Vector3 position;
-        public Vector3 exitPoint;
-        public Direction pathDirection;
+        model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        WaveManager.Instance.OnEnemyDeath();
+        Destroy(gameObject);
+    }
 
-        public OriginalTileState(Tile tile)
-        {
-            this.tile = tile;
-            position = tile.transform.localPosition;
-            exitPoint = tile.exitPoint;
-            pathDirection = tile.pathDirection;
-        }
-    }
-    public void ApplyDamage(float damage)
+    public void TakeDamage(float damage)
     {
-        help -= damage;
+        
     }
-    void Attack(float damage)
+
+    public void ApplySlow(float slow)
     {
-        GetComponent<Tower>().ApplyDamage(damage);
+        currentSpeed = maxSpeed * (1 - slow);
     }
-         
 }
 
 public enum EnemyState

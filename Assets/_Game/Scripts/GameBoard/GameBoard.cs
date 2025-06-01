@@ -31,7 +31,7 @@ public class GameBoard : MonoBehaviour
     private void Start()
     {
         Initialize();
-        BuildPathToDestination();
+        BuildPathToDestination(ignoreTowers: false);
     }
 
     void Initialize()
@@ -52,7 +52,7 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    public void BuildPathToDestination()
+    public void BuildPathToDestination(bool ignoreTowers)
     {
         foreach (Tile tile in tiles)
         {
@@ -69,10 +69,10 @@ public class GameBoard : MonoBehaviour
             Tile tile = SearchFrontier.Dequeue();
             if (tile == null) continue;
 
-            SearchFrontier.Enqueue(tile.GrowPathNorth());
-            SearchFrontier.Enqueue(tile.GrowPathSouth());
-            SearchFrontier.Enqueue(tile.GrowPathEast());
-            SearchFrontier.Enqueue(tile.GrowPathWest());
+            SearchFrontier.Enqueue(tile.GrowPathNorth(ignoreTowers));
+            SearchFrontier.Enqueue(tile.GrowPathSouth(ignoreTowers));
+            SearchFrontier.Enqueue(tile.GrowPathEast(ignoreTowers));
+            SearchFrontier.Enqueue(tile.GrowPathWest(ignoreTowers));
         }
     }
 }

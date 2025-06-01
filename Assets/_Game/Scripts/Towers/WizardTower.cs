@@ -118,7 +118,7 @@ public class WizardTower : Tower
         {
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
-            Economics.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++;
         }
     }
