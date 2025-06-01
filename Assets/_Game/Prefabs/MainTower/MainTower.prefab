@@ -302,15 +302,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SellPrices: 000000000000000000000000
   UpgradePrices: 64000000f4010000e8030000
+  Hp:
+  - 500
+  - 700
+  - 1000
+  - 1300
+  Damage: 000000000000000000000000
   maxLevel: 2
-  tile: {fileID: 0}
   levelOFTower: 0
   TowerPrice: 0
-  SellPrice: 0
-  UpgradePrice: 0
   TowerName: MainTower
   Type: 0
   TowerPanel: {fileID: 5734724905035884570}
+  tile: {fileID: 0}
+  SellPrice: 0
+  UpgradePrice: 0
   GoldGenerated: 0
   GoldGenerationList: 01000000020000000300000004000000
 --- !u!65 &660188337889200183

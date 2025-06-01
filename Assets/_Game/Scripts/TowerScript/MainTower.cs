@@ -9,14 +9,19 @@ public class MainTower : Tower
     {
         Economics.Instance.OnEconomicStructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
+        maxHP = HP[levelOFTower];
+        currentHP = maxHP;
     }
     public override void Upgrade()
     {
         if (levelOFTower < UpgradePrices.Count)
         {
+            float hpPercent=currentHP/maxHP;
             UpgradePrice = UpgradePrices[levelOFTower];
             Economics.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++; 
+            maxHP = HP[levelOFTower];
+            currentHP = maxHP*hpPercent;
             GoldGenerated = GoldGenerationList[levelOFTower];
         }
     }

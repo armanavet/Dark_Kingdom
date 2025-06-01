@@ -9,6 +9,8 @@ public class GoldMineTower : Tower
     {
         Economics.Instance.OnEconomicStructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
+        maxHP = HP[levelOFTower];
+        currentHP = maxHP;
     }
     public override void Upgrade()
     {

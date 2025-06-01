@@ -824,6 +824,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SellPrices: 78000000820000008c00000096000000
   UpgradePrices: a0000000aa000000b4000000
+  HP:
+  - 150
+  - 170
+  - 200
+  - 220
+  Damage: 1e00000028000000320000003c000000
+  maxHP: 0
+  currentHP: 0
   maxLevel: 2
   levelOFTower: 0
   TowerPrice: 150
@@ -834,11 +842,11 @@ MonoBehaviour:
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  TarggetPoint: 8.66
+  TarggetPoint: 10
   EnemyMask:
     serializedVersion: 2
     m_Bits: 128
-  shel: {fileID: 3035664297334619729, guid: 84e4f48d75a6a124882c5fdcfc0d7e69, type: 3}
+  shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
   mortal: {fileID: 5693344739112795576}
   shellBlastRadius: 1
   shellDamage: 30

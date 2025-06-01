@@ -30,7 +30,7 @@ public class TowerPanel : MonoBehaviour
     public void ButtonTowerSell()
     {
         Economics.Instance.ChangeGoldAmount(tower.SellPrice);
-        tower.Destroy();
+        tower.Sell();
     }
     public void ButtonTowerUpgrade()
     {

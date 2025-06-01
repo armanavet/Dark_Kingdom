@@ -24,12 +24,9 @@ public class WizardTower : Tower
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
+        maxHP = HP[levelOFTower];
+        currentHP=maxHP;
     }
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -66,6 +63,7 @@ public class WizardTower : Tower
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
+        Debug.Log("s="+s+ " CosTheta="+ CosTheta+" dir="+dir+ " sinTheta="+ sinTheta +" r=" +r);
 
         //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);

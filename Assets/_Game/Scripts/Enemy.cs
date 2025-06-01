@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] Transform model;
     [SerializeField] float speed;
@@ -16,16 +17,22 @@ public class Enemy : MonoBehaviour
     float positionOffset;
     EnemyState state;
     Queue<OriginalTileState> path;
-
+    [SerializeField] float damage;
+    float help;
+    public float Maxhelp;
     bool gameStarted = false;
 
     private void Start()
     {
-        
+       help=Maxhelp;
     }
 
     void Update()
     {
+        if (help <= 0)
+        {
+            Destroy(gameObject);
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             float offset = 0;
@@ -37,7 +44,7 @@ public class Enemy : MonoBehaviour
         {
             state = tileFrom.tile.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
             if (state == EnemyState.Moving) Move();
-            else if (state == EnemyState.Attacking) Attack();
+            else if (state == EnemyState.Attacking) Attack(damage);
         }
     }
 
@@ -52,6 +59,8 @@ public class Enemy : MonoBehaviour
             this.positionOffset = positionOffset;
             PrepareInitialMove();
         }
+        //help = model.transform.localScale.x * 100;
+        //Maxhelp = help;
     }
 
     void PrepareInitialMove()
@@ -144,11 +153,6 @@ public class Enemy : MonoBehaviour
         transform.localPosition = positionFrom;
     }
 
-    void Attack()
-    {
-        model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-    }
-
     struct OriginalTileState
     {
         public Tile tile;
@@ -164,6 +168,15 @@ public class Enemy : MonoBehaviour
             pathDirection = tile.pathDirection;
         }
     }
+    public void ApplyDamage(float damage)
+    {
+        help -= damage;
+    }
+    void Attack(float damage)
+    {
+        GetComponent<Tower>().ApplyDamage(damage);
+    }
+         
 }
 
 public enum EnemyState

@@ -15,10 +15,12 @@ public class ArcherTower : Tower
     [SerializeField] float arrowSpeed;
     [SerializeField] float attackSpeed;
     float attackCooldown;
-
+    [SerializeField] float damage = 30;
     private void Start()
     {
         attackCooldown=1/attackSpeed;
+        maxHP = HP[levelOFTower];
+        currentHP = maxHP;
     }
     // Update is called once per frame
     void Update()
@@ -39,7 +41,7 @@ public class ArcherTower : Tower
         Turret.LookAt(point);
         float d = Vector3.Distance(Turret.position, point);
         Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(point - Turret.position));
-        arrow.Initialize(arrowSpeed, Turret.position, point);
+        arrow.Initialize(arrowSpeed, Turret.position, point,damage);
         
     }
     bool AcquireTarget()
