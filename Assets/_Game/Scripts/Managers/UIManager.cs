@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 //using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
@@ -15,10 +16,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform towersUIPanel;
     [SerializeField] Tower[] towers;
     [SerializeField] TextMeshProUGUI GoldQuantity;
-    [SerializeField] LayerMask layerMask;
+    [SerializeField] LayerMask towerLayerMask;
+    [SerializeField] LayerMask tileLayerMask;
+    [SerializeField] GameObject tilePanelPrefab;
+    [SerializeField] float yCoord;
     float PanelYInitial;
     Button[] towerButtons;
-    GameObject previewsHit;
+    GameObject previewsHit,tilePanel;
     Transform activePanel;
     bool isPanelActive = false;
     #region Singleton 
@@ -46,6 +50,8 @@ public class UIManager : MonoBehaviour
     {
         PanelYInitial = towersUIPanel.transform.position.y;
         towerButtons = towersUIPanel.GetComponentsInChildren<Button>();
+        tilePanel = Instantiate(tilePanelPrefab);
+        tilePanel.SetActive(false);
     }
     private void Update()
     {
@@ -53,7 +59,15 @@ public class UIManager : MonoBehaviour
         GoldQuantity.text = EconomyManager.Instance.CurrentGold.ToString();
         if (Input.GetMouseButtonDown(0))
         {
-            TowerPanelShowAndHide();
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            else
+            {
+                TowerPanelShowAndHide();
+                TilePanel();
+            }
         }
         if (isPanelActive && activePanel != null)
         {
@@ -67,7 +81,7 @@ public class UIManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, towerLayerMask))
         {
             GameObject towerPanel = hit.transform.GetComponent<Tower>().TowerPanel;
             Transform panel = towerPanel.transform.Find("SellUI");
@@ -92,6 +106,34 @@ public class UIManager : MonoBehaviour
                 previewsHit.gameObject.SetActive(false);
                 isPanelActive = false;
             }
+        }
+    }
+
+    void TilePanel()
+    {
+        if (tilePanel == null)
+        {
+            return;
+        }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, tileLayerMask))
+        {
+            Tile tile_ = hit.transform.GetComponent<Tile>();
+            bool selectedTile = tile_.MakeObstructedYellow(GameBoard.Instance.tiles, GameBoard.Instance.Width, GameBoard.Instance.Length);
+            if(selectedTile == true)
+            {
+                tilePanel.SetActive(true);
+                tilePanel.GetComponent<TileBuy>().tile = tile_;
+                tilePanel.transform.position = new Vector3(tile_.transform.position.x, tile_.transform.position.y+yCoord, tile_.transform.position.z);
+            }
+            else
+            {
+                tilePanel.SetActive(false);
+            }
+        }
+        else
+        {
+            tilePanel.SetActive(false);
         }
     }
     void ChangeUiButtonVisibility()
@@ -126,4 +168,6 @@ public class UIManager : MonoBehaviour
             button.interactable = true;
         }
     }
+
+
 }

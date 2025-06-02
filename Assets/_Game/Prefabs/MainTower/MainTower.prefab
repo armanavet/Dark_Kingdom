@@ -303,14 +303,14 @@ MonoBehaviour:
   SellPrices: 000000000000000000000000
   UpgradePrices: 64000000f4010000e8030000
   maxLevel: 2
-  tile: {fileID: 0}
   levelOFTower: 0
   TowerPrice: 0
-  SellPrice: 0
-  UpgradePrice: 0
   TowerName: MainTower
   Type: 0
   TowerPanel: {fileID: 5734724905035884570}
+  tile: {fileID: 0}
+  SellPrice: 0
+  UpgradePrice: 0
   GoldGenerated: 0
   GoldGenerationList: 01000000020000000300000004000000
 --- !u!65 &660188337889200183
@@ -332,8 +332,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 1.12, z: 3}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 3, y: 1.9390671, z: 3}
+  m_Center: {x: 0, y: 0.9095335, z: 0}
 --- !u!1 &5021882948944103273
 GameObject:
   m_ObjectHideFlags: 0
