@@ -6,7 +6,7 @@ public class GameBoard : MonoBehaviour
 {
     [HideInInspector] public int Length;
     [HideInInspector] public int Width;
-    public List<Tile> tiles;
+    public List<Tile>  tiles = new List<Tile>();
     Queue<Tile> SearchFrontier = new Queue<Tile>();
     #region Singleton 
     private static GameBoard _instance;
@@ -27,7 +27,6 @@ public class GameBoard : MonoBehaviour
         _instance = this;
     }
     #endregion
-
     private void Start()
     {
         Initialize();
