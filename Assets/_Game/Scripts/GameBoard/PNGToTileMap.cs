@@ -45,7 +45,6 @@ public class PNGToTileMap : MonoBehaviour
         }
 
     }
-
     TileType GetTileType(Color color)
     {
         if (isColorClose(color, Color.white)) return TileType.Neutral;
