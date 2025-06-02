@@ -27,27 +27,6 @@ public class GameBoard : MonoBehaviour
         _instance = this;
     }
     #endregion
-
-
-    #region Singleton 
-    private static GameBoard _instance;
-    public static GameBoard Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = GameObject.FindObjectOfType<GameBoard>();
-            }
-
-            return _instance;
-        }
-    }
-    private void Awake()
-    {
-        _instance = this;
-    }
-    #endregion
     private void Start()
     {
         Initialize();
