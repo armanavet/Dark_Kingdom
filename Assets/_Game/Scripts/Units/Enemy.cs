@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour, IDebuffable
         if (progress > 1)
         {
             tileFrom = tileTo;
-            tileTo = tileFrom.NextOnPath;
+            tileTo = tileFrom.NextOnPath ?? tileFrom;
             progress = 0;
             PrepareNextMove();
         }
@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour, IDebuffable
         Destroy(gameObject);
     }
 
-    public void TakeDamage(float damage)
+    public void ApplyDamage(float damage)
     {
         
     }

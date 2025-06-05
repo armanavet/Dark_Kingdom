@@ -46,7 +46,7 @@ public class DebuffManager : MonoBehaviour
 
     void HandleDebuff(IDebuffable target, Debuff debuff)
     {
-        if (debuff.Damage > 0) target.TakeDamage(debuff.Damage);
+        if (debuff.Damage > 0) target.ApplyDamage(debuff.Damage);
         if (debuff.Slow > 0) target.ApplySlow(debuff.Slow);
     }
 

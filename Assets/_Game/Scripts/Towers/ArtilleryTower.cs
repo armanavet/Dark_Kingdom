@@ -19,18 +19,23 @@ public class ArtilleryTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
-    private void Awake()
+
+    void Awake()
     {
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
     }
+
     void Start()
     {
-
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        shellDamage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
-    // Update is called once per frame
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
@@ -43,6 +48,7 @@ public class ArtilleryTower : Tower
             launchProgress = 0;
         }
     }
+
     void Launch(TargetPoint target)
     {
         if (target == null)
@@ -66,6 +72,7 @@ public class ArtilleryTower : Tower
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
+        Debug.Log("s=" + s + " CosTheta=" + CosTheta + " dir=" + dir + " sinTheta=" + sinTheta + " r=" + r);
 
         //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);
@@ -116,12 +123,16 @@ public class ArtilleryTower : Tower
     }
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
+            CurrentLevel++;
+            shellDamage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
+            currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
 }
