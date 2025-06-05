@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EconomyManager : MonoBehaviour
+public class EconomyManager : MonoBehaviour, ISaveable
 {
     [SerializeField] int currentGold;
-    public int CurrentGold { get => currentGold; }
-    [SerializeField]List<Tower> EconomicBuilding = new List<Tower>();
+    [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
     float timer = 0;
+    public int CurrentGold { get => currentGold; }
+
     #region Singleton 
     private static EconomyManager _instance;
     public static EconomyManager Instance
@@ -30,7 +31,12 @@ public class EconomyManager : MonoBehaviour
     }
     #endregion
 
-    private void Update()
+    void Start()
+    {
+        SaveManager.RegisterSaveable(this);
+    }
+
+    void Update()
     {
         timer += Time.deltaTime;
         if(timer >= 1)
@@ -45,24 +51,42 @@ public class EconomyManager : MonoBehaviour
         currentGold += amount;
     }
 
-    public void OnEconomyManagertructureChange(Tower structure)
+    public void OnEconomicStructureChange(Tower structure)
     {
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
-        if (EconomicBuilding.Contains(structure))
+        if (EconomicBuildings.Contains(structure))
         {
-            EconomicBuilding.Remove(structure);
+            EconomicBuildings.Remove(structure);
             return;
         }
-        EconomicBuilding.Add(structure);
+        EconomicBuildings.Add(structure);
     }
 
     void GenerateGold()
     {
-        foreach (var building in EconomicBuilding)
+        foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;
             ChangeGoldAmount(building.GoldGenerated);
         }
+    }
+
+    public string GetUniqueSaveID()
+    {
+        return nameof(EconomyManager);
+    }
+
+    public ISaveData SaveState()
+    {
+        GeneralData saveData = new GeneralData();
+        saveData.CurrentGold = currentGold;
+        return saveData;
+    }
+
+    public void LoadState(ISaveData data)
+    {
+        GeneralData saveData = data as GeneralData;
+        currentGold = saveData.CurrentGold;
     }
 }
 

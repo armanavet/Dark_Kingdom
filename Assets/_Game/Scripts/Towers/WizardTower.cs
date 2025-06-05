@@ -18,16 +18,24 @@ public class WizardTower : Tower
     [SerializeField, Range(0.5f, 5f)]
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
-    float shellDamage = 30;
+    float shellDamage;
+
     private void Awake()
     {
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        maxHP = HP[levelOFTower];
-        currentHP=maxHP;
     }
-    // Update is called once per frame
+
+    void Start()
+    {
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        shellDamage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        currentHP = currentHP == 0 ? maxHP : currentHP;
+    }
+
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
@@ -114,12 +122,16 @@ public class WizardTower : Tower
     }
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
+            CurrentLevel++;
+            shellDamage = Damage[CurrentLevel];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
+            currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
 }

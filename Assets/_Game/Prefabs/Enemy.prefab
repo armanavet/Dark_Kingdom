@@ -151,4 +151,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 3400160282683954535}
-  speed: 3
+  maxSpeed: 3

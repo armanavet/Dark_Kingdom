@@ -5,24 +5,31 @@ using UnityEngine;
 public class MainTower : Tower
 {
     [SerializeField] List<int> GoldGenerationList;
+    float damage;
+
     private void Start()
     {
-        EconomyManager.Instance.OnEconomyManagertructureChange(this);
-        GoldGenerated = GoldGenerationList[levelOFTower];
-        maxHP = HP[levelOFTower];
-        currentHP = maxHP;
+        EconomyManager.Instance.OnEconomicStructureChange(this);
+        GoldGenerated = GoldGenerationList[CurrentLevel];
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        damage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        currentHP = currentHP == 0 ? maxHP : currentHP;
     }
+
     public override void Upgrade()
     {
-        if (levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < UpgradePrices.Count)
         {
-            float hpPercent=currentHP/maxHP;
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++; 
-            maxHP = HP[levelOFTower];
-            currentHP = maxHP*hpPercent;
-            GoldGenerated = GoldGenerationList[levelOFTower];
+            CurrentLevel++; 
+            damage = Damage[CurrentLevel];
+            GoldGenerated = GoldGenerationList[CurrentLevel];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
+            currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
 }

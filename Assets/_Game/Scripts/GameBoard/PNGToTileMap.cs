@@ -21,7 +21,7 @@ public class PNGToTileMap : MonoBehaviour
         script.Width = Width;
         Debug.Log(Width + " " + Height);
         Vector2 offset = new Vector2((Width - 1) * 0.5f, (Height - 1) * 0.5f);
-        script.tiles = new List<Tile>();
+        script.Tiles = new List<Tile>();
 
         for (int y = 0; y < Height; y++)
         {
@@ -39,7 +39,7 @@ public class PNGToTileMap : MonoBehaviour
                 {
                     tile.SetType(TileType);
                     tile.SetCoordinates(x,y);
-                    script.tiles.Add(tile);
+                    script.Tiles.Add(tile);
                 }
             }
         }
