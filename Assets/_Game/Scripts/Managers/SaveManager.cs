@@ -44,6 +44,30 @@ public static class SaveManager
         SaveMetaData();
     }
 
+    public static void Load()
+    {
+        if (!File.Exists(filePath)) return;
+
+        try
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            {
+                saveData = formatter.Deserialize(fs) as SaveData;
+                foreach (var saveable in objectsToSave)
+                {
+                    string id = saveable.GetUniqueSaveID();
+                    saveable.LoadState(saveData.Get(id));
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log("Something went wrong while loading data\n" + ex.Message);
+            return;
+        }
+    }
+
     public static void SaveMetaData()
     {
         string metaFileName = "save" + saveSlot + "_meta" + fileExtension;
@@ -53,8 +77,9 @@ public static class SaveManager
         {
             Directory.CreateDirectory(folderPath);
         }
-        
-        SaveMetaData metaData = new SaveMetaData();
+        GeneralData economyData = (GeneralData)saveData.Get(nameof(EconomyManager));
+        GeneralData stateData = (GeneralData)saveData.Get(nameof(StateManager));
+        SaveMetaData metaData = new SaveMetaData(69420, economyData.CurrentGold, stateData.CurrentWave);
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
         {
@@ -82,30 +107,6 @@ public static class SaveManager
         {
             Debug.Log("Something went wrong while loading meta data\n" + ex.Message);
             return null;
-        }
-    }
-
-    public static void Load()
-    {
-        if (!File.Exists(filePath)) return;
-
-        try
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
-            {
-                saveData = formatter.Deserialize(fs) as SaveData;
-                foreach (var saveable in objectsToSave)
-                {
-                    string id = saveable.GetUniqueSaveID();
-                    saveable.LoadState(saveData.Get(id));
-                }
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.Log("Something went wrong while loading data\n" + ex.Message);
-            return;
         }
     }
 
