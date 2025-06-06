@@ -89,7 +89,7 @@ public static class SaveManager
 
     public static SaveMetaData LoadMetaData(int slot)
     {
-        string metaFileName = "save" + saveSlot + "_meta" + fileExtension;
+        string metaFileName = "save" + slot + "_meta" + fileExtension;
         string metaFilePath = Path.Combine(folderPath, metaFileName);
 
         if (!File.Exists(metaFilePath)) return null;
@@ -97,7 +97,7 @@ public static class SaveManager
         try
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
+            using (FileStream fs = new FileStream(metaFilePath, FileMode.Open))
             {
                 SaveMetaData metaData = formatter.Deserialize(fs) as SaveMetaData;
                 return metaData;

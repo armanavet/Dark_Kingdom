@@ -36,8 +36,8 @@ public class StateManager : MonoBehaviour, ISaveable
 
     void Start()
     {
-        ChangeGameStateTo(GameState.Passive);
         SaveManager.RegisterSaveable(this);
+        ChangeGameStateTo(GameState.Passive);
     }
 
     void Update()

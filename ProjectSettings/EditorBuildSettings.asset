@@ -11,7 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Game/Scenes/MainMenu.unity
     guid: 742d6c904ebae414dbae1045c3e15dda
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Game/Scenes/Test.unity
     guid: 625ed79f32e6f9c4abf49a70288c81dc
+  - enabled: 1
+    path: Assets/_Game/Scenes/AutoSave.unity
+    guid: 252ae6d9aad001442850c565829cbe46
   m_configObjects: {}

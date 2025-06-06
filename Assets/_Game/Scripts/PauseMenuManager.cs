@@ -16,12 +16,8 @@ public class PauseMenuManager : MonoBehaviour
         {
             a_BTPause();
         }
-
         // else => continue all actions
     }
-
-    
-    
     public void a_BTPause()
     {
         isActive = !isActive;
