@@ -335,9 +335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -740,27 +738,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonGetPrefabToPlace
-        m_Mode: 2
+      - m_Target: {fileID: 2618082910725223345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: PurchaseTower
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 3006865380794792360, guid: c7f059cc2358f454ea30a425e58833b8,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonStartPreview
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1908542791116142971, guid: f16482fe03adc134e9b571ccdeecdffc,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -800,9 +784,9 @@ RectTransform:
   - {fileID: 8551733846349637950}
   m_Father: {fileID: 752332410707656347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 40, y: -50}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3308020010118555429
@@ -1335,9 +1319,9 @@ RectTransform:
   - {fileID: 1697606448197068496}
   m_Father: {fileID: 752332410707656347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 280, y: -50}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8231166014983151449
@@ -1957,28 +1941,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonGetPrefabToPlace
-        m_Mode: 2
+      - m_Target: {fileID: 2618082910725223345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: PurchaseTower
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 7738979744097704159, guid: d72a165e224f05647b13024d5f403bbc,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonStartPreview
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 7738979744097704159, guid: d11f7d4efe4d5984aa23ca8291048021,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2104,28 +2074,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonGetPrefabToPlace
-        m_Mode: 2
+      - m_Target: {fileID: 2618082910725223345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: PurchaseTower
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 1212775143613245743, guid: 68aa444f007ae1d409d8bd7a28e9ce93,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonStartPreview
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 956857994170318449, guid: eccd2dffe16d73841a3d40de0027a69a,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2164,9 +2120,9 @@ RectTransform:
   - {fileID: 862146452291200332}
   m_Father: {fileID: 752332410707656347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 120, y: -50}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4407138578763157420
@@ -2548,7 +2504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &817621939335464764
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2835,28 +2791,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonGetPrefabToPlace
-        m_Mode: 2
+      - m_Target: {fileID: 2618082910725223345}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: PurchaseTower
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 8319324873643679177, guid: 40e1bc8d91e55c9469a39ccf7dfcd164,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TowerPlacement, Assembly-CSharp
-        m_MethodName: ButtonStartPreview
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 7967348486130354987, guid: 244d1a78af7a58947a6179708ba07679,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3188,17 +3130,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cd13bb5fee21f4bb61c64bd59579fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PanelYHidden: 0
-  towersUIPanel: {fileID: 0}
-  towers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  GoldQuantity: {fileID: 0}
-  layerMask:
+  goldText: {fileID: 7764494914903806360}
+  timerText: {fileID: 564486227127952598}
+  waveText: {fileID: 3034490369652466456}
+  activeStatePanel: {fileID: 7171002447050928202}
+  passiveStatePanel: {fileID: 8805507867628869970}
+  towerPurchasePanel: {fileID: 8488089013099715766}
+  tilePanelPrefab: {fileID: 1745485638072608998, guid: 91c54272be580ba46b54f41bfac51c53,
+    type: 3}
+  tilePanelYOffset: 0
+  towerPurchasePanelYHidden: 50
+  towerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
+  tileMask:
+    serializedVersion: 2
+    m_Bits: 8
+  GameTimer: 0
 --- !u!1 &8805507867628869970
 GameObject:
   m_ObjectHideFlags: 0
@@ -3216,7 +3164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8060040381656600747
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3310,9 +3258,9 @@ RectTransform:
   - {fileID: 6719460625339283117}
   m_Father: {fileID: 752332410707656347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 200, y: -50}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8243090662029568447

@@ -140,12 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66893a703b55c6e4b8fd09792a4685c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &356297678 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7171002447050928202, guid: 3150c0840b68b544083e0be377392f09,
-    type: 3}
-  m_PrefabInstance: {fileID: 1898575047}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &698751832
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 002f108919e402e40ad2d27aae6b7c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerParent: {fileID: 698751833}
 --- !u!1001 &1043977074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -322,13 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGold: 10000
-  EconomicBuilding: []
---- !u!1 &1343905206 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8805507867628869970, guid: 3150c0840b68b544083e0be377392f09,
-    type: 3}
-  m_PrefabInstance: {fileID: 1898575047}
-  m_PrefabAsset: {fileID: 0}
+  EconomicBuildings: []
 --- !u!1 &1359515148
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,10 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362641f41f73b6441bd17bbc1c896c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaveText: {fileID: 0}
-  TimerText: {fileID: 0}
-  ActiveStatePanel: {fileID: 0}
-  PassiveStatePanel: {fileID: 0}
   TimeUntilNextWave: []
   State: 1
 --- !u!4 &1359515150
@@ -675,10 +658,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362641f41f73b6441bd17bbc1c896c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaveText: {fileID: 1898575048}
-  TimerText: {fileID: 1898575050}
-  ActiveStatePanel: {fileID: 356297678}
-  PassiveStatePanel: {fileID: 1343905206}
   TimeUntilNextWave:
   - 15
   - 5
@@ -769,6 +748,12 @@ PrefabInstance:
       propertyPath: towersUIPanel
       value: 
       objectReference: {fileID: 1363598670}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: tilePanelPrefab
+      value: 
+      objectReference: {fileID: 1745485638072608998, guid: 91c54272be580ba46b54f41bfac51c53,
+        type: 3}
     - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: towers.Array.data[0]
@@ -1133,30 +1118,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3150c0840b68b544083e0be377392f09, type: 3}
---- !u!114 &1898575048 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3034490369652466456, guid: 3150c0840b68b544083e0be377392f09,
-    type: 3}
-  m_PrefabInstance: {fileID: 1898575047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1898575050 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 564486227127952598, guid: 3150c0840b68b544083e0be377392f09,
-    type: 3}
-  m_PrefabInstance: {fileID: 1898575047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1901314560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,7 +1193,7 @@ MonoBehaviour:
       Count: 2
   spawnerPrefab: {fileID: 5852631492922821840, guid: 441490a6b761fcf49ab35787d599b728,
     type: 3}
-  enemyPathPrefab: {fileID: 3284128579783507601, guid: 71c97c657ac89604c8b85ed19f322e4c,
+  enemyPathPrefab: {fileID: 579270571906992353, guid: 71c97c657ac89604c8b85ed19f322e4c,
     type: 3}
   delayBetweenSpawns: 1
   spawnerDestroyTime: 2
@@ -1269,7 +1230,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30

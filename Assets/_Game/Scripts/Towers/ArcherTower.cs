@@ -15,12 +15,18 @@ public class ArcherTower : Tower
     [SerializeField] float arrowSpeed;
     [SerializeField] float attackSpeed;
     float attackCooldown;
+    float damage;
 
     private void Start()
     {
-        attackCooldown=1/attackSpeed;
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        damage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        currentHP = currentHP == 0 ? maxHP : currentHP;
+        attackCooldown = 1 / attackSpeed;
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (attackCooldown <= 0)
@@ -39,7 +45,7 @@ public class ArcherTower : Tower
         Turret.LookAt(point);
         float d = Vector3.Distance(Turret.position, point);
         Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(point - Turret.position));
-        arrow.Initialize(arrowSpeed, Turret.position, point);
+        arrow.Initialize(arrowSpeed, Turret.position, point,damage);
         
     }
     bool AcquireTarget()
@@ -73,6 +79,7 @@ public class ArcherTower : Tower
         target = null;
         return false;
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -84,14 +91,19 @@ public class ArcherTower : Tower
             Gizmos.DrawLine(transform.position, target.transform.position);
         }
     }
+
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
+            CurrentLevel++;
+            damage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
+            currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
 }

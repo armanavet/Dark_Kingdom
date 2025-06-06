@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : MonoBehaviour, ISaveable
 {
     [SerializeField] Units units;
     [SerializeField] Wave[] waves;
@@ -41,6 +41,7 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         units.OrganizeByType();
+        SaveManager.RegisterSaveable(this);
     }
 
     public void SpawnWave(int wave)
@@ -58,7 +59,7 @@ public class WaveManager : MonoBehaviour
         List<Tile> potentialPoints = new List<Tile>();
         int variance = (int)distanceVariance.RandomValueInRange;
 
-        foreach (var tile in GameBoard.Instance.tiles)
+        foreach (var tile in GameBoard.Instance.Tiles)
         {
             if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
             {
@@ -80,6 +81,11 @@ public class WaveManager : MonoBehaviour
                 GameObject enemy = Instantiate(prefab, spawnPoint.transform.position, spawnPoint.pathDirection.GetRotation());
                 enemy.GetComponent<Enemy>().OnSpawn(spawnPoint, 0f);
                 enemyCount++;
+                foreach (var path in enemyPath)
+                {
+                    Destroy(path);
+                }
+                enemyPath.Clear();
                 yield return new WaitForSeconds(delayBetweenSpawns);
             }
         }
@@ -109,6 +115,24 @@ public class WaveManager : MonoBehaviour
             enemyPath.Add(path);
             tile = tile.NextOnPath;
         }
+    }
+
+    public string GetUniqueSaveID()
+    {
+        return nameof(WaveManager);
+    }
+
+    public ISaveData SaveState()
+    {
+        GeneralData saveData = new GeneralData();
+        saveData.EnemySpawnTile = spawnPoint.Index;
+        return saveData;
+    }
+
+    public void LoadState(ISaveData data)
+    {
+        GeneralData saveData = data as GeneralData;
+        spawnPoint = GameBoard.Instance.Tiles[saveData.EnemySpawnTile];
     }
 }
 

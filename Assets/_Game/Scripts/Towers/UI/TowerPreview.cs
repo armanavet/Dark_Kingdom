@@ -9,6 +9,7 @@ public class TowerPreview : MonoBehaviour
     [SerializeField] LayerMask layerMask;
     [HideInInspector] public bool canPlace = false;
     [HideInInspector] public Tile tile;
+    public TowerType Type;
 
     private void Start()
     {
