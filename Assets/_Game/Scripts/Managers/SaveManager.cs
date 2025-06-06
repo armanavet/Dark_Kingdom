@@ -14,6 +14,7 @@ public static class SaveManager
     static string folderPath = Application.persistentDataPath + "/Saves";
     static string fileExtension = ".save";
     static string fileName => "save" + saveSlot + fileExtension;
+
     static string filePath => Path.Combine(folderPath, fileName);
     public static void SetSlot(int slot) => saveSlot = slot;
 
@@ -40,18 +41,47 @@ public static class SaveManager
         {
             formatter.Serialize(fs, saveData);
         }
+        SaveMetaData();
     }
 
     public static void SaveMetaData()
     {
-        string metaFileName = "save" + saveSlot + "_meta" + ".json";
+        string metaFileName = "save" + saveSlot + "_meta" + fileExtension;
         string metaFilePath = Path.Combine(folderPath, metaFileName);
 
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+        
         SaveMetaData metaData = new SaveMetaData();
+        BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
         {
-            //json serialize
-            //write to file
+            formatter.Serialize(fs, metaData);
+        }
+    }
+
+    public static SaveMetaData LoadMetaData(int slot)
+    {
+        string metaFileName = "save" + saveSlot + "_meta" + fileExtension;
+        string metaFilePath = Path.Combine(folderPath, metaFileName);
+
+        if (!File.Exists(metaFilePath)) return null;
+
+        try
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
+            {
+                SaveMetaData metaData = formatter.Deserialize(fs) as SaveMetaData;
+                return metaData;
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log("Something went wrong while loading meta data\n" + ex.Message);
+            return null;
         }
     }
 
@@ -72,8 +102,9 @@ public static class SaveManager
                 }
             }
         }
-        catch
+        catch (System.Exception ex)
         {
+            Debug.Log("Something went wrong while loading data\n" + ex.Message);
             return;
         }
     }
