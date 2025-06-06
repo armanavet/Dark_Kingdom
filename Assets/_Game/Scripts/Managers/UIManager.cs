@@ -19,7 +19,6 @@ public class UIManager : MonoBehaviour
     GameObject tilePanel, activePanel, previousHit;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
-    UIAction currentAction;
     float TowerPurchasePanelYInitial;
     bool isPanelActive = false;
     [HideInInspector] public float GameTimer;
@@ -45,7 +44,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    private void Start()
+    void Start()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
@@ -54,7 +53,7 @@ public class UIManager : MonoBehaviour
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
     }
-    private void Update()
+    void Update()
     {
         ChangeUiButtonVisibility();
         goldText.text = EconomyManager.Instance.CurrentGold.ToString();
@@ -63,49 +62,32 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            switch (currentAction)
-            {
-                case UIAction.PurchaseTower:
-                    PlaceTower();
-                    break;
-                default:
-                    if (EventSystem.current.IsPointerOverGameObject()) break; //Check if the click was performed on a UI element
-                    ShowTowerPanel(true);
-                    ShowTilePanel(true);
-                    break;
-            }
+            if (EventSystem.current.IsPointerOverGameObject()) return; //Check if the click was performed on a UI element
 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (towerPreview != null) PlaceTower(true);
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
+            else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
+            else
+            {
+                ShowTowerPanel(false);
+                ShowTilePanel(false);
+            }
         }
 
-        else if (Input.GetMouseButton(1))
+        else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
-            switch (currentAction)
-            {
-                case UIAction.PurchaseTile:
-                    ShowTilePanel(false);
-                    break;
-                case UIAction.PurchaseTower:
-                    if (towerPreview != null)
-                    {
-                        Destroy(towerPreview.gameObject);
-                        ShowTowerPurchasePanel(true);
-                    }
-                    break;
-                case UIAction.UpgradeTower:
-                    ShowTowerPanel(false);
-                    break;
-                default:
-                    break;
-            }
-            currentAction = UIAction.None;
+            ShowTowerPanel(false);
+            ShowTilePanel(false);
+            PlaceTower(false);
         }
+
         if (isPanelActive && activePanel != null)
         {
             Vector3 direction = activePanel.transform.position - Camera.main.transform.position;
             Quaternion rotation = Quaternion.LookRotation(direction * 0.5f * Time.deltaTime);
             activePanel.transform.rotation = rotation;
         }
-
     }
     void ChangeUiButtonVisibility()
     {
@@ -122,63 +104,51 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void ShowTowerPanel(bool value)
+    void ShowTowerPanel(bool value, Transform tower = null)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, towerMask))
+        if (value == true)
         {
-            GameObject towerPanel = hit.transform.GetComponent<Tower>().TowerPanel;
-            Transform panel = towerPanel.transform.Find("SellUI");
-            if (towerPanel == null)
-            {
-                return;
-            }
-            if (previousHit == null)
-            {
-                previousHit = towerPanel;
-            }
-            previousHit.SetActive(false);
+            GameObject towerPanel = tower.GetComponent<Tower>().TowerPanel;
+            if (towerPanel == null) return;
+
+            activePanel?.SetActive(false);
+            activePanel = towerPanel;
             towerPanel.SetActive(true);
-            activePanel = panel.gameObject;
+
             isPanelActive = true;
-            previousHit = towerPanel;
         }
         else
         {
-            if (previousHit != null)
-            {
-                previousHit.gameObject.SetActive(false);
-                isPanelActive = false;
-            }
+            activePanel?.SetActive(false);
+            isPanelActive = false;
         }
     }
 
-    void ShowTilePanel(bool value)
+    void ShowTilePanel(bool value, Transform selectedTile = null)
     {
         if (tilePanel == null) return;
 
         if (value == true)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, tileMask))
+            Tile tile = selectedTile.GetComponent<Tile>();
+            if (tile.CanBePurchased())
             {
-                Tile tile_ = hit.transform.GetComponent<Tile>();
-                bool selectedTile = tile_.CanBePurchased();
-                if (selectedTile == true)
-                {
-                    tilePanel.SetActive(true);
-                    tilePanel.GetComponent<TileBuy>().tile = tile_;
-                    tilePanel.transform.position = new Vector3(tile_.transform.position.x, tile_.transform.position.y + tilePanelYOffset, tile_.transform.position.z);
-                    return;
-                }
+                activePanel?.SetActive(false);
+                activePanel = tilePanel;
+                isPanelActive = true;
+
+                tilePanel.SetActive(true);
+                tilePanel.GetComponent<TileBuy>().tile = tile;
+                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
+                return;
             }
         }
 
-        tilePanel.SetActive(false);
+        activePanel?.SetActive(false);
+        isPanelActive = false;
     }
 
-    public void ShowTowerPurchasePanel(bool value)
+    void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
         {
@@ -204,25 +174,34 @@ public class UIManager : MonoBehaviour
     {
         if (towerPreview == null)
         {
-            currentAction = UIAction.PurchaseTower;
             ShowTowerPurchasePanel(false);
             TowerPreview prefab = TowerManager.Instance.GetPreviewByType((TowerType)type);
             towerPreview = Instantiate(prefab);
         }
     }
 
-    void PlaceTower()
+    void PlaceTower(bool value)
     {
-        if (towerPreview == null) return;
-
-        if (towerPreview.canPlace)
+        if (value == true)
         {
-            Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
-            Destroy(towerPreview.gameObject);
+            if (towerPreview == null) return;
 
-            EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
-            ShowTowerPurchasePanel(true);
-            currentAction = UIAction.None;
+            if (towerPreview.canPlace)
+            {
+                Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
+                EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
+
+                Destroy(towerPreview.gameObject);
+                ShowTowerPurchasePanel(true);
+            }
+        }
+        else
+        {
+            if (towerPreview != null)
+            {
+                Destroy(towerPreview.gameObject);
+                ShowTowerPurchasePanel(true);
+            }
         }
     }
 
@@ -240,12 +219,4 @@ public class UIManager : MonoBehaviour
             waveText.text = "Wave: " + currentWave.ToString();
         }
     }
-}
-
-public enum UIAction
-{
-    None,
-    PurchaseTile,
-    PurchaseTower,
-    UpgradeTower
 }
