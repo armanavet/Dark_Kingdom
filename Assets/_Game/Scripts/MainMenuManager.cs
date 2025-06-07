@@ -13,7 +13,6 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        
         for (int i = 1; i <= savePanelInfos.Count; i++)
         {
             SaveMetaData data = SaveManager.LoadMetaData(i);
@@ -35,10 +34,6 @@ public class MainMenuManager : MonoBehaviour
     public void z_BTExitButton()
     {
         Application.Quit();
-    }
-    public void test()
-    {
-
     }
     //F => savemetadata { }
     //TODO Options button

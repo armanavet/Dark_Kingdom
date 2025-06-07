@@ -7,26 +7,22 @@ using TMPro;
 public class SavePanelInfo : MonoBehaviour
 {
     [SerializeField] TMP_Text PlayTimeText,GoldAmountText,CurrentWavetext,NewGameText;
+    [SerializeField] GameObject SavedDataPanel;
     
     public void test(SaveMetaData saveMetaData)
     {
         if (saveMetaData == null)
         {
-            PlayTimeText.gameObject.SetActive(false);
-            GoldAmountText.gameObject.SetActive(false);
-            CurrentWavetext.gameObject.SetActive(false);
+            SavedDataPanel.SetActive(false);
             NewGameText.gameObject.SetActive(true);
-
         }
         else
         {
-            PlayTimeText.gameObject.SetActive(true);
-            GoldAmountText.gameObject.SetActive(true);
-            CurrentWavetext.gameObject.SetActive(true);
+            SavedDataPanel.SetActive(true);
             NewGameText.gameObject.SetActive(false);
-            PlayTimeText.text = saveMetaData.PlayTime.ToString();
-            GoldAmountText.text = saveMetaData.CurrentGold.ToString();
-            CurrentWavetext.text = saveMetaData.CurrentWave.ToString();
+            PlayTimeText.text = "Play Time = " + saveMetaData.PlayTime.ToString();
+            GoldAmountText.text = "Current Gold = " + saveMetaData.CurrentGold.ToString();
+            CurrentWavetext.text = "Current Wave = " + saveMetaData.CurrentWave.ToString();
 
         }
         
