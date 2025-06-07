@@ -732,6 +732,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: tilePanelYOffset
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3724890625231103466, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_AnchorMax.y

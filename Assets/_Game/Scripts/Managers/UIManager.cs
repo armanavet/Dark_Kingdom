@@ -13,9 +13,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab;
-    [SerializeField] float tilePanelYOffset;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
+    [SerializeField] float tilePanelYOffset;
     GameObject tilePanel, activePanel, previousHit;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform); 
             else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
             else
             {
@@ -74,20 +74,18 @@ public class UIManager : MonoBehaviour
                 ShowTilePanel(false);
             }
         }
-
         else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
             ShowTowerPanel(false);
             ShowTilePanel(false);
             PlaceTower(false);
         }
-
         if (isPanelActive && activePanel != null)
         {
-            Vector3 direction = activePanel.transform.position - Camera.main.transform.position;
-            Quaternion rotation = Quaternion.LookRotation(direction * 0.5f * Time.deltaTime);
+            Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward);
             activePanel.transform.rotation = rotation;
         }
+
     }
     void ChangeUiButtonVisibility()
     {
@@ -110,16 +108,16 @@ public class UIManager : MonoBehaviour
         {
             GameObject towerPanel = tower.GetComponent<Tower>().TowerPanel;
             if (towerPanel == null) return;
-
-            activePanel?.SetActive(false);
+            if(activePanel != null) activePanel.SetActive(false);
+            
             activePanel = towerPanel;
             towerPanel.SetActive(true);
-
+            
             isPanelActive = true;
         }
         else
         {
-            activePanel?.SetActive(false);
+            if (activePanel != null) activePanel.SetActive(false);
             isPanelActive = false;
         }
     }
@@ -133,18 +131,18 @@ public class UIManager : MonoBehaviour
             Tile tile = selectedTile.GetComponent<Tile>();
             if (tile.CanBePurchased())
             {
-                activePanel?.SetActive(false);
+                if (activePanel != null) activePanel.SetActive(false);
                 activePanel = tilePanel;
                 isPanelActive = true;
 
                 tilePanel.SetActive(true);
                 tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
+                tilePanel.transform.position = tile.transform.position + new Vector3(0,tilePanelYOffset,0);
                 return;
             }
         }
 
-        activePanel?.SetActive(false);
+        if (activePanel != null)  activePanel.SetActive(false);
         isPanelActive = false;
     }
 

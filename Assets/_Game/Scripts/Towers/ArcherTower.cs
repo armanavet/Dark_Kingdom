@@ -8,7 +8,7 @@ public class ArcherTower : Tower
     float TarggetPoint = 2f;
     public LayerMask EnemyMask;
     [SerializeField, Range(1, 100f)]
-    float DamagePerSecund = 60f;
+    //float DamagePerSecund = 60f;
     TargetPoint target;
     [SerializeField] Transform Turret;
     [SerializeField] Arrow Arrow;

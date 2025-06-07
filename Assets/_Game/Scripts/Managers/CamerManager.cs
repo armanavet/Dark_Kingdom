@@ -60,8 +60,6 @@ public class CamerManager : MonoBehaviour
     void CameraZoom()
     {
         Vector3 zoom = transform.position + transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
-        //transform.position = 
-        //Vector3 zoom = transform.position - new Vector3(0,Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime,0);
         if (zoom.y > minZoom && zoom.y < maxZoom)
         {
             transform.position = zoom;
@@ -69,21 +67,9 @@ public class CamerManager : MonoBehaviour
             fieldOfView = Mathf.Clamp(fieldOfView, minFieldOfView, maxFieldOfView);
             mainCamera.fieldOfView = fieldOfView;
         }
-        //zoom.y = Mathf.Clamp(zoom.y, minZoom, maxZoom);
 
     }
-    //void CameraZoom()
-    //{
-    //    float scroll = Input.GetAxis("Mouse ScrollWheel");
-    //    if (Mathf.Approximately(scroll, 0f)) return;
-    //    Vector3 zoomTarget = transform.position + transform.forward * 100f;
-    //    Vector3 direction = (transform.position - zoomTarget).normalized;
-    //    float distance = Vector3.Distance(transform.position, zoomTarget);
-    //    float targetDistance = Mathf.Clamp(distance - scroll * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
-
-    //    transform.position = zoomTarget + direction * targetDistance;
-
-    //}
+   
     void CameraRotate()
     {
         if (Input.GetMouseButtonDown(1))
