@@ -163,6 +163,8 @@ public class Tile : MonoBehaviour
 
     public bool CanBePurchased()
     {
+        if (Type != TileType.Obstructed) return false;
+
         foreach (var neighbor in neighbors)
         {
             if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
