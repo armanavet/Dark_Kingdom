@@ -8,12 +8,31 @@ public class DebuffManager : MonoBehaviour
     Dictionary<IDebuffable, List<Debuff>> ActiveDebuffs = new Dictionary<IDebuffable, List<Debuff>>();
     float timer;
 
+    #region Singleton 
+    private static DebuffManager _instance;
+    public static DebuffManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = GameObject.FindObjectOfType<DebuffManager>();
+            }
+
+            return _instance;
+        }
+    }
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
     void Update()
     {
         Tick();
     }
 
-    void ApplyDebuff(IDebuffable target, Debuff debuff)
+    public void ApplyDebuff(IDebuffable target, Debuff debuff)
     {
         if (ActiveDebuffs.ContainsKey(target))
         {
@@ -31,6 +50,7 @@ public class DebuffManager : MonoBehaviour
         }
 
         ActiveDebuffs.Add(target, new List<Debuff>() { debuff });
+        HandleDebuff(target,debuff);
     }
 
     void RemoveDebuff(IDebuffable target, Debuff debuff)
@@ -79,12 +99,15 @@ public class DebuffManager : MonoBehaviour
 
 public enum DebuffType
 {
+    Burn,
+    Poison,
     Slow,
-    Fire,
-    Ice
+    Freeze
 }
 
 public enum StackingType
 {
     ResetDuration
 }
+
+

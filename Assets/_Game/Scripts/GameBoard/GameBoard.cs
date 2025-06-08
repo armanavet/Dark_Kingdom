@@ -31,9 +31,9 @@ public class GameBoard : MonoBehaviour, ISaveable
 
     private void Start()
     {
+        SaveManager.RegisterSaveable(this);
         Initialize();
         BuildPathToDestination(ignoreTowers: false);
-        SaveManager.RegisterSaveable(this);
     }
 
     void Initialize()

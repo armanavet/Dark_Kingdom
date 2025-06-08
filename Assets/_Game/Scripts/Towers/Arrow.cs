@@ -8,39 +8,25 @@ public class Arrow : MonoBehaviour
     float progress = 0;
     float damage;
     Vector3 startPoint;
-    Vector3 endPoint;
+    Enemy target;
     public LayerMask EnemyMask;
     private void Update()
     {
-        transform.position = Vector3.Lerp(startPoint, endPoint, progress);
+        transform.position = Vector3.Lerp(startPoint, target.transform.position, progress);
         progress += speed * Time.deltaTime;
         if (progress >= 1)
         {
-            Explode();
+            //target.ApplyDamage(damage);
+            Destroy(gameObject);
+
         }
     }
-    public void Initialize(float speed,Vector3 position,Vector3 target, float damage)
+    public void Initialize(float speed,Vector3 startPoint,Enemy target, float damage)
     {
         this.speed = speed;
-        startPoint = position;
-        endPoint = target;
+        this.startPoint = startPoint;
+        this.target = target;
         this.damage= damage;
     }
-    void Explode()
-    {
-        Collider[] targets = Physics.OverlapSphere(transform.position, EnemyMask);
-        if (targets.Length > 0)
-        {
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i].GetComponent<TargetPoint>().Enemy.ApplyDamage(damage);
-            }
-        }
-        Destroy(gameObject);
-    }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.layer!=6)
-    //     Destroy(gameObject);
-    //}
+    
 }

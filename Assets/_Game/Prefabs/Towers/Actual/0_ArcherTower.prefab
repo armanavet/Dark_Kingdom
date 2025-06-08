@@ -463,6 +463,11 @@ MonoBehaviour:
   - 160
   Damage: 050000000a0000000f00000014000000
   maxHP: 0
+  debuffs:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af, type: 2}
+  - {fileID: 11400000, guid: 0f0e445aa23debe499efc28a144ed159, type: 2}
+  - {fileID: 11400000, guid: cefa31c790da25645b9f0b74883b1ecc, type: 2}
   MaxLevel: 3
   CurrentLevel: 0
   PurchasePrice: 50
