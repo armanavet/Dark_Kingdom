@@ -11,13 +11,16 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected List<float> HP;
     [SerializeField] protected List<int> Damage;
     [SerializeField] protected float maxHP;
+    [SerializeField] protected Debuff[] debuffs;
     protected float currentHP;
+    protected List<Debuff> currentDebuffs = new List<Debuff>(); 
     public int MaxLevel = 3;
     public int CurrentLevel = 0;
     public int PurchasePrice;
     public string TowerName;
     public TowerType Type;
     public GameObject TowerPanel;
+   
 
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;

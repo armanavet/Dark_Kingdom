@@ -110,8 +110,8 @@ public class UIManager : MonoBehaviour
         {
             GameObject towerPanel = tower.GetComponent<Tower>().TowerPanel;
             if (towerPanel == null) return;
-
-            activePanel?.SetActive(false);
+            if(activePanel != null)
+                activePanel.SetActive(false);
             activePanel = towerPanel;
             towerPanel.SetActive(true);
 
@@ -119,7 +119,8 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            activePanel?.SetActive(false);
+            if (activePanel != null)
+                activePanel.SetActive(false);
             isPanelActive = false;
         }
     }
@@ -133,7 +134,8 @@ public class UIManager : MonoBehaviour
             Tile tile = selectedTile.GetComponent<Tile>();
             if (tile.CanBePurchased())
             {
-                activePanel?.SetActive(false);
+                if (activePanel != null)
+                    activePanel.SetActive(false);
                 activePanel = tilePanel;
                 isPanelActive = true;
 
@@ -143,8 +145,8 @@ public class UIManager : MonoBehaviour
                 return;
             }
         }
-
-        activePanel?.SetActive(false);
+        if (activePanel != null)
+            activePanel.SetActive(false);
         isPanelActive = false;
     }
 

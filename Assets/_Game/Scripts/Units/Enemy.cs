@@ -118,10 +118,13 @@ public class Enemy : MonoBehaviour, IDebuffable
     void Attack()
     {
         model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-        WaveManager.Instance.OnEnemyDeath();
-        Destroy(gameObject);
+        Destroy(gameObject,5);
     }
+    void OnDestroy()
+    {
+        WaveManager.Instance.OnEnemyDeath();
 
+    }
     public void ApplyDamage(float damage)
     {
         

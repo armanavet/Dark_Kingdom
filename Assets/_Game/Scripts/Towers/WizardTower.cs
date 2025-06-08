@@ -10,7 +10,7 @@ public class WizardTower : Tower
     public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Shel shel;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
@@ -33,6 +33,8 @@ public class WizardTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        if (debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -48,7 +50,7 @@ public class WizardTower : Tower
             launchProgress = 0;
         }
     }
-    void Launch(TargetPoint target)
+    void Launch(Enemy target)
     {
         if (target == null)
         {
@@ -63,31 +65,18 @@ public class WizardTower : Tower
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
-
+        
         float s = launchSpeed;
         float s2 = s * s;
         float r = s2 * s2 - g * (g * x * x + 2f * y * s2);
+        if (r < 0) r = 0;
         float tanTheta = (s2 + Mathf.Sqrt(r)) / (g * x);
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
-        Debug.Log("s="+s+ " CosTheta="+ CosTheta+" dir="+dir+ " sinTheta="+ sinTheta +" r=" +r);
 
-        //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
-        //Vector3 prev = launchPoint;
-        //Vector3 next = launchPoint;
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    float t = i / 10f;
-        //    float dx = s * CosTheta * t;
-        //    float dy = s * sinTheta * t - 0.5f * g * t * t;
-        //    next=launchPoint+new Vector3(dir.x*dx,dy,dir.y*dx);
-        //    Debug.DrawLine(prev,next,Color.blue);
-        //    prev=next;
-        //}
-        //Debug.DrawLine(launchPoint, TargetPoint,Color.yellow);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
     }
     bool AcquireTarget()
     {
@@ -109,7 +98,7 @@ public class WizardTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;
@@ -125,13 +114,28 @@ public class WizardTower : Tower
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            CurrentLevel++;
-            shellDamage = Damage[CurrentLevel];
             UpgradePrice = UpgradePrices[CurrentLevel];
+            CurrentLevel++;
+            Debuff currentDebuff = debuffs[CurrentLevel];
+            if (currentDebuff != null)
+            {
+                foreach (var debuff in currentDebuffs)
+                {
+                    if (debuff.Type == currentDebuff.Type)
+                    {
+                        currentDebuffs.Remove(debuff);
+                        break;
+                    }
+                }
+                currentDebuffs.Add(currentDebuff);
+            }
+            shellDamage = Damage[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
         }
     }
+
+
 }

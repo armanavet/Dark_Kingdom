@@ -5,15 +5,10 @@ using UnityEngine;
 public class Shel : MonoBehaviour
 {
     Vector3 launchPoint, targetPoint, launchVelocity;
-    float age, blastRadius, Damage;
-    // Start is called before the first frame update
+    float age, blastRadius, damage;
+    List<Debuff> debuffs;
     public LayerMask EnemyMask;
-    void Start()
-    {
-      
-    }
-
-    // Update is called once per frame
+    
     void Update()
     { 
         age += Time.deltaTime;
@@ -22,31 +17,39 @@ public class Shel : MonoBehaviour
         transform.position = p;
         Vector3 d = launchVelocity;
         d.y -= 9.81f * age;
-        //transform.localRotation = Quaternion.LookRotation(d);
         if (transform.position.y < 0f)
         {
             Explode();
+
         }
 
     }
-    public void Initialize(Vector3 launchpoint, Vector3 targetpoint, Vector3 launchvelocity, float blastradius, float damage)
+    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs)
     {
-        launchPoint = launchpoint;
-        targetPoint = targetpoint;
-        launchVelocity = launchvelocity;
-        blastRadius = blastradius;
-        Damage = damage;
+        this.launchPoint = launchPoint;
+        this.targetPoint = targetPoint;
+        this.launchVelocity = launchVelocity;
+        this.blastRadius = blastRadius;
+        this.damage = damage;
+        this.debuffs = debuffs;
     }
     void Explode()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
+
         if (targets.Length > 0)
         {
-            for (int i = 0; i < targets.Length; i++)
+            foreach(var target in targets)
             {
-                targets[i].GetComponent<TargetPoint>().Enemy.ApplyDamage(Damage);
+                Enemy enemy = target.GetComponent<Enemy>();
+                enemy.ApplyDamage(damage);
+                foreach (var debuff in debuffs)
+                {
+                    DebuffManager.Instance.ApplyDebuff(enemy, debuff);
+                }
             }
         }
         Destroy(gameObject);
     }
+
 }

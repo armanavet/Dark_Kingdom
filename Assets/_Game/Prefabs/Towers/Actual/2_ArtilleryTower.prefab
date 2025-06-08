@@ -237,6 +237,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &4596242895010686213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1677207564359557967}
+  m_Layer: 6
+  m_Name: Mortar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1677207564359557967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4596242895010686213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.193, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2512111831403486953}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5378732875733874235
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,6 +803,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1677207564359557967}
   - {fileID: 5693344739112795576}
   - {fileID: 7723504538975823901}
   m_Father: {fileID: 0}
@@ -831,6 +863,7 @@ MonoBehaviour:
   - 220
   Damage: 1e00000028000000320000003c000000
   maxHP: 0
+  debuffs: []
   MaxLevel: 3
   CurrentLevel: 0
   PurchasePrice: 150
@@ -851,7 +884,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
-  mortal: {fileID: 5693344739112795576}
+  mortal: {fileID: 1677207564359557967}
   shellBlastRadius: 1
   shellDamage: 30
 --- !u!1001 &5226545691095292499

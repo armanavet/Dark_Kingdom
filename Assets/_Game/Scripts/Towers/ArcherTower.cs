@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class ArcherTower : Tower
     public LayerMask EnemyMask;
     [SerializeField, Range(1, 100f)]
     float DamagePerSecund = 60f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Transform Turret;
     [SerializeField] Arrow Arrow;
     [SerializeField] float arrowSpeed;
@@ -17,14 +18,18 @@ public class ArcherTower : Tower
     float attackCooldown;
     float damage;
 
+
     private void Start()
     {
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        if (debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
+
     }
 
     void Update()
@@ -38,15 +43,17 @@ public class ArcherTower : Tower
             attackCooldown = 1 / attackSpeed;
         }
         attackCooldown -= Time.deltaTime;
+
     }
     void Shoot()
     {
         Vector3 point = target.transform.position;
         Turret.LookAt(point);
-        float d = Vector3.Distance(Turret.position, point);
+        float distance = Vector3.Distance(Turret.position, point);
+        float arriveTime = distance / arrowSpeed;
         Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(point - Turret.position));
-        arrow.Initialize(arrowSpeed, Turret.position, point,damage);
-        
+        arrow.Initialize(arrowSpeed, Turret.position, target,damage);
+        StartCoroutine(HitTarget(arriveTime));
     }
     bool AcquireTarget()
     {
@@ -68,7 +75,7 @@ public class ArcherTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;
@@ -97,13 +104,38 @@ public class ArcherTower : Tower
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            UpgradePrice = UpgradePrices[CurrentLevel];
             CurrentLevel++;
+            Debuff currentDebuff = debuffs[CurrentLevel];
+            if (currentDebuff != null)
+            {
+                foreach (var debuff in currentDebuffs)
+                {
+                    if(debuff.Type == currentDebuff.Type)
+                    {
+                        currentDebuffs.Remove(debuff);
+                        break;
+                    }
+                }
+                currentDebuffs.Add(currentDebuff);
+            }
             damage = Damage[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
-            UpgradePrice = UpgradePrices[CurrentLevel];
             float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
         }
+    }
+
+    IEnumerator HitTarget(float arriveTime)
+    {
+        yield return new WaitForSeconds(arriveTime);
+        target.ApplyDamage(damage);
+        foreach (var debuff in currentDebuffs)
+        {
+
+            DebuffManager.Instance.ApplyDebuff(target, debuff);
+        }
+        
     }
 }

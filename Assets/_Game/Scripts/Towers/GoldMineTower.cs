@@ -21,10 +21,10 @@ public class GoldMineTower : Tower
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            UpgradePrice = UpgradePrices[CurrentLevel];
             CurrentLevel++;
             GoldGenerated = GoldGenerationList[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
-            UpgradePrice = UpgradePrices[CurrentLevel];
             float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
