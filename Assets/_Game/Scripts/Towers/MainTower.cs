@@ -23,10 +23,10 @@ public class MainTower : Tower
         if (CurrentLevel < UpgradePrices.Count)
         {
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            UpgradePrice = UpgradePrices[CurrentLevel];
             CurrentLevel++; 
             damage = Damage[CurrentLevel];
             GoldGenerated = GoldGenerationList[CurrentLevel];
-            UpgradePrice = UpgradePrices[CurrentLevel];
             float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];

@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bef55065d7d8c4d96cbd5c08fcc80e, type: 3}
   m_Name: BurnLevelTwo
   m_EditorClassIdentifier: 
-  Duration: 0
-  DurationLeft: 0
-  Damage: 0
+  Duration: 5
+  Damage: 5
   Slow: 0
   Type: 0
   Stacking: 0

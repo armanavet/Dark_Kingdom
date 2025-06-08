@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class DebuffManager : MonoBehaviour
 {
-    Dictionary<IDebuffable, List<Debuff>> ActiveDebuffs = new Dictionary<IDebuffable, List<Debuff>>();
+    Dictionary<IDebuffable, Dictionary<Debuff, float>> ActiveDebuffs = new ();
     float timer;
-
+    
     #region Singleton 
     private static DebuffManager _instance;
     public static DebuffManager Instance
@@ -37,19 +38,24 @@ public class DebuffManager : MonoBehaviour
         if (ActiveDebuffs.ContainsKey(target))
         {
             var activeDebuffs = ActiveDebuffs[target];
-            foreach (var activeDebuff in activeDebuffs)
+            List<Debuff> debuffs = activeDebuffs.Keys.ToList();
+            for (int i = 0; i < debuffs.Count; i++)
             {
-                if (activeDebuff.Type == debuff.Type)
+                if (debuffs[i].Type == debuff.Type)
                 {
-                    activeDebuff.DurationLeft = activeDebuff.Duration;
+                    activeDebuffs.Remove(debuffs[i]);
+                    activeDebuffs.Add(debuff, debuff.Duration);
                     return;
                 }
             }
-            activeDebuffs.Add(debuff);
+            
+            activeDebuffs.Add(debuff,debuff.Duration);
             return;
         }
 
-        ActiveDebuffs.Add(target, new List<Debuff>() { debuff });
+        Dictionary<Debuff, float> newDebuff = new ();
+        newDebuff.Add(debuff, debuff.Duration);
+        ActiveDebuffs.Add(target, newDebuff);
         HandleDebuff(target,debuff);
     }
 
@@ -75,24 +81,39 @@ public class DebuffManager : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= 1f)
         {
-            foreach (var target in ActiveDebuffs.Keys)
+            List<IDebuffable> TargetsToRemove = ActiveDebuffs.Keys.ToList();
+
+            for (int i = TargetsToRemove.Count - 1; i >= 0; i--)
             {
+                IDebuffable target = TargetsToRemove[i];
                 if (target == null)
                 {
                     ActiveDebuffs.Remove(target);
                     continue;
                 }
 
-                var debuffs = ActiveDebuffs[target];
-                foreach (var debuff in debuffs)
-                {
-                    HandleDebuff(target, debuff);
-                    debuff.DurationLeft--;
-                    if (debuff.DurationLeft <= 0)
-                        RemoveDebuff(target, debuff);
-                }
+                IncrementDuration(target);
             }
+
             timer = 0;
+        }
+    }
+    void IncrementDuration(IDebuffable target)
+    {
+        Dictionary<Debuff, float> debuffDurations = ActiveDebuffs[target];
+        List<Debuff> debuffs = debuffDurations.Keys.ToList();
+
+        for (int i = debuffs.Count - 1; i >= 0; i--)
+        {
+            Debuff debuff = debuffs[i];
+            HandleDebuff(target, debuff);
+
+            debuffDurations[debuff]--;
+
+            if (debuffDurations[debuff] <= 0)
+            {
+                RemoveDebuff(target, debuff);
+            }
         }
     }
 }
@@ -101,8 +122,7 @@ public enum DebuffType
 {
     Burn,
     Poison,
-    Slow,
-    Freeze
+    Slow
 }
 
 public enum StackingType

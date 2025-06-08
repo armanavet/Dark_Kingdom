@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Poison
   m_EditorClassIdentifier: 
   Duration: 0
-  DurationLeft: 0
   Damage: 0
   Slow: 0
-  Type: 0
+  Type: 1
   Stacking: 0
