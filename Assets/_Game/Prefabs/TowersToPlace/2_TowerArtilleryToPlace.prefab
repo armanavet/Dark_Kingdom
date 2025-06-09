@@ -751,7 +751,7 @@ GameObject:
   - component: {fileID: 2512111831403486953}
   - component: {fileID: 1336978072523930404}
   - component: {fileID: 4053734959697410459}
-  - component: {fileID: 5555515663387599563}
+  - component: {fileID: 2962724630745943111}
   m_Layer: 6
   m_Name: 2_TowerArtilleryToPlace
   m_TagString: ArtilleryTower
@@ -810,7 +810,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.504205, z: 1}
   m_Center: {x: 0, y: 0.7510935, z: 0}
---- !u!114 &5555515663387599563
+--- !u!114 &2962724630745943111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -822,14 +822,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c760762337c03b42bb29066029b9f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SellPrices: 78000000820000008c00000096000000
-  UpgradePrices: a0000000aa000000b4000000
+  SellPrices: 4b00000064000000c800000090010000
+  UpgradePrices: 96000000fa00000090010000
   HP:
+  - 100
   - 150
-  - 170
   - 200
-  - 220
-  Damage: 1e00000028000000320000003c000000
+  - 250
+  Damage: 1e000000280000003200000046000000
   maxHP: 0
   currentHP: 0
   maxLevel: 2
@@ -842,12 +842,12 @@ MonoBehaviour:
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  TarggetPoint: 10
+  TarggetPoint: 4
   EnemyMask:
     serializedVersion: 2
     m_Bits: 128
   shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
-  mortal: {fileID: 5693344739112795576}
+  mortal: {fileID: 2512111831403486953}
   shellBlastRadius: 1
   shellDamage: 30
 --- !u!1001 &5226545691095292499

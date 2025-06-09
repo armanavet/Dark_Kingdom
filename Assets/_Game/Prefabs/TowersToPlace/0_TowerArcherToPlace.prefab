@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 498062216014893714}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.943, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 3578200552871301636}
   - component: {fileID: 7834484294431754817}
   - component: {fileID: 1117339861032107339}
-  - component: {fileID: 2554583891899901409}
+  - component: {fileID: 3593519278177108726}
   m_Layer: 6
   m_Name: 0_TowerArcherToPlace
   m_TagString: ArcherTower
@@ -442,7 +442,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4439036, z: 1}
   m_Center: {x: 0, y: 0.6982369, z: 0}
---- !u!114 &2554583891899901409
+--- !u!114 &3593519278177108726
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -454,36 +454,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SellPrices: 25000000570000009600000018010000
-  UpgradePrices: 4b00000096000000c8000000
+  SellPrices: 1e0000004b000000960000002c010000
+  UpgradePrices: 6400000096000000c8000000
   HP:
+  - 50
+  - 75
   - 100
-  - 120
-  - 140
-  - 160
-  Damage: 050000000a0000000f00000014000000
+  - 150
+  Damage: 0a000000140000001e00000028000000
   maxHP: 0
   currentHP: 0
   maxLevel: 2
   levelOFTower: 0
   TowerPrice: 50
-  TowerName: Archer Tower
+  TowerName: ArcherTower
   Type: 1
   TowerPanel: {fileID: 2936775719731518850}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  TarggetPoint: 2
+  TarggetPoint: 3
   EnemyMask:
     serializedVersion: 2
     m_Bits: 128
-  DamagePerSecund: 60
   Turret: {fileID: 1574947597934629292}
   Arrow: {fileID: 1242083742202517421, guid: bac3663ceb79b5c4d8a19363a2427ad3, type: 3}
-  arrowSpeed: 8
-  attackSpeed: 1
-  damage: 30
+  attackSpeed: 2
+  damage: 5
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0

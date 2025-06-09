@@ -18,19 +18,17 @@ public abstract class Tower : MonoBehaviour
     public string TowerName;
     public TowerType Type;
     public GameObject TowerPanel;
-
-    [HideInInspector] public Tile tile;
+    public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
     [HideInInspector] public int GoldGenerated = 0;
 
     public void Sell()
     {
-        Economics.Instance.OnEconomicStructureChange(this);
+        EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
-        GameBoard.Instance.BuildPathToDestination();
         SellPrice = SellPrices[levelOFTower];
-        Economics.Instance.ChangeGoldAmount(SellPrice);
+        EconomyManager.Instance.ChangeGoldAmount(SellPrice);
         Destroy(gameObject);
     }
     public void ApplyDamage(float damage)
@@ -38,6 +36,7 @@ public abstract class Tower : MonoBehaviour
         currentHP -= damage;
         if (currentHP <= 0)
         {
+            tile.isEmpty = true;
             Destroy(gameObject);
         }
     }

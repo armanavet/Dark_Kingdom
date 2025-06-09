@@ -7,15 +7,12 @@ public class ArcherTower : Tower
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
     public LayerMask EnemyMask;
-    [SerializeField, Range(1, 100f)]
-    float DamagePerSecund = 60f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Transform Turret;
     [SerializeField] Arrow Arrow;
-    [SerializeField] float arrowSpeed;
     [SerializeField] float attackSpeed;
     float attackCooldown;
-    [SerializeField] float damage = 30;
+    [SerializeField] float damage;
     private void Start()
     {
         attackCooldown=1/attackSpeed;
@@ -29,7 +26,7 @@ public class ArcherTower : Tower
         { 
             if (AcquireTarget())
             {
-                Shoot();
+                Shoot(); 
             }
             attackCooldown = 1 / attackSpeed;
         }
@@ -37,12 +34,9 @@ public class ArcherTower : Tower
     }
     void Shoot()
     {
-        Vector3 point = target.transform.position;
-        Turret.LookAt(point);
-        float d = Vector3.Distance(Turret.position, point);
-        Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(point - Turret.position));
-        arrow.Initialize(arrowSpeed, Turret.position, point,damage);
-        
+        Vector3 targetPosition = target.CurrentPosition;
+        Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(targetPosition - Turret.position));
+        arrow.Initialize(3, Turret.position,targetPosition, target,damage); 
     }
     bool AcquireTarget()
     {
@@ -64,7 +58,7 @@ public class ArcherTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponentInChildren<Enemy>();
             if (target != null)
             {
                 return true;
@@ -90,10 +84,13 @@ public class ArcherTower : Tower
     {
         if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
         {
+            float hpPercent = currentHP / maxHP;
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++;
+            maxHP = HP[levelOFTower];
+            currentHP = maxHP * hpPercent;
         }
     }
 }

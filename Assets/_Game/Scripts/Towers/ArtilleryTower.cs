@@ -6,11 +6,12 @@ public class ArtilleryTower : Tower
 {
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
+
     float TarggetRange = 2f;
     public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Shel shel;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
@@ -40,7 +41,7 @@ public class ArtilleryTower : Tower
             launchProgress = 0;
         }
     }
-    void Launch(TargetPoint target)
+    void Launch(Enemy target)
     {
         if (target == null)
         {
@@ -48,10 +49,10 @@ public class ArtilleryTower : Tower
         }
         Vector2 dir;
         Vector3 launchPoint = mortal.position;
-        Vector3 TargetPoint = target.transform.position;
-        dir.x = TargetPoint.x - launchPoint.x;
-        dir.y = TargetPoint.z - launchPoint.z;
-        TargetPoint.y = 0;
+        Vector3 Enemy = target.transform.position;
+        dir.x = Enemy.x - launchPoint.x;
+        dir.y = Enemy.z - launchPoint.z;
+        Enemy.y = 0;
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
@@ -67,7 +68,7 @@ public class ArtilleryTower : Tower
 
         //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
+        sh.Initialize(launchPoint, Enemy, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
         //Vector3 prev = launchPoint;
         //Vector3 next = launchPoint;
         //for (int i = 0; i < 10; i++)
@@ -79,7 +80,7 @@ public class ArtilleryTower : Tower
         //    Debug.DrawLine(prev,next,Color.blue);
         //    prev=next;
         //}
-        //Debug.DrawLine(launchPoint, TargetPoint,Color.yellow);
+        //Debug.DrawLine(launchPoint, Enemy,Color.yellow);
     }
     bool AcquireTarget()
     {
@@ -101,7 +102,7 @@ public class ArtilleryTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;
@@ -116,10 +117,13 @@ public class ArtilleryTower : Tower
     {
         if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
         {
+            float hpPercent = currentHP / maxHP;
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++;
+            maxHP = HP[levelOFTower];
+            currentHP = maxHP * hpPercent;
         }
     }
 }

@@ -45,7 +45,7 @@ public class EconomyManager : MonoBehaviour
         currentGold += amount;
     }
 
-    public void OnEconomyManagertructureChange(Tower structure)
+    public void OnEconomicStructureChange(Tower structure)
     {
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
         if (EconomicBuilding.Contains(structure))

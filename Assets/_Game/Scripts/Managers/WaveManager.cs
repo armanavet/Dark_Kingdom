@@ -80,6 +80,11 @@ public class WaveManager : MonoBehaviour
                 GameObject enemy = Instantiate(prefab, spawnPoint.transform.position, spawnPoint.pathDirection.GetRotation());
                 enemy.GetComponent<Enemy>().OnSpawn(spawnPoint, 0f);
                 enemyCount++;
+                foreach(var path in enemyPath)
+                {
+                  Destroy(path);
+                }
+                enemyPath.Clear();
                 yield return new WaitForSeconds(delayBetweenSpawns);
             }
         }
@@ -113,10 +118,7 @@ public class WaveManager : MonoBehaviour
 }
 
 #region Wave
-public enum UnitType
-{
-    hayvan
-}
+
 
 [System.Serializable]
 public class Unit

@@ -10,7 +10,7 @@ public class WizardTower : Tower
     public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Shel shel;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
@@ -24,9 +24,12 @@ public class WizardTower : Tower
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        maxHP = HP[levelOFTower];
-        currentHP=maxHP;
     }
+    void Start()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -40,7 +43,7 @@ public class WizardTower : Tower
             launchProgress = 0;
         }
     }
-    void Launch(TargetPoint target)
+    void Launch(Enemy target)
     {
         if (target == null)
         {
@@ -48,10 +51,10 @@ public class WizardTower : Tower
         }
         Vector2 dir;
         Vector3 launchPoint = mortal.position;
-        Vector3 TargetPoint = target.transform.position;
-        dir.x = TargetPoint.x - launchPoint.x;
-        dir.y = TargetPoint.z - launchPoint.z;
-        TargetPoint.y = 0;
+        Vector3 Enemy = target.transform.position;
+        dir.x = Enemy.x - launchPoint.x;
+        dir.y = Enemy.z - launchPoint.z;
+        Enemy.y = 0;
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
@@ -63,11 +66,10 @@ public class WizardTower : Tower
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
-        Debug.Log("s="+s+ " CosTheta="+ CosTheta+" dir="+dir+ " sinTheta="+ sinTheta +" r=" +r);
 
         //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
+        sh.Initialize(launchPoint, Enemy, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
         //Vector3 prev = launchPoint;
         //Vector3 next = launchPoint;
         //for (int i = 0; i < 10; i++)
@@ -79,7 +81,7 @@ public class WizardTower : Tower
         //    Debug.DrawLine(prev,next,Color.blue);
         //    prev=next;
         //}
-        //Debug.DrawLine(launchPoint, TargetPoint,Color.yellow);
+        //Debug.DrawLine(launchPoint, Enemy,Color.yellow);
     }
     bool AcquireTarget()
     {
@@ -101,7 +103,7 @@ public class WizardTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;
@@ -116,10 +118,13 @@ public class WizardTower : Tower
     {
         if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
         {
+            float hpPercent = currentHP / maxHP;
             SellPrice = SellPrices[levelOFTower + 1];
             UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             levelOFTower++;
+            maxHP = HP[levelOFTower];
+            currentHP = maxHP * hpPercent;
         }
     }
 }

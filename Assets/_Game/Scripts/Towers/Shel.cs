@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shel : MonoBehaviour
 {
-    Vector3 launchPoint, targetPoint, launchVelocity;
+    Vector3 launchPoint, Enemy, launchVelocity;
     float age, blastRadius, Damage;
     // Start is called before the first frame update
     public LayerMask EnemyMask;
@@ -29,10 +29,10 @@ public class Shel : MonoBehaviour
         }
 
     }
-    public void Initialize(Vector3 launchpoint, Vector3 targetpoint, Vector3 launchvelocity, float blastradius, float damage)
+    public void Initialize(Vector3 launchpoint, Vector3 Enemy, Vector3 launchvelocity, float blastradius, float damage)
     {
         launchPoint = launchpoint;
-        targetPoint = targetpoint;
+        this.Enemy = Enemy;
         launchVelocity = launchvelocity;
         blastRadius = blastradius;
         Damage = damage;
@@ -44,7 +44,7 @@ public class Shel : MonoBehaviour
         {
             for (int i = 0; i < targets.Length; i++)
             {
-                targets[i].GetComponent<TargetPoint>().Enemy.ApplyDamage(Damage);
+                targets[i].GetComponent<Enemy>().ApplyDamage(Damage);
             }
         }
         Destroy(gameObject);

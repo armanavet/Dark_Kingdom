@@ -8,9 +8,8 @@ public class TileBuy : MonoBehaviour
     
     public void ButtonBuyTile()
     {
-        Economics.Instance.ChangeGoldAmount(-tile.TilePrice);
+        EconomyManager.Instance.ChangeGoldAmount(-tile.TilePrice);
         tile.SetType(TileType.Own);
-        GameBoard.Instance.BuildPathToDestination();
         this.gameObject.SetActive(false);
     }
 }

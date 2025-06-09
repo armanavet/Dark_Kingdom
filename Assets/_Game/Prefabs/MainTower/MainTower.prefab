@@ -302,12 +302,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SellPrices: 000000000000000000000000
   UpgradePrices: 64000000f4010000e8030000
-  Hp:
+  HP:
   - 500
   - 700
   - 1000
   - 1300
   Damage: 000000000000000000000000
+  maxHP: 0
+  currentHP: 0
   maxLevel: 2
   levelOFTower: 0
   TowerPrice: 0

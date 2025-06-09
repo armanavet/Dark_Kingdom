@@ -7,7 +7,7 @@ public class GoldMineTower : Tower
     [SerializeField] List<int> GoldGenerationList;
     private void Start()
     {
-        EconomyManager.Instance.OnEconomyManagertructureChange(this);
+        EconomyManager.Instance.OnEconomicStructureChange(this);
         GoldGenerated = GoldGenerationList[levelOFTower];
         maxHP = HP[levelOFTower];
         currentHP = maxHP;

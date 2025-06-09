@@ -86,12 +86,12 @@ public class Tile : MonoBehaviour
 
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
-        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath) return null;
+        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath ) return null;
 
         if (!ignoreTowers && !nextTile.isEmpty) return null;
 
 
-        arrow.gameObject.SetActive(true);
+        //arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
         nextTile.DistanceToDestinationOriginal ??= distanceToDestination + 1;
