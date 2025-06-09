@@ -6,7 +6,6 @@ using UnityEngine;
 public class Debuff : ScriptableObject
 {
     public float Duration;
-    public float DurationLeft;
     public float Damage;
     public float Slow;
     public DebuffType Type;

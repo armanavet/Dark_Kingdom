@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,36 +8,52 @@ public class ArcherTower : Tower
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
     public LayerMask EnemyMask;
+    [SerializeField, Range(1, 100f)]
+    float DamagePerSecund = 60f;
     Enemy target;
     [SerializeField] Transform Turret;
     [SerializeField] Arrow Arrow;
+    [SerializeField] float arrowSpeed;
     [SerializeField] float attackSpeed;
     float attackCooldown;
-    [SerializeField] float damage;
+    float damage;
+
+
     private void Start()
     {
-        attackCooldown=1/attackSpeed;
-        maxHP = HP[levelOFTower];
-        currentHP = maxHP;
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        damage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        if (debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(debuffs[CurrentLevel]);
+        currentHP = currentHP == 0 ? maxHP : currentHP;
+        attackCooldown = 1 / attackSpeed;
+
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (attackCooldown <= 0)
         { 
             if (AcquireTarget())
             {
-                Shoot(); 
+                Shoot();
             }
             attackCooldown = 1 / attackSpeed;
         }
         attackCooldown -= Time.deltaTime;
+
     }
     void Shoot()
     {
-        Vector3 targetPosition = target.CurrentPosition;
-        Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(targetPosition - Turret.position));
-        arrow.Initialize(3, Turret.position,targetPosition, target,damage); 
+        Vector3 point = target.transform.position;
+        Turret.LookAt(point);
+        float distance = Vector3.Distance(Turret.position, point);
+        float arriveTime = distance / arrowSpeed;
+        Arrow arrow = Instantiate(Arrow, Turret.position, Quaternion.LookRotation(point - Turret.position));
+        arrow.Initialize(arrowSpeed, Turret.position, target,damage);
+        StartCoroutine(HitTarget(arriveTime));
     }
     bool AcquireTarget()
     {
@@ -58,7 +75,7 @@ public class ArcherTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponentInChildren<Enemy>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;
@@ -69,6 +86,7 @@ public class ArcherTower : Tower
         target = null;
         return false;
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -80,17 +98,44 @@ public class ArcherTower : Tower
             Gizmos.DrawLine(transform.position, target.transform.position);
         }
     }
+
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            float hpPercent = currentHP / maxHP;
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
-            maxHP = HP[levelOFTower];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            CurrentLevel++;
+            Debuff currentDebuff = debuffs[CurrentLevel];
+            if (currentDebuff != null)
+            {
+                foreach (var debuff in currentDebuffs)
+                {
+                    if(debuff.Type == currentDebuff.Type)
+                    {
+                        currentDebuffs.Remove(debuff);
+                        break;
+                    }
+                }
+                currentDebuffs.Add(currentDebuff);
+            }
+            damage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
+    }
+
+    IEnumerator HitTarget(float arriveTime)
+    {
+        yield return new WaitForSeconds(arriveTime);
+        target.ApplyDamage(damage);
+        foreach (var debuff in currentDebuffs)
+        {
+
+            DebuffManager.Instance.ApplyDebuff(target, debuff);
+        }
+        
     }
 }

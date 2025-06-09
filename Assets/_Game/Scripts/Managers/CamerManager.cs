@@ -11,7 +11,7 @@ public class CamerManager : MonoBehaviour
     float initialCursorPosition;
     Vector2 initialMousePosition;
     [SerializeField] float speed;
-    [SerializeField] GameBoard Map; 
+    [SerializeField] GameBoard Map;
     [SerializeField] float minZoom;
     [SerializeField] float maxZoom;
     [SerializeField] float minFieldOfView;
@@ -19,6 +19,7 @@ public class CamerManager : MonoBehaviour
     [SerializeField] float zoomSpeed;
     [SerializeField] float rotationSpeed;
     [SerializeField] float mouseMovmentSpeedDifference;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -61,7 +62,7 @@ public class CamerManager : MonoBehaviour
         Vector3 zoom = transform.position + transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
         //transform.position = 
         //Vector3 zoom = transform.position - new Vector3(0,Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime,0);
-        if (zoom.y > minZoom && zoom.y < maxZoom) 
+        if (zoom.y > minZoom && zoom.y < maxZoom)
         {
             transform.position = zoom;
             fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
@@ -69,7 +70,7 @@ public class CamerManager : MonoBehaviour
             mainCamera.fieldOfView = fieldOfView;
         }
         //zoom.y = Mathf.Clamp(zoom.y, minZoom, maxZoom);
-        
+
     }
     //void CameraZoom()
     //{
@@ -85,14 +86,14 @@ public class CamerManager : MonoBehaviour
     //}
     void CameraRotate()
     {
-        if (Input.GetMouseButtonDown(1)) 
+        if (Input.GetMouseButtonDown(1))
         {
             initialCursorPosition = Input.mousePosition.x;
         }
         if (Input.GetMouseButton(1))
         {
             float rotation = Input.mousePosition.x - initialCursorPosition;
-            rotation = Mathf.Clamp(rotation,-1,1);
+            rotation = Mathf.Clamp(rotation, -1, 1);
             transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y + rotation * rotationSpeed * Time.deltaTime, transform.localEulerAngles.z);
             initialCursorPosition = Input.mousePosition.x;
         }

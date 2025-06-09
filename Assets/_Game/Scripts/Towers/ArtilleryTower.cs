@@ -6,12 +6,11 @@ public class ArtilleryTower : Tower
 {
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
-
     float TarggetRange = 2f;
     public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
-    Enemy target;
+    TargetPoint target;
     [SerializeField] Shel shel;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
@@ -20,15 +19,25 @@ public class ArtilleryTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
-    private void Awake()
+
+    void Awake()
     {
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        maxHP = HP[levelOFTower];
-        currentHP = maxHP;
     }
-    // Update is called once per frame
+
+    void Start()
+    {
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        shellDamage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        if (debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(debuffs[CurrentLevel]);
+        currentHP = currentHP == 0 ? maxHP : currentHP;
+    }
+
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
@@ -41,7 +50,8 @@ public class ArtilleryTower : Tower
             launchProgress = 0;
         }
     }
-    void Launch(Enemy target)
+
+    void Launch(TargetPoint target)
     {
         if (target == null)
         {
@@ -49,10 +59,10 @@ public class ArtilleryTower : Tower
         }
         Vector2 dir;
         Vector3 launchPoint = mortal.position;
-        Vector3 Enemy = target.transform.position;
-        dir.x = Enemy.x - launchPoint.x;
-        dir.y = Enemy.z - launchPoint.z;
-        Enemy.y = 0;
+        Vector3 TargetPoint = target.transform.position;
+        dir.x = TargetPoint.x - launchPoint.x;
+        dir.y = TargetPoint.z - launchPoint.z;
+        TargetPoint.y = 0;
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
@@ -60,27 +70,15 @@ public class ArtilleryTower : Tower
         float s = launchSpeed;
         float s2 = s * s;
         float r = s2 * s2 - g * (g * x * x + 2f * y * s2);
+        if (r < 0) r = 0;
         float tanTheta = (s2 + Mathf.Sqrt(r)) / (g * x);
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
-        Debug.Log("s=" + s + " CosTheta=" + CosTheta + " dir=" + dir + " sinTheta=" + sinTheta + " r=" + r);
-
-        //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
+        
         Shel sh = Instantiate(shel);
-        sh.Initialize(launchPoint, Enemy, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
-        //Vector3 prev = launchPoint;
-        //Vector3 next = launchPoint;
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    float t = i / 10f;
-        //    float dx = s * CosTheta * t;
-        //    float dy = s * sinTheta * t - 0.5f * g * t * t;
-        //    next=launchPoint+new Vector3(dir.x*dx,dy,dir.y*dx);
-        //    Debug.DrawLine(prev,next,Color.blue);
-        //    prev=next;
-        //}
-        //Debug.DrawLine(launchPoint, Enemy,Color.yellow);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
+        
     }
     bool AcquireTarget()
     {
@@ -102,7 +100,7 @@ public class ArtilleryTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
+            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
             if (target != null)
             {
                 return true;
@@ -115,15 +113,16 @@ public class ArtilleryTower : Tower
     }
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            float hpPercent = currentHP / maxHP;
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
-            maxHP = HP[levelOFTower];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            CurrentLevel++;
+            shellDamage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
 }

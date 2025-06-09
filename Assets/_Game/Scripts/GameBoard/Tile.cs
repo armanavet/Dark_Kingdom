@@ -10,17 +10,21 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject NeutralTile, OwnTile, ObstructedTile;
     [SerializeField] Tile north, south, east, west, nextOnPath;
     [SerializeField] int distanceToDestination = 0;
-    public int? DistanceToDestinationOriginal { get; private set; }
-    public Tile NextOnPath => nextOnPath;
     public Vector2Int coordinates;
     public Direction pathDirection;
     public Vector3 exitPoint;
     public bool isEmpty = true;
-    [HideInInspector]public int TilePrice => 50;
+    public int TilePrice;
 
-    float ColorTolerance = 0.1f;
-    bool isPath => distanceToDestination != int.MaxValue;
+    public Tile NextOnPath => nextOnPath;
+    public int DistanceToDestinationOriginal { get; private set; }
+    public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
+    bool canBePath => (Type == TileType.Neutral ||
+                       Type == TileType.Own ||
+                       Type == TileType.Claimed) &&
+                       distanceToDestination == int.MaxValue;
 
+    List<Tile> neighbors = new List<Tile>();
 
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
@@ -30,7 +34,6 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         arrow.gameObject.SetActive(false);
-        //TilePrice = 50;
     }
 
     public void SetCoordinates(int x, int y)
@@ -40,9 +43,11 @@ public class Tile : MonoBehaviour
     public void SetType(TileType type)
     {
         Type = type;
+
         NeutralTile.SetActive(false);
         OwnTile.SetActive(false);
         ObstructedTile.SetActive(false);
+
         switch (type)
         {
             case TileType.Neutral:
@@ -51,11 +56,29 @@ public class Tile : MonoBehaviour
             case TileType.Own:
                 OwnTile.SetActive(true);
                 break;
+            case TileType.Claimed:
+                OwnTile.SetActive(true);
+                break;
             case TileType.Obstructed:
                 ObstructedTile.SetActive(true);
                 break;
             default: break;
         }
+    }
+
+    public void SetNeighbors()
+    {
+        neighbors = new List<Tile>()
+        {
+            north,
+            north?.east,
+            east,
+            east?.south,
+            south,
+            south?.west,
+            west,
+            west?.north
+        };
     }
 
     public void MakeEastWestConnection(Tile east, Tile west)
@@ -86,93 +109,87 @@ public class Tile : MonoBehaviour
 
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
-        if (nextTile == null || (nextTile.Type != TileType.Neutral && nextTile.Type != TileType.Own) || nextTile.isPath ) return null;
+        if (nextTile == null || !nextTile.canBePath) return null;
 
         if (!ignoreTowers && !nextTile.isEmpty) return null;
 
 
-        //arrow.gameObject.SetActive(true);
+        arrow.gameObject.SetActive(true);
         nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
-        nextTile.DistanceToDestinationOriginal ??= distanceToDestination + 1;
+
         nextTile.nextOnPath = this;
         nextTile.arrow.rotation = Quaternion.LookRotation(nextTile.arrow.forward, (arrow.position - nextTile.arrow.position).normalized);
         nextTile.pathDirection = direction;
         nextTile.exitPoint = nextTile.transform.position + direction.GetHalfVector();
+
+        if (nextTile.DistanceToDestinationOriginal == 0)
+        {
+            nextTile.DistanceToDestinationOriginal = distanceToDestination + 1;
+        }
         return nextTile;
     }
 
-    public void MakeNeutralYellow(List<Tile> tiles, int width, int height)
+    public void ClaimNeighbors()
     {
-        Tile tile;
-        for (int dy = -1; dy <= 1; dy++)
+        foreach (var neighbor in neighbors)
         {
-            for (int dx = -1; dx <= 1; dx++)
-            {
-                if (dx == 0 && dy == 0)
-                    continue;
-
-                int neighborX = coordinates.x + dx;
-                int neighborY = coordinates.y + dy;
-
-                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height)
-                {
-                    int index = neighborY * width + neighborX;
-                    tile = tiles[index];
-                    if (tile.Type == TileType.Neutral)
-                    {
-                        tile.SetType(TileType.Own);
-                    }
-
-                }
-            }
+            if (neighbor == null || neighbor.Type != TileType.Neutral) continue;
+            
+            neighbor.SetType(TileType.Claimed);
         }
     }
-    public bool MakeObstructedYellow(List<Tile> tiles, int width, int height)
+
+    public void UnclaimNeighbors()
     {
-        if (this.Type != TileType.Obstructed)
-            return false;
-        for (int dy = -1; dy <= 1; dy++)
+        foreach (var neighbor in neighbors)
         {
-            for (int dx = -1; dx <= 1; dx++)
+            if (neighbor == null || neighbor.Type != TileType.Claimed) continue;
+
+            bool canUnclaim = true;
+            List<Tile> surroundingTiles = neighbor.neighbors;
+            foreach (var tile in surroundingTiles)
             {
-                if (dx == 0 && dy == 0)
-                    continue;
-
-                int neighborX = coordinates.x + dx;
-                int neighborY = coordinates.y + dy;
-
-                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height)
+                if (!tile.isEmpty)
                 {
-                    int index = neighborY * width + neighborX;
-                    Tile tile = tiles[index];
-                    if (tile.Type == TileType.Own)
-                    {
-                        return true;
-                    }
-
+                    canUnclaim = false;
+                    break;
                 }
             }
+
+            if (canUnclaim) neighbor.SetType(TileType.Neutral);
+        }
+    }
+
+    public bool CanBePurchased()
+    {
+        if (Type != TileType.Obstructed) return false;
+
+        foreach (var neighbor in neighbors)
+        {
+            if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
+                return true;
         }
         return false;
     }
-    public TileType GetTileType(Color color)
+
+    public TileData OnSave()
     {
-        if (isColorClose(color, Color.white)) return TileType.Neutral;
-        if (isColorClose(color, Color.yellow)) return TileType.Own;
-        if (isColorClose(color, Color.black)) return TileType.Obstructed;
-        return TileType.Neutral;
+        return new TileData(Type, DistanceToDestinationOriginal);
     }
-    bool isColorClose(Color a, Color b)
+
+    public void OnLoad(TileData data)
     {
-        return (Mathf.Abs(a.r - b.r) < ColorTolerance && Mathf.Abs(a.g - b.g) < ColorTolerance && Mathf.Abs(a.b - b.b) < ColorTolerance);
+        Type = data.Type;
+        DistanceToDestinationOriginal = data.DistanceToDestinationOriginal;
     }
 }
 
 public enum TileType
 {
-    Neutral,   //White
-    Own,       //Yellow  
-    Obstructed,//Black
-    Destination//None
+    Neutral,    //White
+    Own,        //Yellow
+    Claimed,    //Yellow
+    Obstructed, //Black
+    Destination,//None
 }

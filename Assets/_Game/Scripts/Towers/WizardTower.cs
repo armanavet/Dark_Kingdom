@@ -18,19 +18,26 @@ public class WizardTower : Tower
     [SerializeField, Range(0.5f, 5f)]
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
-    float shellDamage = 30;
+    float shellDamage;
+
     private void Awake()
     {
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
     }
+
     void Start()
     {
-
+        SellPrice = SellPrices[CurrentLevel];
+        UpgradePrice = UpgradePrices[CurrentLevel];
+        shellDamage = Damage[CurrentLevel];
+        maxHP = HP[CurrentLevel];
+        if (debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(debuffs[CurrentLevel]);
+        currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
-    // Update is called once per frame
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
@@ -51,37 +58,25 @@ public class WizardTower : Tower
         }
         Vector2 dir;
         Vector3 launchPoint = mortal.position;
-        Vector3 Enemy = target.transform.position;
-        dir.x = Enemy.x - launchPoint.x;
-        dir.y = Enemy.z - launchPoint.z;
-        Enemy.y = 0;
+        Vector3 TargetPoint = target.transform.position;
+        dir.x = TargetPoint.x - launchPoint.x;
+        dir.y = TargetPoint.z - launchPoint.z;
+        TargetPoint.y = 0;
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
-
+        
         float s = launchSpeed;
         float s2 = s * s;
         float r = s2 * s2 - g * (g * x * x + 2f * y * s2);
+        if (r < 0) r = 0;
         float tanTheta = (s2 + Mathf.Sqrt(r)) / (g * x);
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
 
-        //mortal.localRotation = Quaternion.LookRotation(new Vector3(dir.x, tanTheta, dir.y));
         Shel sh = Instantiate(shel);
-        sh.Initialize(launchPoint, Enemy, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage);
-        //Vector3 prev = launchPoint;
-        //Vector3 next = launchPoint;
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    float t = i / 10f;
-        //    float dx = s * CosTheta * t;
-        //    float dy = s * sinTheta * t - 0.5f * g * t * t;
-        //    next=launchPoint+new Vector3(dir.x*dx,dy,dir.y*dx);
-        //    Debug.DrawLine(prev,next,Color.blue);
-        //    prev=next;
-        //}
-        //Debug.DrawLine(launchPoint, Enemy,Color.yellow);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
     }
     bool AcquireTarget()
     {
@@ -116,15 +111,31 @@ public class WizardTower : Tower
     }
     public override void Upgrade()
     {
-        if (levelOFTower < SellPrices.Count - 1 && levelOFTower < UpgradePrices.Count)
+        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            float hpPercent = currentHP / maxHP;
-            SellPrice = SellPrices[levelOFTower + 1];
-            UpgradePrice = UpgradePrices[levelOFTower];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            levelOFTower++;
-            maxHP = HP[levelOFTower];
+            UpgradePrice = UpgradePrices[CurrentLevel];
+            CurrentLevel++;
+            Debuff currentDebuff = debuffs[CurrentLevel];
+            if (currentDebuff != null)
+            {
+                foreach (var debuff in currentDebuffs)
+                {
+                    if (debuff.Type == currentDebuff.Type)
+                    {
+                        currentDebuffs.Remove(debuff);
+                        break;
+                    }
+                }
+                currentDebuffs.Add(currentDebuff);
+            }
+            shellDamage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+            float hpPercent = currentHP / maxHP;
             currentHP = maxHP * hpPercent;
+            maxHP = HP[CurrentLevel];
         }
     }
+
+
 }

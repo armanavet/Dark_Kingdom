@@ -8,33 +8,25 @@ public class Arrow : MonoBehaviour
     float progress = 0;
     float damage;
     Vector3 startPoint;
-    Vector3 endPoint;
     Enemy target;
     public LayerMask EnemyMask;
-    bool cxival;
     private void Update()
     {
-        transform.position = Vector3.Lerp(startPoint, endPoint , progress);
+        transform.position = Vector3.Lerp(startPoint, target.transform.position, progress);
         progress += speed * Time.deltaTime;
-        if (progress >= 1 && !cxival)
+        if (progress >= 1)
         {
-            cxival = true;
-           if(target != null)
-            target.ApplyDamage(damage);
-           //Destroy(gameObject);
+            //target.ApplyDamage(damage);
+            Destroy(gameObject);
+
         }
     }
-    public virtual void Initialize(float speed,Vector3 startPoint,Vector3 endPoint,Enemy target, float damage)
+    public void Initialize(float speed,Vector3 startPoint,Enemy target, float damage)
     {
         this.speed = speed;
         this.startPoint = startPoint;
-        this.endPoint =target.transform.position;
         this.target = target;
         this.damage= damage;
     }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.layer!=6)
-    //     Destroy(gameObject);
-    //}
+    
 }
