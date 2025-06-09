@@ -91,15 +91,16 @@ public class UIManager : MonoBehaviour
     }
     void ChangeUiButtonVisibility()
     {
-        foreach (var tower in TowerManager.Instance.TowerPrefabs)
+        for (int i=0;i<towerPurchaseButtons.Length;i++)
         {
+            Tower tower = TowerManager.Instance.TowerPrefabs[i];
             if (tower.PurchasePrice < EconomyManager.Instance.CurrentGold)
             {
-                towerPurchaseButtons[(int)tower.Type].interactable = true;
+                towerPurchaseButtons[i].interactable = true;
             }
             else
             {
-                towerPurchaseButtons[(int)tower.Type].interactable = false;
+                towerPurchaseButtons[i].interactable = false;
             }
         }
     }

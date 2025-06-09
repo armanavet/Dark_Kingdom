@@ -10,6 +10,7 @@ public class DefaultEnemy : Enemy
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
     }
     void Update()
     {
@@ -19,12 +20,11 @@ public class DefaultEnemy : Enemy
     }
     protected override void Attack()
     {
-        if (target == null)
-        {
-        }
-        else
-        {
+        attackCooldown-=Time.deltaTime;
+        if (target != null&& attackCooldown<=0)
+        { 
             target.ApplyDamage(damage);
+            attackCooldown = 1 / attackSpeed;
         }
     }
 }

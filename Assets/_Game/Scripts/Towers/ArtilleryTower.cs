@@ -10,7 +10,7 @@ public class ArtilleryTower : Tower
     public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
-    TargetPoint target;
+    Enemy target;
     [SerializeField] Shel shel;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
@@ -51,7 +51,7 @@ public class ArtilleryTower : Tower
         }
     }
 
-    void Launch(TargetPoint target)
+    void Launch(Enemy target)
     {
         if (target == null)
         {
@@ -100,7 +100,7 @@ public class ArtilleryTower : Tower
                 }
 
             }
-            target = targets[ClosestTargetIndex].GetComponent<TargetPoint>();
+            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
             if (target != null)
             {
                 return true;

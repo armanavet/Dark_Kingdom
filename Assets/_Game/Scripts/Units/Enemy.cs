@@ -9,9 +9,12 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
+    [SerializeField] protected float maxAttackSpeed;
     protected float currentSpeed;
     protected float help;
     protected float damage;
+    protected float attackSpeed;
+    [SerializeField]protected float attackCooldown;
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
@@ -135,6 +138,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
+        attackSpeed = maxAttackSpeed*(1-slow);
     }
 }
 

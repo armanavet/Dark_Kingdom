@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
                        Type == TileType.Claimed) &&
                        distanceToDestination == int.MaxValue;
 
-    List<Tile> neighbors = new List<Tile>();
+    public List<Tile> neighbors = new List<Tile>();
 
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
@@ -99,6 +99,7 @@ public class Tile : MonoBehaviour
         DistanceToDestinationOriginal = 0;
         nextOnPath = null;
         exitPoint = transform.localPosition;
+        isEmpty = false;
     }
 
     public void ClearPath()

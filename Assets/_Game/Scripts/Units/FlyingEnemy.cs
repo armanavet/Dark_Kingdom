@@ -6,26 +6,38 @@ using UnityEngine;
 public class FlyingEnemy : Enemy
 {
     [SerializeField] float height;
+    Vector3 targetPoint;
+    float movementProgress;
+    float TarggetPoint = 2f;
+    [SerializeField] Mage mage;
     void Start()
     {
         transform.position += new Vector3(0, height, 0);
+        target = TowerManager.Instance.Towers[0];
+        targetPoint = target.transform.position + new Vector3(0, height, 0);
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
     }
     void Update()
     {
-        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-        if (state == EnemyState.Moving) Move();
-        else if (state == EnemyState.Attacking) Attack();
+        movementProgress += Time.deltaTime * currentSpeed;
+        if (movementProgress >= 1) Attack();
+        else Move();
     }
     protected override void Move()
     {
-        
-
+        transform.position = Vector3.Lerp(CurrentPosition, targetPoint, movementProgress);
     }
     protected override void Attack()
     {
-        throw new System.NotImplementedException();
+        attackCooldown -= Time.deltaTime;
+        if (target != null && attackCooldown <= 0)
+        {
+            Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPoint - transform.position));
+            arrow.Initialize(attackSpeed, transform.position, targetPoint, target, damage);
+            attackCooldown = 1 / attackSpeed;
+        }
     }
 }

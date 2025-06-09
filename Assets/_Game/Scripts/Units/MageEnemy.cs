@@ -7,13 +7,13 @@ public class MageEnemy : Enemy
 {
     float TarggetPoint = 2f;
     [SerializeField] Mage mage;
-    [SerializeField] float attackSpeed;
 
     void Start()
     {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
     }
     private void Update()
     {
@@ -22,9 +22,14 @@ public class MageEnemy : Enemy
     }
     protected override void Attack()
     {
-        Vector3 targetPosition = target.transform.position;
-        Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPosition - transform.position));
-        arrow.Initialize(attackSpeed, transform.position, targetPosition, target, damage);
+        attackCooldown -= Time.deltaTime;
+        if (target != null && attackCooldown <= 0)
+        {
+            Vector3 targetPosition = target.transform.position;
+            Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPosition - transform.position));
+            arrow.Initialize(attackSpeed, transform.position, targetPosition, target, damage);
+            attackCooldown = 1 / attackSpeed;
+        }
     }
   
     protected override bool AcquireTarget()
