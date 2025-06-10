@@ -123,7 +123,6 @@ public class Enemy : MonoBehaviour, IDebuffable
     void OnDestroy()
     {
         WaveManager.Instance.OnEnemyDeath();
-
     }
     public void ApplyDamage(float damage)
     {
