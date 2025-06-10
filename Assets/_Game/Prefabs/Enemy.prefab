@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 3400160282683954535}
-  maxSpeed: 3
+  maxSpeed: 1.5
 --- !u!65 &7284207934270159960
 BoxCollider:
   m_ObjectHideFlags: 0
