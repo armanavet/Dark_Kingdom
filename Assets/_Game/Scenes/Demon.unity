@@ -991,9 +991,14 @@ MonoBehaviour:
     - Prefab: {fileID: 6347233526246161181, guid: f66139b39090af44f812880530543c49,
         type: 3}
       Type: 5
+    - Prefab: {fileID: 6347233526246161181, guid: 0a85a240e7e62ee4eb352eba415f81d4,
+        type: 3}
+      Type: 6
   waves:
   - Enemies:
-    - Type: 5
+    - Type: 6
+      Count: 1
+    - Type: 0
       Count: 1
   - Enemies:
     - Type: 5

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3400160282683954535}
   - component: {fileID: 3828249866635874796}
   - component: {fileID: 6189110770505722690}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Hayvan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,6 @@ MonoBehaviour:
   maxHP: 30
   maxDamage: 30
   maxAttackSpeed: 1
-  attackCooldown: 0
   mage: {fileID: -3201098322291214515, guid: 0c1d54681661097409ea0981d2ce252c, type: 3}
   height: 3
   rotationSpeed: 15

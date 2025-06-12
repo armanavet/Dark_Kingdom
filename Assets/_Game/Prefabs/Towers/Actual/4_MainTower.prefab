@@ -300,6 +300,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591b4b527cbc0d042af692e9a3761213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 256
   SellPrices: 000000000000000000000000
   UpgradePrices: 64000000f4010000e8030000
   HP:
@@ -308,22 +314,22 @@ MonoBehaviour:
   - 1000
   - 1500
   Damage: 000000000000000000000000
-  maxHP: 0
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 0
-  TowerName: MainTower
-  Type: 4
-  TowerPanel: {fileID: 5734724905035884570}
+  debuffs: []
+  Projectiles: []
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 0
+  Type: 4
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
+  TowerPanel: {fileID: 5734724905035884570}
   GoldGenerationList: 01000000020000000300000004000000
 --- !u!65 &660188337889200183
 BoxCollider:

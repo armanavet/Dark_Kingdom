@@ -155,5 +155,5 @@ public enum UnitType
    Mage,
    Kamikadze,
    Flying,
-   Clone
+   Illusionist
 }

@@ -1,0 +1,56 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public class IllusionistEnemy : Enemy
+{
+    [SerializeField] GameObject illusionPrefab;
+    [SerializeField] float detectionRange;
+    [SerializeField] float illusionSpawnTime;
+    float illusionCooldown;
+    GameObject illusion;
+    void Start()
+    {
+        currentSpeed = maxSpeed;
+        help = maxHP;
+        damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
+    }
+    void Update()
+    {
+
+        if (illusionCooldown <= 0)
+        {
+            if (DetectTowers())
+            {
+                SpawnIllusion();
+                illusionCooldown = illusionSpawnTime;
+            }
+        }
+        illusionCooldown -= Time.deltaTime;
+        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Moving) Move();
+        else if (state == EnemyState.Attacking) Attack();
+    }
+
+    protected override void Attack()
+    {
+        attackCooldown -= Time.deltaTime;
+        if (target != null && attackCooldown <= 0)
+        {
+            target.ApplyDamage(damage);
+            attackCooldown = 1 / attackSpeed;
+        }
+    }
+    bool DetectTowers()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, detectionRange, towerMask);
+        return targets.Length > 0;
+    }
+    void SpawnIllusion()
+    {
+        if (illusion==null)
+        illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
+    }
+}

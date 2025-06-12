@@ -854,6 +854,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c760762337c03b42bb29066029b9f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 256
   SellPrices: 78000000820000008c00000096000000
   UpgradePrices: a0000000aa000000b4000000
   HP:
@@ -862,27 +868,23 @@ MonoBehaviour:
   - 200
   - 220
   Damage: 1e00000028000000320000003c000000
-  maxHP: 0
   debuffs: []
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 150
-  TowerName: ArtilleryTower
-  Type: 2
-  TowerPanel: {fileID: 7195541497489861293}
+  Projectiles: []
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 150
+  Type: 2
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
+  TowerPanel: {fileID: 7195541497489861293}
   TarggetPoint: 10
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 128
   shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
   mortal: {fileID: 1677207564359557967}
   shellBlastRadius: 1

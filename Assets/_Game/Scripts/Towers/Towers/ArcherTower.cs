@@ -6,7 +6,6 @@ using UnityEngine;
 public class ArcherTower : Tower
 {
     [SerializeField] Transform shootingPoint;
-    [SerializeField] LayerMask enemyMask;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
     [SerializeField, Range(1, 10f)]
@@ -55,7 +54,12 @@ public class ArcherTower : Tower
 
     bool AcquireTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+        Collider[] targets;
+        targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
+        if(targets.Length == 0)
+        {
+            targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+        }
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;

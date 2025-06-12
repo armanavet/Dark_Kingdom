@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public abstract class Tower : MonoBehaviour
 {
+    [SerializeField] protected LayerMask enemyMask;
+    [SerializeField] protected LayerMask illusionMask;
     [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<int> UpgradePrices;
     [SerializeField] protected List<float> HP;
