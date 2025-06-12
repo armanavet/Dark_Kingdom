@@ -154,9 +154,13 @@ MonoBehaviour:
   towerMask:
     serializedVersion: 2
     m_Bits: 64
-  maxSpeed: 0.002
+  maxSpeed: 2
   maxHP: 30
   maxDamage: 30
   maxAttackSpeed: 1
-  height: 3
+  attackCooldown: 0
   mage: {fileID: -3201098322291214515, guid: 0c1d54681661097409ea0981d2ce252c, type: 3}
+  height: 3
+  rotationSpeed: 15
+  flyUpSpeed: 1
+  distanceToAttack: 1

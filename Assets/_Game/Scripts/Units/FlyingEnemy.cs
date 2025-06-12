@@ -1,20 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class FlyingEnemy : Enemy
 {
-    [SerializeField] float height;
-    Vector3 targetPoint;
-    float movementProgress;
-    float TarggetPoint = 2f;
     [SerializeField] Mage mage;
+    [SerializeField] float height;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float flyUpSpeed;
+    [SerializeField] float distanceToAttack;
+    Vector3 targetPoint;
+    Quaternion targetRotation;
+    float rotationProgress;
     void Start()
     {
-        transform.position += new Vector3(0, height, 0);
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
+        targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -22,13 +22,14 @@ public class FlyingEnemy : Enemy
     }
     void Update()
     {
-        movementProgress += Time.deltaTime * currentSpeed;
-        if (movementProgress >= 1) Attack();
-        else Move();
+        if (FlyUp()) return;
+        else if (FaceTarget()) return;
+        else if (Vector3.Distance(transform.position, targetPoint) > distanceToAttack) Move();
+        else Attack();
     }
     protected override void Move()
     {
-        transform.position = Vector3.Lerp(CurrentPosition, targetPoint, movementProgress);
+        transform.Translate(Vector3.forward * currentSpeed*Time.deltaTime);
     }
     protected override void Attack()
     {
@@ -39,5 +40,22 @@ public class FlyingEnemy : Enemy
             arrow.Initialize(attackSpeed, transform.position, targetPoint, target, damage);
             attackCooldown = 1 / attackSpeed;
         }
+    }
+    bool FaceTarget()
+    {
+        Debug.Log(targetRotation.eulerAngles.y);
+        float rotationDifference = targetRotation.eulerAngles.y - transform.rotation.y;
+        float rotationTime=rotationDifference/rotationSpeed;
+        rotationProgress += Time.deltaTime / rotationTime;
+        if(rotationProgress>=1)return false;
+        float yRotation=Mathf.LerpAngle(transform.rotation.y,targetRotation.eulerAngles.y,rotationProgress);
+        transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
+        return true;
+    }
+    bool FlyUp()
+    {
+        if (transform.position.y>=height) return false;
+        transform.Translate(transform.up * flyUpSpeed*Time.deltaTime);
+        return true;
     }
 }

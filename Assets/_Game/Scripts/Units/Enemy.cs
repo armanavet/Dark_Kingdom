@@ -14,7 +14,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected float help;
     protected float damage;
     protected float attackSpeed;
-    [SerializeField]protected float attackCooldown;
+    protected float attackCooldown;
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;

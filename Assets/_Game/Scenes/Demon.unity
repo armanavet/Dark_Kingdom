@@ -995,28 +995,18 @@ MonoBehaviour:
   - Enemies:
     - Type: 5
       Count: 1
-    - Type: 3
+  - Enemies:
+    - Type: 5
       Count: 1
   - Enemies:
-    - Type: 0
+    - Type: 5
       Count: 1
-    - Type: 0
-      Count: 2
   - Enemies:
-    - Type: 0
-      Count: 2
-    - Type: 0
-      Count: 2
+    - Type: 5
+      Count: 1
   - Enemies:
-    - Type: 0
-      Count: 2
-    - Type: 0
-      Count: 2
-  - Enemies:
-    - Type: 0
-      Count: 2
-    - Type: 0
-      Count: 2
+    - Type: 5
+      Count: 1
   spawnerPrefab: {fileID: 5852631492922821840, guid: 441490a6b761fcf49ab35787d599b728,
     type: 3}
   enemyPathPrefab: {fileID: 579270571906992353, guid: 71c97c657ac89604c8b85ed19f322e4c,
