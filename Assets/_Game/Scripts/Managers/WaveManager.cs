@@ -137,11 +137,6 @@ public class WaveManager : MonoBehaviour, ISaveable
 }
 
 #region Wave
-public enum UnitType
-{
-    hayvan
-}
-
 [System.Serializable]
 public class Unit
 {

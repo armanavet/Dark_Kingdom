@@ -2,32 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDebuffable
+public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [SerializeField] Transform model;
-    [SerializeField] float maxSpeed;
-    Tile tileFrom, tileTo;
+    [SerializeField] protected LayerMask towerMask;
+    [SerializeField] protected float maxSpeed;
+    [SerializeField] protected float maxHP;
+    [SerializeField] protected float maxDamage;
+    [SerializeField] protected float maxAttackSpeed;
+    protected float currentSpeed;
+    protected float help;
+    protected float damage;
+    protected float attackSpeed;
+    protected float attackCooldown;
+    protected Tile tileFrom, tileTo;
+    protected EnemyState state;
+    protected Tower target;
     Vector3 positionFrom, positionTo;
     Direction direction;
     DirectionChange directionChange;
     float directionAngleFrom, directionAngleTo;
     float progress, progressFactor;
     float positionOffset;
-    float currentSpeed;
-    EnemyState state;
-
-    void Start()
-    {
-        currentSpeed = maxSpeed;
-    }
-
-    void Update()
-    {
-        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-        if (state == EnemyState.Moving) Move();
-        else if (state == EnemyState.Attacking) Attack();
-    }
-
+    public Vector3 CurrentPosition => model.position;
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -49,13 +46,13 @@ public class Enemy : MonoBehaviour, IDebuffable
         progressFactor = 2;
     }
 
-    void Move()
+    protected virtual void Move()
     {
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
             tileFrom = tileTo;
-            tileTo = tileFrom.NextOnPath ?? tileFrom;
+            tileTo = tileFrom.NextOnPath;
             progress = 0;
             PrepareNextMove();
         }
@@ -78,7 +75,7 @@ public class Enemy : MonoBehaviour, IDebuffable
         directionChange = direction.ChangeDirectionTo(tileFrom.pathDirection);
         direction = tileFrom.pathDirection;
         directionAngleFrom = directionAngleTo;
-
+        AcquireTarget();
         switch (directionChange)
         {
             case DirectionChange.None: PrepareMoveForward(); break;
@@ -115,23 +112,33 @@ public class Enemy : MonoBehaviour, IDebuffable
         transform.localPosition = positionFrom;
     }
 
-    void Attack()
+    protected abstract void Attack();
+    protected virtual bool AcquireTarget()
     {
-        model.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-        Destroy(gameObject,5);
-    }
-    void OnDestroy()
-    {
-        WaveManager.Instance.OnEnemyDeath();
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
+        {
+            target = hitInfo.transform.GetComponent<Tower>();
+           
+        } 
+        return true;
     }
     public void ApplyDamage(float damage)
     {
-        
+        help -= damage;
+        if (help <= 0)
+        {
+            OnDeath();
+        }
     }
-
+    protected virtual void OnDeath()
+    {
+        WaveManager.Instance.OnEnemyDeath();
+        Destroy(gameObject);
+    }
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
+        attackSpeed = maxAttackSpeed*(1-slow);
     }
 }
 
@@ -139,4 +146,14 @@ public enum EnemyState
 {
     Attacking,
     Moving
+}
+public enum UnitType
+{
+   Regular,
+   Fast,
+   Tank,
+   Mage,
+   Kamikadze,
+   Flying,
+   Illusionist
 }

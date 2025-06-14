@@ -9,7 +9,7 @@ public class TowerManager : MonoBehaviour, ISaveable
     Dictionary<TowerType, Tower> prefabsByType = new Dictionary<TowerType, Tower>();
     Dictionary<TowerType, TowerPreview> previewsByType = new Dictionary<TowerType, TowerPreview>();
     [HideInInspector]public List<Tower> Towers;
-
+    [SerializeField] Tile mainTowerTile;
     #region Singleton 
     private static TowerManager _instance;
     public static TowerManager Instance
@@ -39,6 +39,13 @@ public class TowerManager : MonoBehaviour, ISaveable
             previewsByType.Add(preview.Type, preview);
 
         SaveManager.RegisterSaveable(this);
+        BuildTower(TowerType.MainTower,mainTowerTile);
+        mainTowerTile.SetType(TileType.Destination);
+        foreach (var tile in mainTowerTile.neighbors)
+        {
+            tile.SetType(TileType.Destination);
+        }
+        GameBoard.Instance.BuildPathToDestination(ignoreTowers: false);
     }
 
     public Tower GetPrefabByType(TowerType type)
@@ -85,7 +92,7 @@ public class TowerManager : MonoBehaviour, ISaveable
     public void LoadState(ISaveData data)
     {
         DataList<TowerData> saveData = data as DataList<TowerData>;
-        for (int i = 0; i < saveData.Count; i++)
+        for (int i = 1; i < saveData.Count; i++)
         {
             TowerData towerData = saveData[i];
             Tower tower = BuildTower(towerData.Type, GameBoard.Instance.Tiles[towerData.TileIndex]);

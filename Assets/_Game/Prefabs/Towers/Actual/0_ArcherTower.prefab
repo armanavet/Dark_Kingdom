@@ -454,6 +454,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 256
   SellPrices: 25000000570000009600000018010000
   UpgradePrices: 4b00000096000000c8000000
   HP:
@@ -487,9 +493,6 @@ MonoBehaviour:
     CurrentHP: 0
   TowerPanel: {fileID: 2936775719731518850}
   shootingPoint: {fileID: 1574947597934629292}
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
   projectileSpeed: 12
   attackSpeed: 1
   attackRange: 3

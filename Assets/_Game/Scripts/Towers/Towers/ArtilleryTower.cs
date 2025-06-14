@@ -7,7 +7,6 @@ public class ArtilleryTower : Tower
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
     float TarggetRange = 2f;
-    public LayerMask EnemyMask;
     float launchSpeed;
     float g = 9.81f;
     Enemy target;
@@ -82,7 +81,12 @@ public class ArtilleryTower : Tower
     }
     bool AcquireTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, TarggetPoint, EnemyMask);
+        Collider[] targets;
+        targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
+        if (targets.Length == 0)
+        {
+            targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
+        }
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;
