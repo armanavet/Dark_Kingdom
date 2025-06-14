@@ -683,7 +683,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeUntilNextWave:
-  - 15
+  - 8
   - 5
   - 5
   - 5
@@ -973,7 +973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   units:
     UnitList:
-    - Prefab: {fileID: 6347233526246161181, guid: 45bce58723907444b83253e8f7692a93,
+    - Prefab: {fileID: 6347233526246161181, guid: 161880f216074454fa8f13ad54960649,
         type: 3}
       Type: 0
     - Prefab: {fileID: 6347233526246161181, guid: fd4172ecb6efd1f46bbb0b6c1238f420,

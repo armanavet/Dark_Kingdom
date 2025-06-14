@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class IllusionistEnemy : Enemy
 {
-    [SerializeField] GameObject illusionPrefab;
+    [SerializeField] Illusion illusionPrefab;
     [SerializeField] float detectionRange;
     [SerializeField] float illusionSpawnTime;
     float illusionCooldown;
-    GameObject illusion;
+    Illusion illusion;
+
     void Start()
     {
         currentSpeed = maxSpeed;
@@ -50,7 +51,10 @@ public class IllusionistEnemy : Enemy
     }
     void SpawnIllusion()
     {
-        if (illusion==null)
-        illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
+        if (illusion == null)
+        {
+            illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
+            illusion.OnSpawn(tileFrom, 0);
+        }
     }
 }

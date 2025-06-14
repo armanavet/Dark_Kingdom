@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5de00ff7a988c2a4c82bc39302a21941, type: 2}
+  - {fileID: 2100000, guid: eeed5cc2066bb8e41a05b7c8d23b94ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   model: {fileID: 3400160282683954535}
   towerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   maxSpeed: 1
   maxHP: 120
   maxDamage: 0
