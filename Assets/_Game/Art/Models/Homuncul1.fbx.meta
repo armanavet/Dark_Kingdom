@@ -1,24 +1,24 @@
 fileFormatVersion: 2
 guid: 4c31a21fb4173a746a0978a56fd8a38a
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Homuncul1
-    second: {fileID: 2100000, guid: 9116f2a4fe86cbc478193edecae6f447, type: 2}
+    second: {fileID: 2100000, guid: f0d77d58a780abe47bfaec84f1374707, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Homuncul2
-    second: {fileID: 2100000, guid: cfecb4c46e8567342beeaf4977b8745b, type: 2}
+    second: {fileID: 2100000, guid: a67d3c12b78b8234ab41391aa31bef51, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Hpmuncul3
-    second: {fileID: 2100000, guid: 9b5479e24add8ae4fa886715184ee03c, type: 2}
+    second: {fileID: 2100000, guid: 46cad2e281afef548ba9a41a2bf64844, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -55,6 +55,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -600,7 +601,8 @@ ModelImporter:
     - name: ik_hand_r
       parentName: ik_hand_gun
       position: {x: -0.000000085830685, y: -0.0000001001358, z: -0.000000038146972}
-      rotation: {x: 0.000000052154068, y: 0.000000044703487, z: -0.000000011175871, w: 1}
+      rotation: {x: 0.000000052154068, y: 0.000000044703487, z: -0.000000011175871,
+        w: 1}
       scale: {x: 1, y: 1, z: 0.99999994}
     - name: interaction
       parentName: root
@@ -770,7 +772,8 @@ ModelImporter:
     - name: upperarm_twist_02_l
       parentName: upperarm_l
       position: {x: -0.18514112, y: 0.000000005960464, z: -0.00000003710389}
-      rotation: {x: -0.00000012898818, y: -0.0000000033469405, z: 0.00000015553087, w: 1}
+      rotation: {x: -0.00000012898818, y: -0.0000000033469405, z: 0.00000015553087,
+        w: 1}
       scale: {x: 1, y: 1.0000001, z: 1}
     - name: clavicle_r
       parentName: spine_05
@@ -1065,6 +1068,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 

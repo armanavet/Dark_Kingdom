@@ -2,7 +2,7 @@
 - Project name: Dark_Kingdom
 - Unity version: Unity 2022.3.50f1
 - Active game object:
-  - Name: Mage
+  - Name: ExplosionEnemy
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Enemy
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
