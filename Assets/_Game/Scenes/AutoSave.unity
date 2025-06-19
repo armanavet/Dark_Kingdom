@@ -298,6 +298,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66893a703b55c6e4b8fd09792a4685c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &678246129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 678246131}
+  - component: {fileID: 678246130}
+  m_Layer: 0
+  m_Name: PauseMenuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &678246130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678246129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8696ee51cbea8eb4ab2326b0ca72671d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SceneToLoad: MainMenu
+  _PauseMenuContainer: {fileID: 1898575048}
+--- !u!4 &678246131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678246129}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 969.5964, y: 630.89764, z: 160.42123}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &698751832
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,6 +732,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: tilePanelYOffset
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3724890625231103466, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -705,6 +756,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5184157996208282572, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 678246130}
+    - target: {fileID: 5184157996208282572, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: z_BTExitToMenuButton
       objectReference: {fileID: 0}
     - target: {fileID: 5578826510392851205, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -866,6 +927,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8479202177426719986, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 678246130}
+    - target: {fileID: 8479202177426719986, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: a_BTPause
+      objectReference: {fileID: 0}
     - target: {fileID: 8675701837135286849, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_Name
@@ -876,6 +947,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3150c0840b68b544083e0be377392f09, type: 3}
+--- !u!1 &1898575048 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1782795931714138561, guid: 3150c0840b68b544083e0be377392f09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1898575047}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1901314560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1164,3 +1241,4 @@ SceneRoots:
   - {fileID: 1901314561}
   - {fileID: 1557232833}
   - {fileID: 1898575047}
+  - {fileID: 678246131}

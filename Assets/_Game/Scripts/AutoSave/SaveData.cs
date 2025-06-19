@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,7 +9,12 @@ public class SaveData
     Dictionary<string, ISaveData> data = new Dictionary<string, ISaveData>();
 
     public void Add(string id, ISaveData saveData) => data[id] = saveData;
-    public ISaveData Get(string id) => data[id];
+    public ISaveData Get(string id) 
+    { 
+        if (data.ContainsKey(id)) 
+            return data[id]; 
+        return null;
+    }
 }
 
 [System.Serializable]

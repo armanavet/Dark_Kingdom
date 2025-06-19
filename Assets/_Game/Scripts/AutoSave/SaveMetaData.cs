@@ -15,4 +15,5 @@ public class SaveMetaData
         CurrentGold = currentGold;
         CurrentWave = currentWave;
     }
+    
 }
