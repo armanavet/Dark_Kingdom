@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2758378707745903820}
   - {fileID: 1144549494783277767}
   - {fileID: 4874035228709155332}
   m_Father: {fileID: 0}
@@ -82,6 +83,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247fec6ad501b9941b2dfd0c8497b731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 256
   SellPrices: 280000002c0000002e00000032000000
   UpgradePrices: 580000006000000068000000
   HP:
@@ -90,28 +97,29 @@ MonoBehaviour:
   - 140
   - 160
   Damage: 0a000000140000001e00000028000000
-  maxHP: 0
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 100
-  TowerName: WizardTower
-  Type: 1
-  TowerPanel: {fileID: 6915444093387794395}
+  debuffs:
+  - {fileID: 11400000, guid: 516d500b9594861439cc5b2f88066083, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 1571ac825c02bb449ac3275b3c66442e, type: 2}
+  - {fileID: 0}
+  Projectiles: []
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 100
+  Type: 1
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
+  TowerPanel: {fileID: 6915444093387794395}
   TarggetPoint: 2
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 128
   shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
-  mortal: {fileID: 1144549494783277767}
+  mortal: {fileID: 2758378707745903820}
   shellBlastRadius: 1
   shellDamage: 30
 --- !u!1 &1535471789287636228
@@ -807,6 +815,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &8153216966242578204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2758378707745903820}
+  m_Layer: 6
+  m_Name: Mortar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2758378707745903820
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8153216966242578204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.203, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2966124940193732391}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8595865822520528307
 GameObject:
   m_ObjectHideFlags: 0

@@ -57,7 +57,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480519335892533317}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
@@ -65,10 +65,10 @@ RectTransform:
   - {fileID: 4474812569477484098}
   - {fileID: 5514337648817606986}
   m_Father: {fileID: 5319822399164765688}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1.7}
   m_SizeDelta: {x: 190, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2074499638913403738
@@ -305,7 +305,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.7}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8514930772131493350
@@ -454,6 +454,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 256
   SellPrices: 25000000570000009600000018010000
   UpgradePrices: 4b00000096000000c8000000
   HP:
@@ -462,31 +468,34 @@ MonoBehaviour:
   - 140
   - 160
   Damage: 050000000a0000000f00000014000000
-  maxHP: 0
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 50
-  TowerName: Archer Tower
-  Type: 0
-  TowerPanel: {fileID: 2936775719731518850}
+  debuffs:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af, type: 2}
+  - {fileID: 11400000, guid: 0f0e445aa23debe499efc28a144ed159, type: 2}
+  - {fileID: 11400000, guid: cefa31c790da25645b9f0b74883b1ecc, type: 2}
+  Projectiles:
+  - {fileID: 1094462928439039344, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
+  - {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e, type: 3}
+  - {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e, type: 3}
+  - {fileID: 6171265629823123270, guid: b2c62bc029caf7a4d89b626c853317e2, type: 3}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 50
+  Type: 0
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
-  TarggetPoint: 2
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  target: {fileID: 0}
-  Turret: {fileID: 1574947597934629292}
-  Arrow: {fileID: 1242083742202517421, guid: bac3663ceb79b5c4d8a19363a2427ad3, type: 3}
-  arrowSpeed: 8
+  TowerPanel: {fileID: 2936775719731518850}
+  shootingPoint: {fileID: 1574947597934629292}
+  projectileSpeed: 12
   attackSpeed: 1
+  attackRange: 3
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0
