@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3741927400639079587}
   - component: {fileID: 2849710709768455832}
   - component: {fileID: -4862218571588783178}
+  - component: {fileID: 1554842445146108484}
   m_Layer: 7
   m_Name: ExplosionEnemy
   m_TagString: Untagged
@@ -76,6 +77,27 @@ MonoBehaviour:
   maxDamage: 60
   maxAttackSpeed: 0
   radius: 3
+--- !u!95 &1554842445146108484
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347233526246161181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &4941352895115759471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -148,7 +170,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 54fa9d339cfb28a44be2c2dcbe16797b, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: d19f0e375a0203a4ca72964404dbd39e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -11,6 +11,7 @@ public class ExplosionEnemy : Enemy
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -30,7 +31,7 @@ public class ExplosionEnemy : Enemy
                 targets[i].GetComponent<Tower>().ApplyDamage(damage);
             }
         }
-        Destroy(gameObject);
         WaveManager.Instance.OnEnemyDeath();
+        Destroy(gameObject);
     }
 }

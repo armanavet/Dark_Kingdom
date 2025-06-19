@@ -19,6 +19,7 @@ public class FlyingEnemy : Enemy
         help = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -29,10 +30,14 @@ public class FlyingEnemy : Enemy
     }
     protected override void Move()
     {
+        animator.SetBool("isMoving", true);
+        animator.SetBool("isAttacking", false);
         transform.Translate(Vector3.forward * currentSpeed*Time.deltaTime);
     }
     protected override void Attack()
     {
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isAttacking", true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

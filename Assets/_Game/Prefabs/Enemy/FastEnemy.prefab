@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3741927400639079587}
   - component: {fileID: 2849710709768455832}
   - component: {fileID: 2437349974861460720}
+  - component: {fileID: 1700529049495643870}
   m_Layer: 7
   m_Name: FastEnemy
   m_TagString: Untagged
@@ -71,10 +72,31 @@ MonoBehaviour:
   towerMask:
     serializedVersion: 2
     m_Bits: 64
-  maxSpeed: 3
+  maxSpeed: 1.5
   maxHP: 20
   maxDamage: 20
   maxAttackSpeed: 1
+--- !u!95 &1700529049495643870
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347233526246161181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 980aa9198bc972f438394afe5c92dd3a, type: 3}
+  m_Controller: {fileID: 9100000, guid: b4d15ec36d0616c4eb1d6f8a71851d4d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &8645659964197043038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -143,7 +165,16 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 9500000, guid: 980aa9198bc972f438394afe5c92dd3a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 980aa9198bc972f438394afe5c92dd3a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b4d15ec36d0616c4eb1d6f8a71851d4d, type: 2}
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 980aa9198bc972f438394afe5c92dd3a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

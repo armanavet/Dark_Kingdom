@@ -467,7 +467,7 @@ MonoBehaviour:
   - 120
   - 140
   - 160
-  Damage: 050000000a0000000f00000014000000
+  Damage: 000000000a0000000f00000014000000
   debuffs:
   - {fileID: 0}
   - {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af, type: 2}

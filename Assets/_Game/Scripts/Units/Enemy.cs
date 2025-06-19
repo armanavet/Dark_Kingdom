@@ -10,6 +10,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
+    protected Animator animator;
     protected float currentSpeed;
     protected float help;
     protected float damage;
@@ -25,6 +26,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
+
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -48,6 +50,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
 
     protected virtual void Move()
     {
+        animator.SetBool("isMoving", true);
+        animator.SetBool("isAttacking", false);
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -118,12 +122,14 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
         {
             target = hitInfo.transform.GetComponent<Tower>();
-           
-        } 
+
+        }
         return true;
     }
     public void ApplyDamage(float damage)
     {
+        if (state == EnemyState.Dead) return;
+
         help -= damage;
         if (help <= 0)
         {
@@ -132,28 +138,34 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     protected virtual void OnDeath()
     {
+        state = EnemyState.Dead;
+        animator.SetBool("isDead", true);
         WaveManager.Instance.OnEnemyDeath();
-        Destroy(gameObject);
+        gameObject.layer = 0;
     }
+
+    void DestroyModel() => Destroy(gameObject);
+
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
-        attackSpeed = maxAttackSpeed*(1-slow);
+        attackSpeed = maxAttackSpeed * (1 - slow);
     }
 }
 
 public enum EnemyState
 {
     Attacking,
-    Moving
+    Moving,
+    Dead
 }
 public enum UnitType
 {
-   Regular,
-   Fast,
-   Tank,
-   Mage,
-   Kamikadze,
-   Flying,
-   Illusionist
+    Regular,
+    Fast,
+    Tank,
+    Mage,
+    Kamikadze,
+    Flying,
+    Illusionist
 }

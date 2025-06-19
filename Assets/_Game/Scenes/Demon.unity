@@ -179,9 +179,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TowerPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2554583891899901409, guid: c7f059cc2358f454ea30a425e58833b8, type: 3}
+  - {fileID: 1543937721329535402, guid: 68aa444f007ae1d409d8bd7a28e9ce93, type: 3}
+  - {fileID: 5555515663387599563, guid: 40e1bc8d91e55c9469a39ccf7dfcd164, type: 3}
   - {fileID: 5780887718468457345, guid: d72a165e224f05647b13024d5f403bbc, type: 3}
   - {fileID: 1959172426943113151, guid: c802cf4422494a44c9f602064b9a6baf, type: 3}
   TowerPreviews:
@@ -996,22 +996,20 @@ MonoBehaviour:
       Type: 6
   waves:
   - Enemies:
-    - Type: 6
-      Count: 1
-    - Type: 0
-      Count: 1
+    - Type: 1
+      Count: 2
   - Enemies:
-    - Type: 5
-      Count: 1
+    - Type: 1
+      Count: 2
   - Enemies:
-    - Type: 5
-      Count: 1
+    - Type: 1
+      Count: 2
   - Enemies:
-    - Type: 5
-      Count: 1
+    - Type: 1
+      Count: 2
   - Enemies:
-    - Type: 5
-      Count: 1
+    - Type: 1
+      Count: 2
   spawnerPrefab: {fileID: 5852631492922821840, guid: 441490a6b761fcf49ab35787d599b728,
     type: 3}
   enemyPathPrefab: {fileID: 579270571906992353, guid: 71c97c657ac89604c8b85ed19f322e4c,

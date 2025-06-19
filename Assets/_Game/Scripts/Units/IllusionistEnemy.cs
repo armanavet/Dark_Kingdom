@@ -17,6 +17,7 @@ public class IllusionistEnemy : Enemy
         help = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -37,6 +38,8 @@ public class IllusionistEnemy : Enemy
 
     protected override void Attack()
     {
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isAttacking", true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

@@ -14,6 +14,7 @@ public class MageEnemy : Enemy
         help = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -22,6 +23,8 @@ public class MageEnemy : Enemy
     }
     protected override void Attack()
     {
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isAttacking", true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

@@ -31,7 +31,7 @@ public class ArcherTower : Tower
     void Update()
     {
         if (attackCooldown <= 0)
-        { 
+        {
             if (AcquireTarget())
             {
                 Shoot();
@@ -56,7 +56,7 @@ public class ArcherTower : Tower
     {
         Collider[] targets;
         targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if(targets.Length == 0)
+        if (targets.Length == 0)
         {
             targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
         }
@@ -134,11 +134,16 @@ public class ArcherTower : Tower
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
     {
         yield return new WaitForSeconds(arriveTime);
-        target.ApplyDamage(damage);
-        foreach (var debuff in currentDebuffs)
+
+        if (target != null)
         {
-            DebuffManager.Instance.ApplyDebuff(target, debuff);
+            target.ApplyDamage(damage);
+            foreach (var debuff in currentDebuffs)
+            {
+                DebuffManager.Instance.ApplyDebuff(target, debuff);
+            }
         }
+
         Destroy(currentProjectile);
     }
 }
