@@ -997,7 +997,13 @@ MonoBehaviour:
   waves:
   - Enemies:
     - Type: 1
-      Count: 2
+      Count: 1
+    - Type: 2
+      Count: 1
+    - Type: 0
+      Count: 1
+    - Type: 3
+      Count: 1
   - Enemies:
     - Type: 1
       Count: 2
