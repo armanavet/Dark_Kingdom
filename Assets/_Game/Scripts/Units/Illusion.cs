@@ -14,8 +14,18 @@ public class Illusion : Enemy
     }
     void Update()
     {
+        if (state == EnemyState.Dead) return;
+
         state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-        if (state == EnemyState.Moving) Move();
+        if (state == EnemyState.Moving)
+        {
+            animator.SetBool("isIdle", false);
+            Move();
+        }
+        else
+        {
+            animator.SetBool("isIdle", true);
+        }
     }
     protected override void Attack(){}
 }

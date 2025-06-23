@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3741927400639079587}
   - component: {fileID: 2849710709768455832}
   - component: {fileID: 355278325959723672}
+  - component: {fileID: 2323125959523864059}
   m_Layer: 7
   m_Name: IllusionistEnemy
   m_TagString: Untagged
@@ -79,6 +80,27 @@ MonoBehaviour:
     type: 3}
   detectionRange: 4
   illusionSpawnTime: 6
+--- !u!95 &2323125959523864059
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347233526246161181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f81a342f3873b0146b31aa01238e91c6, type: 3}
+  m_Controller: {fileID: 9100000, guid: 5379c489705460c44a27c4080eb4e64e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3129500146844981362
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -162,7 +184,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: f81a342f3873b0146b31aa01238e91c6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
