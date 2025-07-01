@@ -29,13 +29,12 @@ public class GameBoard : MonoBehaviour, ISaveable
     }
     #endregion
 
-    private void Start()
+    void Start()
     {
         SaveManager.RegisterSaveable(this);
-        Initialize();
     }
 
-    void Initialize()
+    public void Initialize()
     {
         for (int i = 0, y = 0; y < Tiles.Count / Width; y++)
         {
@@ -55,6 +54,8 @@ public class GameBoard : MonoBehaviour, ISaveable
         foreach (var tile in Tiles)
         {
             tile.SetNeighbors();
+            tile.SetSurroundingTiles();
+            tile.SetModel();
         }
     }
 

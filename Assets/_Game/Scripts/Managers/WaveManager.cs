@@ -50,6 +50,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         if (wave >= waves.Length) return;
 
         Wave enemiesToSpawn = waves[wave];
+        spawnPoint.Corrupt();
         GameObject spawner = Instantiate(spawnerPrefab, spawnPoint.transform.localPosition, spawnPoint.pathDirection.GetRotation());
         StartCoroutine(SpawnUnits(enemiesToSpawn, spawner));
     }
@@ -90,6 +91,7 @@ public class WaveManager : MonoBehaviour, ISaveable
             }
         }
         Destroy(spawner, spawnerDestroyTime);
+        spawnPoint.Restore();
     }
 
     public void OnEnemyDeath()
