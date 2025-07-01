@@ -996,8 +996,8 @@ MonoBehaviour:
       Type: 6
   waves:
   - Enemies:
-    - Type: 1
-      Count: 2
+    - Type: 4
+      Count: 1
   - Enemies:
     - Type: 1
       Count: 2

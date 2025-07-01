@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3741927400639079587}
   - component: {fileID: 2849710709768455832}
   - component: {fileID: 4092068630225891846}
+  - component: {fileID: 6546207173363977586}
   m_Layer: 7
   m_Name: MageEnemy
   m_TagString: Untagged
@@ -76,6 +77,27 @@ MonoBehaviour:
   maxDamage: 20
   maxAttackSpeed: 2
   mage: {fileID: -3201098322291214515, guid: 0c1d54681661097409ea0981d2ce252c, type: 3}
+--- !u!95 &6546207173363977586
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347233526246161181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d24972fc4cb1b404ca892a9e98fbc7e5, type: 3}
+  m_Controller: {fileID: 9100000, guid: f2f76bfe842e6664cac2ec3d79e9dab8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3943100229009318982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -159,7 +181,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: d24972fc4cb1b404ca892a9e98fbc7e5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

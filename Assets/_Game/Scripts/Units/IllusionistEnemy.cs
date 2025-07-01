@@ -21,6 +21,7 @@ public class IllusionistEnemy : Enemy
     }
     void Update()
     {
+        if (state == EnemyState.Dead) return;
 
         if (illusionCooldown <= 0)
         {

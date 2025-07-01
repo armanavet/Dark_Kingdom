@@ -15,8 +15,8 @@ public class WaveManager : MonoBehaviour, ISaveable
     [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
     bool cantFindPath => spawnPoint.NextOnPath == null;
     List<GameObject> enemyPath = new List<GameObject>();
+    List<Enemy> enemies = new List<Enemy>();
     Tile spawnPoint;
-    int enemyCount;
 
     #region Singleton 
     private static WaveManager _instance;
@@ -80,8 +80,9 @@ public class WaveManager : MonoBehaviour, ISaveable
             for (int i = 0; i < count; i++)
             {
                 GameObject enemy = Instantiate(prefab, spawnPoint.transform.position, spawnPoint.pathDirection.GetRotation());
-                enemy.GetComponent<Enemy>().OnSpawn(spawnPoint, 0f);
-                enemyCount++;
+                Enemy script = enemy.GetComponent<Enemy>();
+                enemies.Add(script);
+                script.OnSpawn(spawnPoint, 0f);
                 foreach (var path in enemyPath)
                 {
                     Destroy(path);
@@ -94,10 +95,12 @@ public class WaveManager : MonoBehaviour, ISaveable
         spawnPoint.Restore();
     }
 
-    public void OnEnemyDeath()
+    public void OnEnemyDeath(Enemy enemy)
     {
-        enemyCount--;
-        if (enemyCount <= 0)
+        if (!enemies.Contains(enemy)) return;
+
+        enemies.Remove(enemy);
+        if (enemies.Count == 0)
         {
             enemyPath.ForEach(x => Destroy(x));
             StateManager.Instance.ChangeGameStateTo(GameState.Passive);

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3741927400639079587}
   - component: {fileID: 2849710709768455832}
   - component: {fileID: 7896916420576822002}
+  - component: {fileID: 8130970647572635430}
   m_Layer: 7
   m_Name: Ruben
   m_TagString: Untagged
@@ -75,6 +76,27 @@ MonoBehaviour:
   maxHP: 100
   maxDamage: 20
   maxAttackSpeed: 1
+--- !u!95 &8130970647572635430
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347233526246161181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 4c31a21fb4173a746a0978a56fd8a38a, type: 3}
+  m_Controller: {fileID: 9100000, guid: 8a456331bad73974ca22ccfbb492b51b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1131686024283446686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -158,7 +180,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 4c31a21fb4173a746a0978a56fd8a38a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

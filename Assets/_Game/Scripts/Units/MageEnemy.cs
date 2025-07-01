@@ -18,8 +18,12 @@ public class MageEnemy : Enemy
     }
     private void Update()
     {
-        if (AcquireTarget()) Attack();
-        else Move();
+        if (state == EnemyState.Dead) return;
+        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Moving) Move();
+        else if (state == EnemyState.Attacking) Attack();
+        //if (AcquireTarget()) Attack();
+        //else Move();
     }
     protected override void Attack()
     {

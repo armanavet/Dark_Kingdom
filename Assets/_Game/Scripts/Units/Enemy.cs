@@ -139,12 +139,16 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
-        animator.SetBool("isDead", true);
-        WaveManager.Instance.OnEnemyDeath();
+        animator?.SetBool("isDead", true);
+        WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
 
-    void DestroyModel() => Destroy(gameObject);
+    void DestroyModel() 
+    {
+        DebuffManager.Instance.RemoveTarget(this);
+        Destroy(gameObject);
+    }
 
     public void ApplySlow(float slow)
     {
