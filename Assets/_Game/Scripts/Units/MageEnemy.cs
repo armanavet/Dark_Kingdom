@@ -14,14 +14,21 @@ public class MageEnemy : Enemy
         help = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
     }
     private void Update()
     {
-        if (AcquireTarget()) Attack();
-        else Move();
+        if (state == EnemyState.Dead) return;
+        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Moving) Move();
+        else if (state == EnemyState.Attacking) Attack();
+        //if (AcquireTarget()) Attack();
+        //else Move();
     }
     protected override void Attack()
     {
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isAttacking", true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

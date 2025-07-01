@@ -41,7 +41,7 @@ public class TowerManager : MonoBehaviour, ISaveable
         SaveManager.RegisterSaveable(this);
         BuildTower(TowerType.MainTower,mainTowerTile);
         mainTowerTile.SetType(TileType.Destination);
-        foreach (var tile in mainTowerTile.neighbors)
+        foreach (var tile in mainTowerTile.surroundingTiles)
         {
             tile.SetType(TileType.Destination);
         }
@@ -67,7 +67,7 @@ public class TowerManager : MonoBehaviour, ISaveable
         Tower tower = Instantiate(prefab, tile.transform.position, Quaternion.identity, parentObject);
         tower.tile = tile;
         tile.isEmpty = false;
-        tile.ClaimNeighbors();
+        tile.ClaimSurroundingTiles();
         Towers.Add(tower);
 
         return tower;

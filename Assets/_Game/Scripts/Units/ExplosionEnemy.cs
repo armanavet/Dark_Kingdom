@@ -5,12 +5,13 @@ using UnityEngine;
 public class ExplosionEnemy : Enemy
 {
     [SerializeField]float radius;
-
+    [SerializeField]GameObject[] Effects;
     void Start()
     {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -18,7 +19,7 @@ public class ExplosionEnemy : Enemy
         if (state == EnemyState.Moving) Move();
         else if (state == EnemyState.Attacking) Attack();
     }
-    protected override void Attack() => OnDeath();
+    protected override void Attack() => animator.SetBool("isAttacking", true);
   
     protected override void OnDeath()
     {
@@ -30,7 +31,11 @@ public class ExplosionEnemy : Enemy
                 targets[i].GetComponent<Tower>().ApplyDamage(damage);
             }
         }
+        WaveManager.Instance.OnEnemyDeath(this);
+        foreach (var effect in Effects) 
+        {
+            Instantiate(effect, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
-        WaveManager.Instance.OnEnemyDeath();
     }
 }

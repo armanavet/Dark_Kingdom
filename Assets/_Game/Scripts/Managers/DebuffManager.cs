@@ -33,6 +33,13 @@ public class DebuffManager : MonoBehaviour
         Tick();
     }
 
+    public void RemoveTarget(IDebuffable target)
+    {
+        if (ActiveDebuffs.ContainsKey(target))
+        {
+            ActiveDebuffs.Remove(target);
+        }
+    }
     public void ApplyDebuff(IDebuffable target, Debuff debuff)
     {
         if (ActiveDebuffs.ContainsKey(target))
@@ -72,6 +79,12 @@ public class DebuffManager : MonoBehaviour
 
     void HandleDebuff(IDebuffable target, Debuff debuff)
     {
+        if (target == null)
+        {
+            ActiveDebuffs.Remove(target);
+            return;
+        }
+
         if (debuff.Damage > 0) target.ApplyDamage(debuff.Damage);
         if (debuff.Slow > 0) target.ApplySlow(debuff.Slow);
     }

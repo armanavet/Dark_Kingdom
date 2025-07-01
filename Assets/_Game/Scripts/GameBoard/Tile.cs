@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
     public TileType Type;
 
-    [SerializeField] Transform arrow;
-    [SerializeField] GameObject NeutralTile, OwnTile, ObstructedTile;
+    //[SerializeField] Transform arrow;
+    [SerializeField] GameObject[] NeutralTiles, OwnTiles, ObstructedTiles;
     [SerializeField] Tile north, south, east, west, nextOnPath;
+    [SerializeField] Color regularColor, corruptedColor;
     [SerializeField] int distanceToDestination = 0;
     public Vector2Int coordinates;
     public Direction pathDirection;
@@ -21,20 +23,15 @@ public class Tile : MonoBehaviour
     public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
     bool canBePath => (Type == TileType.Neutral ||
                        Type == TileType.Own ||
-                       Type == TileType.Claimed) &&
-                       distanceToDestination == int.MaxValue;
+                       Type == TileType.Claimed);
 
-    public List<Tile> neighbors = new List<Tile>();
+    public List<Tile> surroundingTiles = new List<Tile>();
+    List<Tile> neighbors = new List<Tile>();
 
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
     public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
     public Tile GrowPathWest(bool ignoreTowers) => GrowPathTo(west, Direction.East, ignoreTowers);
-
-    private void Start()
-    {
-        arrow.gameObject.SetActive(false);
-    }
 
     public void SetCoordinates(int x, int y)
     {
@@ -43,32 +40,115 @@ public class Tile : MonoBehaviour
     public void SetType(TileType type)
     {
         Type = type;
+    }
 
-        NeutralTile.SetActive(false);
-        OwnTile.SetActive(false);
-        ObstructedTile.SetActive(false);
+    public void SetModel()
+    {
+        NeutralTiles.ToList().ForEach(x => x.SetActive(false));
+        OwnTiles.ToList().ForEach(x => x.SetActive(false));
+        ObstructedTiles.ToList().ForEach(x => x.SetActive(false));
 
-        switch (type)
+        int random;
+        switch (Type)
         {
             case TileType.Neutral:
-                NeutralTile.SetActive(true);
+                ConnectRoads();
                 break;
             case TileType.Own:
-                OwnTile.SetActive(true);
-                break;
             case TileType.Claimed:
-                OwnTile.SetActive(true);
+                random = Random.Range(0, OwnTiles.Length);
+                if (OwnTiles.Length > 0)
+                    OwnTiles[random].SetActive(true);
                 break;
             case TileType.Obstructed:
-                ObstructedTile.SetActive(true);
+                random = Random.Range(0, ObstructedTiles.Length);
+                if (ObstructedTiles.Length > 0)
+                    ObstructedTiles[random].SetActive(true);
                 break;
             default: break;
         }
     }
 
-    public void SetNeighbors()
+    void ConnectRoads()
     {
-        neighbors = new List<Tile>()
+        if (NeutralTiles.Length == 0) return;
+
+        if (NeutralTiles.Length < 6)
+        {
+            NeutralTiles[0].SetActive(true);
+            return;
+        }
+        var straight = NeutralTiles[0];
+        var corner = NeutralTiles[1];
+        var tSection = NeutralTiles[2];
+        var crossroads = NeutralTiles[3];
+        var end = NeutralTiles[4];
+        var bump = NeutralTiles[5];
+
+        List<Tile> surroundingRoads = neighbors.Where(x => x.canBePath).ToList();
+        switch (surroundingRoads.Count)
+        {
+            case 1: 
+                end.SetActive(true);
+                end.transform.LookAt(surroundingRoads[0].transform);
+                break;
+            case 2:
+                if (VectorOperations.PointsLineUp(surroundingRoads[0].coordinates, surroundingRoads[1].coordinates))
+                {
+                    int random = Random.Range(1, 10);
+                    if (random == 1)
+                    {
+                        bump.SetActive(true);
+                        bump.transform.LookAt(surroundingRoads[0].transform);
+                    }
+                    else
+                    {
+                        straight.SetActive(true);
+                        straight.transform.LookAt(surroundingRoads[0].transform);
+                    }
+                }
+                else
+                {
+                    corner.SetActive(true);
+                    corner.transform.rotation = SetCornerRotation();
+                }
+                break;
+            case 3:
+                tSection.SetActive(true);
+                tSection.transform.rotation = SetTSectionRotation();
+                break;
+            case 4:
+                crossroads.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    Quaternion SetCornerRotation()
+    {
+        float yRotation = 0;
+        if (north != null && east != null && north.canBePath && east.canBePath) yRotation = 90f;
+        else if (east != null && south != null && east.canBePath && south.canBePath) yRotation = 180f;
+        else if (south != null && west != null && south.canBePath && west.canBePath) yRotation = 270f;
+
+        return Quaternion.Euler(0, yRotation, 0);
+    }
+
+    Quaternion SetTSectionRotation()
+    {
+        float yRotation = 0;
+        if (west == null || !west.canBePath) yRotation = 90f;
+        else if (north == null || !north.canBePath) yRotation = 180f;
+        else if (east == null || !east.canBePath) yRotation = 270f;
+
+        return Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void SetSurroundingTiles()
+    {
+        surroundingTiles = new List<Tile>()
         {
             north,
             north?.east,
@@ -79,6 +159,14 @@ public class Tile : MonoBehaviour
             west,
             west?.north
         };
+    }
+
+    public void SetNeighbors()
+    {
+        if (north != null) neighbors.Add(north);
+        if (east != null) neighbors.Add(east);
+        if (south != null) neighbors.Add(south);
+        if (west != null) neighbors.Add(west);
     }
 
     public void MakeEastWestConnection(Tile east, Tile west)
@@ -110,17 +198,17 @@ public class Tile : MonoBehaviour
 
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
-        if (nextTile == null || !nextTile.canBePath) return null;
+        if (nextTile == null || !nextTile.canBePath || distanceToDestination != int.MaxValue) return null;
 
         if (!ignoreTowers && !nextTile.isEmpty) return null;
 
 
-        arrow.gameObject.SetActive(true);
-        nextTile.arrow.gameObject.SetActive(true);
+        //arrow.gameObject.SetActive(true);
+        //nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
 
         nextTile.nextOnPath = this;
-        nextTile.arrow.rotation = Quaternion.LookRotation(nextTile.arrow.forward, (arrow.position - nextTile.arrow.position).normalized);
+        //nextTile.arrow.rotation = Quaternion.LookRotation(nextTile.arrow.forward, (arrow.position - nextTile.arrow.position).normalized);
         nextTile.pathDirection = direction;
         nextTile.exitPoint = nextTile.transform.position + direction.GetHalfVector();
 
@@ -131,25 +219,24 @@ public class Tile : MonoBehaviour
         return nextTile;
     }
 
-    public void ClaimNeighbors()
+    public void ClaimSurroundingTiles()
     {
-        foreach (var neighbor in neighbors)
+        foreach (var neighbor in surroundingTiles)
         {
             if (neighbor == null || neighbor.Type != TileType.Neutral) continue;
-            
+
             neighbor.SetType(TileType.Claimed);
         }
     }
 
-    public void UnclaimNeighbors()
+    public void UnclaimSurroundingTiles()
     {
-        foreach (var neighbor in neighbors)
+        foreach (var neighbor in surroundingTiles)
         {
             if (neighbor == null || neighbor.Type != TileType.Claimed) continue;
 
             bool canUnclaim = true;
-            List<Tile> surroundingTiles = neighbor.neighbors;
-            foreach (var tile in surroundingTiles)
+            foreach (var tile in neighbor.surroundingTiles)
             {
                 if (!tile.isEmpty)
                 {
@@ -166,12 +253,30 @@ public class Tile : MonoBehaviour
     {
         if (Type != TileType.Obstructed) return false;
 
-        foreach (var neighbor in neighbors)
+        foreach (var neighbor in surroundingTiles)
         {
             if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
                 return true;
         }
         return false;
+    }
+
+    public void Corrupt()
+    {
+        GetComponent<Renderer>().material.color = corruptedColor;
+        foreach (var neighbor in surroundingTiles)
+        {
+            neighbor.GetComponent<Renderer>().material.color = corruptedColor;
+        }
+    }
+
+    public void Restore()
+    {
+        GetComponent<Renderer>().material.color = regularColor;
+        foreach (var neighbor in surroundingTiles)
+        {
+            neighbor.GetComponent<Renderer>().material.color = regularColor;
+        }
     }
 
     public TileData OnSave()
@@ -188,9 +293,9 @@ public class Tile : MonoBehaviour
 
 public enum TileType
 {
-    Neutral,    //White
-    Own,        //Yellow
-    Claimed,    //Yellow
-    Obstructed, //Black
-    Destination,//None
+    Neutral,
+    Own,
+    Claimed,
+    Obstructed,
+    Destination
 }

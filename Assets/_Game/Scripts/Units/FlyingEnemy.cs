@@ -19,20 +19,31 @@ public class FlyingEnemy : Enemy
         help = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
+        if (state == EnemyState.Dead) 
+        {
+            Fall(); 
+            return; 
+        } 
         if (FlyUp()) return;
         else if (FaceTarget()) return;
         else if (Vector3.Distance(transform.position, targetPoint) > distanceToAttack) Move();
         else Attack();
+        
     }
     protected override void Move()
     {
+        animator.SetBool("isMoving", true);
+        animator.SetBool("isAttacking", false);
         transform.Translate(Vector3.forward * currentSpeed*Time.deltaTime);
     }
     protected override void Attack()
     {
+        animator.SetBool("isMoving", false);
+        animator.SetBool("isAttacking", true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {
@@ -43,7 +54,6 @@ public class FlyingEnemy : Enemy
     }
     bool FaceTarget()
     {
-        Debug.Log(targetRotation.eulerAngles.y);
         float rotationDifference = targetRotation.eulerAngles.y - transform.rotation.y;
         float rotationTime=rotationDifference/rotationSpeed;
         rotationProgress += Time.deltaTime / rotationTime;
@@ -58,4 +68,11 @@ public class FlyingEnemy : Enemy
         transform.Translate(transform.up * flyUpSpeed*Time.deltaTime);
         return true;
     }
+
+    void Fall()
+    {
+        if (transform.position.y <= 0) return;
+        transform.Translate(-transform.up * flyUpSpeed * Time.deltaTime);
+    }
+
 }

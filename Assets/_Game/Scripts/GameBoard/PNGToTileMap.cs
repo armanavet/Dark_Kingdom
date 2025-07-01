@@ -8,20 +8,19 @@ public class PNGToTileMap : MonoBehaviour
 {
     public Texture2D sourceImage;
     public GameObject TilePrefab;
-    public string savePrefabPath = "Assets/_Game/Prefabs/GeneratedTilemap.prefab";
+    public string savePrefabPath = "Assets/_Game/Prefabs/GameBoard.prefab";
     GameObject GridParent;
     float ColorTolerance = 0.1f;
     public void GenerateGrid()
     {
-        GridParent = new GameObject("GeneratedGrid");
-        GameBoard script = GridParent.AddComponent<GameBoard>();
         int Width = sourceImage.width;
         int Height = sourceImage.height;
+        GridParent = new GameObject("GameBoard");
+        GameBoard script = GridParent.AddComponent<GameBoard>();
         script.Length = Height;
         script.Width = Width;
-        Debug.Log(Width + " " + Height);
-        Vector2 offset = new Vector2((Width - 1) * 0.5f, (Height - 1) * 0.5f);
         script.Tiles = new List<Tile>();
+        Vector2 offset = new Vector2((Width - 1) * 0.5f, (Height - 1) * 0.5f);
 
         for (int y = 0; y < Height; y++)
         {
@@ -43,6 +42,8 @@ public class PNGToTileMap : MonoBehaviour
                 }
             }
         }
+
+        GameBoard.Instance.Initialize();
 
     }
     TileType GetTileType(Color color)

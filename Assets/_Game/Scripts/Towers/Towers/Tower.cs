@@ -32,25 +32,23 @@ public abstract class Tower : MonoBehaviour
     public void Sell()
     {
         EconomyManager.Instance.ChangeGoldAmount(SellPrice);
-        PrepareForDestruction();
-        Destroy(gameObject);
+        Destroy();
     }
     public void ApplyDamage(float damage)
     {
         currentHP -= damage;
         if (currentHP <= 0)
         {
-            PrepareForDestruction();
-            Destroy(gameObject);
+            Destroy();
         }
     }
 
-    void PrepareForDestruction()
+    void Destroy()
     {
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
-        tile.UnclaimNeighbors();
+        tile.UnclaimSurroundingTiles();
     }
 
     public TowerData OnSave()
