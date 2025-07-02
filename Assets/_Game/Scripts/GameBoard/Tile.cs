@@ -73,7 +73,7 @@ public class Tile : MonoBehaviour
     {
         if (NeutralTiles.Length == 0) return;
 
-        if (NeutralTiles.Length < 6)
+        if (NeutralTiles.Length < 5)
         {
             NeutralTiles[0].SetActive(true);
             return;
@@ -83,7 +83,6 @@ public class Tile : MonoBehaviour
         var tSection = NeutralTiles[2];
         var crossroads = NeutralTiles[3];
         var end = NeutralTiles[4];
-        var bump = NeutralTiles[5];
 
         List<Tile> surroundingRoads = neighbors.Where(x => x.canBePath).ToList();
         switch (surroundingRoads.Count)
@@ -95,17 +94,8 @@ public class Tile : MonoBehaviour
             case 2:
                 if (VectorOperations.PointsLineUp(surroundingRoads[0].coordinates, surroundingRoads[1].coordinates))
                 {
-                    int random = Random.Range(1, 10);
-                    if (random == 1)
-                    {
-                        bump.SetActive(true);
-                        bump.transform.LookAt(surroundingRoads[0].transform);
-                    }
-                    else
-                    {
-                        straight.SetActive(true);
-                        straight.transform.LookAt(surroundingRoads[0].transform);
-                    }
+                     straight.SetActive(true);
+                     straight.transform.LookAt(surroundingRoads[0].transform);
                 }
                 else
                 {
