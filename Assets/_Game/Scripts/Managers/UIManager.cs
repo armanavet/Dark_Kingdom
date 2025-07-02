@@ -48,6 +48,7 @@ public class UIManager : MonoBehaviour
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
+
         tilePanel = Instantiate(tilePanelPrefab);
         tilePanel.SetActive(false);
         activeStatePanel.SetActive(false);
@@ -89,16 +90,19 @@ public class UIManager : MonoBehaviour
     }
     void ChangeUiButtonVisibility()
     {
-        foreach (var tower in TowerManager.Instance.TowerPrefabs)
+        for (int i = 0; i < towerPurchaseButtons.Length; i++)
         {
-            if (tower.PurchasePrice < EconomyManager.Instance.CurrentGold)
+            if (towerPurchaseButtons[i] == TowerManager.Instance.TowerPrefabs[i]) 
             {
-                towerPurchaseButtons[(int)tower.Type].interactable = true;
-            }
-            else
-            {
-                towerPurchaseButtons[(int)tower.Type].interactable = false;
-            }
+                if (TowerManager.Instance.TowerPrefabs[i].PurchasePrice < EconomyManager.Instance.CurrentGold)
+                {
+                    towerPurchaseButtons[i].interactable = true;
+                }
+                else
+                {
+                    towerPurchaseButtons[i].interactable = false;
+                }
+            }            
         }
     }
 
