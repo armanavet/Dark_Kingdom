@@ -26,13 +26,9 @@ public class GameBoard : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
-
-    void Start()
-    {
-        SaveManager.RegisterSaveable(this);
-    }
 
     public void Initialize()
     {
@@ -82,6 +78,8 @@ public class GameBoard : MonoBehaviour, ISaveable
             SearchFrontier.Enqueue(tile.GrowPathWest(ignoreTowers));
         }
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {

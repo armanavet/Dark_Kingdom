@@ -31,12 +31,12 @@ public class StateManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
 
-    void Start()
+    public void Initialize()
     {
-        SaveManager.RegisterSaveable(this);
         ChangeGameStateTo(GameState.Passive);
     }
 
@@ -75,6 +75,8 @@ public class StateManager : MonoBehaviour, ISaveable
     {
         timeMultiplier = (timeMultiplier == multiplier) ? (timeMultiplier = 1) : (timeMultiplier = multiplier);
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {

@@ -35,13 +35,13 @@ public class WaveManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
 
-    void Start()
+    public void Initialize()
     {
         units.OrganizeByType();
-        SaveManager.RegisterSaveable(this);
     }
 
     public void SpawnWave(int wave)
@@ -121,6 +121,8 @@ public class WaveManager : MonoBehaviour, ISaveable
             tile = tile.NextOnPath;
         }
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {

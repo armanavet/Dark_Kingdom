@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    void Start()
+    public void Initialize()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
