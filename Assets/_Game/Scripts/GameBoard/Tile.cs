@@ -17,6 +17,9 @@ public class Tile : MonoBehaviour
     public Vector3 exitPoint;
     public bool isEmpty = true;
     public int TilePrice;
+    public List<Tile> surroundingTiles = new List<Tile>();
+    List<Tile> neighbors = new List<Tile>();
+    [SerializeField] GameObject currentModel;
 
     public Tile NextOnPath => nextOnPath;
     public int DistanceToDestinationOriginal { get; private set; }
@@ -24,9 +27,6 @@ public class Tile : MonoBehaviour
     bool canBePath => (Type == TileType.Neutral ||
                        Type == TileType.Own ||
                        Type == TileType.Claimed);
-
-    public List<Tile> surroundingTiles = new List<Tile>();
-    List<Tile> neighbors = new List<Tile>();
 
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
@@ -37,9 +37,10 @@ public class Tile : MonoBehaviour
     {
         coordinates = new Vector2Int(x, y);
     }
-    public void SetType(TileType type)
+    public void SetType(TileType type, bool setModel = true)
     {
         Type = type;
+        if (setModel) SetModel();
     }
 
     public void SetModel()
@@ -56,24 +57,26 @@ public class Tile : MonoBehaviour
                 break;
             case TileType.Own:
             case TileType.Claimed:
+            case TileType.Destination:
                 random = Random.Range(0, OwnTiles.Length);
                 if (OwnTiles.Length > 0)
-                    OwnTiles[random].SetActive(true);
+                    currentModel = OwnTiles[random];
                 break;
             case TileType.Obstructed:
                 random = Random.Range(0, ObstructedTiles.Length);
                 if (ObstructedTiles.Length > 0)
-                    ObstructedTiles[random].SetActive(true);
+                    currentModel = ObstructedTiles[random];
                 break;
             default: break;
         }
+        currentModel.SetActive(true);
     }
 
     void ConnectRoads()
     {
         if (NeutralTiles.Length == 0) return;
 
-        if (NeutralTiles.Length < 6)
+        if (NeutralTiles.Length < 5)
         {
             NeutralTiles[0].SetActive(true);
             return;
@@ -83,42 +86,36 @@ public class Tile : MonoBehaviour
         var tSection = NeutralTiles[2];
         var crossroads = NeutralTiles[3];
         var end = NeutralTiles[4];
-        var bump = NeutralTiles[5];
 
         List<Tile> surroundingRoads = neighbors.Where(x => x.canBePath).ToList();
         switch (surroundingRoads.Count)
         {
-            case 1: 
-                end.SetActive(true);
-                end.transform.LookAt(surroundingRoads[0].transform);
+            case 1:
+                currentModel = end;
+                currentModel.SetActive(true);
+                currentModel.transform.LookAt(surroundingRoads[0].transform);
                 break;
             case 2:
                 if (VectorOperations.PointsLineUp(surroundingRoads[0].coordinates, surroundingRoads[1].coordinates))
                 {
-                    int random = Random.Range(1, 10);
-                    if (random == 1)
-                    {
-                        bump.SetActive(true);
-                        bump.transform.LookAt(surroundingRoads[0].transform);
-                    }
-                    else
-                    {
-                        straight.SetActive(true);
-                        straight.transform.LookAt(surroundingRoads[0].transform);
-                    }
+                    currentModel = straight;
+                    currentModel.transform.LookAt(surroundingRoads[0].transform);
                 }
                 else
                 {
-                    corner.SetActive(true);
-                    corner.transform.rotation = SetCornerRotation();
+                    currentModel = corner;
+                    currentModel.SetActive(true);
+                    currentModel.transform.rotation = SetCornerRotation();
                 }
                 break;
             case 3:
-                tSection.SetActive(true);
-                tSection.transform.rotation = SetTSectionRotation();
+                currentModel = tSection;
+                currentModel.SetActive(true);
+                currentModel.transform.rotation = SetTSectionRotation();
                 break;
             case 4:
-                crossroads.SetActive(true);
+                currentModel = crossroads;
+                currentModel.SetActive(true);
                 break;
             default:
                 break;
@@ -198,15 +195,13 @@ public class Tile : MonoBehaviour
 
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
-        if (nextTile == null || !nextTile.canBePath || distanceToDestination != int.MaxValue) return null;
+        if (nextTile == null || !nextTile.canBePath || nextTile.distanceToDestination != int.MaxValue) return null;
 
         if (!ignoreTowers && !nextTile.isEmpty) return null;
-
 
         //arrow.gameObject.SetActive(true);
         //nextTile.arrow.gameObject.SetActive(true);
         nextTile.distanceToDestination = distanceToDestination + 1;
-
         nextTile.nextOnPath = this;
         //nextTile.arrow.rotation = Quaternion.LookRotation(nextTile.arrow.forward, (arrow.position - nextTile.arrow.position).normalized);
         nextTile.pathDirection = direction;
@@ -263,19 +258,19 @@ public class Tile : MonoBehaviour
 
     public void Corrupt()
     {
-        GetComponent<Renderer>().material.color = corruptedColor;
+        currentModel.GetComponent<Renderer>().material.color = corruptedColor;
         foreach (var neighbor in surroundingTiles)
         {
-            neighbor.GetComponent<Renderer>().material.color = corruptedColor;
+            neighbor.currentModel.GetComponent<Renderer>().material.color = corruptedColor;
         }
     }
 
     public void Restore()
     {
-        GetComponent<Renderer>().material.color = regularColor;
+        currentModel.GetComponent<Renderer>().material.color = regularColor;
         foreach (var neighbor in surroundingTiles)
         {
-            neighbor.GetComponent<Renderer>().material.color = regularColor;
+            neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
         }
     }
 

@@ -44,11 +44,10 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    void Start()
+    public void Initialize()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
-
         tilePanel = Instantiate(tilePanelPrefab);
         tilePanel.SetActive(false);
         activeStatePanel.SetActive(false);
@@ -92,17 +91,15 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
         {
-            if (towerPurchaseButtons[i] == TowerManager.Instance.TowerPrefabs[i]) 
+            var tower = TowerManager.Instance.TowerPrefabs[i];
+            if (tower.PurchasePrice < EconomyManager.Instance.CurrentGold)
             {
-                if (TowerManager.Instance.TowerPrefabs[i].PurchasePrice < EconomyManager.Instance.CurrentGold)
-                {
-                    towerPurchaseButtons[i].interactable = true;
-                }
-                else
-                {
-                    towerPurchaseButtons[i].interactable = false;
-                }
-            }            
+                towerPurchaseButtons[i].interactable = true;
+            }
+            else
+            {
+                towerPurchaseButtons[i].interactable = false;
+            }
         }
     }
 

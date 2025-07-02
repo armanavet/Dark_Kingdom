@@ -28,13 +28,9 @@ public class EconomyManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
-
-    void Start()
-    {
-        SaveManager.RegisterSaveable(this);
-    }
 
     void Update()
     {
@@ -53,7 +49,9 @@ public class EconomyManager : MonoBehaviour, ISaveable
 
     public void OnEconomicStructureChange(Tower structure)
     {
+        if (structure == null) return;
         if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
+
         if (EconomicBuildings.Contains(structure))
         {
             EconomicBuildings.Remove(structure);
@@ -70,6 +68,8 @@ public class EconomyManager : MonoBehaviour, ISaveable
             ChangeGoldAmount(building.GoldGenerated);
         }
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {

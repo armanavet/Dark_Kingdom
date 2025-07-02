@@ -36,7 +36,7 @@ public class PNGToTileMap : MonoBehaviour
                 Tile tile = tileObj.GetComponent<Tile>();
                 if (tile != null)
                 {
-                    tile.SetType(TileType);
+                    tile.SetType(TileType, false);
                     tile.SetCoordinates(x,y);
                     script.Tiles.Add(tile);
                 }

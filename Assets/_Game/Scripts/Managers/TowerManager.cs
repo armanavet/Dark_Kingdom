@@ -10,6 +10,7 @@ public class TowerManager : MonoBehaviour, ISaveable
     Dictionary<TowerType, TowerPreview> previewsByType = new Dictionary<TowerType, TowerPreview>();
     [HideInInspector]public List<Tower> Towers;
     [SerializeField] Tile mainTowerTile;
+
     #region Singleton 
     private static TowerManager _instance;
     public static TowerManager Instance
@@ -27,10 +28,11 @@ public class TowerManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
 
-    void Start()
+    public void Initialize()
     {
         foreach (var prefab in TowerPrefabs)
             prefabsByType.Add(prefab.Type, prefab);
@@ -38,14 +40,14 @@ public class TowerManager : MonoBehaviour, ISaveable
         foreach (var preview in TowerPreviews)
             previewsByType.Add(preview.Type, preview);
 
-        SaveManager.RegisterSaveable(this);
         BuildTower(TowerType.MainTower,mainTowerTile);
         mainTowerTile.SetType(TileType.Destination);
         foreach (var tile in mainTowerTile.surroundingTiles)
         {
             tile.SetType(TileType.Destination);
+            tile.isEmpty = false;
         }
-        GameBoard.Instance.BuildPathToDestination(ignoreTowers: false);
+        GameBoard.Instance.BuildPathToDestination(false);
     }
 
     public Tower GetPrefabByType(TowerType type)
@@ -72,6 +74,8 @@ public class TowerManager : MonoBehaviour, ISaveable
 
         return tower;
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {
