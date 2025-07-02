@@ -249,8 +249,8 @@ MonoBehaviour:
   east: {fileID: 0}
   west: {fileID: 0}
   nextOnPath: {fileID: 0}
-  regularColor: {r: 0, g: 0, b: 0, a: 0}
-  corruptedColor: {r: 0, g: 0, b: 0, a: 0}
+  regularColor: {r: 1, g: 1, b: 1, a: 0}
+  corruptedColor: {r: 1, g: 0, b: 0, a: 0}
   distanceToDestination: 0
   coordinates: {x: 0, y: 0}
   pathDirection: 0
