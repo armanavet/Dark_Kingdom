@@ -80,12 +80,11 @@ public class OptionsMenuPanelManager : MonoBehaviour
     }
     public void c_BTSetVolume(float volume)
     {
-        AudioListener.volume = volume;
         volumeTextValue.text = volume.ToString("0.0");
     }
     public void e_BTResetButton(string MenuType)
     {
-        if(MenuType == "Audio")
+        if (MenuType == "Audio")
         {
             AudioListener.volume = defaultVolume;
             volumeSlider.value = defaultVolume;
@@ -182,6 +181,11 @@ public class OptionsMenuPanelManager : MonoBehaviour
         Screen.SetResolution(resolution.width, resolution.height, savedFullscreen);
 
         
+    }
+
+    public void n_BTAudioPlay()
+    {
+        AudioManager.instance.PlayClickSoundForUI();
     }
     public IEnumerator ConfirmationBox()
     {

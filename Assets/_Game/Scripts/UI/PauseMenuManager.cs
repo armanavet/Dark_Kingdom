@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class PauseMenuManager : MonoBehaviour
 {
     public string _SceneToLoad;
-    [SerializeField] private GameObject _PauseMenuContainer = null;
+    [SerializeField] GameObject _PauseMenuPanel = null;
+    //[SerializeField] GameObject _PauseMenuContainer = null;
     bool isActive;
     float a;
     void Update()
@@ -21,12 +22,16 @@ public class PauseMenuManager : MonoBehaviour
     public void a_BTPause()
     {
         isActive = !isActive;
-        _PauseMenuContainer.SetActive(isActive);
+        _PauseMenuPanel.SetActive(isActive);
         Time.timeScale = isActive ? 0 : 1;
+    }
+    public void b_BTAudioPlay()
+    {
+        AudioManager.instance.PlayClickSoundForUI();
     }
     public void z_BTExitToMenuButton()
     {
         SceneManager.LoadScene(_SceneToLoad);
     }
-    //TODO Options button
+    
 }

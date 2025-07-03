@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable
@@ -9,7 +10,10 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
-    [SerializeField] protected float maxAttackSpeed;
+    [SerializeField] protected float maxAttackSpeed; 
+    [SerializeField] protected AudioClip runLoop;
+    [SerializeField] protected AudioClip attackSound;
+    protected AudioSource audioSource;
     protected Animator animator;
     protected float currentSpeed;
     protected float help;
@@ -27,6 +31,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
 
+    
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -35,7 +40,21 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         PrepareInitialMove();
         progress = 0;
     }
+    //protected void PlayRunSound()
+    //{
+    //    if (audioSource.clip != runLoop)
+    //    {
+    //        audioSource.clip = runLoop;
+    //        audioSource.loop = true;
+    //        audioSource.Play();
+    //    }
+    //}
 
+    //protected void PlayAttackSound()
+    //{
+    //    audioSource.Stop(); // if running
+    //    audioSource.PlayOneShot(attackSound);
+    //}
     void PrepareInitialMove()
     {
         positionFrom = tileFrom.transform.position;
@@ -48,10 +67,17 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         progressFactor = 2;
     }
 
+
     protected virtual void Move()
     {
         animator.SetBool("isMoving", true);
         animator.SetBool("isAttacking", false);
+        if (!audioSource.isPlaying || audioSource.clip != runLoop)
+        {
+            audioSource.clip = runLoop;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -140,6 +166,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         state = EnemyState.Dead;
         animator?.SetBool("isDead", true);
+        audioSource.Stop();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
