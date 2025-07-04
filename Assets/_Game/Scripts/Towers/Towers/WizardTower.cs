@@ -28,7 +28,11 @@ public class WizardTower : Tower
 
     void Start()
     {
-        SellPrice = SellPrices[CurrentLevel];
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+            SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
@@ -76,6 +80,8 @@ public class WizardTower : Tower
 
         Shel sh = Instantiate(shel);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
+        audioSource.clip = shootSound;
+        audioSource.PlayOneShot(shootSound);
     }
     bool AcquireTarget()
     {

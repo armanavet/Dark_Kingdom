@@ -7,6 +7,10 @@ public class Illusion : Enemy
     [SerializeField] float duration;
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         currentSpeed = maxSpeed;
         help = maxHP;
         animator = GetComponent<Animator>();
@@ -27,5 +31,17 @@ public class Illusion : Enemy
             animator.SetBool("isIdle", true);
         }
     }
-    protected override void Attack(){}
+    protected override void Attack(){
+    }
+    public void PlayGrowelSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayWalkingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
+    }
 }

@@ -10,6 +10,10 @@ public class MageEnemy : Enemy
 
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -69,5 +73,16 @@ public class MageEnemy : Enemy
         }
         target = null;
         return false;
+    }
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayWalkingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }

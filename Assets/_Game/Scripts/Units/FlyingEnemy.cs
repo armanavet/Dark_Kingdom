@@ -12,6 +12,10 @@ public class FlyingEnemy : Enemy
     float rotationProgress;
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
@@ -74,5 +78,15 @@ public class FlyingEnemy : Enemy
         if (transform.position.y <= 0) return;
         transform.Translate(-transform.up * flyUpSpeed * Time.deltaTime);
     }
-
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayFlyingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
+    }
 }

@@ -13,6 +13,10 @@ public class IllusionistEnemy : Enemy
 
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -60,5 +64,16 @@ public class IllusionistEnemy : Enemy
             illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
             illusion.OnSpawn(tileFrom, 0);
         }
+    }
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayWalkingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }

@@ -264,9 +264,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2533224050949870714}
   - component: {fileID: 7497355478416520662}
-  - component: {fileID: 2372493990305677013}
   - component: {fileID: 7241747384034096508}
   - component: {fileID: 7489851890267479578}
+  - component: {fileID: -7032535349145301802}
   m_Layer: 7
   m_Name: Ruben
   m_TagString: Untagged
@@ -311,28 +311,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2372493990305677013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789802928488366921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68101582159c2494abedb41f3ae0c7f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 5525157896910802345}
-  towerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  maxSpeed: 1
-  maxHP: 100
-  maxDamage: 20
-  maxAttackSpeed: 1
-  runLoop: {fileID: 8300000, guid: 7a1da8275935858428d3af22a10ab810, type: 3}
-  attackSound: {fileID: 8300000, guid: 7187dc81f98b8be4eb97bfc4dd9a5abf, type: 3}
 --- !u!95 &7241747384034096508
 Animator:
   serializedVersion: 5
@@ -366,13 +344,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 200
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -450,6 +428,38 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-7032535349145301802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789802928488366921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68101582159c2494abedb41f3ae0c7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: -8679921383154817045, guid: 4c31a21fb4173a746a0978a56fd8a38a, type: 3}
+  towerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxSpeed: 1
+  maxHP: 100
+  maxDamage: 5
+  maxAttackSpeed: 2
+  movingSounds:
+  - {fileID: 8300000, guid: 9ea11a2d13d536e4e8441a0f5895995c, type: 3}
+  - {fileID: 8300000, guid: 203ac8b6f07070e4f93f1c1a6fff06c3, type: 3}
+  - {fileID: 8300000, guid: ac6649006dbee9e4685752e124111da7, type: 3}
+  - {fileID: 8300000, guid: f42914d98b070f741b2feee96a2988ee, type: 3}
+  - {fileID: 8300000, guid: feb62160ad1f8334ab037017b843d162, type: 3}
+  - {fileID: 8300000, guid: 001f691d110d55648871a03f446ffa08, type: 3}
+  - {fileID: 8300000, guid: 6478d7fb30f301b4fa8f74d5d1dad094, type: 3}
+  - {fileID: 8300000, guid: f1547ad8fbfa4f24d83e5a445aee860d, type: 3}
+  - {fileID: 8300000, guid: 47832b56ccba5bc408b1d5aac1871746, type: 3}
+  - {fileID: 8300000, guid: 3d132da7af60f1145a3deb6a8bc42a08, type: 3}
+  attackSound: {fileID: 8300000, guid: b70d04f1f7e251b4f8629b271d71c623, type: 3}
 --- !u!1 &856434313831559734
 GameObject:
   m_ObjectHideFlags: 0

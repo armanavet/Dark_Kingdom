@@ -12,8 +12,6 @@ public class DefaultEnemy : Enemy
         {
             audioSource = GetComponent<AudioSource>();
         }
-
-        Debug.Log(audioSource);
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -31,13 +29,24 @@ public class DefaultEnemy : Enemy
     {
         animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
-        audioSource.clip = attackSound; // stop run loop if playing
-        audioSource.PlayOneShot(attackSound);
+        
         attackCooldown -=Time.deltaTime;
         if (target != null&& attackCooldown<=0)
         { 
             target.ApplyDamage(damage);
             attackCooldown = 1 / attackSpeed;
         }
+    }
+
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayWalkingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }

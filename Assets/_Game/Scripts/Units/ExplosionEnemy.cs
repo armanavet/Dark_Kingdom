@@ -8,6 +8,10 @@ public class ExplosionEnemy : Enemy
     [SerializeField]GameObject[] Effects;
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -20,9 +24,10 @@ public class ExplosionEnemy : Enemy
         else if (state == EnemyState.Attacking) Attack();
     }
     protected override void Attack() => animator.SetBool("isAttacking", true);
-  
+     
     protected override void OnDeath()
     {
+        
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -37,5 +42,17 @@ public class ExplosionEnemy : Enemy
             Instantiate(effect, transform.position, Quaternion.identity);
         }
         Destroy(gameObject);
+    }
+
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayWalkingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }

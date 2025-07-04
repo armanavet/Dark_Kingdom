@@ -8,6 +8,7 @@ public class ArcherTower : Tower
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
+    [SerializeField] AudioClip HitSound;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
     float attackCooldown;
@@ -16,6 +17,10 @@ public class ArcherTower : Tower
 
     private void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
@@ -44,6 +49,8 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
+        audioSource.clip = shootSound;
+        audioSource.PlayOneShot(shootSound);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -143,7 +150,8 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-
+        audioSource.clip = HitSound;
+        audioSource.PlayOneShot(HitSound);
         Destroy(currentProjectile);
     }
 }

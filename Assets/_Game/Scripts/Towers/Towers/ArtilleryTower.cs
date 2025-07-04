@@ -28,6 +28,10 @@ public class ArtilleryTower : Tower
 
     void Start()
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
@@ -77,7 +81,8 @@ public class ArtilleryTower : Tower
         
         Shel sh = Instantiate(shel);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        
+        audioSource.clip = shootSound; 
+        audioSource.PlayOneShot(shootSound);
     }
     bool AcquireTarget()
     {

@@ -13,7 +13,9 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected List<float> HP;
     [SerializeField] protected List<int> Damage;
     [SerializeField] protected Debuff[] debuffs;
-    [SerializeField] protected GameObject[] Projectiles;
+    [SerializeField] protected GameObject[] Projectiles; 
+    [SerializeField] protected AudioClip shootSound;
+    protected AudioSource audioSource;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();

@@ -12,7 +12,6 @@ public class Mage : MonoBehaviour
     Vector3 endPoint;
     public LayerMask TowerMask;
     bool cxival;
-
     private void Update()
     {
         transform.position = Vector3.Lerp(startPoint, endPoint, progress);
