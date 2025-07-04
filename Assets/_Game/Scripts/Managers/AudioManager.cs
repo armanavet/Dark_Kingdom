@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    
+    
+    AudioSource audioSource;
+    [Header("Volume Setting")]
+    [SerializeField] AudioClip menuItemsClickSound;
+    [SerializeField] AudioClip towerPanelBuyClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] AudioClip menuItemsClickSound;
+
     #region Singleton
     private static AudioManager _instance;
     public static AudioManager instance
@@ -31,23 +45,18 @@ public class AudioManager : MonoBehaviour
         }
 
         _instance = this;
-        //DontDestroyOnLoad(gameObject); // Optional: keep across scenes
+        DontDestroyOnLoad(gameObject); // Optional: keep across scenes
     }
     #endregion
 
 
-    public AudioSource audioSource;
-    [Header("Volume Setting")]
-    [SerializeField] AudioClip menuItemsClickSound;
-    [SerializeField] AudioClip towerPanelBuyClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-
+    private void Start()
+    {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
     public void PlayClickSoundForUI()
     {
         audioSource.PlayOneShot(menuItemsClickSound);

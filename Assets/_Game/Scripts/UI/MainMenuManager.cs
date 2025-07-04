@@ -17,9 +17,7 @@ public class MainMenuManager : MonoBehaviour
         {
             SaveMetaData data = SaveManager.LoadMetaData(i);
             savePanelInfos[i-1].test(data);
-
         }
-
     }
     public void a_BTStartGame()
     {
@@ -36,9 +34,5 @@ public class MainMenuManager : MonoBehaviour
     public void z_BTExitButton()
     {
         Application.Quit();
-    }
-    public void c_BTAudioPlay()
-    {
-        AudioManager.instance.PlayClickSoundForUI();
     }
 }
