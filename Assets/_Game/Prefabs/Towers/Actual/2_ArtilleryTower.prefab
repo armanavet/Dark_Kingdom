@@ -860,16 +860,21 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  SellPrices: 78000000820000008c00000096000000
   UpgradePrices: a0000000aa000000b4000000
+  SellPrices: 78000000820000008c00000096000000
   HP:
   - 150
   - 170
   - 200
   - 220
   Damage: 1e00000028000000320000003c000000
-  debuffs: []
+  Debuffs: []
   Projectiles: []
+  Models:
+  - {fileID: 4920466596475463426}
+  - {fileID: 4920466596475463426}
+  - {fileID: 4920466596475463426}
+  - {fileID: 4920466596475463426}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
@@ -972,6 +977,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fe59a51b8091b249b54b09a449312bf, type: 3}
+--- !u!1 &4920466596475463426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5fe59a51b8091b249b54b09a449312bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 5226545691095292499}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5693344739112795576 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5fe59a51b8091b249b54b09a449312bf,

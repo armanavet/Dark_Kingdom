@@ -8,16 +8,18 @@ public abstract class Tower : MonoBehaviour
 {
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
-    [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<int> UpgradePrices;
+    [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<float> HP;
     [SerializeField] protected List<int> Damage;
-    [SerializeField] protected Debuff[] debuffs;
+    [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
+    [SerializeField] protected GameObject[] Models;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
     protected GameObject projectile;
+    protected GameObject model;
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;

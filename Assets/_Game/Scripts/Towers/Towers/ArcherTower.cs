@@ -20,9 +20,11 @@ public class ArcherTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        model = Models[CurrentLevel];
         projectile = Projectiles[CurrentLevel];
-        if (debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
+        if (Debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(Debuffs[CurrentLevel]);
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
 
@@ -105,17 +107,24 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
+
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
             projectile = Projectiles[CurrentLevel];
-            float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
-            maxHP = HP[CurrentLevel];
 
-            Debuff newDebuff = debuffs[CurrentLevel];
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
+            float hpPercent = currentHP / maxHP;
+            maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
+
+            Debuff newDebuff = Debuffs[CurrentLevel];
             if (newDebuff != null)
             {
                 foreach (var debuff in currentDebuffs)

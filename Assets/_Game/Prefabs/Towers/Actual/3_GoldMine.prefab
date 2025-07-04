@@ -688,30 +688,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b4c7b371e1c2c4484d8980039adae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SellPrices: 500000005a000000640000006e000000
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 0
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 0
   UpgradePrices: 78000000820000008c000000
+  SellPrices: 500000005a000000640000006e000000
   HP:
   - 100
   - 120
   - 140
   - 160
   Damage: 
-  maxHP: 0
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 80
-  TowerName: GoldMine
-  Type: 3
-  TowerPanel: {fileID: 6605709382628991479}
+  Debuffs: []
+  Projectiles: []
+  Models:
+  - {fileID: 1484812841678415993}
+  - {fileID: 1484812841678415993}
+  - {fileID: 1484812841678415993}
+  - {fileID: 1484812841678415993}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 80
+  Type: 3
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
+  TowerPanel: {fileID: 6605709382628991479}
   GoldGenerationList: 020000000400000006000000
 --- !u!1 &8368888997727213712
 GameObject:
@@ -935,6 +946,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b00d68b0564040e4c95206afe082b6f6, type: 3}
+--- !u!1 &1484812841678415993 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b00d68b0564040e4c95206afe082b6f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1754843339613738280}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2292558457273742019 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b00d68b0564040e4c95206afe082b6f6,

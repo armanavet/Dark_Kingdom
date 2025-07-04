@@ -258,6 +258,7 @@ MonoBehaviour:
   isEmpty: 1
   TilePrice: 0
   surroundingTiles: []
+  currentModel: {fileID: 0}
 --- !u!65 &4639269498908194017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -913,7 +914,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e4f34005a366c3d4da05631b55083957, type: 2}
+      objectReference: {fileID: 2100000, guid: 5bddc527c68094f4c91006665bc01a3b, type: 2}
     - target: {fileID: 919132149155446097, guid: 8f28202b9715dbd49b493898479c652c,
         type: 3}
       propertyPath: m_Name

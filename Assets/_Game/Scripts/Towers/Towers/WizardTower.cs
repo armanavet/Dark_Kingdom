@@ -32,8 +32,10 @@ public class WizardTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
-        if (debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
+        model = Models[CurrentLevel];
+        if (Debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(Debuffs[CurrentLevel]);
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -117,10 +119,23 @@ public class WizardTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
-            Debuff currentDebuff = debuffs[CurrentLevel];
+
+            shellDamage = Damage[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
+
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
+            float hpPercent = currentHP / maxHP;
+            maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
+
+            Debuff currentDebuff = Debuffs[CurrentLevel];
             if (currentDebuff != null)
             {
                 foreach (var debuff in currentDebuffs)
@@ -133,11 +148,6 @@ public class WizardTower : Tower
                 }
                 currentDebuffs.Add(currentDebuff);
             }
-            shellDamage = Damage[CurrentLevel];
-            SellPrice = SellPrices[CurrentLevel];
-            float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
-            maxHP = HP[CurrentLevel];
         }
     }
 

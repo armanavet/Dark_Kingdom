@@ -32,8 +32,10 @@ public class ArtilleryTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
-        if (debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
+        model = Models[CurrentLevel];
+        if (Debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(Debuffs[CurrentLevel]);
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -119,14 +121,21 @@ public class ArtilleryTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
+
             shellDamage = Damage[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
+
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
             float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
         }
     }
 }
