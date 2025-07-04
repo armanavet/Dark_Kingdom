@@ -33,15 +33,15 @@ public class Illusion : Enemy
     }
     protected override void Attack(){
     }
-    public void PlayGrowelSound()
-    {
-        audioSource.clip = attackSound;
-        audioSource.PlayOneShot(attackSound);
-    }
-    public void PlayWalkingSound()
-    {
-        int randomSound = Random.Range(0, movingSounds.Length);
-        audioSource.clip = movingSounds[randomSound];
-        audioSource.PlayOneShot(movingSounds[randomSound]);
-    }
+    //public void PlayGrowelSound()
+    //{
+    //    audioSource.clip = attackSound;
+    //    audioSource.PlayOneShot(attackSound);
+    //}
+    //public void PlayWalkingSound()
+    //{
+    //    int randomSound = Random.Range(0, movingSounds.Length);
+    //    audioSource.clip = movingSounds[randomSound];
+    //    audioSource.PlayOneShot(movingSounds[randomSound]);
+    //}
 }

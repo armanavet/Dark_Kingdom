@@ -11,8 +11,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    //[SerializeField] protected AudioClip runSoundFirs
-    //[SerializeField] protected AudioClip runSoundSecond;
     [SerializeField] protected AudioClip[] movingSounds;
     [SerializeField] protected AudioClip attackSound;
     protected AudioSource audioSource;
@@ -60,12 +58,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         animator.SetBool("isMoving", true);
         animator.SetBool("isAttacking", false);
-        //if (!audioSource.isPlaying || audioSource.clip != runLoop)
-        //{
-        //    audioSource.clip = runLoop;
-        //    audioSource.loop = true;
-        //    audioSource.Play();
-        //}
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -169,6 +161,17 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
+    }
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayMovingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }
 

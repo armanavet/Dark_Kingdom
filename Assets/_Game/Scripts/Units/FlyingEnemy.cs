@@ -78,15 +78,15 @@ public class FlyingEnemy : Enemy
         if (transform.position.y <= 0) return;
         transform.Translate(-transform.up * flyUpSpeed * Time.deltaTime);
     }
-    public void PlayAttackSound()
-    {
-        audioSource.clip = attackSound;
-        audioSource.PlayOneShot(attackSound);
-    }
-    public void PlayFlyingSound()
-    {
-        int randomSound = Random.Range(0, movingSounds.Length);
-        audioSource.clip = movingSounds[randomSound];
-        audioSource.PlayOneShot(movingSounds[randomSound]);
-    }
+    //public void PlayAttackSound()
+    //{
+    //    audioSource.clip = attackSound;
+    //    audioSource.PlayOneShot(attackSound);
+    //}
+    //public void PlayFlyingSound()
+    //{
+    //    int randomSound = Random.Range(0, movingSounds.Length);
+    //    audioSource.clip = movingSounds[randomSound];
+    //    audioSource.PlayOneShot(movingSounds[randomSound]);
+    //}
 }

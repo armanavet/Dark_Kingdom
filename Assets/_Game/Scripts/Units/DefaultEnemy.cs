@@ -37,16 +37,15 @@ public class DefaultEnemy : Enemy
             attackCooldown = 1 / attackSpeed;
         }
     }
-
-    public void PlayAttackSound()
-    {
-        audioSource.clip = attackSound;
-        audioSource.PlayOneShot(attackSound);
-    }
-    public void PlayWalkingSound()
-    {
-        int randomSound = Random.Range(0, movingSounds.Length);
-        audioSource.clip = movingSounds[randomSound];
-        audioSource.PlayOneShot(movingSounds[randomSound]);
-    }
+    //public void PlayAttackSound()
+    //{
+    //    audioSource.clip = attackSound;
+    //    audioSource.PlayOneShot(attackSound);
+    //}
+    //public void PlayWalkingSound()
+    //{
+    //    int randomSound = Random.Range(0, movingSounds.Length);
+    //    audioSource.clip = movingSounds[randomSound];
+    //    audioSource.PlayOneShot(movingSounds[randomSound]);
+    //}
 }
