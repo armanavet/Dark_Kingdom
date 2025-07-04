@@ -36,7 +36,8 @@ public class ArtilleryTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
-        if (debuffs[CurrentLevel] != null)
+        
+        if (debuffs.Length != 0 && debuffs[CurrentLevel] != null)
             currentDebuffs.Add(debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
