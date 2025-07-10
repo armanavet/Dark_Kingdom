@@ -146,7 +146,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         state = EnemyState.Dead;
         animator?.SetBool("isDead", true);
-        audioSource.Stop();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
