@@ -50,7 +50,6 @@ public class StateManager : MonoBehaviour, ISaveable
         }
         
     }
-
     public void ChangeGameStateTo(GameState newState)
     {
         if (newState == GameState.Active)
@@ -100,5 +99,6 @@ public class StateManager : MonoBehaviour, ISaveable
 public enum GameState
 {
     Active,
-    Passive
+    Passive,
+    Paused
 }

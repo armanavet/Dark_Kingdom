@@ -16,12 +16,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
+    [HideInInspector] public float GameTimer;
     GameObject tilePanel, activePanel, previousHit;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
     bool isPanelActive = false;
-    [HideInInspector] public float GameTimer;
 
     #region Singleton 
     private static UIManager _instance;
@@ -59,7 +59,6 @@ public class UIManager : MonoBehaviour
         goldText.text = EconomyManager.Instance.CurrentGold.ToString();
         timerText.text = Mathf.Round(GameTimer).ToString();
 
-
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject()) return; //Check if the click was performed on a UI element
@@ -87,6 +86,7 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
     void ChangeUiButtonVisibility()
     {
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
