@@ -228,6 +228,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 36251230034119462, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 343994804711681414, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -262,6 +267,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[5].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564436062867586071, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564436062867586071, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1285608353}
+    - target: {fileID: 1564436062867586071, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonToMakeFaster
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564436062867586071, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StateManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564436062867586071, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1633722038027672189, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -342,6 +372,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tilePanelYOffset
       value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: towerPurchasePanelYHidden
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 2908821175123681306, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -462,6 +497,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3756388761243774723, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3756388761243774723, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1285608353}
+    - target: {fileID: 3756388761243774723, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonToMakeFaster
+      objectReference: {fileID: 0}
+    - target: {fileID: 3756388761243774723, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StateManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3756388761243774723, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4068774391347336107, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -607,6 +667,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817149597157538664, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817149597157538664, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1285608353}
+    - target: {fileID: 5817149597157538664, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonToMakeFaster
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817149597157538664, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StateManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817149597157538664, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6058233400614581221, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -792,6 +877,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665871083671671648, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665871083671671648, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1285608353}
+    - target: {fileID: 7665871083671671648, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonToMakeFaster
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665871083671671648, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StateManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665871083671671648, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8479202177426719986, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
@@ -1079,6 +1189,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59168ea100d2f4342a83b7011fa3138e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1285608353 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2840659112818164777}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362641f41f73b6441bd17bbc1c896c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1331065062
@@ -1665,7 +1787,7 @@ PrefabInstance:
     - target: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
       propertyPath: TimeUntilNextWave.Array.data[0]
-      value: 1
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8448817151349281244, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
@@ -1851,6 +1973,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
+      propertyPath: waves.Array.data[6].Enemies.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
+        type: 3}
       propertyPath: waves.Array.data[0].Enemies.Array.data[0].Type
       value: 4
       objectReference: {fileID: 0}
@@ -1862,26 +1989,31 @@ PrefabInstance:
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
       propertyPath: waves.Array.data[1].Enemies.Array.data[0].Type
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
-        type: 3}
-      propertyPath: waves.Array.data[2].Enemies.Array.data[0].Type
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
-      propertyPath: waves.Array.data[3].Enemies.Array.data[0].Type
-      value: 4
+      propertyPath: waves.Array.data[2].Enemies.Array.data[0].Type
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
-      propertyPath: waves.Array.data[4].Enemies.Array.data[0].Type
+      propertyPath: waves.Array.data[3].Enemies.Array.data[0].Type
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
+      propertyPath: waves.Array.data[4].Enemies.Array.data[0].Type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
+        type: 3}
       propertyPath: waves.Array.data[5].Enemies.Array.data[0].Type
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
+        type: 3}
+      propertyPath: waves.Array.data[6].Enemies.Array.data[0].Type
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
@@ -1917,6 +2049,11 @@ PrefabInstance:
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
       propertyPath: waves.Array.data[5].Enemies.Array.data[0].Count
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
+        type: 3}
+      propertyPath: waves.Array.data[6].Enemies.Array.data[0].Count
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
