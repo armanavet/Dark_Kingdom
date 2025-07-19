@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class MageEnemy : Enemy
 {
     float TarggetPoint = 2f;
+    float rotationProgress;
+    [SerializeField] float rotationSpeed;
     [SerializeField] Mage mage;
+    [SerializeField] Transform shootingPoint;
+    [SerializeField] float projectileSpeed;
+    [SerializeField] Transform targetModel;
 
     void Start()
     {
@@ -22,30 +28,39 @@ public class MageEnemy : Enemy
     }
     private void Update()
     {
-        if (state == EnemyState.Dead) return;
-        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-        if (state == EnemyState.Moving) Move();
-        else if (state == EnemyState.Attacking) Attack();
-        //if (AcquireTarget()) Attack();
-        //else Move();
+        bool targetAcquired = AcquireTarget();
+        if (targetAcquired == false) 
+        { 
+            Move();
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+            bool facingTarget = FaceTarget();
+            if (facingTarget) Attack();
+        }
+        
     }
     protected override void Attack()
     {
-        animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
-        attackCooldown -= Time.deltaTime;
-        if (target != null && attackCooldown <= 0)
+    }
+    public void LaunchProjectile()
+    {
+        if (target != null)
         {
             Vector3 targetPosition = target.transform.position;
-            Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPosition - transform.position));
-            arrow.Initialize(attackSpeed, transform.position, targetPosition, target, damage);
-            attackCooldown = 1 / attackSpeed;
+            float travelDistance = Vector3.Distance(shootingPoint.position, targetPosition);
+            float travelTime = travelDistance / projectileSpeed;
+            Mage arrow = Instantiate(mage, shootingPoint.position, Quaternion.LookRotation(targetPosition - transform.position));
+            arrow.Initialize(projectileSpeed);
+            StartCoroutine(HitTarget(arrow, travelTime));
         }
     }
-  
     protected override bool AcquireTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, TarggetPoint, towerMask );
+        if (target != null) return true;
+        Collider[] targets = Physics.OverlapSphere(transform.position, TarggetPoint, towerMask);
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;
@@ -74,15 +89,38 @@ public class MageEnemy : Enemy
         target = null;
         return false;
     }
-    //public void PlayAttackSound()
-    //{
-    //    audioSource.clip = attackSound;
-    //    audioSource.PlayOneShot(attackSound);
-    //}
-    //public void PlayWalkingSound()
-    //{
-    //    int randomSound = Random.Range(0, movingSounds.Length);
-    //    audioSource.clip = movingSounds[randomSound];
-    //    audioSource.PlayOneShot(movingSounds[randomSound]);
-    //}
+    IEnumerator HitTarget(Mage currentProjectile, float arriveTime)
+    {
+        yield return new WaitForSeconds(arriveTime);
+
+        if (target != null)
+        {
+            target.ApplyDamage(damage);
+        }
+        Destroy(currentProjectile.gameObject);
+    }
+
+    bool FaceTarget()
+    {
+        if (rotationProgress < 1)
+        {
+            //float targetYRotation = Quaternion.LookRotation(target.transform.position - transform.position).eulerAngles.y;
+            //float rotationDifference = targetYRotation - transform.rotation.eulerAngles.y;
+            //float rotationTime = rotationDifference / rotationSpeed;
+            //rotationProgress += Time.deltaTime / rotationTime;
+            //float yRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, targetYRotation, rotationProgress);
+            //transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
+            //return false;
+
+            float targetYRotation = Quaternion.LookRotation(targetModel.position - transform.position).eulerAngles.y;
+            float rotationDifference = targetYRotation - targetModel.eulerAngles.y;
+            float rotationTime = rotationDifference / rotationSpeed;
+            rotationProgress += Time.deltaTime / rotationTime;
+            float yRotation = Mathf.LerpAngle(targetModel.eulerAngles.y, targetYRotation, rotationProgress);
+            transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
+            return false;
+        }
+        rotationProgress = 0;
+        return true;
+    }
 }

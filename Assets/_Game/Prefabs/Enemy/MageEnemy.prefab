@@ -222,6 +222,37 @@ Transform:
   - {fileID: 607798018004832962}
   m_Father: {fileID: 5079128983460426071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1032215368337193424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5018620842035672789}
+  m_Layer: 7
+  m_Name: ShootingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5018620842035672789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032215368337193424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.016895086, y: 0.08553384, z: 0.015626535, w: 0.9960695}
+  m_LocalPosition: {x: 0.060356643, y: 1.0799887, z: 0.9223399}
+  m_LocalScale: {x: 2.8571427, y: 2.8571424, z: 2.8571427}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5045288137109526712}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1294206173910153441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,6 +1286,7 @@ Transform:
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 5018620842035672789}
   - {fileID: 785640985498096556}
   - {fileID: 97132437827187076}
   - {fileID: 1239174989132052427}
@@ -2943,7 +2975,7 @@ MonoBehaviour:
   towerMask:
     serializedVersion: 2
     m_Bits: 64
-  maxSpeed: 1
+  maxSpeed: 0.7
   maxHP: 30
   maxDamage: 20
   maxAttackSpeed: 2
@@ -2959,7 +2991,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 47832b56ccba5bc408b1d5aac1871746, type: 3}
   - {fileID: 8300000, guid: 3d132da7af60f1145a3deb6a8bc42a08, type: 3}
   attackSound: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+  rotationSpeed: 150
   mage: {fileID: -3201098322291214515, guid: 0c1d54681661097409ea0981d2ce252c, type: 3}
+  shootingPoint: {fileID: 5018620842035672789}
+  projectileSpeed: 5
+  targetModel: {fileID: 5045288137109526712}
 --- !u!95 &1056430567862960734
 Animator:
   serializedVersion: 5

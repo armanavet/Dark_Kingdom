@@ -30,7 +30,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
-
     
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
@@ -40,7 +39,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         PrepareInitialMove();
         progress = 0;
     }
-
     void PrepareInitialMove()
     {
         positionFrom = tileFrom.transform.position;
@@ -52,8 +50,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         transform.localRotation = direction.GetRotation();
         progressFactor = 2;
     }
-
-
     protected virtual void Move()
     {
         animator.SetBool("isMoving", true);
