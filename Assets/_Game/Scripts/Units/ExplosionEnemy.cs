@@ -6,12 +6,15 @@ public class ExplosionEnemy : Enemy
 {
     [SerializeField]float radius;
     [SerializeField]GameObject[] Effects;
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;

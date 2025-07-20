@@ -17304,17 +17304,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSpeed: 2
-  maxHP: 30
-  maxDamage: 30
-  maxAttackSpeed: 1
+  maxHP: 45
+  maxDamage: 20
+  maxAttackSpeed: 2
   movingSounds:
   - {fileID: 8300000, guid: 4e349dc959014a845b9aa317d1c2b7f0, type: 3}
   attackSound: {fileID: 8300000, guid: 7159759be8bab914bbe48609de62f01c, type: 3}
   mage: {fileID: -3201098322291214515, guid: 0c1d54681661097409ea0981d2ce252c, type: 3}
   height: 1.5
   rotationSpeed: 15
-  flyUpSpeed: 1
-  distanceToAttack: 1
+  flyUpSpeed: 2
+  distanceToAttack: 2
 --- !u!95 &3448884677042387073
 Animator:
   serializedVersion: 5

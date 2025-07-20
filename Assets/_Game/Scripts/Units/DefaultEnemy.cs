@@ -6,12 +6,15 @@ using UnityEngine;
 
 public class DefaultEnemy : Enemy
 {
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;

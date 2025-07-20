@@ -146,7 +146,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         state = EnemyState.Dead;
         animator?.SetBool("isDead", true);
-        audioSource.Stop();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
@@ -170,6 +169,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void PlayMovingSound()
     {
         int randomSound = Random.Range(0, movingSounds.Length);
+        Debug.Log(audioSource == null);
         audioSource.clip = movingSounds[randomSound];
         audioSource.PlayOneShot(movingSounds[randomSound]);
     }

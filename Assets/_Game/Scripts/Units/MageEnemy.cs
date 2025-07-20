@@ -8,12 +8,15 @@ public class MageEnemy : Enemy
     float TarggetPoint = 2f;
     [SerializeField] Mage mage;
 
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     float speed;
-
+    
     private void Update()
     {
         transform.position += transform.forward * Time.deltaTime * speed;

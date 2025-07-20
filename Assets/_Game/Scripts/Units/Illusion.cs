@@ -5,12 +5,15 @@ using UnityEngine;
 public class Illusion : Enemy
 {
     [SerializeField] float duration;
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         animator = GetComponent<Animator>();

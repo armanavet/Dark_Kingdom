@@ -10,12 +10,15 @@ public class FlyingEnemy : Enemy
     Vector3 targetPoint;
     Quaternion targetRotation;
     float rotationProgress;
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);

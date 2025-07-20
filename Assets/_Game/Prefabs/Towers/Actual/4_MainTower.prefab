@@ -316,6 +316,7 @@ MonoBehaviour:
   Damage: 000000000000000000000000
   debuffs: []
   Projectiles: []
+  shootSound: {fileID: 0}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
@@ -330,7 +331,7 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 5734724905035884570}
-  GoldGenerationList: 01000000020000000300000004000000
+  GoldGenerationList: 01000000020000000400000006000000
 --- !u!65 &660188337889200183
 BoxCollider:
   m_ObjectHideFlags: 0

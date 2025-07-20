@@ -886,7 +886,7 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 7195541497489861293}
-  TarggetPoint: 10
+  TarggetPoint: 3
   shel: {fileID: 8804500034350230353, guid: 82b33b1b7fb5ad44c829096675dc88cb, type: 3}
   mortal: {fileID: 1677207564359557967}
   shellBlastRadius: 1

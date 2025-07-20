@@ -10,13 +10,15 @@ public class IllusionistEnemy : Enemy
     [SerializeField] float illusionSpawnTime;
     float illusionCooldown;
     Illusion illusion;
-
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;

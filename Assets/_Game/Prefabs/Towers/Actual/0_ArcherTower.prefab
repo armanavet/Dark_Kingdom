@@ -461,21 +461,21 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  SellPrices: 25000000570000009600000018010000
+  SellPrices: 140000003200000064000000b4000000
   UpgradePrices: 4b00000096000000c8000000
   HP:
   - 100
   - 120
   - 140
   - 160
-  Damage: 050000000a0000000f00000014000000
+  Damage: 0a0000000f000000140000001e000000
   debuffs:
   - {fileID: 0}
   - {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af, type: 2}
   - {fileID: 11400000, guid: 0f0e445aa23debe499efc28a144ed159, type: 2}
   - {fileID: 11400000, guid: cefa31c790da25645b9f0b74883b1ecc, type: 2}
   Projectiles:
-  - {fileID: 1094462928439039344, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
+  - {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
   - {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e, type: 3}
   - {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e, type: 3}
   - {fileID: 6171265629823123270, guid: b2c62bc029caf7a4d89b626c853317e2, type: 3}
@@ -498,7 +498,7 @@ MonoBehaviour:
   projectileSpeed: 12
   attackSpeed: 1
   HitSound: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
-  attackRange: 3
+  attackRange: 2.5
 --- !u!82 &377767704748963384
 AudioSource:
   m_ObjectHideFlags: 0

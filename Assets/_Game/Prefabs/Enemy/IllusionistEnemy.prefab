@@ -932,9 +932,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSpeed: 1
-  maxHP: 60
-  maxDamage: 20
-  maxAttackSpeed: 1
+  maxHP: 50
+  maxDamage: 10
+  maxAttackSpeed: 2
   movingSounds:
   - {fileID: 8300000, guid: 9ea11a2d13d536e4e8441a0f5895995c, type: 3}
   - {fileID: 8300000, guid: 203ac8b6f07070e4f93f1c1a6fff06c3, type: 3}
