@@ -13,6 +13,8 @@ public class WaveManager : MonoBehaviour, ISaveable
     [SerializeField] int spawnerDestroyTime;
     [SerializeField] int spawnDistanceFromCenter;
     [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
+    [SerializeField] bool a;
+    [SerializeField] Tile SpawnPoint;
     bool cantFindPath => spawnPoint.NextOnPath == null;
     List<GameObject> enemyPath = new List<GameObject>();
     List<Enemy> enemies = new List<Enemy>();
@@ -57,18 +59,26 @@ public class WaveManager : MonoBehaviour, ISaveable
 
     void CalculateSpawnPoint()
     {
-        List<Tile> potentialPoints = new List<Tile>();
-        int variance = (int)distanceVariance.RandomValueInRange;
-
-        foreach (var tile in GameBoard.Instance.Tiles)
+        if (a)
         {
-            if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
-            {
-                potentialPoints.Add(tile);
-            }
+            spawnPoint = SpawnPoint;
         }
+        else 
+        {
+            List<Tile> potentialPoints = new List<Tile>();
+            int variance = (int)distanceVariance.RandomValueInRange;
 
-        spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
+            foreach (var tile in GameBoard.Instance.Tiles)
+            {
+                if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
+                {
+                    potentialPoints.Add(tile);
+                }
+            }
+
+            spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
+        }
+        
     }
 
     IEnumerator SpawnUnits(Wave wave, GameObject spawner)
