@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
-    [SerializeField] Transform model;
+    [SerializeField] protected Transform model;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;

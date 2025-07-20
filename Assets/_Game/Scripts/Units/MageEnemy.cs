@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -8,11 +9,14 @@ public class MageEnemy : Enemy
 {
     float TarggetPoint = 2f;
     float rotationProgress;
+    float initialRotation;
+    bool facingPath = true;
     [SerializeField] float rotationSpeed;
     [SerializeField] Mage mage;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
+
 
     void Start()
     {
@@ -29,20 +33,40 @@ public class MageEnemy : Enemy
     private void Update()
     {
         bool targetAcquired = AcquireTarget();
-        if (targetAcquired == false) 
-        { 
-            Move();
+        if (targetAcquired == false)
+        {
+            if (facingPath) Move();
         }
         else
         {
-            animator.SetBool("isMoving", false);
+            facingPath = false;
+            DirectionChange turnDirection = CalculateTurnDirection();
+            switch (turnDirection)
+            {
+                case DirectionChange.TurnLeft:
+                    animator.SetBool("isTurningLeft", true);
+                    break;
+                case DirectionChange.TurnRight:
+                    animator.SetBool("isTurningRight", true);
+                    break;
+                case DirectionChange.None:
+                    Attack();
+                    break;
+
+            }
+            initialRotation = transform.eulerAngles.y;
             bool facingTarget = FaceTarget();
-            if (facingTarget) Attack();
+            if (facingTarget)
+            {
+                //Attack();
+            }
         }
-        
     }
     protected override void Attack()
     {
+        animator.SetBool("isTurningLeft", false);
+        animator.SetBool("isTurningRight", false);
+        animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
     }
     public void LaunchProjectile()
@@ -76,11 +100,12 @@ public class MageEnemy : Enemy
                         ClosestTargetIndex = i;
                     }
                 }
-
             }
             target = targets[ClosestTargetIndex].GetComponentInChildren<Tower>();
             if (target != null)
             {
+                target.OnDestroyed += StartTurning;
+                rotationProgress = 0;
                 return true;
             }
             else
@@ -102,25 +127,45 @@ public class MageEnemy : Enemy
 
     bool FaceTarget()
     {
+        float targetYRotation = Quaternion.LookRotation(target.transform.position - model.position).eulerAngles.y;
         if (rotationProgress < 1)
         {
-            //float targetYRotation = Quaternion.LookRotation(target.transform.position - transform.position).eulerAngles.y;
-            //float rotationDifference = targetYRotation - transform.rotation.eulerAngles.y;
-            //float rotationTime = rotationDifference / rotationSpeed;
-            //rotationProgress += Time.deltaTime / rotationTime;
-            //float yRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, targetYRotation, rotationProgress);
-            //transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
-            //return false;
-
-            float targetYRotation = Quaternion.LookRotation(targetModel.position - transform.position).eulerAngles.y;
-            float rotationDifference = targetYRotation - targetModel.eulerAngles.y;
+            float rotationDifference = targetYRotation - target.transform.eulerAngles.y;
             float rotationTime = rotationDifference / rotationSpeed;
             rotationProgress += Time.deltaTime / rotationTime;
-            float yRotation = Mathf.LerpAngle(targetModel.eulerAngles.y, targetYRotation, rotationProgress);
-            transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
+            float yRotation = Mathf.LerpAngle(model.eulerAngles.y, targetYRotation, rotationProgress);
+            //model.rotation = Quaternion.Euler(model.rotation.x, yRotation, model.rotation.z);
+
             return false;
         }
-        rotationProgress = 0;
+        model.rotation = Quaternion.Euler(model.rotation.x, targetYRotation, model.rotation.z);
+        Attack();
         return true;
+    }
+    IEnumerator FacePath()
+    {
+        float targetYRotation = initialRotation;
+        float rotationDifference = targetYRotation - target.transform.eulerAngles.y;
+        float rotationTime = rotationDifference / rotationSpeed;
+        rotationProgress += Time.deltaTime / rotationTime;
+        float yRotation = Mathf.LerpAngle(model.eulerAngles.y, targetYRotation, rotationProgress);
+        model.rotation = Quaternion.Euler(model.rotation.x, yRotation, model.rotation.z);
+        yield return new WaitUntil(() => rotationProgress >= 1);
+        facingPath = true;
+    }
+
+    void StartTurning()
+    {
+        target.OnDestroyed -= StartTurning;
+        StartCoroutine(FacePath());
+    }
+
+    DirectionChange CalculateTurnDirection()
+    {
+        float targetYRotation = Quaternion.LookRotation(target.transform.position - model.position).eulerAngles.y;
+        float currentRotation = model.eulerAngles.y;
+        if (targetYRotation < currentRotation) return DirectionChange.TurnLeft;
+        else if (targetYRotation > currentRotation) return DirectionChange.TurnRight;
+        else return DirectionChange.None;
     }
 }
