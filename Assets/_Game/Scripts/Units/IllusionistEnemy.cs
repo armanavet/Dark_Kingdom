@@ -10,13 +10,15 @@ public class IllusionistEnemy : Enemy
     [SerializeField] float illusionSpawnTime;
     float illusionCooldown;
     Illusion illusion;
-
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -65,15 +67,4 @@ public class IllusionistEnemy : Enemy
             illusion.OnSpawn(tileFrom, 0);
         }
     }
-    //public void PlayAttackSound()
-    //{
-    //    audioSource.clip = attackSound;
-    //    audioSource.PlayOneShot(attackSound);
-    //}
-    //public void PlayWalkingSound()
-    //{
-    //    int randomSound = Random.Range(0, movingSounds.Length);
-    //    audioSource.clip = movingSounds[randomSound];
-    //    audioSource.PlayOneShot(movingSounds[randomSound]);
-    //}
 }

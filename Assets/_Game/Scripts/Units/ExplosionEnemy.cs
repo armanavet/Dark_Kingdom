@@ -6,12 +6,15 @@ public class ExplosionEnemy : Enemy
 {
     [SerializeField]float radius;
     [SerializeField]GameObject[] Effects;
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         damage = maxDamage;
@@ -44,15 +47,4 @@ public class ExplosionEnemy : Enemy
         Destroy(gameObject);
     }
 
-    //public void PlayAttackSound()
-    //{
-    //    audioSource.clip = attackSound;
-    //    audioSource.PlayOneShot(attackSound);
-    //}
-    //public void PlayWalkingSound()
-    //{
-    //    int randomSound = Random.Range(0, movingSounds.Length);
-    //    audioSource.clip = movingSounds[randomSound];
-    //    audioSource.PlayOneShot(movingSounds[randomSound]);
-    //}
 }

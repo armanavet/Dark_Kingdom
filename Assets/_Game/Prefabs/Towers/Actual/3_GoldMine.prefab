@@ -688,6 +688,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b4c7b371e1c2c4484d8980039adae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 0
+  illusionMask:
+    serializedVersion: 2
+    m_Bits: 0
   SellPrices: 500000005a000000640000006e000000
   UpgradePrices: 78000000820000008c000000
   HP:
@@ -696,23 +702,24 @@ MonoBehaviour:
   - 140
   - 160
   Damage: 
-  maxHP: 0
-  MaxLevel: 3
-  CurrentLevel: 0
-  PurchasePrice: 80
-  TowerName: GoldMine
-  Type: 3
-  TowerPanel: {fileID: 6605709382628991479}
+  debuffs: []
+  Projectiles: []
+  shootSound: {fileID: 0}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
+  MaxLevel: 3
+  CurrentLevel: 0
+  PurchasePrice: 80
+  Type: 3
   saveData:
     Type: 0
     TileIndex: 0
     Level: 0
     CurrentHP: 0
-  GoldGenerationList: 020000000400000006000000
+  TowerPanel: {fileID: 6605709382628991479}
+  GoldGenerationList: 01000000020000000400000006000000
 --- !u!1 &8368888997727213712
 GameObject:
   m_ObjectHideFlags: 0

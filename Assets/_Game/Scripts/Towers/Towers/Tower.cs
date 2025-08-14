@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,10 +32,12 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public TowerType Type;
     [HideInInspector] public TowerData saveData;
     public GameObject TowerPanel;
-
+    public event Action OnDestroyed;
+    
     public void Sell()
     {
         EconomyManager.Instance.ChangeGoldAmount(SellPrice);
+
         Destroy();
     }
     public void ApplyDamage(float damage)
@@ -51,6 +55,7 @@ public abstract class Tower : MonoBehaviour
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
         tile.UnclaimSurroundingTiles();
+        OnDestroyed.Invoke();
         Destroy(gameObject);
     }
 

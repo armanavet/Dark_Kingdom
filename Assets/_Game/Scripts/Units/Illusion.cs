@@ -5,12 +5,15 @@ using UnityEngine;
 public class Illusion : Enemy
 {
     [SerializeField] float duration;
-    void Start()
+    private void Awake()
     {
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
+    }
+    void Start()
+    {
         currentSpeed = maxSpeed;
         help = maxHP;
         animator = GetComponent<Animator>();
@@ -33,15 +36,4 @@ public class Illusion : Enemy
     }
     protected override void Attack(){
     }
-    //public void PlayGrowelSound()
-    //{
-    //    audioSource.clip = attackSound;
-    //    audioSource.PlayOneShot(attackSound);
-    //}
-    //public void PlayWalkingSound()
-    //{
-    //    int randomSound = Random.Range(0, movingSounds.Length);
-    //    audioSource.clip = movingSounds[randomSound];
-    //    audioSource.PlayOneShot(movingSounds[randomSound]);
-    //}
 }

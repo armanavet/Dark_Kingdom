@@ -149,9 +149,9 @@ public class ArcherTower : Tower
             {
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
-        }
         audioSource.clip = HitSound;
         audioSource.PlayOneShot(HitSound);
+        }
         Destroy(currentProjectile);
     }
 }
