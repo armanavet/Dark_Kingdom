@@ -17,11 +17,11 @@ public class MainMenuManager : MonoBehaviour
         {
             SaveMetaData data = SaveManager.LoadMetaData(i);
             savePanelInfos[i-1].test(data);
-
         }
     }
     public void a_BTStartGame()
     {
+        
         SaveManager.SetSlot(id);
         SaveManager.OnGameStart();
         SceneManager.LoadScene(_SceneToLoad);
@@ -35,6 +35,4 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
-    //F => savemetadata { }
-    //TODO Options button
 }

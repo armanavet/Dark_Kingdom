@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class FlyingEnemy : Enemy
 {
@@ -7,9 +8,18 @@ public class FlyingEnemy : Enemy
     [SerializeField] float rotationSpeed;
     [SerializeField] float flyUpSpeed;
     [SerializeField] float distanceToAttack;
+    [SerializeField] float projectileSpeed;
+    [SerializeField] Transform shootingPoint;
     Vector3 targetPoint;
     Quaternion targetRotation;
     float rotationProgress;
+    private void Awake()
+    {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
     void Start()
     {
         target = TowerManager.Instance.Towers[0];
@@ -44,13 +54,20 @@ public class FlyingEnemy : Enemy
     {
         animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
-        attackCooldown -= Time.deltaTime;
+    }
+
+    public void LaunchProjectile()
+    {
         if (target != null && attackCooldown <= 0)
         {
-            Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPoint - transform.position));
-            arrow.Initialize(attackSpeed, transform.position, targetPoint, target, damage);
-            attackCooldown = 1 / attackSpeed;
+            Vector3 targetPosition = target.transform.position;
+            float travelDistance = Vector3.Distance(shootingPoint.position, targetPosition);
+            float travelTime = travelDistance / projectileSpeed;
+            Mage arrow = Instantiate(mage, shootingPoint.position, Quaternion.LookRotation(targetPosition - transform.position));
+            arrow.Initialize(projectileSpeed);
+            StartCoroutine(HitTarget(arrow, travelTime));
         }
+        
     }
     bool FaceTarget()
     {
@@ -75,4 +92,14 @@ public class FlyingEnemy : Enemy
         transform.Translate(-transform.up * flyUpSpeed * Time.deltaTime);
     }
 
+    IEnumerator HitTarget(Mage currentProjectile, float arriveTime)
+    {
+        yield return new WaitForSeconds(arriveTime);
+
+        if (target != null)
+        {
+            target.ApplyDamage(damage);
+        }
+        Destroy(currentProjectile.gameObject);
+    }
 }

@@ -5,6 +5,13 @@ using UnityEngine;
 public class Illusion : Enemy
 {
     [SerializeField] float duration;
+    private void Awake()
+    {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
     void Start()
     {
         currentSpeed = maxSpeed;
@@ -27,5 +34,6 @@ public class Illusion : Enemy
             animator.SetBool("isIdle", true);
         }
     }
-    protected override void Attack(){}
+    protected override void Attack(){
+    }
 }

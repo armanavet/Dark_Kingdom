@@ -1,10 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
 public class DefaultEnemy : Enemy
 {
+    private void Awake()
+    {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
     void Start()
     {
         currentSpeed = maxSpeed;
@@ -24,6 +32,7 @@ public class DefaultEnemy : Enemy
     {
         animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
+        
         attackCooldown -=Time.deltaTime;
         if (target != null&& attackCooldown<=0)
         { 

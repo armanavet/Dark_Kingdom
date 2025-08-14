@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
-    [SerializeField] Transform model;
+    [SerializeField] protected Transform model;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
+    [SerializeField] protected AudioClip[] movingSounds;
+    [SerializeField] protected AudioClip attackSound;
+    protected AudioSource audioSource;
     protected Animator animator;
     protected float currentSpeed;
     protected float help;
@@ -26,7 +30,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
-
+    
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -35,7 +39,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         PrepareInitialMove();
         progress = 0;
     }
-
     void PrepareInitialMove()
     {
         positionFrom = tileFrom.transform.position;
@@ -47,7 +50,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         transform.localRotation = direction.GetRotation();
         progressFactor = 2;
     }
-
     protected virtual void Move()
     {
         animator.SetBool("isMoving", true);
@@ -154,6 +156,18 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
+    }
+    public void PlayAttackSound()
+    {
+        audioSource.clip = attackSound;
+        audioSource.PlayOneShot(attackSound);
+    }
+    public void PlayMovingSound()
+    {
+        int randomSound = Random.Range(0, movingSounds.Length);
+        Debug.Log(audioSource == null);
+        audioSource.clip = movingSounds[randomSound];
+        audioSource.PlayOneShot(movingSounds[randomSound]);
     }
 }
 
