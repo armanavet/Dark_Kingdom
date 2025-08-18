@@ -849,9 +849,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7834484294431754817}
-        m_TargetAssemblyTypeName: TowerPanel, Assembly-CSharp
-        m_MethodName: ButtonTowerSell
+      - m_Target: {fileID: 2554583891899901409}
+        m_TargetAssemblyTypeName: Tower, Assembly-CSharp
+        m_MethodName: Sell
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

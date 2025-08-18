@@ -40,6 +40,21 @@ public class OptionsMenuPanelManager : MonoBehaviour
 
 
     float savedVolume;
+
+    void Awake()
+    {
+        // Find all Buttons
+        foreach (Button btn in FindObjectsOfType<Button>(true))
+            btn.onClick.AddListener(() => n_BTAudioPlay());
+
+        // Find all Toggles
+        foreach (Toggle toggle in FindObjectsOfType<Toggle>(true))
+            toggle.onValueChanged.AddListener((_) => n_BTAudioPlay());
+
+        // Find all Dropdowns
+        foreach (Dropdown dropdown in FindObjectsOfType<Dropdown>(true))
+            dropdown.onValueChanged.AddListener((_) => n_BTAudioPlay());
+    }
     private void Start()
     {
         savedVolume = PlayerPrefs.GetFloat("masterVolume", AudioListener.volume);
@@ -190,7 +205,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         confirmationPrompt.SetActive(false);
     }
 }

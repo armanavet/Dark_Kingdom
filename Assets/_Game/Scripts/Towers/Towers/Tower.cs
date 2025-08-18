@@ -55,7 +55,7 @@ public abstract class Tower : MonoBehaviour
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
         tile.UnclaimSurroundingTiles();
-        OnDestroyed.Invoke();
+        OnDestroyed?.Invoke();
         Destroy(gameObject);
     }
 
