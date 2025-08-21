@@ -11,6 +11,7 @@ TagManager:
   - ArtilleryTower
   - GoldMine
   - Enamy
+  - a
   layers:
   - Default
   - TransparentFX
