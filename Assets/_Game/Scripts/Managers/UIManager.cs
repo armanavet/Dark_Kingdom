@@ -12,12 +12,13 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
+    [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit;
+    GameObject tilePanel, activePanel, previousHit, selectionMark, activeSelectionMark,effect;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -49,7 +50,9 @@ public class UIManager : MonoBehaviour
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         tilePanel = Instantiate(tilePanelPrefab);
+        selectionMark = Instantiate(selectionMarkPrefab);
         tilePanel.SetActive(false);
+        selectionMark.SetActive(false);   
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
     }
@@ -65,7 +68,7 @@ public class UIManager : MonoBehaviour
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform); 
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
             else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
             else
             {
@@ -78,6 +81,7 @@ public class UIManager : MonoBehaviour
             ShowTowerPanel(false);
             ShowTilePanel(false);
             PlaceTower(false);
+            
         }
         if (isPanelActive && activePanel != null)
         {
@@ -125,7 +129,7 @@ public class UIManager : MonoBehaviour
 
     void ShowTilePanel(bool value, Transform selectedTile = null)
     {
-        if (tilePanel == null) return;
+        if (tilePanel == null && selectionMark == null) return;
 
         if (value == true)
         {
@@ -133,20 +137,40 @@ public class UIManager : MonoBehaviour
             if (tile.CanBePurchased())
             {
                 if (activePanel != null) activePanel.SetActive(false);
+                if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+                
                 activePanel = tilePanel;
+                activeSelectionMark = selectionMark;
                 isPanelActive = true;
 
                 tilePanel.SetActive(true);
+                selectionMark.SetActive(true);
+
                 tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0,tilePanelYOffset,0);
+                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
+                
+                selectionMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
+                
+                selectionMark.transform.DOKill();
+                selectionMark.transform.DOMoveY(0.3f, 0.6f)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1,LoopType.Yoyo);
+                selectionMark.transform.DOScale(new Vector3(1.1f,1,1.1f), 0.6f)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1,LoopType.Yoyo);
+
                 return;
             }
         }
 
-        if (activePanel != null)  activePanel.SetActive(false);
+        if (activePanel != null) activePanel.SetActive(false);
+        if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+
         isPanelActive = false;
     }
-
+    void SelectionAnim()
+    {
+    }
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
@@ -192,6 +216,10 @@ public class UIManager : MonoBehaviour
 
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
+                effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
+                Destroy(effect,2f);
+                effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
+                Destroy(effect,2f);
             }
         }
         else
