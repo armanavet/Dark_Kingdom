@@ -174,7 +174,6 @@ public class UIManager : MonoBehaviour
     void OutlineForTile()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if(Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
         {
