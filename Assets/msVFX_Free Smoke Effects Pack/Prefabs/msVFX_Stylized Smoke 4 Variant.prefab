@@ -10,6 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6650199810314842004, guid: 3b7f2c753d435d647a80f1f047a113e3,
         type: 3}
+      propertyPath: lengthInSec
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650199810314842004, guid: 3b7f2c753d435d647a80f1f047a113e3,
+        type: 3}
       propertyPath: InitialModule.startRotation.scalar
       value: -0.17453292
       objectReference: {fileID: 0}

@@ -12,13 +12,13 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectorPrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectorPrefab, outlinePrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit, selectorMark, activeSelectorMark,effect;
+    GameObject tilePanel, activePanel, previousHit, selectorMark, activeSelectorMark,effect,outline;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -51,13 +51,16 @@ public class UIManager : MonoBehaviour
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         tilePanel = Instantiate(tilePanelPrefab);
         selectorMark = Instantiate(selectorPrefab);
+        outline = Instantiate(outlinePrefab);
         tilePanel.SetActive(false);
         selectorMark.SetActive(false);   
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
+        outline.SetActive(false);
     }
     void Update()
     {
+        OutlineForTile();
         ChangeUiButtonVisibility();
         goldText.text = EconomyManager.Instance.CurrentGold.ToString();
         timerText.text = Mathf.Round(GameTimer).ToString();
@@ -168,7 +171,22 @@ public class UIManager : MonoBehaviour
 
         isPanelActive = false;
     }
-    
+    void OutlineForTile()
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
+        {
+            if (tileHit.collider.CompareTag("a"))
+            {
+                outline.SetActive(true);
+                outline.transform.position = tileHit.transform.position;
+            }
+            else outline.SetActive(false);
+        }
+        //outline.SetActive(false);
+    }
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
