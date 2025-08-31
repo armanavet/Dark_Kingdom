@@ -67,16 +67,11 @@ public class TowerManager : MonoBehaviour, ISaveable
         Transform parentObject = FindObjectOfType<TowerManager>().transform;
 
         Tower tower = Instantiate(prefab, tile.transform.position, Quaternion.identity, parentObject);
-        //GameObject effect0 = Instantiate(effects[1],new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y,tower.transform.rotation.z));
-        ////GameObject effect1 = Instantiate(effects[0],new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
-        //effect0 = Instantiate(effects[0],new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
         tower.tile = tile;
         tile.isEmpty = false;
-        tile.ClaimSurroundingTiles();
+        //if(type != TowerType.MainTower) tile.ClaimSurroundingTiles();
+        tile.SetType(TileType.Claimed);
         Towers.Add(tower);
-
-        //Destroy(effect0, 2f);
-        //Destroy(effect1, 2f);
         return tower;
     }
 

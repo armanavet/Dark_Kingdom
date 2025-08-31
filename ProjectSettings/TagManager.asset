@@ -12,6 +12,7 @@ TagManager:
   - GoldMine
   - Enamy
   - a
+  - SelectionPrefab
   layers:
   - Default
   - TransparentFX

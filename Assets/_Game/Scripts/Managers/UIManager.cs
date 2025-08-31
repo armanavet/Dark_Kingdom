@@ -12,13 +12,13 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectorPrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit, selectionMark, activeSelectionMark,effect;
+    GameObject tilePanel, activePanel, previousHit, selectorMark, activeSelectorMark,effect;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -50,9 +50,9 @@ public class UIManager : MonoBehaviour
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         tilePanel = Instantiate(tilePanelPrefab);
-        selectionMark = Instantiate(selectionMarkPrefab);
+        selectorMark = Instantiate(selectorPrefab);
         tilePanel.SetActive(false);
-        selectionMark.SetActive(false);   
+        selectorMark.SetActive(false);   
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
     }
@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
 
     void ShowTilePanel(bool value, Transform selectedTile = null)
     {
-        if (tilePanel == null && selectionMark == null) return;
+        if (tilePanel == null && selectorMark == null) return;
 
         if (value == true)
         {
@@ -137,40 +137,38 @@ public class UIManager : MonoBehaviour
             if (tile.CanBePurchased())
             {
                 if (activePanel != null) activePanel.SetActive(false);
-                if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+                if (activeSelectorMark != null) activeSelectorMark.SetActive(false);
                 
                 activePanel = tilePanel;
-                activeSelectionMark = selectionMark;
+                activeSelectorMark = selectorMark;
+
                 isPanelActive = true;
 
                 tilePanel.SetActive(true);
-                selectionMark.SetActive(true);
+                selectorMark.SetActive(true);
 
                 tilePanel.GetComponent<TileBuy>().tile = tile;
                 tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
                 
-                selectionMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
+                selectorMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
                 
-                selectionMark.transform.DOKill();
-                selectionMark.transform.DOMoveY(0.3f, 0.6f)
+                selectorMark.transform.DOKill();
+                selectorMark.transform.DOMoveY(0.3f, 0.6f)
                     .SetEase(Ease.Linear)
                     .SetLoops(-1,LoopType.Yoyo);
-                selectionMark.transform.DOScale(new Vector3(1.1f,1,1.1f), 0.6f)
+                selectorMark.transform.DOScale(new Vector3(1.1f,1,1.1f), 0.6f)
                     .SetEase(Ease.Linear)
                     .SetLoops(-1,LoopType.Yoyo);
-
                 return;
             }
         }
 
         if (activePanel != null) activePanel.SetActive(false);
-        if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+        if (activeSelectorMark != null) activeSelectorMark.SetActive(false);
 
         isPanelActive = false;
     }
-    void SelectionAnim()
-    {
-    }
+    
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)

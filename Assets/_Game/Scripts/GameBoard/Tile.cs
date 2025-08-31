@@ -218,10 +218,11 @@ public class Tile : MonoBehaviour
     {
         foreach (var neighbor in surroundingTiles)
         {
-            if (neighbor == null || neighbor.Type != TileType.Neutral) continue;
-
+            //if (neighbor == null || neighbor.Type != TileType.Neutral) continue;
+            if (neighbor == null || neighbor.Type == TileType.Neutral || neighbor.Type == TileType.Own) continue;
             neighbor.SetType(TileType.Claimed);
         }
+        
     }
 
     public void UnclaimSurroundingTiles()
@@ -247,10 +248,10 @@ public class Tile : MonoBehaviour
     public bool CanBePurchased()
     {
         if (Type != TileType.Obstructed) return false;
-
         foreach (var neighbor in surroundingTiles)
         {
-            if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
+            //if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
+            if (neighbor.Type == TileType.Claimed)
                 return true;
         }
         return false;
