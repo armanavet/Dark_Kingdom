@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,18 +8,18 @@ public abstract class Tower : MonoBehaviour
 {
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
-    [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<int> UpgradePrices;
+    [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<float> HP;
     [SerializeField] protected List<int> Damage;
-    [SerializeField] protected Debuff[] debuffs;
-    [SerializeField] protected GameObject[] Projectiles; 
-    [SerializeField] protected AudioClip shootSound;
-    protected AudioSource audioSource;
+    [SerializeField] protected Debuff[] Debuffs;
+    [SerializeField] protected GameObject[] Projectiles;
+    [SerializeField] protected GameObject[] Models;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
     protected GameObject projectile;
+    protected GameObject model;
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
@@ -32,12 +30,11 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public TowerType Type;
     [HideInInspector] public TowerData saveData;
     public GameObject TowerPanel;
-    public event Action OnDestroyed;
-    
+    public event System.Action OnDestroyed;
+
     public void Sell()
     {
         EconomyManager.Instance.ChangeGoldAmount(SellPrice);
-
         Destroy();
     }
     public void ApplyDamage(float damage)

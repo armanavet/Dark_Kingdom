@@ -8,7 +8,6 @@ public class ArcherTower : Tower
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
-    [SerializeField] AudioClip HitSound;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
     float attackCooldown;
@@ -17,17 +16,15 @@ public class ArcherTower : Tower
 
     private void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        model = Models[CurrentLevel];
         projectile = Projectiles[CurrentLevel];
-        if (debuffs.Length != 0 && debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
+        if (Debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(Debuffs[CurrentLevel]);
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
 
@@ -49,8 +46,6 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        audioSource.clip = shootSound;
-        audioSource.PlayOneShot(shootSound);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -112,17 +107,24 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
+
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
             projectile = Projectiles[CurrentLevel];
-            float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
-            maxHP = HP[CurrentLevel];
 
-            Debuff newDebuff = debuffs[CurrentLevel];
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
+            float hpPercent = currentHP / maxHP;
+            maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
+
+            Debuff newDebuff = Debuffs[CurrentLevel];
             if (newDebuff != null)
             {
                 foreach (var debuff in currentDebuffs)
@@ -149,9 +151,8 @@ public class ArcherTower : Tower
             {
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
-        audioSource.clip = HitSound;
-        audioSource.PlayOneShot(HitSound);
         }
+
         Destroy(currentProjectile);
     }
 }

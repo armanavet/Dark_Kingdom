@@ -13,6 +13,8 @@ public class GoldMineTower : Tower
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        model = Models[CurrentLevel];
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -20,14 +22,21 @@ public class GoldMineTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
+
             GoldGenerated = GoldGenerationList[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
+
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
             float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
         }
     }
 }

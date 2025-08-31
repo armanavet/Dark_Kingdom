@@ -15,6 +15,8 @@ public class MainTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
+        model = Models[CurrentLevel];
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -22,14 +24,21 @@ public class MainTower : Tower
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++; 
+
             damage = Damage[CurrentLevel];
             GoldGenerated = GoldGenerationList[CurrentLevel];
+
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
             float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
         }
     }
 }

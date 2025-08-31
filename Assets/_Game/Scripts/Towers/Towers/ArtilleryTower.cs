@@ -28,17 +28,14 @@ public class ArtilleryTower : Tower
 
     void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         shellDamage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
-        
-        if (debuffs.Length != 0 && debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
+        model = Models[CurrentLevel];
+        if (Debuffs[CurrentLevel] != null)
+            currentDebuffs.Add(Debuffs[CurrentLevel]);
+
         currentHP = currentHP == 0 ? maxHP : currentHP;
     }
 
@@ -82,8 +79,7 @@ public class ArtilleryTower : Tower
         
         Shel sh = Instantiate(shel);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        audioSource.clip = shootSound; 
-        audioSource.PlayOneShot(shootSound);
+        
     }
     bool AcquireTarget()
     {
@@ -125,14 +121,21 @@ public class ArtilleryTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
             UpgradePrice = UpgradePrices[CurrentLevel];
+            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+
             CurrentLevel++;
+
             shellDamage = Damage[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
+
+            model.SetActive(false);
+            model = Models[CurrentLevel];
+            model.SetActive(true);
+
             float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
             maxHP = HP[CurrentLevel];
+            currentHP = maxHP * hpPercent;
         }
     }
 }
