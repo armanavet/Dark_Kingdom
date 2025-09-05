@@ -16,8 +16,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
+    [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit;
+    GameObject tilePanel, activePanel, previousHit,effect;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -65,7 +66,7 @@ public class UIManager : MonoBehaviour
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform); 
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
             else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
             else
             {
@@ -78,6 +79,7 @@ public class UIManager : MonoBehaviour
             ShowTowerPanel(false);
             ShowTilePanel(false);
             PlaceTower(false);
+            
         }
         if (isPanelActive && activePanel != null)
         {
@@ -135,18 +137,29 @@ public class UIManager : MonoBehaviour
                 if (activePanel != null) activePanel.SetActive(false);
                 activePanel = tilePanel;
                 isPanelActive = true;
-
                 tilePanel.SetActive(true);
                 tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0,tilePanelYOffset,0);
-                return;
+                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
             }
         }
+        if (activePanel != null) activePanel.SetActive(false);
 
-        if (activePanel != null)  activePanel.SetActive(false);
         isPanelActive = false;
     }
-
+    void OutlineForTile()
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
+        {
+            Transform a = tileHit.collider.transform.Find("OutlineForTile");
+            if (a.gameObject != null)
+            {
+                a.gameObject.SetActive(true);
+            }
+            else a.gameObject.SetActive(false);
+        }
+    }
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
@@ -192,6 +205,10 @@ public class UIManager : MonoBehaviour
 
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
+                effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
+                Destroy(effect,2f);
+                effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
+                Destroy(effect,2f);
             }
         }
         else

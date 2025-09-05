@@ -165,7 +165,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void PlayMovingSound()
     {
         int randomSound = Random.Range(0, movingSounds.Length);
-        Debug.Log(audioSource == null);
+        //Debug.Log(audioSource == null);
         audioSource.clip = movingSounds[randomSound];
         audioSource.PlayOneShot(movingSounds[randomSound]);
     }
