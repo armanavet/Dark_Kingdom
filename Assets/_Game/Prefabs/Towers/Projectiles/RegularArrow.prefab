@@ -9715,8 +9715,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 929976595788919247}
-  - component: {fileID: 482332826573434270}
   - component: {fileID: 4916164987126143427}
+  - component: {fileID: 482332826573434270}
   m_Layer: 0
   m_Name: RegularArrow
   m_TagString: Untagged
@@ -9740,6 +9740,18 @@ Transform:
   - {fileID: 7860085610024500631}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4916164987126143427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3763443671515703615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385a3c33b878c8c41bf9c4f4e64a096e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &482332826573434270
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9836,18 +9848,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4916164987126143427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3763443671515703615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 385a3c33b878c8c41bf9c4f4e64a096e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5215025543190478097
 GameObject:
   m_ObjectHideFlags: 0
