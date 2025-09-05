@@ -1,6 +1,7 @@
     using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -32,10 +33,10 @@ public class PNGToTileMap : MonoBehaviour
                 GameObject tileObj = Instantiate(TilePrefab, GridParent.transform);
                 tileObj.transform.localPosition = new Vector3(x - offset.x, 0, y - offset.y);
                 tileObj.name = $"Tile_{x}_{y}";
-
+                
                 Tile tile = tileObj.GetComponent<Tile>();
                 if (tile != null)
-                {
+                {   
                     tile.SetType(TileType, false);
                     tile.SetCoordinates(x,y);
                     script.Tiles.Add(tile);

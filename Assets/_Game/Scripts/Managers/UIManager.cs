@@ -12,13 +12,13 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectorPrefab, outlinePrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float tilePanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit, selectorMark, activeSelectorMark,effect,outline;
+    GameObject tilePanel, activePanel, previousHit,effect;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -50,17 +50,12 @@ public class UIManager : MonoBehaviour
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         tilePanel = Instantiate(tilePanelPrefab);
-        selectorMark = Instantiate(selectorPrefab);
-        outline = Instantiate(outlinePrefab);
         tilePanel.SetActive(false);
-        selectorMark.SetActive(false);   
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
-        outline.SetActive(false);
     }
     void Update()
     {
-        OutlineForTile();
         ChangeUiButtonVisibility();
         goldText.text = EconomyManager.Instance.CurrentGold.ToString();
         timerText.text = Mathf.Round(GameTimer).ToString();
@@ -132,7 +127,7 @@ public class UIManager : MonoBehaviour
 
     void ShowTilePanel(bool value, Transform selectedTile = null)
     {
-        if (tilePanel == null && selectorMark == null) return;
+        if (tilePanel == null) return;
 
         if (value == true)
         {
@@ -140,34 +135,14 @@ public class UIManager : MonoBehaviour
             if (tile.CanBePurchased())
             {
                 if (activePanel != null) activePanel.SetActive(false);
-                if (activeSelectorMark != null) activeSelectorMark.SetActive(false);
-                
                 activePanel = tilePanel;
-                activeSelectorMark = selectorMark;
-
                 isPanelActive = true;
-
                 tilePanel.SetActive(true);
-                selectorMark.SetActive(true);
-
                 tilePanel.GetComponent<TileBuy>().tile = tile;
                 tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
-                
-                selectorMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
-                
-                selectorMark.transform.DOKill();
-                selectorMark.transform.DOMoveY(0.3f, 0.6f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1,LoopType.Yoyo);
-                selectorMark.transform.DOScale(new Vector3(1.1f,1,1.1f), 0.6f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1,LoopType.Yoyo);
-                return;
             }
         }
-
         if (activePanel != null) activePanel.SetActive(false);
-        if (activeSelectorMark != null) activeSelectorMark.SetActive(false);
 
         isPanelActive = false;
     }
@@ -177,14 +152,13 @@ public class UIManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if(Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
         {
-            if (tileHit.collider.CompareTag("a"))
+            Transform a = tileHit.collider.transform.Find("OutlineForTile");
+            if (a.gameObject != null)
             {
-                outline.SetActive(true);
-                outline.transform.position = tileHit.transform.position;
+                a.gameObject.SetActive(true);
             }
-            else outline.SetActive(false);
+            else a.gameObject.SetActive(false);
         }
-        //outline.SetActive(false);
     }
     void ShowTowerPurchasePanel(bool value)
     {

@@ -11,7 +11,5 @@ public class TileBuy : MonoBehaviour
         EconomyManager.Instance.ChangeGoldAmount(-tile.TilePrice);
         tile.SetType(TileType.Own);
         this.gameObject.SetActive(false);
-        GameObject selectiomPrefabInScene = GameObject.FindWithTag("SelectionPrefab");
-        selectiomPrefabInScene.gameObject.SetActive(false);
     }
 }
