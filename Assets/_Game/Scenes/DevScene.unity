@@ -349,6 +349,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5876793522845272134, guid: 2c0edfcb164e9cf49b3fa758a14e3420,
         type: 3}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: towerPurchasePanelYHidden
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 3056571085803093745, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
