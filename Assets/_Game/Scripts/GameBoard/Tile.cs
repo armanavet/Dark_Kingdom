@@ -21,19 +21,7 @@ public class Tile : MonoBehaviour
     List<Tile> neighbors = new List<Tile>();
     [SerializeField] GameObject currentModel;
 
-    private void Awake()
-    {
-        ToggleOutline(NeutralTiles);
-        ToggleOutline(OwnTiles);
-        ToggleOutline(ObstructedTiles);
-    }
-    void ToggleOutline(GameObject[] tiles)
-    {
-        foreach (var tile in tiles)
-        {
-            tile.transform.Find("OutlineForTile").gameObject.SetActive(false);
-        }
-    }
+    
     public Tile NextOnPath => nextOnPath;
     public int DistanceToDestinationOriginal { get; private set; }
     public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
