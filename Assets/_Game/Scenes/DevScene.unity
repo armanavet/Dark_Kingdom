@@ -351,8 +351,13 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
+      propertyPath: towerPanelYOffset
+      value: 2.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
       propertyPath: towerPurchasePanelYHidden
-      value: -2
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 3056571085803093745, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}

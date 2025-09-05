@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float tilePanelYOffset;
+    [SerializeField] float towerPanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
     GameObject tilePanel, activePanel, previousHit,effect;
@@ -67,17 +67,17 @@ public class UIManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
             else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
-            else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
+            //else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
             else
             {
                 ShowTowerPanel(false);
-                ShowTilePanel(false);
+                //ShowTilePanel(false);
             }
         }
         else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
             ShowTowerPanel(false);
-            ShowTilePanel(false);
+            //ShowTilePanel(false);
             PlaceTower(false);
             
         }
@@ -110,11 +110,13 @@ public class UIManager : MonoBehaviour
         if (value == true)
         {
             GameObject towerPanel = tower.GetComponent<Tower>().TowerPanel;
+            Tower towerPos = tower.GetComponent<Tower>();
             if (towerPanel == null) return;
             if(activePanel != null) activePanel.SetActive(false);
             
             activePanel = towerPanel;
-            towerPanel.SetActive(true);
+            activePanel.transform.position = new Vector3(towerPos.transform.position.x, towerPos.transform.position.y + towerPanelYOffset, towerPos.transform.position.z);
+            activePanel.SetActive(true);
             
             isPanelActive = true;
         }
@@ -125,27 +127,27 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void ShowTilePanel(bool value, Transform selectedTile = null)
-    {
-        if (tilePanel == null) return;
+    //void ShowTilePanel(bool value, Transform selectedTile = null)
+    //{
+    //    if (tilePanel == null) return;
 
-        if (value == true)
-        {
-            Tile tile = selectedTile.GetComponent<Tile>();
-            if (tile.CanBePurchased())
-            {
-                if (activePanel != null) activePanel.SetActive(false);
-                activePanel = tilePanel;
-                isPanelActive = true;
-                tilePanel.SetActive(true);
-                tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
-            }
-        }
-        if (activePanel != null) activePanel.SetActive(false);
+    //    if (value == true)
+    //    {
+    //        Tile tile = selectedTile.GetComponent<Tile>();
+    //        if (tile.CanBePurchased())
+    //        {
+    //            if (activePanel != null) activePanel.SetActive(false);
+    //            activePanel = tilePanel;
+    //            isPanelActive = true;
+    //            tilePanel.SetActive(true);
+    //            tilePanel.GetComponent<TileBuy>().tile = tile;
+    //            tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
+    //        }
+    //    }
+    //    if (activePanel != null) activePanel.SetActive(false);
 
-        isPanelActive = false;
-    }
+    //    isPanelActive = false;
+    //}
     void OutlineForTile()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
