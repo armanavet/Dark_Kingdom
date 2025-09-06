@@ -460,7 +460,7 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 4b00000096000000c8000000
+  UpgradePrices: 4b00000096000000
   SellPrices: 25000000570000009600000018010000
   HP:
   - 100
@@ -479,10 +479,9 @@ MonoBehaviour:
   - {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e, type: 3}
   - {fileID: 6171265629823123270, guid: b2c62bc029caf7a4d89b626c853317e2, type: 3}
   Models:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5676146550569586168}
+  - {fileID: 1658780769897821688}
+  - {fileID: 5730854685874866972}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
@@ -1008,6 +1007,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 718cc6d080294af40acd1d68973dd1b3, type: 3}
+--- !u!1 &1658780769897821688 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6310557092053101938, guid: 718cc6d080294af40acd1d68973dd1b3,
+    type: 3}
+  m_PrefabInstance: {fileID: 4654107856426473610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9134367930537559656 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4491634000884850402, guid: 718cc6d080294af40acd1d68973dd1b3,
@@ -1093,6 +1098,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7522384599193898872}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5730854685874866972 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2876943681928430692, guid: f860c9edd6b68924a89eb63ead6acd1d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7522384599193898872}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7990521893352023064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1164,6 +1175,12 @@ PrefabInstance:
 --- !u!4 &1184876223477222384 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9121354908309663720, guid: acfe905eb3d13ba4ba12b75e31a84cdc,
+    type: 3}
+  m_PrefabInstance: {fileID: 7990521893352023064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5676146550569586168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2315325632776038880, guid: acfe905eb3d13ba4ba12b75e31a84cdc,
     type: 3}
   m_PrefabInstance: {fileID: 7990521893352023064}
   m_PrefabAsset: {fileID: 0}

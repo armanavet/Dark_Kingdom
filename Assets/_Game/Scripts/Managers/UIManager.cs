@@ -12,13 +12,13 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float towerPanelYOffset;
+    [SerializeField] float towerPanelYOffset, tilePanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit,effect;
+    GameObject tilePanel, activePanel, previousHit,effect, selectionMark, activeSelectionMark;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -50,7 +50,9 @@ public class UIManager : MonoBehaviour
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         tilePanel = Instantiate(tilePanelPrefab);
+        selectionMark = Instantiate(selectionMarkPrefab);
         tilePanel.SetActive(false);
+        selectionMark.SetActive(false);
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
     }
@@ -67,17 +69,17 @@ public class UIManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
             else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
-            //else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
+            else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
             else
             {
                 ShowTowerPanel(false);
-                //ShowTilePanel(false);
+                ShowTilePanel(false);
             }
         }
         else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
             ShowTowerPanel(false);
-            //ShowTilePanel(false);
+            ShowTilePanel(false);
             PlaceTower(false);
             
         }
@@ -105,17 +107,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void ShowTowerPanel(bool value, Transform tower = null)
+    void ShowTowerPanel(bool value, Transform selectedTower = null)
     {
         if (value == true)
         {
-            GameObject towerPanel = tower.GetComponent<Tower>().TowerPanel;
-            Tower towerPos = tower.GetComponent<Tower>();
+            Tower tower = selectedTower.GetComponent<Tower>();
+            GameObject towerPanel = tower.TowerPanel;
             if (towerPanel == null) return;
             if(activePanel != null) activePanel.SetActive(false);
             
             activePanel = towerPanel;
-            activePanel.transform.position = new Vector3(towerPos.transform.position.x, towerPos.transform.position.y + towerPanelYOffset, towerPos.transform.position.z);
+            SetTowerPanelPosition(activePanel,tower);
             activePanel.SetActive(true);
             
             isPanelActive = true;
@@ -127,27 +129,69 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //void ShowTilePanel(bool value, Transform selectedTile = null)
-    //{
-    //    if (tilePanel == null) return;
+    void SetTowerPanelPosition(GameObject panel, Tower tower)
+    {
+        if (tower.CompareTag("ArcherTower"))
+        {
+            towerPanelYOffset = 2.6f;
+            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        }
+        else if (tower.CompareTag("WizardTower"))
+        {
+            towerPanelYOffset = 2.25f;
+            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        }
+        else if (tower.CompareTag("ArtilleryTower"))
+        {
+            towerPanelYOffset = 2.3f;
+            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        }
+        else if (tower.CompareTag("GoldMine"))
+        {
+            towerPanelYOffset = 1.3f;
+            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
 
-    //    if (value == true)
-    //    {
-    //        Tile tile = selectedTile.GetComponent<Tile>();
-    //        if (tile.CanBePurchased())
-    //        {
-    //            if (activePanel != null) activePanel.SetActive(false);
-    //            activePanel = tilePanel;
-    //            isPanelActive = true;
-    //            tilePanel.SetActive(true);
-    //            tilePanel.GetComponent<TileBuy>().tile = tile;
-    //            tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
-    //        }
-    //    }
-    //    if (activePanel != null) activePanel.SetActive(false);
+        }
+        else panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
 
-    //    isPanelActive = false;
-    //}
+    }
+
+    void ShowTilePanel(bool value, Transform selectedTile = null)
+    {
+        if (tilePanel == null && selectionMark == null) return;
+
+        if (value == true)
+        {
+            Tile tile = selectedTile.GetComponent<Tile>();
+            if (tile.CanBePurchased())
+            {
+                Debug.Log("enter in function after click on the tile");
+                if (activePanel != null) activePanel.SetActive(false);
+                if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+                activePanel = tilePanel;
+                activeSelectionMark = selectionMark;
+                isPanelActive = true;
+                tilePanel.SetActive(true);
+                selectionMark.SetActive(true);
+                tilePanel.GetComponent<TileBuy>().tile = tile;
+                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
+                selectionMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
+
+                selectionMark.transform.DOKill();
+                selectionMark.transform.DOMoveY(0.3f, 0.7f)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1, LoopType.Yoyo);
+                selectionMark.transform.DOScale(new Vector3(1.2f, 1, 1.2f), 0.6f)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1, LoopType.Yoyo);
+                return;
+            }
+        }
+        if (activePanel != null) activePanel.SetActive(false);
+        if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
+
+        isPanelActive = false;
+    }
     void OutlineForTile()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;

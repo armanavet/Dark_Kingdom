@@ -56,8 +56,10 @@ public class Tile : MonoBehaviour
             case TileType.Neutral:
                 ConnectRoads();
                 break;
-            case TileType.Own:
             case TileType.Claimed:
+                ConnectRoads();
+                break;
+            case TileType.Own:
             case TileType.Destination:
                 random = Random.Range(0, OwnTiles.Length);
                 if (OwnTiles.Length > 0)
@@ -219,41 +221,16 @@ public class Tile : MonoBehaviour
     {
         foreach (var neighbor in surroundingTiles)
         {
-            if (neighbor == null || neighbor.Type != TileType.Neutral) continue;
-            neighbor.SetType(TileType.Claimed);
-        }
-        
-    }
-
-    public void UnclaimSurroundingTiles()
-    {
-        foreach (var neighbor in surroundingTiles)
-        {
-            if (neighbor == null || neighbor.Type != TileType.Claimed) continue;
-
-            bool canUnclaim = true;
-            foreach (var tile in neighbor.surroundingTiles)
-            {
-                if (!tile.isEmpty)
-                {
-                    canUnclaim = false;
-                    break;
-                }
-            }
-
-            if (canUnclaim) neighbor.SetType(TileType.Neutral);
+            if (neighbor == null || neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed) continue; 
+            else if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
+            else if (neighbor.Type == TileType.Neutral) neighbor.SetType(TileType.Claimed);
         }
     }
 
     public bool CanBePurchased()
     {
-        if (Type != TileType.Obstructed) return false;
-        foreach (var neighbor in surroundingTiles)
-        {
-            if (neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed)
-                return true;
-        }
-        return false;
+        if (Type == TileType.Claimed) return true;
+        else return false;
     }
 
     public void Corrupt()

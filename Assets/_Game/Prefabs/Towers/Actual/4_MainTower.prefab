@@ -269,8 +269,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8911066532944339708}
   - {fileID: 9084984418182355662}
+  - {fileID: 8911066532944339708}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4912775467551945949
@@ -304,7 +304,7 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 64000000f4010000e8030000
+  UpgradePrices: 64000000f4010000
   SellPrices: 000000000000000000000000
   HP:
   - 500
@@ -315,15 +315,14 @@ MonoBehaviour:
   Debuffs: []
   Projectiles: []
   Models:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4462003506909241463}
+  - {fileID: 3994852007506916656}
+  - {fileID: 3455892021237394572}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  MaxLevel: 3
+  LevelMax: 1
   CurrentLevel: 0
   PurchasePrice: 0
   Type: 4
@@ -476,9 +475,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4059195600660973098}
+      - m_Target: {fileID: 4912775467551945949}
         m_TargetAssemblyTypeName: TowerPanel, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: ButtonTowerUpgrade
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -688,10 +687,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7655192183460608748, guid: ffac097577b576c418a5f04484afecde, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffac097577b576c418a5f04484afecde, type: 3}
+--- !u!1 &4462003506909241463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1930245196258827545, guid: ffac097577b576c418a5f04484afecde,
+    type: 3}
+  m_PrefabInstance: {fileID: 2820840284331851118}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5803717952796753367 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8624201909159837881, guid: ffac097577b576c418a5f04484afecde,
@@ -777,6 +783,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6835928205371570948}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3455892021237394572 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8154843580335708040, guid: 15c12cac9530be5418a47eb4c42b43bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6835928205371570948}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7113138184673214962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -850,6 +862,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: def46324d64cc504e97abb58fcb09170, type: 3}
+--- !u!1 &3994852007506916656 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6180735023826760898, guid: def46324d64cc504e97abb58fcb09170,
+    type: 3}
+  m_PrefabInstance: {fileID: 7113138184673214962}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4412304630137279320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6885254869147587242, guid: def46324d64cc504e97abb58fcb09170,

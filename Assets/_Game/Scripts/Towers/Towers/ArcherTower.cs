@@ -111,7 +111,6 @@ public class ArcherTower : Tower
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
             projectile = Projectiles[CurrentLevel];

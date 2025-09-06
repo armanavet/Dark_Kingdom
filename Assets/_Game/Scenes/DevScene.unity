@@ -352,8 +352,14 @@ PrefabInstance:
     - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: towerPanelYOffset
-      value: 2.1
+      value: 1.7
       objectReference: {fileID: 0}
+    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: selectionMarkPrefab
+      value: 
+      objectReference: {fileID: 6341198808007680494, guid: ca1f6b2e8d99a4e4d89283a04dfca328,
+        type: 3}
     - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: towerPurchasePanelYHidden
@@ -1190,6 +1196,11 @@ PrefabInstance:
       propertyPath: Map
       value: 
       objectReference: {fileID: 1261744675}
+    - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
+        type: 3}
+      propertyPath: rotationSpeed
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

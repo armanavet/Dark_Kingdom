@@ -89,7 +89,7 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 580000006000000068000000
+  UpgradePrices: 5800000060000000
   SellPrices: 280000002c0000002e00000032000000
   HP:
   - 80
@@ -104,10 +104,9 @@ MonoBehaviour:
   - {fileID: 0}
   Projectiles: []
   Models:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1540380179985112985}
+  - {fileID: 6876134232157917290}
+  - {fileID: 8298744466026624177}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
@@ -1005,6 +1004,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa9fe385cdde5194d9184db50c7133b2, type: 3}
+--- !u!1 &6876134232157917290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6557564491083348702, guid: aa9fe385cdde5194d9184db50c7133b2,
+    type: 3}
+  m_PrefabInstance: {fileID: 319132761897167540}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7292360822780735540 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7016153048519268992, guid: aa9fe385cdde5194d9184db50c7133b2,
@@ -1090,6 +1095,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6178768262422683830}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8298744466026624177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2779975375624082439, guid: fa08a47733c0d1d4b80a15c9dfcee599,
+    type: 3}
+  m_PrefabInstance: {fileID: 6178768262422683830}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6389037464764611382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1168,6 +1179,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54e6adf8f83fbac43b7dec8f93f9a510, type: 3}
+--- !u!1 &1540380179985112985 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5605552334049666223, guid: 54e6adf8f83fbac43b7dec8f93f9a510,
+    type: 3}
+  m_PrefabInstance: {fileID: 6389037464764611382}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6816976815638675282 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 446049821284074596, guid: 54e6adf8f83fbac43b7dec8f93f9a510,
