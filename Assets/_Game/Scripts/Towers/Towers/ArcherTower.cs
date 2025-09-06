@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ArcherTower : Tower
 {
+    [SerializeField] List<float> shootingPointPositions;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
@@ -21,6 +22,7 @@ public class ArcherTower : Tower
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
         model = Models[CurrentLevel];
+        shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
         projectile = Projectiles[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
@@ -36,6 +38,7 @@ public class ArcherTower : Tower
         {
             if (AcquireTarget())
             {
+                Debug.Log("Will shoot");
                 Shoot();
             }
             attackCooldown = 1 / attackSpeed;
@@ -117,6 +120,7 @@ public class ArcherTower : Tower
 
             model.SetActive(false);
             model = Models[CurrentLevel];
+            shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
             model.SetActive(true);
 
             float hpPercent = currentHP / maxHP;

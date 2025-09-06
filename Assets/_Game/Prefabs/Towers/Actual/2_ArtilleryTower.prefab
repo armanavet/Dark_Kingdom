@@ -916,7 +916,7 @@ MonoBehaviour:
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  MaxLevel: 3
+  LevelMax: 1
   CurrentLevel: 0
   PurchasePrice: 150
   Type: 2

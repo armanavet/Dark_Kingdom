@@ -52,7 +52,6 @@ public abstract class Tower : MonoBehaviour
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
-        //tile.UnclaimSurroundingTiles();
         OnDestroyed?.Invoke();
         Destroy(gameObject);
     }

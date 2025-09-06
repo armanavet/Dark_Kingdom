@@ -380,9 +380,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3578200552871301636}
+  - component: {fileID: 2554583891899901409}
   - component: {fileID: 7834484294431754817}
   - component: {fileID: 1117339861032107339}
-  - component: {fileID: 2554583891899901409}
   m_Layer: 6
   m_Name: 0_ArcherTower
   m_TagString: ArcherTower
@@ -408,40 +408,6 @@ Transform:
   - {fileID: 5319822399164765688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7834484294431754817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006865380794792360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f9dc8e5144131c42ba65aab5b7f63b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpgradeButton: {fileID: 6795227476563511694}
---- !u!65 &1117339861032107339
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006865380794792360}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.4439036, z: 1}
-  m_Center: {x: 0, y: 0.6982369, z: 0}
 --- !u!114 &2554583891899901409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +452,7 @@ MonoBehaviour:
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  MaxLevel: 3
+  LevelMax: 1
   CurrentLevel: 0
   PurchasePrice: 50
   Type: 0
@@ -496,10 +462,48 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 2936775719731518850}
+  shootingPointPositions:
+  - 1.3
+  - 1.65
+  - 1.75
   shootingPoint: {fileID: 1574947597934629292}
   projectileSpeed: 12
   attackSpeed: 1
   attackRange: 3
+--- !u!114 &7834484294431754817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006865380794792360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9dc8e5144131c42ba65aab5b7f63b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpgradeButton: {fileID: 6795227476563511694}
+--- !u!65 &1117339861032107339
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006865380794792360}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.4439036, z: 1}
+  m_Center: {x: 0, y: 0.6982369, z: 0}
 --- !u!1 &4336097693392959391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,6 +1120,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2315325632776038880, guid: acfe905eb3d13ba4ba12b75e31a84cdc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9121354908309663720, guid: acfe905eb3d13ba4ba12b75e31a84cdc,
         type: 3}
