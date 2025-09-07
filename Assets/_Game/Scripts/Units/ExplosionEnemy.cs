@@ -22,15 +22,15 @@ public class ExplosionEnemy : Enemy
     }
     void Update()
     {
-        state = tileFrom.isEmpty && help>0 ? EnemyState.Moving : EnemyState.Attacking;
+        if (state == EnemyState.Dead) return;
+        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
         if (state == EnemyState.Moving) Move();
         else if (state == EnemyState.Attacking) Attack();
     }
-    protected override void Attack() => animator.SetBool("isAttacking", true);
-     
-    protected override void OnDeath()
+
+    private void Explode()
     {
-        
+        AudioManager.instance.PlayExplosionSound(attackSound);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -47,4 +47,6 @@ public class ExplosionEnemy : Enemy
         Destroy(gameObject);
     }
 
+    protected override void Attack() => OnDeath();  
+    
 }

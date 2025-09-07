@@ -17,7 +17,14 @@ public class MageEnemy : Enemy
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
 
+    private void OnDestroy()
+    {
+        if (target != null)
+        {
+            target.OnDestroyed -= StartTurning;
 
+        }
+    }
     private void Awake()
     {
         if (audioSource == null)

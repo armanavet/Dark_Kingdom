@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     [Header("Volume Setting")]
     [SerializeField] AudioClip menuItemsClickSound;
     [SerializeField] AudioClip towerPanelBuyClickSound;
+    [SerializeField] AudioSource explosionSound;
     //[SerializeField] AudioClip menuItemsClickSound;
     //[SerializeField] AudioClip menuItemsClickSound;
     //[SerializeField] AudioClip menuItemsClickSound;
@@ -64,5 +65,10 @@ public class AudioManager : MonoBehaviour
     public void PlayClickSoundForPanelUI()
     {
         audioSource.PlayOneShot(towerPanelBuyClickSound);
+    }
+
+    public void PlayExplosionSound(AudioClip soundClip)
+    {
+        audioSource.PlayOneShot(soundClip);
     }
 }

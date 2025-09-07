@@ -38,7 +38,6 @@ public class ArcherTower : Tower
         {
             if (AcquireTarget())
             {
-                Debug.Log("Will shoot");
                 Shoot();
             }
             attackCooldown = 1 / attackSpeed;
@@ -121,6 +120,7 @@ public class ArcherTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
+            //shootingPoint.Translate();
             model.SetActive(true);
 
             float hpPercent = currentHP / maxHP;
