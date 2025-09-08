@@ -379,7 +379,8 @@ MonoBehaviour:
   - 1500
   Damage: 000000000000000000000000
   Debuffs: []
-  Projectiles: []
+  Projectiles:
+  - {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
   Models:
   - {fileID: 4462003506909241463}
   - {fileID: 3994852007506916656}
@@ -399,6 +400,62 @@ MonoBehaviour:
     CurrentHP: 0
   TowerPanel: {fileID: 5734724905035884570}
   GoldGenerationList: 01000000020000000300000004000000
+  Defender:
+  - turret: {fileID: 2147981638518327845}
+    target: {fileID: 0}
+    cooldown: 0
+  - turret: {fileID: 617453874657489919}
+    target: {fileID: 0}
+    cooldown: 0
+  - turret: {fileID: 3581851993535102382}
+    target: {fileID: 0}
+    cooldown: 0
+  - turret: {fileID: 6447519981833342827}
+    target: {fileID: 0}
+    cooldown: 0
+  ShootingPointPositions:
+  - 1.4
+  - 1.5
+  - 1.6
+  TowersRootPoints:
+  - {fileID: 5126355764872827917}
+  - {fileID: 8244271394942083490}
+  - {fileID: 1249604174996992637}
+  - {fileID: 6223597220560938767}
+  TowersRootPointPositions:
+  - x:
+    - -0.85
+    - 0.85
+    - -0.85
+    - 0.85
+    y:
+    - 0.85
+    - 0.85
+    - -0.85
+    - -0.85
+  - x:
+    - -0.95
+    - 0.95
+    - -0.95
+    - 0.95
+    y:
+    - 0.95
+    - 0.95
+    - -0.95
+    - -0.95
+  - x:
+    - -1
+    - 1
+    - -1
+    - 1
+    y:
+    - 1
+    - 1
+    - -1
+    - -1
+  ProjectileSpeed: 12
+  AttackSpeed: 1
+  attackRange: 10
 --- !u!65 &660188337889200183
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -696,7 +753,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6223597220560938767}
   - component: {fileID: 429289008504522063}
-  - component: {fileID: 7011321148456246026}
   m_Layer: 6
   m_Name: RightButtomTower
   m_TagString: Untagged
@@ -713,7 +769,7 @@ Transform:
   m_GameObject: {fileID: 6015105033111203366}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.85, y: 0, z: -0.85}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -737,72 +793,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7011321148456246026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6015105033111203366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  illusionMask:
-    serializedVersion: 2
-    m_Bits: 256
-  UpgradePrices: 0000000000000000
-  SellPrices: 00000000000000000000000000000000
-  HP:
-  - 0
-  - 0
-  - 0
-  - 0
-  Damage: 00000000000000000000000000000000
-  Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Projectiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Models:
-  - {fileID: 4462003506909241463}
-  - {fileID: 3994852007506916656}
-  - {fileID: 3455892021237394572}
-  tile: {fileID: 0}
-  SellPrice: 0
-  UpgradePrice: 0
-  GoldGenerated: 0
-  LevelMax: 1
-  CurrentLevel: 0
-  PurchasePrice: 0
-  Type: 0
-  saveData:
-    Type: 0
-    TileIndex: 0
-    Level: 0
-    CurrentHP: 0
-  TowerPanel: {fileID: 0}
-  shootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
-  shootingPoint: {fileID: 6447519981833342827}
-  projectileSpeed: 0
-  attackSpeed: 0
-  attackRange: 2
 --- !u!1 &7313321535224001206
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,7 +841,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8244271394942083490}
   - component: {fileID: 2885101803468788921}
-  - component: {fileID: 5724223465565433056}
   m_Layer: 6
   m_Name: RightTopTower
   m_TagString: Untagged
@@ -864,7 +857,7 @@ Transform:
   m_GameObject: {fileID: 7776196411222224637}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.85, y: 0, z: 0.85}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -888,72 +881,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5724223465565433056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7776196411222224637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  illusionMask:
-    serializedVersion: 2
-    m_Bits: 256
-  UpgradePrices: 0000000000000000
-  SellPrices: 00000000000000000000000000000000
-  HP:
-  - 0
-  - 0
-  - 0
-  - 0
-  Damage: 00000000000000000000000000000000
-  Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Projectiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Models:
-  - {fileID: 4462003506909241463}
-  - {fileID: 3994852007506916656}
-  - {fileID: 3455892021237394572}
-  tile: {fileID: 0}
-  SellPrice: 0
-  UpgradePrice: 0
-  GoldGenerated: 0
-  LevelMax: 1
-  CurrentLevel: 0
-  PurchasePrice: 0
-  Type: 0
-  saveData:
-    Type: 0
-    TileIndex: 0
-    Level: 0
-    CurrentHP: 0
-  TowerPanel: {fileID: 0}
-  shootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
-  shootingPoint: {fileID: 617453874657489919}
-  projectileSpeed: 0
-  attackSpeed: 0
-  attackRange: 2
 --- !u!1 &7976802131019827305
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,9 +894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5126355764872827917}
-  - component: {fileID: 260870321236723533}
   - component: {fileID: 2517648086000339874}
-  - component: {fileID: 3008239949831665670}
   m_Layer: 6
   m_Name: LeftTopTower
   m_TagString: Untagged
@@ -982,60 +911,13 @@ Transform:
   m_GameObject: {fileID: 7976802131019827305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.85, y: 0, z: 0.85}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2147981638518327845}
   m_Father: {fileID: 3406219111571551489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &260870321236723533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7976802131019827305}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7563b7110f19a284cb9287eeb7cfa8d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  illusionMask:
-    serializedVersion: 2
-    m_Bits: 256
-  UpgradePrices: 
-  SellPrices: 
-  HP: []
-  Damage: 
-  Debuffs: []
-  Projectiles: []
-  Models: []
-  tile: {fileID: 0}
-  SellPrice: 0
-  UpgradePrice: 0
-  GoldGenerated: 0
-  LevelMax: 1
-  CurrentLevel: 0
-  PurchasePrice: 0
-  Type: 0
-  saveData:
-    Type: 0
-    TileIndex: 0
-    Level: 0
-    CurrentHP: 0
-  TowerPanel: {fileID: 0}
-  GoldGenerationList: 
-  _ShootingPointsList: []
-  _ShootingPointPositions: []
-  _Projectile: {fileID: 0}
-  _ProjectileSpeed: 0
-  _Damage: 0
-  _AttackSpeed: 0
-  _AttackRange: 2
 --- !u!65 &2517648086000339874
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1053,72 +935,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3008239949831665670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7976802131019827305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  illusionMask:
-    serializedVersion: 2
-    m_Bits: 256
-  UpgradePrices: 0000000000000000
-  SellPrices: 00000000000000000000000000000000
-  HP:
-  - 0
-  - 0
-  - 0
-  - 0
-  Damage: 00000000000000000000000000000000
-  Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Projectiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Models:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  tile: {fileID: 0}
-  SellPrice: 0
-  UpgradePrice: 0
-  GoldGenerated: 0
-  LevelMax: 1
-  CurrentLevel: 0
-  PurchasePrice: 0
-  Type: 0
-  saveData:
-    Type: 0
-    TileIndex: 0
-    Level: 0
-    CurrentHP: 0
-  TowerPanel: {fileID: 0}
-  shootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
-  shootingPoint: {fileID: 2147981638518327845}
-  projectileSpeed: 0
-  attackSpeed: 0
-  attackRange: 2
 --- !u!1 &8211235897525823018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,7 +949,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1249604174996992637}
   - component: {fileID: 5302177711704063746}
-  - component: {fileID: 3838315269160282880}
   m_Layer: 6
   m_Name: LeftButtomTower
   m_TagString: Untagged
@@ -1146,7 +965,7 @@ Transform:
   m_GameObject: {fileID: 8211235897525823018}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.85, y: 0, z: -0.85}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1170,72 +989,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3838315269160282880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8211235897525823018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05db03e67d934d949beaf119a704406f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 128
-  illusionMask:
-    serializedVersion: 2
-    m_Bits: 256
-  UpgradePrices: 0000000000000000
-  SellPrices: 00000000000000000000000000000000
-  HP:
-  - 0
-  - 0
-  - 0
-  - 0
-  Damage: 00000000000000000000000000000000
-  Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Projectiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  Models:
-  - {fileID: 4462003506909241463}
-  - {fileID: 3994852007506916656}
-  - {fileID: 3455892021237394572}
-  tile: {fileID: 0}
-  SellPrice: 0
-  UpgradePrice: 0
-  GoldGenerated: 0
-  LevelMax: 1
-  CurrentLevel: 0
-  PurchasePrice: 0
-  Type: 0
-  saveData:
-    Type: 0
-    TileIndex: 0
-    Level: 0
-    CurrentHP: 0
-  TowerPanel: {fileID: 0}
-  shootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
-  shootingPoint: {fileID: 3581851993535102382}
-  projectileSpeed: 0
-  attackSpeed: 0
-  attackRange: 2
 --- !u!1 &8561355985832169357
 GameObject:
   m_ObjectHideFlags: 0
