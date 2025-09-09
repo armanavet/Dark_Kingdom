@@ -4,12 +4,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class MainTowerDefender
 {
     public Transform turret;
+    public Transform turretRoot;
     [HideInInspector] public Enemy target;
     [HideInInspector] public float cooldown;
 }
@@ -33,6 +35,7 @@ public class MainTower : Tower
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
     float damage;
+    //
 
     private void Start()
     {
@@ -50,7 +53,8 @@ public class MainTower : Tower
         {
             defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
-            Debug.Log(defender.cooldown);
+            //Debug.Log(defender.turret);
+            //Debug.Log(defender.turretRoot);
         }
     }
 
@@ -64,10 +68,28 @@ public class MainTower : Tower
                 {
                     Shoot(defender);
                 }
-                defender.cooldown = Random.Range(0.1f, 1f / AttackSpeed);
+                //defender.cooldown = Random.Range(0.1f, 1f / AttackSpeed);
+                defender.cooldown = 1 / AttackSpeed;
             }
             defender.cooldown -= Time.deltaTime;
         }
+        OnDrawGizmos();
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Vector3 position = new Vector3();
+        foreach (var defender in Defender)
+        {
+            position = defender.turretRoot.position;
+            Gizmos.DrawWireSphere(position, attackRange);
+        }
+        //Vector3 posiion = transform.position;
+        Gizmos.color = Color.red;
+        //if (target != null)
+        //{
+        //    Gizmos.DrawLine(transform.position, target.transform.position);
+        //}
     }
     public override void Upgrade()
     {
@@ -110,8 +132,8 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
-        Collider[] PotentialTargets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+        Collider[] PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, illusionMask);
+        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, enemyMask);
         if (PotentialTargets.Length > 0)
         {
             if (defender.target == null)

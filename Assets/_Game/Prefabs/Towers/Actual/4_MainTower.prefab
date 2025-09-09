@@ -402,15 +402,19 @@ MonoBehaviour:
   GoldGenerationList: 01000000020000000300000004000000
   Defender:
   - turret: {fileID: 2147981638518327845}
+    turretRoot: {fileID: 5126355764872827917}
     target: {fileID: 0}
     cooldown: 0
   - turret: {fileID: 617453874657489919}
+    turretRoot: {fileID: 8244271394942083490}
     target: {fileID: 0}
     cooldown: 0
   - turret: {fileID: 3581851993535102382}
+    turretRoot: {fileID: 1249604174996992637}
     target: {fileID: 0}
     cooldown: 0
   - turret: {fileID: 6447519981833342827}
+    turretRoot: {fileID: 6223597220560938767}
     target: {fileID: 0}
     cooldown: 0
   ShootingPointPositions:
@@ -455,7 +459,7 @@ MonoBehaviour:
     - -1
   ProjectileSpeed: 12
   AttackSpeed: 1
-  attackRange: 10
+  attackRange: 1
 --- !u!65 &660188337889200183
 BoxCollider:
   m_ObjectHideFlags: 0
