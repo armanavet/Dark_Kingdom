@@ -370,26 +370,22 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 64000000f4010000
   SellPrices: 000000000000000000000000
+  UpgradePrices: 64000000f4010000
   HP:
   - 500
   - 750
   - 1000
-  - 1500
-  Damage: 000000000000000000000000
-  Debuffs: []
+  Damage: 020000000400000008000000
+  debuffs: []
   Projectiles:
   - {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
-  Models:
-  - {fileID: 4462003506909241463}
-  - {fileID: 3994852007506916656}
-  - {fileID: 3455892021237394572}
+  shootSound: {fileID: 0}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  LevelMax: 1
+  MaxLevel: 3
   CurrentLevel: 0
   PurchasePrice: 0
   Type: 4
@@ -400,66 +396,6 @@ MonoBehaviour:
     CurrentHP: 0
   TowerPanel: {fileID: 5734724905035884570}
   GoldGenerationList: 01000000020000000300000004000000
-  Defender:
-  - turret: {fileID: 2147981638518327845}
-    turretRoot: {fileID: 5126355764872827917}
-    target: {fileID: 0}
-    cooldown: 0
-  - turret: {fileID: 617453874657489919}
-    turretRoot: {fileID: 8244271394942083490}
-    target: {fileID: 0}
-    cooldown: 0
-  - turret: {fileID: 3581851993535102382}
-    turretRoot: {fileID: 1249604174996992637}
-    target: {fileID: 0}
-    cooldown: 0
-  - turret: {fileID: 6447519981833342827}
-    turretRoot: {fileID: 6223597220560938767}
-    target: {fileID: 0}
-    cooldown: 0
-  ShootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
-  TowersRootPoints:
-  - {fileID: 5126355764872827917}
-  - {fileID: 8244271394942083490}
-  - {fileID: 1249604174996992637}
-  - {fileID: 6223597220560938767}
-  TowersRootPointPositions:
-  - x:
-    - -0.85
-    - 0.85
-    - -0.85
-    - 0.85
-    y:
-    - 0.85
-    - 0.85
-    - -0.85
-    - -0.85
-  - x:
-    - -0.95
-    - 0.95
-    - -0.95
-    - 0.95
-    y:
-    - 0.95
-    - 0.95
-    - -0.95
-    - -0.95
-  - x:
-    - -1
-    - 1
-    - -1
-    - 1
-    y:
-    - 1
-    - 1
-    - -1
-    - -1
-  ProjectileSpeed: 12
-  AttackSpeed: 1
-  attackRange: 1
 --- !u!65 &660188337889200183
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1102,12 +1038,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffac097577b576c418a5f04484afecde, type: 3}
---- !u!1 &4462003506909241463 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1930245196258827545, guid: ffac097577b576c418a5f04484afecde,
-    type: 3}
-  m_PrefabInstance: {fileID: 2820840284331851118}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5803717952796753367 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8624201909159837881, guid: ffac097577b576c418a5f04484afecde,
@@ -1193,12 +1123,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6835928205371570948}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3455892021237394572 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8154843580335708040, guid: 15c12cac9530be5418a47eb4c42b43bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 6835928205371570948}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7113138184673214962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1280,12 +1204,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: def46324d64cc504e97abb58fcb09170, type: 3}
---- !u!1 &3994852007506916656 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6180735023826760898, guid: def46324d64cc504e97abb58fcb09170,
-    type: 3}
-  m_PrefabInstance: {fileID: 7113138184673214962}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4412304630137279320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6885254869147587242, guid: def46324d64cc504e97abb58fcb09170,

@@ -894,29 +894,21 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: a0000000aa000000
-  SellPrices: 78000000820000008c00000096000000
+  SellPrices: 7800000096000000c8000000
+  UpgradePrices: aa000000c8000000
   HP:
   - 150
   - 170
   - 200
-  - 220
-  Damage: 1e00000028000000320000003c000000
-  Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  Damage: 14000000280000003c000000
+  debuffs: []
   Projectiles: []
-  Models:
-  - {fileID: 8444647051516647916}
-  - {fileID: 941346566660253557}
-  - {fileID: 1816358124227128857}
+  shootSound: {fileID: 0}
   tile: {fileID: 0}
   SellPrice: 0
   UpgradePrice: 0
   GoldGenerated: 0
-  LevelMax: 1
+  MaxLevel: 3
   CurrentLevel: 0
   PurchasePrice: 150
   Type: 2
@@ -1004,12 +996,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52407e887fa4a9a4fa373033ea0c1631, type: 3}
---- !u!1 &1816358124227128857 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 784650964247828799, guid: 52407e887fa4a9a4fa373033ea0c1631,
-    type: 3}
-  m_PrefabInstance: {fileID: 1429510192182802214}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8486613890705949115 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7354415217246713501, guid: 52407e887fa4a9a4fa373033ea0c1631,
@@ -1089,12 +1075,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b56c2e22fd761842ae5b1f2e162b7f2, type: 3}
---- !u!1 &941346566660253557 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3055872329410346902, guid: 5b56c2e22fd761842ae5b1f2e162b7f2,
-    type: 3}
-  m_PrefabInstance: {fileID: 2844293672011536611}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6205181032977400723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8171162788740176752, guid: 5b56c2e22fd761842ae5b1f2e162b7f2,
@@ -1172,12 +1152,6 @@ PrefabInstance:
 --- !u!4 &2018623218944465022 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6045145298245775343, guid: a32802e3cb0f20c40b8a8f55cff5e73d,
-    type: 3}
-  m_PrefabInstance: {fileID: 5757637175932204945}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8444647051516647916 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4239669841007914621, guid: a32802e3cb0f20c40b8a8f55cff5e73d,
     type: 3}
   m_PrefabInstance: {fileID: 5757637175932204945}
   m_PrefabAsset: {fileID: 0}
