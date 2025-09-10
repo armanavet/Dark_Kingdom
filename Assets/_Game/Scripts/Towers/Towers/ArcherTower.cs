@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class ArcherTower : Tower
 {
+    [SerializeField] protected AudioClip TowerActionSound;
+    [SerializeField] protected AudioClip TowerHitSound;
     [SerializeField] List<float> shootingPointPositions;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
+    [SerializeField] protected AudioSource TowerAudioSource;
+    //protected AudioSource TowerHitSoundSource;
     float attackCooldown;
     float damage;
     Enemy target;
@@ -48,7 +52,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        TowerAudio();
+        TowerAudio(TowerActionSound,TowerAudioSource);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -156,7 +160,7 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-
+        TowerAudio(TowerHitSound, TowerAudioSource);
         Destroy(currentProjectile);
     }
 }

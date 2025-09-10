@@ -68,7 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a475084d95530024d9f0a0670487b07f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplodeSound: {fileID: 8300000, guid: 8b3f676fe7b41044495a2964396b8ba3, type: 3}
+  ExplodeSound: {fileID: 8300000, guid: 86288c7e24d510b44a66f75d9ee7cbf9, type: 3}
+  audioSource: {fileID: 4087538810783459154}
   EnemyMask:
     serializedVersion: 2
     m_Bits: 128
@@ -90,7 +91,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 140
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

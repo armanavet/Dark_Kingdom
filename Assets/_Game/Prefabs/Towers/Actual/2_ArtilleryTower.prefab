@@ -927,6 +927,8 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 7195541497489861293}
+  TowerActionSound: {fileID: 8300000, guid: 96ad05f0e8840c141b1b75411d038f9b, type: 3}
+  TowerAudioSource: {fileID: -1483032268635739683}
   TarggetPoint: 10
   shel: {fileID: -7014182495101091874, guid: 7e0078554bc8e7d4d9d3c391cad14a8e, type: 3}
   mortal: {fileID: 1677207564359557967}

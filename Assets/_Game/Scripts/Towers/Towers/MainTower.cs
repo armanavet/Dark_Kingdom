@@ -25,6 +25,8 @@ public class TowersRootPointPositions
 }
 public class MainTower : Tower
 {
+    [SerializeField] protected AudioClip TowerActionSound;
+    [SerializeField] protected AudioClip TowerHitSound;
     [SerializeField] List<int> GoldGenerationList;
     [SerializeField] private List<MainTowerDefender> Defender;
     [SerializeField] List<float> ShootingPointPositions;
@@ -34,6 +36,8 @@ public class MainTower : Tower
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
+    [SerializeField] protected AudioSource TowerAudioSource;    
+    //protected AudioSource TowerSource;
     float damage;
     //
 
@@ -118,7 +122,7 @@ public class MainTower : Tower
 
     void Shoot(MainTowerDefender defender)
     {
-        TowerAudio();
+        TowerAudio(TowerActionSound, TowerAudioSource);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -181,7 +185,7 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-
+        TowerAudio(TowerHitSound, TowerAudioSource);
         Destroy(currentProjectile);
     }
 }

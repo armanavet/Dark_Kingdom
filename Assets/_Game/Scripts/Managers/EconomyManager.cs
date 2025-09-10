@@ -66,7 +66,6 @@ public class EconomyManager : MonoBehaviour, ISaveable
         {
             if (building == null) continue;
             ChangeGoldAmount(building.GoldGenerated);
-            building.TowerAudio();
         }
     }
 

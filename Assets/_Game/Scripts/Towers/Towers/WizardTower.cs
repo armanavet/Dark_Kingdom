@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WizardTower : Tower
 {
+    [SerializeField] protected AudioClip TowerActionSound;
+    [SerializeField] protected AudioSource TowerAudioSource;
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
     float TarggetRange = 2f;
@@ -42,10 +44,11 @@ public class WizardTower : Tower
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
-        if (launchProgress > 1)
+        if (launchProgress > 2)
         {
             if (AcquireTarget())
             {
+                TowerAudio(TowerActionSound, TowerAudioSource);
                 Launch(target);
             }
             launchProgress = 0;
@@ -78,7 +81,7 @@ public class WizardTower : Tower
 
         Shel sh = Instantiate(shel);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        TowerAudio();
+        
     }
     bool AcquireTarget()
     {

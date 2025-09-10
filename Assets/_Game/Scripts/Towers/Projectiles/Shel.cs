@@ -6,19 +6,19 @@ using UnityEngine;
 public class Shel : MonoBehaviour
 {
     [SerializeField] protected AudioClip ExplodeSound;
+    [SerializeField] protected AudioSource audioSource;
+    public LayerMask EnemyMask;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
     List<Debuff> debuffs;
-    public LayerMask EnemyMask;
-    protected AudioSource audioSource;
 
-    private void Start()
-    {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
-    }
+    //private void Start()
+    //{
+    //    if (audioSource == null)
+    //    {
+    //        audioSource = GetComponent<AudioSource>();
+    //    }
+    //}
 
     void Update()
     { 
@@ -30,7 +30,7 @@ public class Shel : MonoBehaviour
         d.y -= 9.81f * age;
         if (transform.position.y < 0f)
         {
-
+            
             Explode();
 
         }
@@ -61,8 +61,9 @@ public class Shel : MonoBehaviour
                 }
             }
         }
-        audioSource.clip = ExplodeSound;
-        audioSource.PlayOneShot(ExplodeSound);
+        //audioSource.clip = ExplodeSound;
+        //audioSource.PlayOneShot(ExplodeSound);
+        AudioManager.instance.PlayExplosionSound(ExplodeSound);
         Destroy(gameObject);
 
     }
