@@ -48,6 +48,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
+        TowerAudio();
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;

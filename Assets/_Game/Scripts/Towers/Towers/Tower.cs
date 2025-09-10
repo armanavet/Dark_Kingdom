@@ -15,6 +15,8 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models;
+    [SerializeField] protected AudioClip TowerActionSound;
+    protected AudioSource TowerAudioSource;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
@@ -46,7 +48,12 @@ public abstract class Tower : MonoBehaviour
             Destroy();
         }
     }
+    public void TowerAudio()
+    {
+        TowerAudioSource.clip = TowerActionSound;
+        TowerAudioSource.PlayOneShot(TowerActionSound);
 
+    }
     void Destroy()
     {
         TowerManager.Instance.Towers.Remove(this);

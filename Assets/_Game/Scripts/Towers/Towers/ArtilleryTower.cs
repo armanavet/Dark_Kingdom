@@ -79,7 +79,7 @@ public class ArtilleryTower : Tower
         
         Shel sh = Instantiate(shel);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        
+        TowerAudio();
     }
     bool AcquireTarget()
     {

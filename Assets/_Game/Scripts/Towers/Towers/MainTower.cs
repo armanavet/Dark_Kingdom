@@ -53,8 +53,6 @@ public class MainTower : Tower
         {
             defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
-            //Debug.Log(defender.turret);
-            //Debug.Log(defender.turretRoot);
         }
     }
 
@@ -68,12 +66,10 @@ public class MainTower : Tower
                 {
                     Shoot(defender);
                 }
-                //defender.cooldown = Random.Range(0.1f, 1f / AttackSpeed);
                 defender.cooldown = 1 / AttackSpeed;
             }
             defender.cooldown -= Time.deltaTime;
         }
-        //OnDrawGizmos();
     }
     private void OnDrawGizmos()
     {
@@ -122,6 +118,7 @@ public class MainTower : Tower
 
     void Shoot(MainTowerDefender defender)
     {
+        TowerAudio();
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
