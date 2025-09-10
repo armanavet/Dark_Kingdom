@@ -1585,7 +1585,7 @@ PrefabInstance:
     - target: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
       propertyPath: TimeUntilNextWave.Array.data[0]
-      value: 60
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
