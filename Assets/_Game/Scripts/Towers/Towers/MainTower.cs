@@ -73,7 +73,7 @@ public class MainTower : Tower
             }
             defender.cooldown -= Time.deltaTime;
         }
-        OnDrawGizmos();
+        //OnDrawGizmos();
     }
     private void OnDrawGizmos()
     {
