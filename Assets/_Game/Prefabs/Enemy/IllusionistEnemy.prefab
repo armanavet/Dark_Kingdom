@@ -932,7 +932,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSpeed: 1
-  maxHP: 50
+  maxHP: 70
   maxDamage: 10
   maxAttackSpeed: 2
   movingSounds:

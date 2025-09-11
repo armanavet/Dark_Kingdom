@@ -430,10 +430,10 @@ MonoBehaviour:
   UpgradePrices: 4b00000096000000
   SellPrices: 250000005700000096000000
   HP:
-  - 100
+  - 60
+  - 80
   - 120
-  - 140
-  Damage: 050000000a0000000f000000
+  Damage: 0a0000000f00000014000000
   Debuffs:
   - {fileID: 0}
   - {fileID: 0}
