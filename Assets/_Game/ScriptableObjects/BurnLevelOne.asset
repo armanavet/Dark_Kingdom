@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BurnLevelOne
   m_EditorClassIdentifier: 
   Duration: 5
-  Damage: 3
+  Damage: 5
   Slow: 0
   Type: 0
   Stacking: 0

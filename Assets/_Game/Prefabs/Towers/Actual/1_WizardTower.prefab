@@ -93,15 +93,14 @@ MonoBehaviour:
   UpgradePrices: 500000008c000000
   SellPrices: 1e0000005000000064000000
   HP:
-  - 50
+  - 60
   - 70
   - 100
   Damage: 050000000a0000000f000000
   Debuffs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 516d500b9594861439cc5b2f88066083, type: 2}
+  - {fileID: 11400000, guid: 516d500b9594861439cc5b2f88066083, type: 2}
+  - {fileID: 11400000, guid: 1571ac825c02bb449ac3275b3c66442e, type: 2}
   Projectiles:
   - {fileID: 1777402069902847104, guid: 7e0078554bc8e7d4d9d3c391cad14a8e, type: 3}
   Models:

@@ -446,7 +446,7 @@ MonoBehaviour:
     m_Bits: 64
   maxSpeed: 1
   maxHP: 40
-  maxDamage: 10
+  maxDamage: 5
   maxAttackSpeed: 2
   movingSounds:
   - {fileID: 8300000, guid: 9ea11a2d13d536e4e8441a0f5895995c, type: 3}
