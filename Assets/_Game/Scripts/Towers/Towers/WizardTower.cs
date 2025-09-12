@@ -44,7 +44,7 @@ public class WizardTower : Tower
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
-        if (launchProgress > 2)
+        if (launchProgress > 4)
         {
             if (AcquireTarget())
             {

@@ -377,7 +377,7 @@ MonoBehaviour:
   - 500
   - 750
   - 1000
-  Damage: 05000000080000000c000000
+  Damage: 050000000a00000014000000
   Debuffs: []
   Projectiles:
   - {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab, type: 3}
@@ -401,7 +401,7 @@ MonoBehaviour:
   TowerPanel: {fileID: 5734724905035884570}
   TowerActionSound: {fileID: 8300000, guid: a58e438b7cfa445498120af0e6169082, type: 3}
   TowerHitSound: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
-  GoldGenerationList: 01000000020000000300000004000000
+  GoldGenerationList: 010000000200000003000000
   Defender:
   - turret: {fileID: 2147981638518327845}
     turretRoot: {fileID: 5126355764872827917}
