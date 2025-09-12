@@ -70,7 +70,6 @@ public class TowerManager : MonoBehaviour, ISaveable
         tower.tile = tile;
         tile.isEmpty = false;
         if(type != TowerType.MainTower) tile.ClaimSurroundingTiles();
-        tile.SetType(TileType.Claimed);
         Towers.Add(tower);
         return tower;
     }

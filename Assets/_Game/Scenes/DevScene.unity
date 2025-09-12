@@ -331,39 +331,21 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 872572116}
-    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
+    - target: {fileID: 2908821175123681306, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
-      propertyPath: outlinePrefab
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 7389140747027322213, guid: f2d0d1c0059941844b4872f08f57b3fe,
-        type: 3}
-    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
-        type: 3}
-      propertyPath: selectorPrefab
-      value: 
-      objectReference: {fileID: 5876793522845272134, guid: 2c0edfcb164e9cf49b3fa758a14e3420,
-        type: 3}
-    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
-        type: 3}
-      propertyPath: towerPanelYOffset
-      value: 1.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
-        type: 3}
-      propertyPath: selectionMarkPrefab
-      value: 
-      objectReference: {fileID: 6341198808007680494, guid: ca1f6b2e8d99a4e4d89283a04dfca328,
-        type: 3}
-    - target: {fileID: 2618082910725223345, guid: 3150c0840b68b544083e0be377392f09,
-        type: 3}
-      propertyPath: towerPurchasePanelYHidden
-      value: -50
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1393970013}
     - target: {fileID: 3056571085803093745, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 872572116}
+    - target: {fileID: 3444274826414960113, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1393970013}
     - target: {fileID: 3688401125573599845, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -404,11 +386,21 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 872572116}
+    - target: {fileID: 4416782265950642109, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1393970013}
     - target: {fileID: 5184157996208282572, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1343951994}
+    - target: {fileID: 5381181928780930966, guid: 3150c0840b68b544083e0be377392f09,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1393970013}
     - target: {fileID: 5578826510392851205, guid: 3150c0840b68b544083e0be377392f09,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -757,11 +749,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OptionsPanelManager
       objectReference: {fileID: 0}
-    - target: {fileID: 1270830066698766326, guid: 5dbdc9ee0dd2cb34199c1c33ab9e0d72,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 5507586831983265671, guid: 5dbdc9ee0dd2cb34199c1c33ab9e0d72,
         type: 3}
       propertyPath: UnderLine
@@ -985,6 +972,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4374174200736280337}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1393970013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3951428070617020872, guid: 3a176898504db6c4e9aaaae42919ca7e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1908005819}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534cfd3c33086ae4fb34293908410717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1437396011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,11 +1120,6 @@ PrefabInstance:
       propertyPath: Map
       value: 
       objectReference: {fileID: 1261744675}
-    - target: {fileID: 3824141108081378807, guid: 03819994bccd2564dbe671cd2eac1b29,
-        type: 3}
-      propertyPath: rotationSpeed
-      value: 80
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1145,21 +1139,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1812525117077183482, guid: 3a176898504db6c4e9aaaae42919ca7e,
-        type: 3}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 7a8e2a109d237ea4396e9fd787426d90, type: 3}
-    - target: {fileID: 3951428070617020872, guid: 3a176898504db6c4e9aaaae42919ca7e,
-        type: 3}
-      propertyPath: menuItemsClickSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 52c10346d389d354690bc48ab2e7b775, type: 3}
-    - target: {fileID: 3951428070617020872, guid: 3a176898504db6c4e9aaaae42919ca7e,
-        type: 3}
-      propertyPath: towerPanelBuyClickSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 9b5798ccc7db4394d99bfd7b11b67b2d, type: 3}
     - target: {fileID: 8586111898906872534, guid: 3a176898504db6c4e9aaaae42919ca7e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1812,7 +1791,7 @@ PrefabInstance:
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
       propertyPath: waves.Array.data[0].Enemies.Array.size
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
@@ -1892,7 +1871,7 @@ PrefabInstance:
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
       propertyPath: waves.Array.data[0].Enemies.Array.data[0].Count
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5919368106905103676, guid: 12b82371407f6274c9f62c0f766763f9,
         type: 3}
@@ -2096,7 +2075,7 @@ PrefabInstance:
     - target: {fileID: 75801982545095862, guid: 3635bf24564d61542a59445ef84a2018,
         type: 3}
       propertyPath: currentGold
-      value: 120
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 75801982545095862, guid: 3635bf24564d61542a59445ef84a2018,
         type: 3}

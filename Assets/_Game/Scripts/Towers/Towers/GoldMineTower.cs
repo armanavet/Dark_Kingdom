@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GoldMineTower : Tower
 {
+    [Header("Wizard Tower Parameters")]
     [SerializeField] List<int> GoldGenerationList;
 
     private void Start()

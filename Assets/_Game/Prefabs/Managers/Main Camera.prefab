@@ -151,11 +151,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  Map: {fileID: 1624185337057530083, guid: c0dccd004cbc89644a4214ba82397795, type: 3}
+  Map: {fileID: 0}
   minZoom: 4
   maxZoom: 15
   minFieldOfView: 55
   maxFieldOfView: 65
   zoomSpeed: 170
-  rotationSpeed: 60
+  rotationSpeed: 80
   mouseMovmentSpeedDifference: 15

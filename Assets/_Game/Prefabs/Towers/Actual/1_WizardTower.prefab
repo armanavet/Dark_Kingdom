@@ -121,13 +121,12 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 6915444093387794395}
-  TowerActionSound: {fileID: 8300000, guid: 7c0943868e4260948813c9edd3dc18fa, type: 3}
-  TowerAudioSource: {fileID: -3468788538838422617}
-  TarggetPoint: 2
-  shel: {fileID: -7014182495101091874, guid: 7e0078554bc8e7d4d9d3c391cad14a8e, type: 3}
   mortal: {fileID: 2758378707745903820}
+  shell: {fileID: -6085003567618033123, guid: 7e0078554bc8e7d4d9d3c391cad14a8e, type: 3}
+  TarggetPoint: 2
   shellBlastRadius: 1
   shellDamage: 30
+  TowerActionSound: {fileID: 8300000, guid: 7c0943868e4260948813c9edd3dc18fa, type: 3}
 --- !u!82 &-3468788538838422617
 AudioSource:
   m_ObjectHideFlags: 0

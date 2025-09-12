@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7290410692591475983}
   - component: {fileID: 6725331701501597863}
-  - component: {fileID: -7014182495101091874}
   - component: {fileID: 4087538810783459154}
+  - component: {fileID: -6085003567618033123}
   m_Layer: 0
   m_Name: Shell
   m_TagString: Untagged
@@ -56,23 +56,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-7014182495101091874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777402069902847104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a475084d95530024d9f0a0670487b07f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ExplodeSound: {fileID: 8300000, guid: 86288c7e24d510b44a66f75d9ee7cbf9, type: 3}
-  audioSource: {fileID: 4087538810783459154}
-  EnemyMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!82 &4087538810783459154
 AudioSource:
   m_ObjectHideFlags: 0
@@ -169,6 +152,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6085003567618033123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777402069902847104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a475084d95530024d9f0a0670487b07f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExplodeSound: {fileID: 8300000, guid: 86288c7e24d510b44a66f75d9ee7cbf9, type: 3}
+  EnemyMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1001 &2608528349855973439
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public abstract class Tower : MonoBehaviour
 {
+    [Header("Tower parameters")]
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
     [SerializeField] protected List<int> UpgradePrices;
@@ -15,7 +16,7 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models; 
-    
+    protected AudioSource TowerAudioSource;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
@@ -49,9 +50,7 @@ public abstract class Tower : MonoBehaviour
     }
     public void TowerAudio(AudioClip audioClip, AudioSource audioSource)
     {
-        audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
-
+        AudioManager.instance.PlayTowerActionSound(audioClip, audioSource);
     }
     void Destroy()
     {

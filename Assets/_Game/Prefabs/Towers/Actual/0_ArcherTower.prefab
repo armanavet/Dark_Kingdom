@@ -461,8 +461,6 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 2936775719731518850}
-  TowerActionSound: {fileID: 8300000, guid: f9526dd5f88860849889eb4574dc6dca, type: 3}
-  TowerHitSound: {fileID: 8300000, guid: 643fdb9fc49dfe14a9c9fee32e556bcb, type: 3}
   shootingPointPositions:
   - 1.3
   - 1.7
@@ -471,7 +469,8 @@ MonoBehaviour:
   projectileSpeed: 12
   attackSpeed: 1
   attackRange: 3
-  TowerAudioSource: {fileID: -1607863766202603399}
+  TowerActionSound: {fileID: 8300000, guid: f9526dd5f88860849889eb4574dc6dca, type: 3}
+  TowerHitSound: {fileID: 8300000, guid: 643fdb9fc49dfe14a9c9fee32e556bcb, type: 3}
 --- !u!114 &7834484294431754817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,9 +889,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2554583891899901409}
-        m_TargetAssemblyTypeName: Tower, Assembly-CSharp
-        m_MethodName: Sell
+      - m_Target: {fileID: 7834484294431754817}
+        m_TargetAssemblyTypeName: TowerPanel, Assembly-CSharp
+        m_MethodName: ButtonTowerSell
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -5,19 +5,27 @@ using UnityEngine;
 
 public class ArcherTower : Tower
 {
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
+    [Header("Archer Tower Parameters")]
     [SerializeField] List<float> shootingPointPositions;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] float attackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
-    [SerializeField] protected AudioSource TowerAudioSource;
-    //protected AudioSource TowerHitSoundSource;
+    [Header("Audio Parameters")]
+    [SerializeField] protected AudioClip TowerActionSound;
+    [SerializeField] protected AudioClip TowerHitSound;
     float attackCooldown;
     float damage;
     Enemy target;
+
+    private void Awake()
+    {
+        if (TowerAudioSource == null)
+        {
+            TowerAudioSource = GetComponent<AudioSource>();
+        }
+    }
 
     private void Start()
     {

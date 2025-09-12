@@ -29,11 +29,13 @@ public class TowerPanel : MonoBehaviour
     }
     public void ButtonTowerSell()
     {
+        AudioManager.instance.PlayClickSoundForPanelUI();
         EconomyManager.Instance.ChangeGoldAmount(tower.SellPrice);
         tower.Sell();
     }
     public void ButtonTowerUpgrade()
     {
+        AudioManager.instance.PlayTowerUpgradeSound();
         tower.Upgrade();
     }
 }

@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Shel : MonoBehaviour
+public class Shell : MonoBehaviour
 {
+    [Header("Audio Parameters")]
     [SerializeField] protected AudioClip ExplodeSound;
-    [SerializeField] protected AudioSource audioSource;
+    protected AudioSource audioSource;
     public LayerMask EnemyMask;
+    List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
-    List<Debuff> debuffs;
 
-    //private void Start()
-    //{
-    //    if (audioSource == null)
-    //    {
-    //        audioSource = GetComponent<AudioSource>();
-    //    }
-    //}
+    private void Start()
+    {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
 
     void Update()
     { 
@@ -61,8 +62,6 @@ public class Shel : MonoBehaviour
                 }
             }
         }
-        //audioSource.clip = ExplodeSound;
-        //audioSource.PlayOneShot(ExplodeSound);
         AudioManager.instance.PlayExplosionSound(ExplodeSound);
         Destroy(gameObject);
 

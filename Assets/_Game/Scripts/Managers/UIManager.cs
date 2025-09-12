@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static UnityEngine.GraphicsBuffer;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] float towerPanelYOffset, tilePanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit,effect, selectionMark, activeSelectionMark;
+    GameObject tilePanel, activePanel, previousHit, effect, selectionMark, activeSelectionMark;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -81,7 +82,7 @@ public class UIManager : MonoBehaviour
             ShowTowerPanel(false);
             ShowTilePanel(false);
             PlaceTower(false);
-            
+
         }
         if (isPanelActive && activePanel != null)
         {
@@ -114,12 +115,12 @@ public class UIManager : MonoBehaviour
             Tower tower = selectedTower.GetComponent<Tower>();
             GameObject towerPanel = tower.TowerPanel;
             if (towerPanel == null) return;
-            if(activePanel != null) activePanel.SetActive(false);
-            
+            if (activePanel != null) activePanel.SetActive(false);
+
             activePanel = towerPanel;
-            SetTowerPanelPosition(activePanel,tower);
+            SetTowerPanelPosition(activePanel, tower);
             activePanel.SetActive(true);
-            
+
             isPanelActive = true;
         }
         else
@@ -165,7 +166,6 @@ public class UIManager : MonoBehaviour
             Tile tile = selectedTile.GetComponent<Tile>();
             if (tile.CanBePurchased())
             {
-                Debug.Log("enter in function after click on the tile");
                 if (activePanel != null) activePanel.SetActive(false);
                 if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
                 activePanel = tilePanel;
@@ -196,7 +196,7 @@ public class UIManager : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
+        if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
         {
             Transform a = tileHit.collider.transform.Find("OutlineForTile");
             if (a.gameObject != null)
@@ -246,19 +246,25 @@ public class UIManager : MonoBehaviour
 
             if (towerPreview.canPlace)
             {
+                AudioManager.instance.PlayTowerPlaceSound();
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
                 EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
-
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
+                AudioManager.instance.PlayTowerPuffEffectSoundDelayed();
                 effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
-                Destroy(effect,2f);
+                Destroy(effect, 2f);
                 effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
-                Destroy(effect,2f);
+                Destroy(effect, 2f);
+            }
+            else
+            {
+                AudioManager.instance.PlayTowerPlacementDeniedSound();
             }
         }
         else
         {
+
             if (towerPreview != null)
             {
                 Destroy(towerPreview.gameObject);
@@ -281,4 +287,6 @@ public class UIManager : MonoBehaviour
             waveText.text = "Wave: " + currentWave.ToString();
         }
     }
+
+
 }

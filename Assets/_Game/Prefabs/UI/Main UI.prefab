@@ -11662,7 +11662,7 @@ MonoBehaviour:
   towerPurchasePanel: {fileID: 8488089013099715766}
   tilePanelPrefab: {fileID: 1745485638072608998, guid: 91c54272be580ba46b54f41bfac51c53,
     type: 3}
-  selectionMarkPrefab: {fileID: 5876793522845272134, guid: 2c0edfcb164e9cf49b3fa758a14e3420,
+  selectionMarkPrefab: {fileID: 6341198808007680494, guid: ca1f6b2e8d99a4e4d89283a04dfca328,
     type: 3}
   towerPurchasePanelYHidden: -50
   towerMask:
@@ -11671,6 +11671,7 @@ MonoBehaviour:
   tileMask:
     serializedVersion: 2
     m_Bits: 8
+  towerPanelYOffset: 1.7
   tilePanelYOffset: 1.3
   effects:
   - {fileID: 7700141250635946098, guid: ec8556b1463987e468cf844835a1fb1a, type: 3}

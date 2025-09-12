@@ -4,30 +4,34 @@ using UnityEngine;
 
 public class ArtilleryTower : Tower
 {
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioSource TowerAudioSource;
+    [Header("Artillery Tower Parameters")]
+    [SerializeField] Transform mortal;
+    [SerializeField] Shell shell;
     [SerializeField, Range(1, 10f)]
     float TarggetPoint = 2f;
-    float TarggetRange = 2f;
-    float launchSpeed;
-    float g = 9.81f;
-    Enemy target;
-    [SerializeField] Shel shel;
-    float launchProgress = 0f;
-    int shotsPerSecond = 1;
-    [SerializeField] Transform mortal;
     [SerializeField, Range(0.5f, 5f)]
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
+    [Header("Audio Parameters")]
+    [SerializeField] protected AudioClip TowerActionSound;
+    Enemy target;
+    float TarggetRange = 2f;
+    float g = 9.81f;
+    float launchSpeed;
+    float launchProgress = 0f;
+    int shotsPerSecond = 1;
 
     void Awake()
     {
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
+        if (TowerAudioSource == null)
+        {
+            TowerAudioSource = GetComponent<AudioSource>();
+        }
     }
-
     void Start()
     {
         SellPrice = SellPrices[CurrentLevel];
@@ -80,7 +84,7 @@ public class ArtilleryTower : Tower
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
         
-        Shel sh = Instantiate(shel);
+        Shell sh = Instantiate(shell);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
     }
     bool AcquireTarget()

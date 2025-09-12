@@ -25,8 +25,7 @@ public class TowersRootPointPositions
 }
 public class MainTower : Tower
 {
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
+    [Header("Main Tower Parameters")]
     [SerializeField] List<int> GoldGenerationList;
     [SerializeField] private List<MainTowerDefender> Defender;
     [SerializeField] List<float> ShootingPointPositions;
@@ -36,11 +35,18 @@ public class MainTower : Tower
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
-    [SerializeField] protected AudioSource TowerAudioSource;    
-    //protected AudioSource TowerSource;
+    [Header("Audio Parameters")]
+    [SerializeField] protected AudioClip TowerActionSound;
+    [SerializeField] protected AudioClip TowerHitSound;
     float damage;
-    //
 
+    private void Awake()
+    {
+        if (TowerAudioSource == null)
+        {
+            TowerAudioSource = GetComponent<AudioSource>();
+        }
+    }
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
