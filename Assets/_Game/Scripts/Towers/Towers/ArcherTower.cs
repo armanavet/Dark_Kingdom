@@ -118,6 +118,8 @@ public class ArcherTower : Tower
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
+            if(CurrentLevel < 2)
+                UpgradePrice = UpgradePrices[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
             projectile = Projectiles[CurrentLevel];
@@ -125,7 +127,6 @@ public class ArcherTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
-            //shootingPoint.Translate();
             model.SetActive(true);
 
             float hpPercent = currentHP / maxHP;

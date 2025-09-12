@@ -21,8 +21,8 @@ public class TowerPanel : MonoBehaviour
         if (EconomyManager.Instance.CurrentGold < tower.UpgradePrice || tower.CurrentLevel > tower.LevelMax)
         {
             UpgradeButton.interactable = false;
-        } 
-        else 
+        }
+        else
         {
             UpgradeButton.interactable = true;
         }

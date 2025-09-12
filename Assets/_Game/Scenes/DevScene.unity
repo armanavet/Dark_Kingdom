@@ -1600,7 +1600,7 @@ PrefabInstance:
     - target: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
       propertyPath: TimeUntilNextWave.Array.data[0]
-      value: 10
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6939339031035881969, guid: 46d78a13ce8ac1b41899c9f722b2f46b,
         type: 3}
@@ -2096,7 +2096,7 @@ PrefabInstance:
     - target: {fileID: 75801982545095862, guid: 3635bf24564d61542a59445ef84a2018,
         type: 3}
       propertyPath: currentGold
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 75801982545095862, guid: 3635bf24564d61542a59445ef84a2018,
         type: 3}

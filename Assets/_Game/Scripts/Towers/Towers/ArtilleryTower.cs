@@ -127,7 +127,8 @@ public class ArtilleryTower : Tower
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-
+            if (CurrentLevel < 2)
+                UpgradePrice = UpgradePrices[CurrentLevel];
             shellDamage = Damage[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
 

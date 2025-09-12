@@ -34,7 +34,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
 
     void Update()
     {
-        timer += Time.deltaTime;
+        timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
         if(timer >= 1)
         {
             GenerateGold();

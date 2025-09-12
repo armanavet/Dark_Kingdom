@@ -99,7 +99,9 @@ public class MainTower : Tower
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-
+            if (CurrentLevel < 2)
+                UpgradePrice = UpgradePrices[CurrentLevel];
+            SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
             GoldGenerated = GoldGenerationList[CurrentLevel];
 

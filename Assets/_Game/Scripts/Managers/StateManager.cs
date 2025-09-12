@@ -11,7 +11,7 @@ public class StateManager : MonoBehaviour, ISaveable
     [SerializeField] float[] TimeUntilNextWave;
     [HideInInspector] public GameState State;
     float Timer;
-    int timeMultiplier = 1;
+    public int timeMultiplier = 1;
     int currentWave = 0;
 
     #region Singleton
