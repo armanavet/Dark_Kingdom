@@ -27,7 +27,7 @@ public class GoldMineTower : Tower
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-            if (CurrentLevel < 2)
+            if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
             GoldGenerated = GoldGenerationList[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
