@@ -35,16 +35,18 @@ public class MainTower : Tower
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
+    
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
     [SerializeField] protected AudioClip TowerHitSound;
+    
     float damage;
 
     private void Awake()
     {
-        if (TowerAudioSource == null)
+        if (towerAudioSource == null)
         {
-            TowerAudioSource = GetComponent<AudioSource>();
+            towerAudioSource = GetComponent<AudioSource>();
         }
     }
     private void Start()
@@ -130,7 +132,7 @@ public class MainTower : Tower
 
     void Shoot(MainTowerDefender defender)
     {
-        TowerAudio(TowerActionSound, TowerAudioSource);
+        TowerAudio(TowerActionSound, towerAudioSource);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -193,7 +195,7 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        TowerAudio(TowerHitSound, TowerAudioSource);
+        TowerAudio(TowerHitSound, towerAudioSource);
         Destroy(currentProjectile);
     }
 }

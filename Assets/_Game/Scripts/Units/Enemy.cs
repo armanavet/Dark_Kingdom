@@ -5,15 +5,19 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
+    [Header("Enemy Parameters")]
     [SerializeField] protected Transform model;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    [SerializeField] protected AudioClip[] movingSounds;
-    [SerializeField] protected AudioClip attackSound;
-    protected AudioSource audioSource;
+    
+    [Header("Audio Parameters")]
+    [SerializeField] protected AudioClip[] EnemyMovingSounds;
+    [SerializeField] protected AudioClip EnemyAttackSound;
+
+    protected AudioSource enemyAudioSource;
     protected Animator animator;
     protected float currentSpeed;
     protected float help;
@@ -23,6 +27,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
+    
     Vector3 positionFrom, positionTo;
     Direction direction;
     DirectionChange directionChange;
@@ -159,14 +164,11 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     public void PlayAttackSound()
     {
-        audioSource.clip = attackSound;
-        audioSource.PlayOneShot(attackSound);
+        AudioManager.instance.EnemyAttackSound(EnemyAttackSound,enemyAudioSource);
     }
     public void PlayMovingSound()
     {
-        int randomSound = Random.Range(0, movingSounds.Length);
-        audioSource.clip = movingSounds[randomSound];
-        audioSource.PlayOneShot(movingSounds[randomSound]);
+        AudioManager.instance.EnemyMovingSound(EnemyMovingSounds,enemyAudioSource);
     }
 }
 

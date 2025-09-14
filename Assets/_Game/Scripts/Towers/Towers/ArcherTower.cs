@@ -12,18 +12,20 @@ public class ArcherTower : Tower
     [SerializeField] float attackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
+
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
     [SerializeField] protected AudioClip TowerHitSound;
+    
     float attackCooldown;
     float damage;
     Enemy target;
 
     private void Awake()
     {
-        if (TowerAudioSource == null)
+        if (towerAudioSource == null)
         {
-            TowerAudioSource = GetComponent<AudioSource>();
+            towerAudioSource = GetComponent<AudioSource>();
         }
     }
 
@@ -60,7 +62,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        TowerAudio(TowerActionSound,TowerAudioSource);
+        TowerAudio(TowerActionSound,towerAudioSource);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -169,7 +171,7 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        TowerAudio(TowerHitSound, TowerAudioSource);
+        TowerAudio(TowerHitSound, towerAudioSource);
         Destroy(currentProjectile);
     }
 }

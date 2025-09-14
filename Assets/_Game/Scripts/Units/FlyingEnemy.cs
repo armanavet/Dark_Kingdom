@@ -3,6 +3,7 @@ using System.Collections;
 
 public class FlyingEnemy : Enemy
 {
+    [Header("Flying Enemy Parameters")]
     [SerializeField] Mage mage;
     [SerializeField] float height;
     [SerializeField] float rotationSpeed;
@@ -10,14 +11,16 @@ public class FlyingEnemy : Enemy
     [SerializeField] float distanceToAttack;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform shootingPoint;
+
     Vector3 targetPoint;
     Quaternion targetRotation;
+    
     float rotationProgress;
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()

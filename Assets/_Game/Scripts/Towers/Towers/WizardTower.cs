@@ -13,8 +13,10 @@ public class WizardTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage;
+    
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
+    
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -27,9 +29,9 @@ public class WizardTower : Tower
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        if (TowerAudioSource == null)
+        if (towerAudioSource == null)
         {
-            TowerAudioSource = GetComponent<AudioSource>();
+            towerAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()
@@ -52,7 +54,7 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                TowerAudio(TowerActionSound, TowerAudioSource);
+                TowerAudio(TowerActionSound, towerAudioSource);
                 Launch(target);
             }
             launchProgress = 0;

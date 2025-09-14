@@ -5,12 +5,12 @@ using UnityEditor;
 using UnityEngine;
 
 public class DefaultEnemy : Enemy
-{
+{   
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()

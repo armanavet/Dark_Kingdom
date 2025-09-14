@@ -16,22 +16,24 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models; 
-    protected AudioSource TowerAudioSource;
+    
+    protected AudioSource towerAudioSource;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
     protected GameObject projectile;
     protected GameObject model;
+    
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
     [HideInInspector] public int GoldGenerated = 0;
-    //[HideInInspector] public int MaxLevel = 2;
     [HideInInspector] public int LevelMax = 1;
     [HideInInspector] public int CurrentLevel = 0;
     [HideInInspector] public int PurchasePrice;
     [HideInInspector] public TowerType Type;
     [HideInInspector] public TowerData saveData;
+    
     public GameObject TowerPanel;
     public event System.Action OnDestroyed;
 

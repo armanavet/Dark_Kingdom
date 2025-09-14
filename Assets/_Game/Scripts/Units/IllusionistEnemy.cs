@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class IllusionistEnemy : Enemy
 {
+    [Header("Illusionist Enemy Parameters")]
     [SerializeField] Illusion illusionPrefab;
     [SerializeField] float detectionRange;
     [SerializeField] float illusionSpawnTime;
@@ -12,9 +13,9 @@ public class IllusionistEnemy : Enemy
     Illusion illusion;
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()

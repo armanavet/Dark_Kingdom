@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ExplosionEnemy : Enemy
 {
+    [Header("Explosion Enemy Parameters")]
     [SerializeField]float radius;
     [SerializeField]GameObject[] Effects;
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()
@@ -30,7 +31,7 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
-        AudioManager.instance.PlayExplosionSound(attackSound);
+        AudioManager.instance.PlayExplosionSound(EnemyAttackSound);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {

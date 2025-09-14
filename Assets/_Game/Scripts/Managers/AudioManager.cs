@@ -15,8 +15,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip towerPuffEffectClip;
     [SerializeField] AudioClip towerPlacementDeniedClip;
     [Header("Audio Sources")]
-    //[SerializeField] AudioSource explosionSound;
     [SerializeField] AudioSource towerPuffEffectSource;
+    
+    
+    //[SerializeField] AudioSource explosionSound;
     //[SerializeField] AudioClip menuItemsClickSound;
     //[SerializeField] AudioClip menuItemsClickSound;
     //[SerializeField] AudioClip menuItemsClickSound;
@@ -81,7 +83,17 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = audioClip;
         audioSource.PlayOneShot(audioClip);
     }
-
+    public void EnemyAttackSound(AudioClip audioClip, AudioSource audioSource)
+    {
+        audioSource.clip = audioClip;
+        audioSource.PlayOneShot(audioClip);
+    }
+    public void EnemyMovingSound(AudioClip[] audioClips, AudioSource audioSource)
+    {
+        int randomSound = Random.Range(0, audioClips.Length);
+        audioSource.clip = audioClips[randomSound];
+        audioSource.PlayOneShot(audioClips[randomSound]);
+    }
     public void PlayTowerUpgradeSound()
     {
         audioSource.PlayOneShot(towerUpgradeClip);
@@ -98,6 +110,8 @@ public class AudioManager : MonoBehaviour
     {
         audioSource.PlayOneShot(towerPlacementDeniedClip);
     }
+    
+
     private IEnumerator PlayWithDelay(AudioSource source, AudioClip clip, float delay)
     {
         yield return new WaitForSeconds(delay);
