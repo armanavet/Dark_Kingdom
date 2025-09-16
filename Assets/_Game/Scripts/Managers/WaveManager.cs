@@ -13,13 +13,16 @@ public class WaveManager : MonoBehaviour, ISaveable
     [SerializeField] int spawnerDestroyTime;
     [SerializeField] int spawnDistanceFromCenter;
     [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
+    
     [SerializeField] bool a;
     [SerializeField] Tile SpawnPoint;
+    
     bool cantFindPath => spawnPoint.NextOnPath == null;
     List<GameObject> enemyPath = new List<GameObject>();
     List<Enemy> enemies = new List<Enemy>();
     Tile spawnPoint;
 
+    public int totalEnemiesInWave = 0;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -63,7 +66,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             spawnPoint = SpawnPoint;
         }
-        else 
+        else
         {
             List<Tile> potentialPoints = new List<Tile>();
             int variance = (int)distanceVariance.RandomValueInRange;
@@ -78,9 +81,12 @@ public class WaveManager : MonoBehaviour, ISaveable
 
             spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
         }
-        
-    }
 
+    }
+    public void TotalEnemiesInWave(int currentWave)
+    {
+        totalEnemiesInWave = waves[currentWave].Enemies.Sum(e => e.Count);
+    }
     IEnumerator SpawnUnits(Wave wave, GameObject spawner)
     {
         foreach (var enemyType in wave.Enemies)
@@ -110,7 +116,8 @@ public class WaveManager : MonoBehaviour, ISaveable
         if (!enemies.Contains(enemy)) return;
 
         enemies.Remove(enemy);
-        if (enemies.Count == 0)
+        totalEnemiesInWave--;
+        if (totalEnemiesInWave == 0)
         {
             enemyPath.ForEach(x => Destroy(x));
             StateManager.Instance.ChangeGameStateTo(GameState.Passive);

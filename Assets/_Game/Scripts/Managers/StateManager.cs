@@ -48,7 +48,7 @@ public class StateManager : MonoBehaviour, ISaveable
             UIManager.Instance.GameTimer = Timer;
             if (Timer <= 0) ChangeGameStateTo(GameState.Active);
         }
-        
+
     }
     public void ChangeGameStateTo(GameState newState)
     {
@@ -62,6 +62,7 @@ public class StateManager : MonoBehaviour, ISaveable
         {
             State = GameState.Passive;
             currentWave++;
+            WaveManager.Instance.TotalEnemiesInWave(currentWave - 1);
             Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[currentWave - 1] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
             WaveManager.Instance.DrawEnemyPath();
             SaveManager.Save();
