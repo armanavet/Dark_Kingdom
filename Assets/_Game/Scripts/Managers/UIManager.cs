@@ -11,9 +11,9 @@ using static UnityEngine.GraphicsBuffer;
 
 public class UIManager : MonoBehaviour
 {
-
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
+    [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float towerPanelYOffset, tilePanelYOffset;

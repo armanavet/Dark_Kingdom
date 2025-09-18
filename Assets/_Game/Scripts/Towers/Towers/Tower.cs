@@ -37,9 +37,9 @@ public abstract class Tower : MonoBehaviour
     public GameObject TowerPanel;
     public event System.Action OnDestroyed;
 
-    public void Sell()
+    public void Sell(int price)
     {
-        EconomyManager.Instance.ChangeGoldAmount(SellPrice);
+        EconomyManager.Instance.ChangeGoldAmount(price);
         Destroy();
     }
     public void ApplyDamage(float damage)
