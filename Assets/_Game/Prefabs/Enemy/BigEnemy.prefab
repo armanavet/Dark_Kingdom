@@ -2324,8 +2324,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1192087755606216617}
-  - component: {fileID: 8601057965290232059}
   - component: {fileID: 6936212393283491530}
+  - component: {fileID: 8601057965290232059}
   - component: {fileID: 1428951486645733775}
   - component: {fileID: -1708152931368752185}
   m_Layer: 7
@@ -2351,6 +2351,38 @@ Transform:
   - {fileID: 3735393535193070117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6936212393283491530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2987599941022267008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68101582159c2494abedb41f3ae0c7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: 3735393535193070117}
+  towerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxSpeed: 0.5
+  maxHP: 100
+  maxDamage: 5
+  maxAttackSpeed: 2
+  EnemyMovingSounds:
+  - {fileID: 8300000, guid: 5ac23b84df40ca249a221e384e36b562, type: 3}
+  - {fileID: 8300000, guid: 269c941eb3773424e8c7790da6555e33, type: 3}
+  - {fileID: 8300000, guid: e0a5674a874cdc94796f8405bee87a69, type: 3}
+  - {fileID: 8300000, guid: deda1544d1fdb5b46914dc69db6ed010, type: 3}
+  - {fileID: 8300000, guid: 7cb92fd2b45d1ad498ba9fed57d3bb20, type: 3}
+  - {fileID: 8300000, guid: 1d30509716141c64e8244596ee2e00da, type: 3}
+  - {fileID: 8300000, guid: 4765ab99f273f4c468e29ab4ab433cea, type: 3}
+  - {fileID: 8300000, guid: 74a6a210ff047f644a2aa4b8bf42515d, type: 3}
+  - {fileID: 8300000, guid: ff63d39c2dda05149945e04464173035, type: 3}
+  - {fileID: 8300000, guid: 29cc0cf4733e0d9458c3b87b937635d8, type: 3}
+  EnemyAttackSound: {fileID: 8300000, guid: 9fa474f7d9e88de4f87ee38d07210954, type: 3}
 --- !u!65 &8601057965290232059
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2372,38 +2404,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.56300986, y: 0.6701831, z: 0.46640304}
   m_Center: {x: 0.0034139603, y: 0.31125668, z: 0.020574376}
---- !u!114 &6936212393283491530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2987599941022267008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68101582159c2494abedb41f3ae0c7f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 3735393535193070117}
-  towerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  maxSpeed: 0.5
-  maxHP: 100
-  maxDamage: 5
-  maxAttackSpeed: 2
-  movingSounds:
-  - {fileID: 8300000, guid: 5461cae585b64f64089805f0d313bc84, type: 3}
-  - {fileID: 8300000, guid: 2b3fc7e56f2686b48b9445e48c7db2c9, type: 3}
-  - {fileID: 8300000, guid: 87d51f07abec0584d805bbe3708a7c71, type: 3}
-  - {fileID: 8300000, guid: 9f96c8d3fef6ab440bdc9bd4ad3d08fe, type: 3}
-  - {fileID: 8300000, guid: 61abfb7bb17151f458862ef823ac0932, type: 3}
-  - {fileID: 8300000, guid: 2e14b3cc9c6906b42885675f3572d4b3, type: 3}
-  - {fileID: 8300000, guid: 846819fd62ca22b478d33e537cd61c8c, type: 3}
-  - {fileID: 8300000, guid: 6eee7f295d5ff8b4f934dec7f44eaf97, type: 3}
-  - {fileID: 8300000, guid: 9b1f6289334342841afe6a5a8349e7ec, type: 3}
-  - {fileID: 8300000, guid: afeb90013e6764449ae1616f47705ff7, type: 3}
-  attackSound: {fileID: 8300000, guid: 738e3bff6c9edfe409dcb5b68d82d66a, type: 3}
 --- !u!95 &1428951486645733775
 Animator:
   serializedVersion: 5

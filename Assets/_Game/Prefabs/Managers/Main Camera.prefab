@@ -158,4 +158,4 @@ MonoBehaviour:
   maxFieldOfView: 65
   zoomSpeed: 170
   rotationSpeed: 80
-  mouseMovmentSpeedDifference: 15
+  mouseDragSpeed: 15

@@ -7,15 +7,17 @@ using static UnityEngine.GraphicsBuffer;
 
 public class MageEnemy : Enemy
 {
-    float TarggetPoint = 2f;
-    float rotationProgress;
-    float initialRotation;
-    bool facingPath = true;
+    [Header("Mage Enemy Parameters")]
     [SerializeField] float rotationSpeed;
     [SerializeField] Mage mage;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
+    
+    float TarggetPoint = 2f;
+    float rotationProgress;
+    float initialRotation;
+    bool facingPath = true;
 
     private void OnDestroy()
     {
@@ -27,9 +29,9 @@ public class MageEnemy : Enemy
     }
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()

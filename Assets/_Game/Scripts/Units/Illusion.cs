@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Illusion : Enemy
 {
+    [Header("Illusion Parameters")]
     [SerializeField] float duration;
     private void Awake()
     {
-        if (audioSource == null)
+        if (enemyAudioSource == null)
         {
-            audioSource = GetComponent<AudioSource>();
+            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()
