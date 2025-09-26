@@ -30,7 +30,7 @@ public class TowerPanel : MonoBehaviour
     public void ButtonTowerSell()
     {
         AudioManager.instance.PlayClickSoundForPanelUI();
-        tower.Sell(-tower.SellPrice);
+        tower.Sell(tower.SellPrice);
     }
     public void ButtonTowerUpgrade()
     {
