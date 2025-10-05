@@ -90,8 +90,8 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 500000008c000000
-  SellPrices: 1e0000005000000064000000
+  UpgradePrices: 78000000b4000000
+  SellPrices: 320000005f00000091000000
   HP:
   - 60
   - 70

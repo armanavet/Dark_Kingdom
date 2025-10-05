@@ -17315,8 +17315,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSpeed: 2
-  maxHP: 40
-  maxDamage: 20
+  maxHP: 100
+  maxDamage: 25
   maxAttackSpeed: 2
   EnemyMovingSounds:
   - {fileID: 8300000, guid: 0b4651f8ba4edde40bdcb65a70e3bddd, type: 3}

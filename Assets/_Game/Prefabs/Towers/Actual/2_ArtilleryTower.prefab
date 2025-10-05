@@ -895,13 +895,13 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: aa000000c8000000
-  SellPrices: 7800000096000000c8000000
+  UpgradePrices: c80000002c010000
+  SellPrices: 6400000096000000c8000000
   HP:
   - 100
   - 140
   - 170
-  Damage: 190000002d0000003c000000
+  Damage: 190000002d00000041000000
   Debuffs:
   - {fileID: 0}
   - {fileID: 0}

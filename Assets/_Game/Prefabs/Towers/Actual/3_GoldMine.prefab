@@ -729,7 +729,7 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 0
-  UpgradePrices: 96000000c8000000
+  UpgradePrices: 96000000fa000000
   SellPrices: 500000006400000096000000
   HP:
   - 50
@@ -757,7 +757,7 @@ MonoBehaviour:
     Level: 0
     CurrentHP: 0
   TowerPanel: {fileID: 6605709382628991479}
-  GoldGenerationList: 020000000400000006000000
+  GoldGenerationList: 010000000200000004000000
 --- !u!82 &-2160714832936541825
 AudioSource:
   m_ObjectHideFlags: 0

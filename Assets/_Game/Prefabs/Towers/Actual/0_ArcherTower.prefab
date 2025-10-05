@@ -427,8 +427,8 @@ MonoBehaviour:
   illusionMask:
     serializedVersion: 2
     m_Bits: 256
-  UpgradePrices: 4b00000096000000
-  SellPrices: 250000005700000096000000
+  UpgradePrices: 6400000096000000
+  SellPrices: 23000000550000007d000000
   HP:
   - 70
   - 100
@@ -467,7 +467,7 @@ MonoBehaviour:
   - 1.8
   shootingPoint: {fileID: 1574947597934629292}
   projectileSpeed: 12
-  attackSpeed: 1
+  attackSpeed: 2
   attackRange: 3
   TowerActionSound: {fileID: 8300000, guid: f9526dd5f88860849889eb4574dc6dca, type: 3}
   TowerHitSound: {fileID: 8300000, guid: 643fdb9fc49dfe14a9c9fee32e556bcb, type: 3}

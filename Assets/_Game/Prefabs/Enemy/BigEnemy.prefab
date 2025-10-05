@@ -2368,7 +2368,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSpeed: 0.5
-  maxHP: 100
+  maxHP: 180
   maxDamage: 5
   maxAttackSpeed: 2
   EnemyMovingSounds:
