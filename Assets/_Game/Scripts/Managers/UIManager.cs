@@ -12,14 +12,14 @@ using static UnityEngine.GraphicsBuffer;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float towerPanelYOffset, tilePanelYOffset;
+    [SerializeField] float towerPanelYOffset;
     [SerializeField] GameObject[] effects;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit, effect, selectionMark, activeSelectionMark;
+    GameObject activePanel, previousHit, effect;
     Button[] towerPurchaseButtons;
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
@@ -50,10 +50,6 @@ public class UIManager : MonoBehaviour
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
-        tilePanel = Instantiate(tilePanelPrefab);
-        selectionMark = Instantiate(selectionMarkPrefab);
-        tilePanel.SetActive(false);
-        selectionMark.SetActive(false);
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
     }
@@ -70,17 +66,15 @@ public class UIManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (towerPreview != null) PlaceTower(true);
             else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
-            else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
+            
             else
             {
                 ShowTowerPanel(false);
-                ShowTilePanel(false);
             }
         }
         else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
             ShowTowerPanel(false);
-            ShowTilePanel(false);
             PlaceTower(false);
 
         }
@@ -155,42 +149,6 @@ public class UIManager : MonoBehaviour
         }
         else panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
 
-    }
-
-    void ShowTilePanel(bool value, Transform selectedTile = null)
-    {
-        if (tilePanel == null && selectionMark == null) return;
-
-        if (value == true)
-        {
-            Tile tile = selectedTile.GetComponent<Tile>();
-            if (tile.CanBePurchased())
-            {
-                if (activePanel != null) activePanel.SetActive(false);
-                if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
-                activePanel = tilePanel;
-                activeSelectionMark = selectionMark;
-                isPanelActive = true;
-                tilePanel.SetActive(true);
-                selectionMark.SetActive(true);
-                tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
-                selectionMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
-
-                selectionMark.transform.DOKill();
-                selectionMark.transform.DOMoveY(0.3f, 0.7f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1, LoopType.Yoyo);
-                selectionMark.transform.DOScale(new Vector3(1.2f, 1, 1.2f), 0.6f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1, LoopType.Yoyo);
-                return;
-            }
-        }
-        if (activePanel != null) activePanel.SetActive(false);
-        if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
-
-        isPanelActive = false;
     }
     void OutlineForTile()
     {

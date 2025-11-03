@@ -418,9 +418,9 @@ MonoBehaviour:
     target: {fileID: 0}
     cooldown: 0
   ShootingPointPositions:
-  - 1.4
-  - 1.5
-  - 1.6
+  - 0.4
+  - 0.5
+  - 0.6
   TowersRootPoints:
   - {fileID: 5126355764872827917}
   - {fileID: 8244271394942083490}
@@ -460,6 +460,8 @@ MonoBehaviour:
   ProjectileSpeed: 12
   AttackSpeed: 1
   attackRange: 1
+  size: {x: 1.3, y: 3, z: 1.3}
+  alpha: 0.193
   TowerActionSound: {fileID: 8300000, guid: a58e438b7cfa445498120af0e6169082, type: 3}
   TowerHitSound: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
 --- !u!65 &660188337889200183
@@ -604,7 +606,7 @@ Transform:
   m_GameObject: {fileID: 4115551149538144193}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -856,7 +858,7 @@ GameObject:
   - component: {fileID: 6223597220560938767}
   - component: {fileID: 429289008504522063}
   m_Layer: 6
-  m_Name: RightButtomTower
+  m_Name: TowerRightButtom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -871,7 +873,7 @@ Transform:
   m_GameObject: {fileID: 6015105033111203366}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -944,7 +946,7 @@ GameObject:
   - component: {fileID: 8244271394942083490}
   - component: {fileID: 2885101803468788921}
   m_Layer: 6
-  m_Name: RightTopTower
+  m_Name: TowerRightTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -959,7 +961,7 @@ Transform:
   m_GameObject: {fileID: 7776196411222224637}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -998,7 +1000,7 @@ GameObject:
   - component: {fileID: 5126355764872827917}
   - component: {fileID: 2517648086000339874}
   m_Layer: 6
-  m_Name: LeftTopTower
+  m_Name: TowerLeftTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1013,7 +1015,7 @@ Transform:
   m_GameObject: {fileID: 7976802131019827305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1052,7 +1054,7 @@ GameObject:
   - component: {fileID: 1249604174996992637}
   - component: {fileID: 5302177711704063746}
   m_Layer: 6
-  m_Name: LeftButtomTower
+  m_Name: TowerLeftButtom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1067,7 +1069,7 @@ Transform:
   m_GameObject: {fileID: 8211235897525823018}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -35,6 +35,10 @@ public class MainTower : Tower
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
+
+    public Vector3 size = Vector3.one;
+    [Range(0f, 1f)]
+    public float alpha = 0.5f;
     
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
@@ -64,14 +68,17 @@ public class MainTower : Tower
         foreach (var defender in Defender)
         {
             defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
+            Debug.Log(defender.turret.position);
             defender.cooldown = 1 / AttackSpeed;
         }
-    }
+    }   
 
     private void Update()
     {
+        
         foreach (var defender in Defender)
         {
+            Debug.Log(defender.turret.position + "|||" + CurrentLevel);
             if (defender.cooldown <= 0)
             {
                 if (AcquireTarget(defender))
@@ -85,19 +92,32 @@ public class MainTower : Tower
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        //Gizmos.color = Color.yellow;
         Vector3 position = new Vector3();
+        //foreach (var defender in Defender)
+        //{
+        //    position = defender.turretRoot.position;
+        //    Gizmos.DrawCube(position, attackRange);
+        //}
+        ////Vector3 posiion = transform.position;
+        //Gizmos.color = Color.red;
+        ////if (target != null)
+        ////{
+        ////    Gizmos.DrawLine(transform.position, target.transform.position);
+        ////}
+        ///
+        // Set the color with custom alpha.
+        Gizmos.color = new Color(0f, 1f, 0f, alpha); // Green with custom alpha
+
+        // Draw the cube.
         foreach (var defender in Defender)
         {
             position = defender.turretRoot.position;
-            Gizmos.DrawWireSphere(position, attackRange);
+            Gizmos.DrawCube(position, size);
         }
-        //Vector3 posiion = transform.position;
-        Gizmos.color = Color.red;
-        //if (target != null)
-        //{
-        //    Gizmos.DrawLine(transform.position, target.transform.position);
-        //}
+        // Draw a wire cube outline.
+        //Gizmos.color = Color.white;
+        //Gizmos.DrawWireCube(position, size);
     }
     public override void Upgrade()
     {
@@ -143,8 +163,12 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
-        Collider[] PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, illusionMask);
-        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, enemyMask);
+        //Collider[] PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, illusionMask);
+        
+        Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, defender.turretRoot.localScale/2, Quaternion.identity, illusionMask);
+
+        //if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, enemyMask);
+        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, defender.turretRoot.localScale / 2, Quaternion.identity, enemyMask);
         if (PotentialTargets.Length > 0)
         {
             if (defender.target == null)
@@ -180,7 +204,7 @@ public class MainTower : Tower
     {
         for (int j = 0; j < towersRootPoints.Count; j++)
         {
-            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y, towersRootPointPositions[currentLevel].y[j]);
+            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y * 0, towersRootPointPositions[currentLevel].y[j]);
         }
     }
     IEnumerator HitTarget(MainTowerDefender defender, GameObject currentProjectile, float arriveTime)

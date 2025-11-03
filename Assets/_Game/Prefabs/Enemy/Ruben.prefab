@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68101582159c2494abedb41f3ae0c7f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: -8679921383154817045, guid: 4c31a21fb4173a746a0978a56fd8a38a, type: 3}
+  model: {fileID: 5525157896910802345}
   towerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -341,8 +341,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.34724557, y: 0.609792, z: 0.123935014}
+  m_Center: {x: -0.00572592, y: 0.30344188, z: -0.0028629452}
 --- !u!95 &7241747384034096508
 Animator:
   serializedVersion: 5

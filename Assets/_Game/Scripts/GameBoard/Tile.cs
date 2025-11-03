@@ -221,9 +221,8 @@ public class Tile : MonoBehaviour
     {
         foreach (var neighbor in surroundingTiles)
         {
-            if (neighbor == null || neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed) continue; 
-            else if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
-            else if (neighbor.Type == TileType.Neutral) neighbor.SetType(TileType.Claimed);
+            if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
+            else continue;
         }
     }
 

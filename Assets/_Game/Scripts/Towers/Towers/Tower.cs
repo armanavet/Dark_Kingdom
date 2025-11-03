@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public abstract class Tower : MonoBehaviour
 {
-    [Header("Tower parameters")]
+    [Header("Tower Parameters")]
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
     [SerializeField] protected List<int> UpgradePrices;
