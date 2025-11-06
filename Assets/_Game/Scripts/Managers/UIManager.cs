@@ -150,20 +150,6 @@ public class UIManager : MonoBehaviour
         else panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
 
     }
-    void OutlineForTile()
-    {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
-        {
-            Transform a = tileHit.collider.transform.Find("OutlineForTile");
-            if (a.gameObject != null)
-            {
-                a.gameObject.SetActive(true);
-            }
-            else a.gameObject.SetActive(false);
-        }
-    }
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
