@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 2707190591291844315}
   m_Layer: 5
   m_Name: SellUI
-  m_TagString: Untagged
+  m_TagString: TowerUIPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

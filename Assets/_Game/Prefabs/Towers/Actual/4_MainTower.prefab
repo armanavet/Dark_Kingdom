@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9072826925883226382}
   m_Layer: 0
   m_Name: SellUI
-  m_TagString: Untagged
+  m_TagString: TowerUIPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -459,7 +459,6 @@ MonoBehaviour:
     - -1
   ProjectileSpeed: 12
   AttackSpeed: 1
-  attackRange: 1
   size: {x: 1.3, y: 3, z: 1.3}
   alpha: 0.193
   TowerActionSound: {fileID: 8300000, guid: a58e438b7cfa445498120af0e6169082, type: 3}

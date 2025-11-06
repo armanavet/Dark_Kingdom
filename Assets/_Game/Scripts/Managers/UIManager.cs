@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class UIManager : MonoBehaviour
     TowerPreview towerPreview;
     float TowerPurchasePanelYInitial;
     bool isPanelActive = false;
-
+    Camera mainCamera;
     #region Singleton 
     private static UIManager _instance;
     public static UIManager Instance
@@ -44,33 +45,37 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
     #endregion
-
-
     public void Initialize()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
+        mainCamera = Camera.main;
+    }
+    void LateUpdate()
+    {
+        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
+        timerText.text = Mathf.Round(GameTimer).ToString();
     }
     void Update()
     {
         ChangeUiButtonVisibility();
-        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
-        timerText.text = Mathf.Round(GameTimer).ToString();
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject()) return; //Check if the click was performed on a UI element
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
-            
-            else
+            if (IsClickOnTowerPanelUI()) return; // Check if the click was performed on the Tower UI panel
+            if (EventSystem.current.IsPointerOverGameObject()) //Check if the click was performed on a UI element
             {
                 ShowTowerPanel(false);
+                return;
             }
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (towerPreview != null) PlaceTower(true);
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
+            else ShowTowerPanel(false);
         }
         else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
         {
@@ -78,14 +83,13 @@ public class UIManager : MonoBehaviour
             PlaceTower(false);
 
         }
+
         if (isPanelActive && activePanel != null)
         {
-            Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward);
-            activePanel.transform.rotation = rotation;
+            activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
         }
 
     }
-
     void ChangeUiButtonVisibility()
     {
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
@@ -101,7 +105,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     void ShowTowerPanel(bool value, Transform selectedTower = null)
     {
         if (value == true)
@@ -123,32 +126,25 @@ public class UIManager : MonoBehaviour
             isPanelActive = false;
         }
     }
-
     void SetTowerPanelPosition(GameObject panel, Tower tower)
     {
-        if (tower.CompareTag("ArcherTower"))
-        {
-            towerPanelYOffset = 2.6f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("WizardTower"))
-        {
-            towerPanelYOffset = 2.25f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("ArtilleryTower"))
-        {
-            towerPanelYOffset = 2.3f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("GoldMine"))
-        {
-            towerPanelYOffset = 1.3f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        Transform panelPos = panel.transform;
+        float towerPositionX = tower.transform.position.x;
+        float towerPositionY = tower.transform.position.y;
+        float towerPositionZ = tower.transform.position.z;
+        float yOffset = towerPanelYOffset;
 
-        }
-        else panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        if (tower.CompareTag("ArcherTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("WizardTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("ArtilleryTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("GoldMine")) yOffset = 2.6f;
 
+        SetPosition(panelPos, yOffset, towerPositionX, towerPositionY, towerPositionZ);
+
+    }
+    void SetPosition(Transform positionToPlace, float yOffsetNumber, float x, float y, float z)
+    {
+        positionToPlace.position = new Vector3(x, y + yOffsetNumber, z);
     }
     void ShowTowerPurchasePanel(bool value)
     {
@@ -171,7 +167,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void PurchaseTower(int type)
     {
         if (towerPreview == null)
@@ -181,7 +176,6 @@ public class UIManager : MonoBehaviour
             towerPreview = Instantiate(prefab);
         }
     }
-
     void PlaceTower(bool value)
     {
         if (value == true)
@@ -216,7 +210,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void OnGameStateChanged(GameState newState, int currentWave)
     {
         if (newState == GameState.Passive)
@@ -231,6 +224,18 @@ public class UIManager : MonoBehaviour
             waveText.text = "Wave: " + currentWave.ToString();
         }
     }
+    Quaternion LookAtCamera(Transform cameraTransform)
+    {
+        return Quaternion.LookRotation(cameraTransform.forward);
+    }
+    bool IsClickOnTowerPanelUI()
+    {
+        var eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
 
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
 
+        return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
+    }
 }

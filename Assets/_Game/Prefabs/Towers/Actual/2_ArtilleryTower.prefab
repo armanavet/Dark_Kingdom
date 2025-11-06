@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4271414258683102213}
   m_Layer: 0
   m_Name: SellUI
-  m_TagString: Untagged
+  m_TagString: TowerUIPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
