@@ -12,7 +12,7 @@ public class StateManager : MonoBehaviour, ISaveable
     [HideInInspector] public GameState State;
     float Timer;
     public int timeMultiplier = 1;
-    int currentWave = 0;
+    int currentWave = 9;
 
     #region Singleton
     private static StateManager _instance;
@@ -48,29 +48,39 @@ public class StateManager : MonoBehaviour, ISaveable
             UIManager.Instance.GameTimer = Timer;
             if (Timer <= 0) ChangeGameStateTo(GameState.Active);
         }
-
+        else if (State == GameState.End)
+        {
+            UIManager.Instance.ShowEndGamePanel();
+        }
     }
     public void ChangeGameStateTo(GameState newState)
     {
+        int wave = currentWave;
         if (newState == GameState.Active)
         {
             State = GameState.Active;
             timeMultiplier = 1;
-            WaveManager.Instance.SpawnWave(currentWave - 1);
+            WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
-            State = GameState.Passive;
-            currentWave++;
-            Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[currentWave - 1] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-            WaveManager.Instance.DrawEnemyPath();
-            WaveManager.Instance.TotalEnemiesInWave(currentWave - 1);
-            SaveManager.Save();
+            if (wave < WaveManager.Instance.waveLength)
+            {
+                State = GameState.Passive;
+                Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[wave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
+                if (wave == WaveManager.Instance.waveLength-1) WaveManager.Instance.GetPhaseCommands(wave, true);
+                else WaveManager.Instance.GetPhaseCommands(wave);
+                currentWave++;
+                SaveManager.Save();
+            }
+        }
+        else if (newState == GameState.End)
+        {
+            State = GameState.End;
         }
 
         UIManager.Instance.OnGameStateChanged(newState, currentWave);
     }
-
     public void ButtonToMakeFaster(int multiplier)
     {
         timeMultiplier = (timeMultiplier == multiplier) ? (timeMultiplier = 1) : (timeMultiplier = multiplier);
@@ -101,5 +111,6 @@ public enum GameState
 {
     Active,
     Passive,
-    Paused
+    Paused,
+    End
 }

@@ -13,10 +13,10 @@ public class WizardTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage;
-    
+
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
-    
+
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -75,7 +75,7 @@ public class WizardTower : Tower
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
-        
+
         float s = launchSpeed;
         float s2 = s * s;
         float r = s2 * s2 - g * (g * x * x + 2f * y * s2);
@@ -86,17 +86,15 @@ public class WizardTower : Tower
         float sinTheta = Mathf.Sin(theta);
 
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs);
+
     }
     bool AcquireTarget()
     {
         Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
-        if (targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
-        }
+        targets = Physics.OverlapSphere(transform.position, TarggetPoint, portalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;

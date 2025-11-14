@@ -17,7 +17,7 @@ public class ExplosionEnemy : Enemy
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
     }

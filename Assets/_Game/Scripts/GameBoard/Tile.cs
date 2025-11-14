@@ -21,7 +21,6 @@ public class Tile : MonoBehaviour
     List<Tile> neighbors = new List<Tile>();
     [SerializeField] GameObject currentModel;
 
-
     public Tile NextOnPath => nextOnPath;
     public int DistanceToDestinationOriginal { get; private set; }
     public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
@@ -45,7 +44,6 @@ public class Tile : MonoBehaviour
         Type = type;
         if (setModel) SetModel();
     }
-
     public void SetModel()
     {
         NeutralTiles.ToList().ForEach(x => x.SetActive(false));
@@ -82,7 +80,6 @@ public class Tile : MonoBehaviour
         }
         currentModel.SetActive(true);
     }
-
     void Connect(GameObject[] tilesModels, bool isRiver = false)
     {
         if (tilesModels == null || tilesModels.Length == 0) return;
@@ -167,8 +164,6 @@ public class Tile : MonoBehaviour
 
         ActivateModel(currentModel);
     }
-
-
     Quaternion SetCornerRotation()
     {
         float yRotation = 0;
@@ -186,7 +181,6 @@ public class Tile : MonoBehaviour
         }
         return Quaternion.Euler(0, yRotation, 0);
     }
-
     Quaternion SetTSectionRotation()
     {
         float yRotation = 0;
@@ -215,12 +209,10 @@ public class Tile : MonoBehaviour
         currentModel = model;
         currentModel.SetActive(true);
     }
-
     void LookAtTile(Transform target)
     {
         currentModel.transform.LookAt(target);
     }
-
     public void SetSurroundingTiles()
     {
         surroundingTiles = new List<Tile>()
@@ -235,7 +227,6 @@ public class Tile : MonoBehaviour
             west?.north
         };
     }
-
     public void SetNeighbors()
     {
         if (north != null) neighbors.Add(north);
@@ -243,19 +234,16 @@ public class Tile : MonoBehaviour
         if (south != null) neighbors.Add(south);
         if (west != null) neighbors.Add(west);
     }
-
     public void MakeEastWestConnection(Tile east, Tile west)
     {
         east.west = west;
         west.east = east;
     }
-
     public void MakeNorthSouthConnection(Tile north, Tile south)
     {
         north.south = south;
         south.north = north;
     }
-
     public void BecomeDestination()
     {
         distanceToDestination = 0;
@@ -264,13 +252,11 @@ public class Tile : MonoBehaviour
         exitPoint = transform.localPosition;
         isEmpty = false;
     }
-
     public void ClearPath()
     {
         distanceToDestination = int.MaxValue;
         nextOnPath = null;
     }
-
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
         if (nextTile == null || !nextTile.canBePath || nextTile.distanceToDestination != int.MaxValue) return null;
@@ -291,7 +277,6 @@ public class Tile : MonoBehaviour
         }
         return nextTile;
     }
-
     public void ClaimSurroundingTiles()
     {
         foreach (var neighbor in surroundingTiles)
@@ -300,13 +285,11 @@ public class Tile : MonoBehaviour
             else continue;
         }
     }
-
     public bool CanBePurchased()
     {
         if (Type == TileType.Claimed) return true;
         else return false;
     }
-
     public void Corrupt()
     {
         currentModel.GetComponent<Renderer>().material.color = corruptedColor;
@@ -315,7 +298,6 @@ public class Tile : MonoBehaviour
             neighbor.currentModel.GetComponent<Renderer>().material.color = corruptedColor;
         }
     }
-
     public void Restore()
     {
         currentModel.GetComponent<Renderer>().material.color = regularColor;
@@ -324,19 +306,16 @@ public class Tile : MonoBehaviour
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
         }
     }
-
     public TileData OnSave()
     {
         return new TileData(Type, DistanceToDestinationOriginal);
     }
-
     public void OnLoad(TileData data)
     {
         Type = data.Type;
         DistanceToDestinationOriginal = data.DistanceToDestinationOriginal;
     }
 }
-
 public enum TileType
 {
     Neutral,

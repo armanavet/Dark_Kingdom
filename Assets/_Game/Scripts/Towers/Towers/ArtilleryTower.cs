@@ -92,11 +92,9 @@ public class ArtilleryTower : Tower
     bool AcquireTarget()
     {
         Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
-        if (targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
-        }
+        targets = Physics.OverlapSphere(transform.position, TarggetPoint, portalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;

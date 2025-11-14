@@ -34,18 +34,18 @@ public class MainTower : Tower
     [SerializeField] float ProjectileSpeed;
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
-    //float attackRange = 2f;
+    float attackRange = 2f;
 
     public Vector3 size = Vector3.one;
     [Range(0f, 1f)]
     public float alpha = 0.5f;
-    
+
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip TowerActionSound;
     [SerializeField] protected AudioClip TowerHitSound;
-    
-    float damage;
 
+    float damage;
+    Vector3 range;
     private void Awake()
     {
         if (towerAudioSource == null)
@@ -70,11 +70,12 @@ public class MainTower : Tower
             defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
         }
-    }   
+        range = new Vector3(attackRange, attackRange, attackRange);
+    }
 
     private void Update()
     {
-        
+
         foreach (var defender in Defender)
         {
             if (defender.cooldown <= 0)
@@ -103,8 +104,8 @@ public class MainTower : Tower
         ////    Gizmos.DrawLine(transform.position, target.transform.position);
         ////}
         ///
-        
-        
+
+
         // Set the color with custom alpha.
         Gizmos.color = new Color(0f, 1f, 0f, alpha); // Green with custom alpha
         Vector3 position = new Vector3();
@@ -163,12 +164,9 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
-        //Collider[] PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, illusionMask);
-        //if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, enemyMask);
-        
-        Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, defender.turretRoot.localScale/2, Quaternion.identity, illusionMask);
-        
-        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, defender.turretRoot.localScale / 2, Quaternion.identity, enemyMask);
+
+        Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, illusionMask);
+        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, enemyMask);
         if (PotentialTargets.Length > 0)
         {
             if (defender.target == null)

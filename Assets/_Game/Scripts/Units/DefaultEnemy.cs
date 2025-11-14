@@ -16,7 +16,7 @@ public class DefaultEnemy : Enemy
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();

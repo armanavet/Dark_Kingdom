@@ -16,7 +16,7 @@ public class Illusion : Enemy
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         animator = GetComponent<Animator>();
         Destroy(gameObject,duration);
     }

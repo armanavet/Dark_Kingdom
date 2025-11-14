@@ -74,11 +74,10 @@ public class ArcherTower : Tower
     bool AcquireTarget()
     {
         Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if (targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
-        }
+        targets = Physics.OverlapSphere(transform.position, attackRange, portalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+        
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;

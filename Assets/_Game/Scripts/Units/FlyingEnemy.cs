@@ -29,7 +29,7 @@ public class FlyingEnemy : Enemy
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();

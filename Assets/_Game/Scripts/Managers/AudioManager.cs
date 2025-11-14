@@ -17,14 +17,6 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] AudioSource towerPuffEffectSource;
     
-    
-    //[SerializeField] AudioSource explosionSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-
     #region Singleton
     private static AudioManager _instance;
     public static AudioManager instance
@@ -66,41 +58,53 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayClickSoundForUI()
     {
-        audioSource.PlayOneShot(menuItemsClickSound);
+        PlayOneShot(menuItemsClickSound);
     }
     public void PlayClickSoundForPanelUI()
     {
-        audioSource.PlayOneShot(towerPanelBuyClickSound);
+        PlayOneShot(towerPanelBuyClickSound);
     }
 
-    public void PlayExplosionSound(AudioClip soundClip)
+    public void PlayExplosionSound(AudioClip audioClip)
     {
-        audioSource.PlayOneShot(soundClip);
+        if (audioClip == null)
+            return;
+
+        PlayOneShot(audioClip);
     }
 
     public void PlayTowerActionSound(AudioClip audioClip, AudioSource audioSource)
     {
+        if (audioClip == null || audioSource == null)
+            return;
+
         audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
+        PlayOneShot(audioClip);
     }
     public void EnemyAttackSound(AudioClip audioClip, AudioSource audioSource)
     {
+        if (audioClip == null || audioSource == null)
+            return;
+
         audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
+        PlayOneShot(audioClip);
     }
     public void EnemyMovingSound(AudioClip[] audioClips, AudioSource audioSource)
     {
+        if (audioClips == null || audioSource == null)
+            return;
+
         int randomSound = Random.Range(0, audioClips.Length);
         audioSource.clip = audioClips[randomSound];
-        audioSource.PlayOneShot(audioClips[randomSound]);
+        PlayOneShot(audioClips[randomSound]);
     }
     public void PlayTowerUpgradeSound()
     {
-        audioSource.PlayOneShot(towerUpgradeClip);
+        PlayOneShot(towerUpgradeClip);
     }
     public void PlayTowerPlaceSound()
     {
-        audioSource.PlayOneShot(towerPlaceClip);
+        PlayOneShot(towerPlaceClip);
     }
     public void PlayTowerPuffEffectSoundDelayed(float delay = 0.08f)
     {
@@ -108,10 +112,13 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayTowerPlacementDeniedSound()
     {
-        audioSource.PlayOneShot(towerPlacementDeniedClip);
+        PlayOneShot(towerPlacementDeniedClip);
     }
     
-
+    void PlayOneShot(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
     private IEnumerator PlayWithDelay(AudioSource source, AudioClip clip, float delay)
     {
         yield return new WaitForSeconds(delay);

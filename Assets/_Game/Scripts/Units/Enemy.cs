@@ -20,7 +20,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected AudioSource enemyAudioSource;
     protected Animator animator;
     protected float currentSpeed;
-    protected float help;
+    protected float health;
     protected float damage;
     protected float attackSpeed;
     protected float attackCooldown;
@@ -129,7 +129,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
         {
             target = hitInfo.transform.GetComponent<Tower>();
-
         }
         return true;
     }
@@ -137,8 +136,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         if (state == EnemyState.Dead) return;
 
-        help -= damage;
-        if (help <= 0)
+        health -= damage;
+        if (health <= 0)
         {
             OnDeath();
         }
@@ -146,7 +145,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
-        animator?.SetBool("isDead", true);
+        if (animator != null) animator?.SetBool("isDead", true);
+        else return;
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }

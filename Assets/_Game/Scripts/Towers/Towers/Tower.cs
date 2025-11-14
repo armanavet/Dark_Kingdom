@@ -9,6 +9,7 @@ public abstract class Tower : MonoBehaviour
     [Header("Tower Parameters")]
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
+    [SerializeField] protected LayerMask portalMask;
     [SerializeField] protected List<int> UpgradePrices;
     [SerializeField] protected List<int> SellPrices;
     [SerializeField] protected List<float> HP;

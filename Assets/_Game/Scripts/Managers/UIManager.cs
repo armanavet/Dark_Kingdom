@@ -12,8 +12,8 @@ using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
+    [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, endGameMenuPanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] LayerMask towerMask, tileMask;
@@ -57,6 +57,7 @@ public class UIManager : MonoBehaviour
     {
         goldText.text = EconomyManager.Instance.CurrentGold.ToString();
         timerText.text = Mathf.Round(GameTimer).ToString();
+
     }
     void Update()
     {
@@ -77,7 +78,7 @@ public class UIManager : MonoBehaviour
             else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
             else ShowTowerPanel(false);
         }
-        else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetMouseButton(1))
         {
             ShowTowerPanel(false);
             PlaceTower(false);
@@ -88,7 +89,11 @@ public class UIManager : MonoBehaviour
         {
             activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
         }
-
+        
+        if (Input.GetKeyDown("escape"))
+        {
+            PauseMenuManager.Instance.a_BTPause();
+        }
     }
     void ChangeUiButtonVisibility()
     {
@@ -222,7 +227,29 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + currentWave.ToString();
+            if(currentWave == WaveManager.Instance.waveLength)
+            {
+                activeStateText.text = string.Empty;
+                activeStateText.text = "Destroy The Portal!";
+                waveText.text = "Wave: " + currentWave.ToString();
+            }
+        }else if (newState == GameState.End)
+        {
+            activeStatePanel.SetActive(false);
+            passiveStatePanel.SetActive(false);
         }
+        /*
+         * if state == end 
+         * activesState true
+         * passive false
+         * wave.text + currentwave
+         * activ.text + "destroy the portal to finish the game"
+         */
+    }
+    public void ShowEndGamePanel()
+    {
+        endGameMenuPanel.SetActive(true);
+        Time.timeScale = 0;
     }
     Quaternion LookAtCamera(Transform cameraTransform)
     {

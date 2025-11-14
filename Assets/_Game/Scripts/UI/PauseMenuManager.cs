@@ -11,6 +11,25 @@ public class PauseMenuManager : MonoBehaviour
     //[SerializeField] GameObject _PauseMenuContainer = null;
     bool isActive;
     float a;
+    #region Singleton 
+    private static PauseMenuManager _instance;
+    public static PauseMenuManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = GameObject.FindObjectOfType<PauseMenuManager>();
+            }
+
+            return _instance;
+        }
+    }
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
     void Update()
     {
         if (Input.GetKeyDown("escape"))

@@ -7,12 +7,13 @@ public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip ExplodeSound;
-    protected AudioSource audioSource;
     public LayerMask EnemyMask;
+    public LayerMask PortalMask;
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
 
+    protected AudioSource audioSource;
     private void Start()
     {
         if (audioSource == null)
@@ -22,7 +23,7 @@ public class Shell : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
         age += Time.deltaTime;
         Vector3 p = launchPoint + launchVelocity * age;
         p.y -= 0.5f * 9.81f * age * age;
@@ -31,9 +32,7 @@ public class Shell : MonoBehaviour
         d.y -= 9.81f * age;
         if (transform.position.y < 0f)
         {
-            
             Explode();
-
         }
 
     }
@@ -48,11 +47,12 @@ public class Shell : MonoBehaviour
     }
     void Explode()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
+        Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, PortalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
 
         if (targets.Length > 0)
         {
-            foreach(var target in targets)
+            foreach (var target in targets)
             {
                 Enemy enemy = target.GetComponent<Enemy>();
                 enemy.ApplyDamage(damage);

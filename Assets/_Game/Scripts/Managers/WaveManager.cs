@@ -1,7 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.ComponentModel.Design;
+using Unity.VisualScripting;
 
 public class WaveManager : MonoBehaviour, ISaveable
 {
@@ -10,19 +12,26 @@ public class WaveManager : MonoBehaviour, ISaveable
     [SerializeField] GameObject spawnerPrefab;
     [SerializeField] GameObject enemyPathPrefab;
     [SerializeField] float delayBetweenSpawns;
-    [SerializeField] int spawnerDestroyTime;
+    [SerializeField] float spawnerDestroyTime;
     [SerializeField] int spawnDistanceFromCenter;
     [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
-    
+
     [SerializeField] bool a;
     [SerializeField] Tile SpawnPoint;
-    
+
     bool cantFindPath => spawnPoint.NextOnPath == null;
+    bool isPortalDead;
+    GameObject spawner;
+    Wave enemiesToSpawn;
+    Wave[] reserveWave;
     List<GameObject> enemyPath = new List<GameObject>();
     List<Enemy> enemies = new List<Enemy>();
     Tile spawnPoint;
+    int currentWave;
 
+    public PortalMode portalMode;
     public int totalEnemiesInWave = 0;
+    public int waveLength;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -43,23 +52,33 @@ public class WaveManager : MonoBehaviour, ISaveable
         RegisterSaveable();
     }
     #endregion
-
     public void Initialize()
     {
         units.OrganizeByType();
+        isPortalDead = false;
+        waveLength = waves.Length;
     }
-
-    public void SpawnWave(int wave)
+    public void GetPhaseCommands(int wave, bool isLastWave = false)
     {
         if (waves == null || waves.Length == 0) return;
         if (wave >= waves.Length) return;
-
-        Wave enemiesToSpawn = waves[wave];
-        spawnPoint.Corrupt();
-        GameObject spawner = Instantiate(spawnerPrefab, spawnPoint.transform.localPosition, spawnPoint.pathDirection.GetRotation());
-        StartCoroutine(SpawnUnits(enemiesToSpawn, spawner));
+        reserveWave = waves;
+        currentWave = wave;
+        TotalEnemiesInWave(wave);
+        DrawEnemyPath();
+        if (!isLastWave) portalMode = PortalMode.NormalMode;
+        else portalMode = PortalMode.BossMode;
     }
-
+    public void StartSpawn()
+    {
+        spawner = Instantiate(spawnerPrefab, spawnPoint.transform.localPosition, spawnPoint.pathDirection.GetRotation());
+        spawnPoint.Corrupt();
+        StartCoroutines(spawner, enemiesToSpawn);
+    }
+    void StartCoroutines(GameObject spawner, Wave enemies)
+    {
+        StartCoroutine(SpawnUnits(spawner, enemies));
+    }
     void CalculateSpawnPoint()
     {
         if (a)
@@ -70,7 +89,6 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             List<Tile> potentialPoints = new List<Tile>();
             int variance = (int)distanceVariance.RandomValueInRange;
-
             foreach (var tile in GameBoard.Instance.Tiles)
             {
                 if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
@@ -78,16 +96,15 @@ public class WaveManager : MonoBehaviour, ISaveable
                     potentialPoints.Add(tile);
                 }
             }
-
             spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
         }
-
     }
     public void TotalEnemiesInWave(int currentWave)
     {
-        totalEnemiesInWave = waves[currentWave].Enemies.Sum(e => e.Count);
+        enemiesToSpawn = reserveWave[currentWave];
+        totalEnemiesInWave = reserveWave[currentWave].Enemies.Sum(e => e.Count);
     }
-    IEnumerator SpawnUnits(Wave wave, GameObject spawner)
+    IEnumerator SpawnUnits(GameObject spawner, Wave wave)
     {
         foreach (var enemyType in wave.Enemies)
         {
@@ -104,27 +121,70 @@ public class WaveManager : MonoBehaviour, ISaveable
                     Destroy(path);
                 }
                 enemyPath.Clear();
-                yield return new WaitForSeconds(delayBetweenSpawns);
+
+                bool islastUint = (totalEnemiesInWave == 1);
+                if (!islastUint)
+                    yield return new WaitForSeconds(delayBetweenSpawns);
             }
         }
-        Destroy(spawner, spawnerDestroyTime);
-        spawnPoint.Restore();
+        yield break;
     }
-
-    public void OnEnemyDeath(Enemy enemy)
+    void IsWaveEnd()
     {
-        if (!enemies.Contains(enemy)) return;
-
-        enemies.Remove(enemy);
-        totalEnemiesInWave--;
-        if (totalEnemiesInWave == 0)
+        if (portalMode == PortalMode.NormalMode)
         {
-            enemyPath.ForEach(x => Destroy(x));
-            StateManager.Instance.ChangeGameStateTo(GameState.Passive);
+            if (totalEnemiesInWave == 0)
+            {
+                enemiesToSpawn = null;
+                Destroy(spawner, spawnerDestroyTime);
+                spawnPoint.Restore();
+                enemyPath.ForEach(x => Destroy(x));
+                StateManager.Instance.ChangeGameStateTo(GameState.Passive);
+            }
+        }
+        else if (portalMode == PortalMode.BossMode)
+        {
+            if (isPortalDead == true)
+            {
+                enemiesToSpawn = null;
+                enemies.Clear();
+                Destroy(spawner, spawnerDestroyTime);
+                spawnPoint.Restore();
+                enemyPath.ForEach(x => Destroy(x));
+                StateManager.Instance.ChangeGameStateTo(GameState.End);
+            }
+            else if (isPortalDead == false && totalEnemiesInWave == 0)
+            {
+                TotalEnemiesInWave(currentWave);
+                StartCoroutines(spawner, enemiesToSpawn);
+            }
         }
     }
+    public void OnEnemyDeath(Enemy enemy)
+    {
+        if (portalMode == PortalMode.NormalMode && !enemies.Contains(enemy))
+        {
+            return;
+        }
+        else if (portalMode == PortalMode.BossMode && !enemies.Contains(enemy))
+        {
+            isPortalDead = true;
+        }
+        enemies.Remove(enemy);
+        totalEnemiesInWave--;
+        IsWaveEnd();
 
-    public void DrawEnemyPath()
+    }
+    /*public void OnPortalDeath(Enemy enemy)
+    {
+        isPortalDead = true;
+        isPortalDeath == true
+        enemypath => destroy()
+        enemies remove all
+        change state to end
+         
+    }*/
+    void DrawEnemyPath()
     {
         CalculateSpawnPoint();
         Tile tile = spawnPoint;
@@ -138,28 +198,23 @@ public class WaveManager : MonoBehaviour, ISaveable
             tile = tile.NextOnPath;
         }
     }
-
     public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
-
     public string GetUniqueSaveID()
     {
         return nameof(WaveManager);
     }
-
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
         saveData.EnemySpawnTile = spawnPoint.Index;
         return saveData;
     }
-
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
         spawnPoint = GameBoard.Instance.Tiles[saveData.EnemySpawnTile];
     }
 }
-
 #region Wave
 [System.Serializable]
 public class Unit
@@ -202,3 +257,12 @@ public class EnemiesToSpawn
 }
 
 #endregion
+
+#region PortalPhase
+public enum PortalMode
+{
+    NormalMode,
+    BossMode
+}
+#endregion
+
