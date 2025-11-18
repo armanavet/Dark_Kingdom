@@ -70,7 +70,7 @@ public class MageEnemy : Enemy
             bool facingTarget = FaceTarget();
             if (facingTarget)
             {
-                //Attack();
+                Attack();
             }
         }
     }

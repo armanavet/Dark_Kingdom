@@ -12,7 +12,7 @@ public class StateManager : MonoBehaviour, ISaveable
     [HideInInspector] public GameState State;
     float Timer;
     public int timeMultiplier = 1;
-    int currentWave = 9;
+    int currentWave = 0;
 
     #region Singleton
     private static StateManager _instance;
