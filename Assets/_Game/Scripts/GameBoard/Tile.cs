@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -12,6 +13,8 @@ public class Tile : MonoBehaviour
     [SerializeField] Tile north, south, east, west, nextOnPath;
     [SerializeField] Color regularColor, corruptedColor;
     [SerializeField] int distanceToDestination = 0;
+    [SerializeField] GameObject currentModel;
+    [SerializeField] AudioSource source;
     public Vector2Int coordinates;
     public Direction pathDirection;
     public Vector3 exitPoint;
@@ -19,7 +22,6 @@ public class Tile : MonoBehaviour
     public int TilePrice;
     public List<Tile> surroundingTiles = new List<Tile>();
     List<Tile> neighbors = new List<Tile>();
-    [SerializeField] GameObject currentModel;
 
     public Tile NextOnPath => nextOnPath;
     public int DistanceToDestinationOriginal { get; private set; }
@@ -29,7 +31,13 @@ public class Tile : MonoBehaviour
                        Type == TileType.Claimed ||
                        Type == TileType.Bridge);
     bool canBeRiverPath => (Type == TileType.ObstructedRiver || Type == TileType.Bridge);
-
+    private void Awake()
+    {
+        if(Type == TileType.Bridge || Type == TileType.ObstructedRiver)
+        {
+            source = GetComponent<AudioSource>();
+        }
+    }
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
     public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
@@ -304,6 +312,19 @@ public class Tile : MonoBehaviour
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("MainCamera"))
+        {
+            Debug.Log("camera has entered my collider");
+            if(source != null)
+            {
+                Debug.Log("it's river so play the sound");
+                source.loop = true;
+                source.Play();
+            }
         }
     }
     public TileData OnSave()

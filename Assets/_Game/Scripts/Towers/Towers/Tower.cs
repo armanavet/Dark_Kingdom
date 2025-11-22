@@ -53,7 +53,7 @@ public abstract class Tower : MonoBehaviour
     }
     public void TowerAudio(AudioClip audioClip, AudioSource audioSource)
     {
-        AudioManager.instance.PlayTowerActionSound(audioClip, audioSource);
+        AudioManager.Instance.PlayTowerActionSound(audioClip, audioSource);
     }
     void Destroy()
     {

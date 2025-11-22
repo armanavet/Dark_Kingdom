@@ -7,8 +7,10 @@ public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip ExplodeSound;
-    public LayerMask EnemyMask;
-    public LayerMask PortalMask;
+    [SerializeField] GameObject[] effects;
+    [SerializeField] LayerMask EnemyMask;
+    [SerializeField] LayerMask PortalMask;
+    GameObject effect;
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
@@ -62,7 +64,12 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.instance.PlayExplosionSound(ExplodeSound);
+        AudioManager.Instance.PlayExplosionSound(ExplodeSound);
+        if (effects.Length != 0)
+        {
+            effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
+            Destroy(effect, 2f);
+        }
         Destroy(gameObject);
 
     }

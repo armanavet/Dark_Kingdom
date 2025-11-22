@@ -200,7 +200,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
 
     public void n_BTAudioPlay()
     {
-        AudioManager.instance.PlayClickSoundForUI();
+        AudioManager.Instance.PlayClickSoundForUI();
     }
     public IEnumerator ConfirmationBox()
     {

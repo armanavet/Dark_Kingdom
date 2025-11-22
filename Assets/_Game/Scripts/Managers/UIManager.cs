@@ -1,13 +1,11 @@
 using DG.Tweening;
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
 using System.Linq;
 
 public class UIManager : MonoBehaviour
@@ -15,17 +13,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, endGameMenuPanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
-    [SerializeField] float towerPurchasePanelYHidden;
-    [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float towerPanelYOffset;
     [SerializeField] GameObject[] effects;
+    [SerializeField] LayerMask towerMask, tileMask;
+    [SerializeField] float towerPurchasePanelYHidden;
+    [SerializeField] float towerPanelYOffset;
+    
     [HideInInspector] public float GameTimer;
-    GameObject activePanel, previousHit, effect;
-    Button[] towerPurchaseButtons;
-    TowerPreview towerPreview;
-    float TowerPurchasePanelYInitial;
-    bool isPanelActive = false;
+
     Camera mainCamera;
+    GameObject activePanel, previousHit, effect;
+    TowerPreview towerPreview;
+    Button[] towerPurchaseButtons;
+    float TowerPurchasePanelYInitial;
+   
+    bool isPanelActive = false;
     #region Singleton 
     private static UIManager _instance;
     public static UIManager Instance
@@ -49,9 +50,12 @@ public class UIManager : MonoBehaviour
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
+        
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
+        
         mainCamera = Camera.main;
+
     }
     void LateUpdate()
     {
@@ -189,12 +193,12 @@ public class UIManager : MonoBehaviour
 
             if (towerPreview.canPlace)
             {
-                AudioManager.instance.PlayTowerPlaceSound();
+                AudioManager.Instance.PlayTowerPlaceSound();
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
                 EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
-                AudioManager.instance.PlayTowerPuffEffectSoundDelayed();
+                AudioManager.Instance.PlayTowerPuffEffectSoundDelayed();
                 effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
                 Destroy(effect, 2f);
                 effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
@@ -202,7 +206,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                AudioManager.instance.PlayTowerPlacementDeniedSound();
+                AudioManager.Instance.PlayTowerPlacementDeniedSound();
             }
         }
         else
@@ -265,4 +269,5 @@ public class UIManager : MonoBehaviour
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
     }
+    
 }

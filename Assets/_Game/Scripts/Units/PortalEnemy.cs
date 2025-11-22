@@ -5,14 +5,9 @@ using UnityEngine;
 
 public class PortalEnemy : Enemy
 {
-    [SerializeField] string portalLayerName = "Portal";
     private void Start()
     {
         health = maxHP;
-        if(WaveManager.Instance.portalMode == PortalMode.BossMode)
-        {
-            gameObject.layer = LayerMask.NameToLayer(portalLayerName);
-        }
     }
     private void Update()
     {
@@ -24,5 +19,7 @@ public class PortalEnemy : Enemy
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
-    protected override void Attack(){}
+    protected override void Attack() { }
+
+
 }

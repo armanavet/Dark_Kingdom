@@ -31,7 +31,7 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
-        AudioManager.instance.PlayExplosionSound(EnemyAttackSound);
+        AudioManager.Instance.PlayExplosionSound(EnemyAttackSound);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {

@@ -164,11 +164,11 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     public void PlayAttackSound()
     {
-        AudioManager.instance.EnemyAttackSound(EnemyAttackSound,enemyAudioSource);
+        AudioManager.Instance.EnemyAttackSound(EnemyAttackSound,enemyAudioSource);
     }
     public void PlayMovingSound()
     {
-        AudioManager.instance.EnemyMovingSound(EnemyMovingSounds,enemyAudioSource);
+        AudioManager.Instance.EnemyMovingSound(EnemyMovingSounds,enemyAudioSource);
     }
 }
 

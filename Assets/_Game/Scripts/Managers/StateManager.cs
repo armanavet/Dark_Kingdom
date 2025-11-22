@@ -60,19 +60,22 @@ public class StateManager : MonoBehaviour, ISaveable
         {
             State = GameState.Active;
             timeMultiplier = 1;
+            AudioManager.Instance.PlayBackgroundMusic(newState);
             WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
-            if (wave < WaveManager.Instance.waveLength)
-            {
-                State = GameState.Passive;
-                Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[wave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-                if (wave == WaveManager.Instance.waveLength-1) WaveManager.Instance.GetPhaseCommands(wave, true);
-                else WaveManager.Instance.GetPhaseCommands(wave);
-                currentWave++;
-                SaveManager.Save();
-            }
+            //if (wave < WaveManager.Instance.waveLength)
+            //{
+            // this if is not necessary 
+            State = GameState.Passive;
+            Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[wave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
+            AudioManager.Instance.PlayBackgroundMusic(newState);
+            if (wave == WaveManager.Instance.waveLength - 1) WaveManager.Instance.GetPhaseCommands(wave, true);
+            else WaveManager.Instance.GetPhaseCommands(wave);
+            currentWave++;
+            SaveManager.Save();
+            //}
         }
         else if (newState == GameState.End)
         {

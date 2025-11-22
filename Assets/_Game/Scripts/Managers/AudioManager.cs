@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    
-    
-    AudioSource audioSource;
-    [Header("Audio Clips")]
-    [SerializeField] AudioClip menuItemsClickSound;
-    [SerializeField] AudioClip towerPanelBuyClickSound;
+    [Header("Background Audio Clips")]
+    [SerializeField] AudioClip backgroundPassivePhaseClip;
+    [SerializeField] AudioClip backgroundActivePhaseClip;
+    [SerializeField] AudioClip waveStartClip;
+    [Header("Menu Audio Clips")]
+    [SerializeField] AudioClip menuItemsClickClip;
+    [Header("Tower Audio Clips")]
+    [SerializeField] AudioClip towerPanelBuyClip;
     [SerializeField] AudioClip towerUpgradeClip;
     [SerializeField] AudioClip towerPlaceClip;
     [SerializeField] AudioClip towerPuffEffectClip;
     [SerializeField] AudioClip towerPlacementDeniedClip;
     [Header("Audio Sources")]
-    [SerializeField] AudioSource towerPuffEffectSource;
-    
+    //[SerializeField] AudioSource towerPuffEffectSource;
+    [Tooltip("Attach the Audio Source handler for...")]
+    [SerializeField] AudioSource handlerForTower, 
+                                 handlerForTowerPuffEffect, 
+                                 handlerForUI, 
+                                 handlerForMusic, 
+                                 handlerForEnemy;
+
+    //AudioSource audioSource;
     #region Singleton
     private static AudioManager _instance;
-    public static AudioManager instance
+    public static AudioManager Instance
     {
         get
         {
@@ -51,35 +60,74 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        //if (audioSource == null)
+        //{
+        //    audioSource = GetComponent<AudioSource>();
+        //}
     }
+    #region BackgroundMusic
+    public void PlayBackgroundMusic(GameState state)
+    {
+        if (handlerForMusic == null || backgroundPassivePhaseClip == null || backgroundActivePhaseClip == null || waveStartClip == null)
+            return;
+        StartCoroutine(PlayBackgroundMusicWithDelay(state, handlerForMusic, waveStartClip, backgroundActivePhaseClip,backgroundPassivePhaseClip));
+    }
+
+    #endregion
+    #region UI
     public void PlayClickSoundForUI()
     {
-        PlayOneShot(menuItemsClickSound);
+        UIPOS(menuItemsClickClip);
     }
     public void PlayClickSoundForPanelUI()
     {
-        PlayOneShot(towerPanelBuyClickSound);
+        UIPOS(towerPanelBuyClip);
     }
-
-    public void PlayExplosionSound(AudioClip audioClip)
+    //audioSource.PlayOneShot() => [name]POS();
+    void UIPOS(AudioClip audioClip)
     {
-        if (audioClip == null)
-            return;
-
-        PlayOneShot(audioClip);
+        handlerForUI.PlayOneShot(audioClip);
     }
-
+    #endregion
+    #region Tower
     public void PlayTowerActionSound(AudioClip audioClip, AudioSource audioSource)
     {
         if (audioClip == null || audioSource == null)
             return;
 
         audioSource.clip = audioClip;
-        PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioClip);
+    }
+    public void PlayTowerUpgradeSound()
+    {
+        TowerPOS(towerUpgradeClip);
+    }
+    public void PlayTowerPlaceSound()
+    {
+        TowerPOS(towerPlaceClip);
+    }
+    public void PlayTowerPuffEffectSoundDelayed(float delay = 0.08f)
+    {
+        StartCoroutine(PlayWithDelay(handlerForTowerPuffEffect, towerPuffEffectClip, delay));
+    }
+    public void PlayTowerPlacementDeniedSound()
+    {
+        TowerPOS(towerPlacementDeniedClip);
+    }
+
+    //audioSource.PlayOneShot() => [name]POS();
+    void TowerPOS(AudioClip audioClip)
+    {
+        handlerForTower.PlayOneShot(audioClip);
+    }
+    #endregion
+    #region Enemy
+    public void PlayExplosionSound(AudioClip audioClip)
+    {
+        if (audioClip == null)
+            return;
+
+        EnemyPOS(audioClip);
     }
     public void EnemyAttackSound(AudioClip audioClip, AudioSource audioSource)
     {
@@ -87,42 +135,55 @@ public class AudioManager : MonoBehaviour
             return;
 
         audioSource.clip = audioClip;
-        PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioClip);
     }
     public void EnemyMovingSound(AudioClip[] audioClips, AudioSource audioSource)
     {
         if (audioClips == null || audioSource == null)
             return;
-
         int randomSound = Random.Range(0, audioClips.Length);
         audioSource.clip = audioClips[randomSound];
-        PlayOneShot(audioClips[randomSound]);
+        audioSource.PlayOneShot(audioClips[randomSound]);
     }
-    public void PlayTowerUpgradeSound()
+    //audioSource.PlayOneShot() => [name]POS();
+    void EnemyPOS(AudioClip audioClip)
     {
-        PlayOneShot(towerUpgradeClip);
+        handlerForEnemy.PlayOneShot(audioClip);
     }
-    public void PlayTowerPlaceSound()
-    {
-        PlayOneShot(towerPlaceClip);
-    }
-    public void PlayTowerPuffEffectSoundDelayed(float delay = 0.08f)
-    {
-        StartCoroutine(PlayWithDelay(towerPuffEffectSource, towerPuffEffectClip, delay));
-    }
-    public void PlayTowerPlacementDeniedSound()
-    {
-        PlayOneShot(towerPlacementDeniedClip);
-    }
-    
-    void PlayOneShot(AudioClip audioClip)
-    {
-        audioSource.PlayOneShot(audioClip);
-    }
+    #endregion
+
     private IEnumerator PlayWithDelay(AudioSource source, AudioClip clip, float delay)
     {
         yield return new WaitForSeconds(delay);
         if (clip != null && source != null)
             source.PlayOneShot(clip);
+    }
+    private IEnumerator PlayBackgroundMusicWithDelay(GameState state, AudioSource source, AudioClip gongClip, AudioClip musicClip1, AudioClip musicClip2)
+    {
+        if (state == GameState.Active)
+        {
+            Debug.Log("Start the gong");
+            source.clip = gongClip;
+            source.PlayOneShot(gongClip);
+            yield return new WaitForSeconds(6);
+            source.clip = musicClip1;
+            source.loop = true;
+            source.PlayOneShot(musicClip1);
+        }
+        else if (state == GameState.Passive)
+        {
+            //source.clip = null;
+            //source.Stop();
+            //source.loop = false;
+            source.clip = musicClip2;
+            source.loop = true;
+            source.Play();
+            Debug.Log("Start the passive phase music");
+
+
+        }
+        Debug.Log("End the Courutine");
+
+        yield break;
     }
 }

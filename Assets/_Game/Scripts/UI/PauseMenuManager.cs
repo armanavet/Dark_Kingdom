@@ -46,7 +46,7 @@ public class PauseMenuManager : MonoBehaviour
     }
     public void b_BTAudioPlay()
     {
-        AudioManager.instance.PlayClickSoundForUI();
+        AudioManager.Instance.PlayClickSoundForUI();
     }
     public void z_BTExitToMenuButton()
     {
