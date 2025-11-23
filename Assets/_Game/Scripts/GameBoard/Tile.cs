@@ -31,13 +31,6 @@ public class Tile : MonoBehaviour
                        Type == TileType.Claimed ||
                        Type == TileType.Bridge);
     bool canBeRiverPath => (Type == TileType.ObstructedRiver || Type == TileType.Bridge);
-    private void Awake()
-    {
-        if(Type == TileType.Bridge || Type == TileType.ObstructedRiver)
-        {
-            source = GetComponent<AudioSource>();
-        }
-    }
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
     public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
@@ -314,19 +307,7 @@ public class Tile : MonoBehaviour
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
         }
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("MainCamera"))
-        {
-            Debug.Log("camera has entered my collider");
-            if(source != null)
-            {
-                Debug.Log("it's river so play the sound");
-                source.loop = true;
-                source.Play();
-            }
-        }
-    }
+    
     public TileData OnSave()
     {
         return new TileData(Type, DistanceToDestinationOriginal);
