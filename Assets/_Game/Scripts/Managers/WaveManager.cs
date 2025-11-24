@@ -160,7 +160,6 @@ public class WaveManager : MonoBehaviour, ISaveable
             {
                 isPortalOn = false;
                 enemiesToSpawn = null;
-                Debug.Log("2 "+isPortalOn);
                 enemies.Clear();
                 spawnPoint.Restore();
                 enemyPath.ForEach(x => Destroy(x));
@@ -197,7 +196,6 @@ public class WaveManager : MonoBehaviour, ISaveable
         }
         enemies.Remove(enemy);
         totalEnemiesInWave--;
-        Debug.Log("1 "+isPortalOn);
         IsWaveEnd();
 
     }

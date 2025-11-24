@@ -1,29 +1,97 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+
+//using System.Collections.Generic;
 using UnityEngine;
+
+public enum SoundType
+{
+    Buy,
+    Upgrade,
+    Place,
+    Denied,
+    PuffEffect
+}
+[System.Serializable]
+public class Music
+{
+    public GameState state;
+    public AudioClip[] audio;
+}
+[System.Serializable]
+public class Type_Sound
+{
+    public SoundType SoundType;
+    public AudioClip Clip;
+}
+
+/*
+//[System.Serializable]
+//public class Unit
+//{
+//    public GameObject Prefab;
+//    public UnitType Type;
+//}
+
+//[System.Serializable]
+//public class Units
+//{
+//    public Unit[] UnitList;
+//    Dictionary<UnitType, GameObject> UnitsByType = new Dictionary<UnitType, GameObject>();
+
+//    public void OrganizeByType()
+//    {
+//        foreach (var unit in UnitList)
+//        {
+//            UnitsByType.Add(unit.Type, unit.Prefab);
+//        }
+//    }
+
+//    public GameObject GetByType(UnitType type)
+//    {
+//        return UnitsByType[type];
+//    }
+//}
+
+//[System.Serializable]
+//public class Wave
+//{
+//    public EnemiesToSpawn[] Enemies;
+//}
+
+//[System.Serializable]
+//public class EnemiesToSpawn
+//{
+//    public UnitType Type;
+//    public int Count;
+//}
+*/
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Background Audio Clips")]
-    [SerializeField] AudioClip backgroundPassivePhaseClip;
-    [SerializeField] AudioClip backgroundActivePhaseClip;
+    [SerializeField] Music[] BackgroundMusic;
     [SerializeField] AudioClip waveStartClip;
     [Header("Menu Audio Clips")]
     [SerializeField] AudioClip menuItemsClickClip;
     [Header("Tower Audio Clips")]
-    [SerializeField] AudioClip towerPanelBuyClip;
-    [SerializeField] AudioClip towerUpgradeClip;
-    [SerializeField] AudioClip towerPlaceClip;
-    [SerializeField] AudioClip towerPuffEffectClip;
-    [SerializeField] AudioClip towerPlacementDeniedClip;
+    [SerializeField] Type_Sound[] Sounds;
+    //[SerializeField] AudioClip towerPanelBuyClip;
+    //[SerializeField] AudioClip towerUpgradeClip;
+    //[SerializeField] AudioClip towerPlaceClip;
+    //[SerializeField] AudioClip towerPuffEffectClip;
+    //[SerializeField] AudioClip towerPlacementDeniedClip;
     [Header("Audio Sources")]
     //[SerializeField] AudioSource towerPuffEffectSource;
-    [Tooltip("Attach the Audio Source handler for...")]
-    [SerializeField] AudioSource handlerForTower, 
-                                 handlerForTowerPuffEffect, 
-                                 handlerForUI, 
-                                 handlerForMusic, 
-                                 handlerForEnemy;
+    [Tooltip("Attach the Audio Source handler for")]
+    [SerializeField]
+    AudioSource handlerForTower,
+                handlerForTowerPuffEffect,
+                handlerForUI,
+                handlerForMusic,
+                handlerForEnemy;
+
 
     //AudioSource audioSource;
     #region Singleton
@@ -57,20 +125,12 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
 
-
-    private void Start()
-    {
-        //if (audioSource == null)
-        //{
-        //    audioSource = GetComponent<AudioSource>();
-        //}
-    }
     #region BackgroundMusic
     public void PlayBackgroundMusic(GameState state)
     {
-        if (handlerForMusic == null || backgroundPassivePhaseClip == null || backgroundActivePhaseClip == null || waveStartClip == null)
+       if (handlerForMusic == null || waveStartClip == null || BackgroundMusic == null)
             return;
-        StartCoroutine(PlayBackgroundMusicWithDelay(state, handlerForMusic, waveStartClip, backgroundActivePhaseClip,backgroundPassivePhaseClip));
+       StartCoroutine(PlayBackgroundMusicWithDelay(state, handlerForMusic, waveStartClip, BackgroundMusic));
     }
 
     #endregion
@@ -81,7 +141,7 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayClickSoundForPanelUI()
     {
-        UIPOS(towerPanelBuyClip);
+        //UIPOS(towerPanelBuyClip);
     }
     //audioSource.PlayOneShot() => [name]POS();
     void UIPOS(AudioClip audioClip)
@@ -100,19 +160,19 @@ public class AudioManager : MonoBehaviour
     }
     public void PlayTowerUpgradeSound()
     {
-        TowerPOS(towerUpgradeClip);
+        //TowerPOS(towerUpgradeClip);
     }
     public void PlayTowerPlaceSound()
     {
-        TowerPOS(towerPlaceClip);
+        //TowerPOS(towerPlaceClip);
     }
     public void PlayTowerPuffEffectSoundDelayed(float delay = 0.08f)
     {
-        StartCoroutine(PlayWithDelay(handlerForTowerPuffEffect, towerPuffEffectClip, delay));
+        //StartCoroutine(PlayWithDelay(handlerForTowerPuffEffect, towerPuffEffectClip, delay));
     }
     public void PlayTowerPlacementDeniedSound()
     {
-        TowerPOS(towerPlacementDeniedClip);
+        //TowerPOS(towerPlacementDeniedClip);
     }
 
     //audioSource.PlayOneShot() => [name]POS();
@@ -122,12 +182,15 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
     #region Enemy
-    public void PlayExplosionSound(AudioClip audioClip)
+    public void PlayExplosionSound(AudioClip audioClip, Transform spawnTransform)
     {
         if (audioClip == null)
             return;
-
-        EnemyPOS(audioClip);
+        AudioSource source = Instantiate(handlerForEnemy, spawnTransform.position, Quaternion.identity);
+        source.clip = audioClip;
+        source.Play();
+        float clipLength = source.clip.length;
+        Destroy(source.gameObject, clipLength);
     }
     public void EnemyAttackSound(AudioClip audioClip, AudioSource audioSource)
     {
@@ -135,7 +198,7 @@ public class AudioManager : MonoBehaviour
             return;
 
         audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioSource.clip);
     }
     public void EnemyMovingSound(AudioClip[] audioClips, AudioSource audioSource)
     {
@@ -143,12 +206,7 @@ public class AudioManager : MonoBehaviour
             return;
         int randomSound = Random.Range(0, audioClips.Length);
         audioSource.clip = audioClips[randomSound];
-        audioSource.PlayOneShot(audioClips[randomSound]);
-    }
-    //audioSource.PlayOneShot() => [name]POS();
-    void EnemyPOS(AudioClip audioClip)
-    {
-        handlerForEnemy.PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioSource.clip);
     }
     #endregion
 
@@ -158,31 +216,35 @@ public class AudioManager : MonoBehaviour
         if (clip != null && source != null)
             source.PlayOneShot(clip);
     }
-    private IEnumerator PlayBackgroundMusicWithDelay(GameState state, AudioSource source, AudioClip gongClip, AudioClip musicClip1, AudioClip musicClip2)
+    private IEnumerator PlayBackgroundMusicWithDelay(GameState state, AudioSource source, AudioClip gongClip, Music[] music)
     {
-        if (state == GameState.Active)
+        float t = 0;
+        int rand = 0;
+        AudioClip[] audio;
+        if (state == music[0].state)
         {
-            Debug.Log("Start the gong");
+            audio = music[0].audio;
+            rand = Random.Range(0, audio.Length);
             source.clip = gongClip;
             source.PlayOneShot(gongClip);
-            yield return new WaitForSeconds(6);
-            source.clip = musicClip1;
+            source.clip = audio[rand];
             source.loop = true;
-            source.PlayOneShot(musicClip1);
+            source.PlayDelayed(gongClip.length);
         }
-        else if (state == GameState.Passive)
+        else if (state == music[1].state)
         {
-            //source.clip = null;
-            //source.Stop();
-            //source.loop = false;
-            source.clip = musicClip2;
+            audio = music[1].audio;
+            rand = Random.Range(0, audio.Length);
+            source.clip = audio[rand];
             source.loop = true;
             source.Play();
-            Debug.Log("Start the passive phase music");
-
-
+            while (t < 0.15f)
+            {
+                //source.PlayScheduled(source.volume);
+                source.volume = t += Time.deltaTime * 0.01f;
+                yield return null;
+            }
         }
-        Debug.Log("End the Courutine");
 
         yield break;
     }
