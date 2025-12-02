@@ -13,7 +13,7 @@ public class MageEnemy : Enemy
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
-    
+
     float TarggetPoint = 2f;
     float rotationProgress;
     float initialRotation;
@@ -27,13 +27,6 @@ public class MageEnemy : Enemy
 
         }
     }
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         currentSpeed = maxSpeed;
@@ -41,6 +34,7 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Mage, soundData);
     }
     private void Update()
     {
@@ -179,5 +173,14 @@ public class MageEnemy : Enemy
         if (targetYRotation < currentRotation) return DirectionChange.TurnLeft;
         else if (targetYRotation > currentRotation) return DirectionChange.TurnRight;
         else return DirectionChange.None;
+    }
+    protected override void PlayAttackSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Mage, soundData, transform);
+    }
+    protected override void PlayMovingSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Mage, soundData, transform);
+
     }
 }

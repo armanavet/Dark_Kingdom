@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
@@ -12,12 +13,14 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    
+
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip[] EnemyMovingSounds;
     [SerializeField] protected AudioClip EnemyAttackSound;
+    [SerializeField] protected SoundData soundData;
+    //[SerializeField] SoundData movingSoundData;
 
-    protected AudioSource enemyAudioSource;
+    //protected AudioSource enemyAudioSource;
     protected Animator animator;
     protected float currentSpeed;
     protected float health;
@@ -27,7 +30,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
-    
+
     Vector3 positionFrom, positionTo;
     Direction direction;
     DirectionChange directionChange;
@@ -35,7 +38,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
-    
+
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -43,6 +46,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         this.positionOffset = positionOffset;
         PrepareInitialMove();
         progress = 0;
+        //AudioManager.Instance.EnemyAudioSettings(soundData);
     }
     void PrepareInitialMove()
     {
@@ -77,7 +81,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
             transform.localRotation = Quaternion.Euler(0, angle, 0);
         }
     }
-
     void PrepareNextMove()
     {
         model.localScale = new Vector3(0.4f, 0.4f, 0.4f);
@@ -150,27 +153,20 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
-
-    void DestroyModel() 
+    void DestroyModel()
     {
         DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }
-
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
-    public void PlayAttackSound()
-    {
-        AudioManager.Instance.EnemyAttackSound(EnemyAttackSound,enemyAudioSource);
-    }
-    public void PlayMovingSound()
-    {
-        AudioManager.Instance.EnemyMovingSound(EnemyMovingSounds,enemyAudioSource);
-    }
+    protected abstract void PlayAttackSound();
+    protected abstract void PlayMovingSound();
 }
+
 
 public enum EnemyState
 {
@@ -180,11 +176,13 @@ public enum EnemyState
 }
 public enum UnitType
 {
+    Null,
     Regular,
     Fast,
     Tank,
     Mage,
     Kamikadze,
     Flying,
-    Illusionist
+    Illusionist,
+    Portal
 }

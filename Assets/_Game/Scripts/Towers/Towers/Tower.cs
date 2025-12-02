@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -16,8 +17,9 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected List<int> Damage;
     [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
-    [SerializeField] protected GameObject[] Models; 
-    
+    [SerializeField] protected GameObject[] Models;
+    [SerializeField] protected SoundData[] soundData;
+
     protected AudioSource towerAudioSource;
     protected float maxHP;
     protected float currentHP;
@@ -53,7 +55,8 @@ public abstract class Tower : MonoBehaviour
     }
     public void TowerAudio(AudioClip audioClip, AudioSource audioSource)
     {
-        AudioManager.Instance.PlayTowerActionSound(audioClip, audioSource);
+        //set the sound data in the audio manager
+        //AudioManager.Instance.PlayTowerActionSound(audioClip, audioSource);
     }
     void Destroy()
     {

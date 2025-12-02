@@ -16,13 +16,6 @@ public class FlyingEnemy : Enemy
     Quaternion targetRotation;
     
     float rotationProgress;
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         target = TowerManager.Instance.Towers[0];
@@ -33,6 +26,7 @@ public class FlyingEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Flying, soundData);
     }
     void Update()
     {
@@ -104,5 +98,15 @@ public class FlyingEnemy : Enemy
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
+    }
+
+    protected override void PlayAttackSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Flying, soundData, transform);
+    }
+    protected override void PlayMovingSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Flying, soundData, transform);
+
     }
 }

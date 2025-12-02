@@ -20,6 +20,7 @@ public class PortalEnemy : Enemy
         gameObject.layer = 0;
     }
     protected override void Attack() { }
-
+    protected override void PlayAttackSound() { }
+    protected override void PlayMovingSound() { }
 
 }

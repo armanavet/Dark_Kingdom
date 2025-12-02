@@ -193,12 +193,12 @@ public class UIManager : MonoBehaviour
 
             if (towerPreview.canPlace)
             {
-                AudioManager.Instance.PlayTowerPlaceSound();
+                //AudioManager.Instance.PlayTowerPlaceSound();
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
                 EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
-                AudioManager.Instance.PlayTowerPuffEffectSoundDelayed();
+                //AudioManager.Instance.PlayTowerPuffEffectSoundDelayed();
                 effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
                 Destroy(effect, 2f);
                 effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
@@ -206,7 +206,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                AudioManager.Instance.PlayTowerPlacementDeniedSound();
+                //AudioManager.Instance.PlayTowerPlacementDeniedSound();
             }
         }
         else

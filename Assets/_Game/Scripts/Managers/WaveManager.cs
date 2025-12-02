@@ -257,6 +257,7 @@ public class Units
     {
         foreach (var unit in UnitList)
         {
+            if(unit != null)
             UnitsByType.Add(unit.Type, unit.Prefab);
         }
     }

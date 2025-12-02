@@ -9,19 +9,13 @@ public class ExplosionEnemy : Enemy
     [SerializeField] float radius;
     [SerializeField] GameObject[] Effects;
     List<GameObject> effectsToDestroy = new List<GameObject>();
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         currentSpeed = maxSpeed;
         health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
+        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Kamikadze, soundData);
     }
     void Update()
     {
@@ -29,12 +23,12 @@ public class ExplosionEnemy : Enemy
         state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
         if (state == EnemyState.Moving) Move();
         else if (state == EnemyState.Attacking) Attack();
-        
+
     }
 
     private void Explode()
     {
-        AudioManager.Instance.PlayExplosionSound(EnemyAttackSound, transform);
+        //AudioManager.Instance.PlayExplosionSound(EnemyAttackSound, transform);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -54,7 +48,7 @@ public class ExplosionEnemy : Enemy
     }
 
     protected override void Attack() => OnDeath();
-     IEnumerator DestroyObject(GameObject[] effects)
+    IEnumerator DestroyObject(GameObject[] effects)
     {
         GameObject effect;
         foreach (var item in effects)
@@ -70,5 +64,15 @@ public class ExplosionEnemy : Enemy
         }
         Destroy(gameObject);
         yield break;
+    }
+
+    protected override void PlayAttackSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Kamikadze, soundData, transform);
+    }
+    protected override void PlayMovingSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Kamikadze, soundData, transform);
+
     }
 }

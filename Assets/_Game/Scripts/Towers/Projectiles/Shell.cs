@@ -64,7 +64,7 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.Instance.PlayExplosionSound(ExplodeSound,transform);
+        //AudioManager.Instance.PlayExplosionSound(ExplodeSound,transform);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));

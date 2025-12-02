@@ -106,9 +106,10 @@ public class TowerManager : MonoBehaviour, ISaveable
 
 public enum TowerType
 {
+    Null,
     ArcherTower,
     WizardTower,
     ArtilleryTower,
-    GoldMine,
+    CrystalMine,
     MainTower
 }

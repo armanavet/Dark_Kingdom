@@ -6,19 +6,13 @@ public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
     [SerializeField] float duration;
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         currentSpeed = maxSpeed;
         health = maxHP;
         animator = GetComponent<Animator>();
-        Destroy(gameObject,duration);
+        Destroy(gameObject, duration);
+        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Illusionist, soundData);
     }
     void Update()
     {
@@ -35,6 +29,12 @@ public class Illusion : Enemy
             animator.SetBool("isIdle", true);
         }
     }
-    protected override void Attack(){
+    protected override void Attack()
+    {
+    }
+    protected override void PlayAttackSound() { }
+    protected override void PlayMovingSound()
+    {
+        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Illusionist, soundData, transform);
     }
 }
