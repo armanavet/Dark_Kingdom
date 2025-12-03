@@ -24,7 +24,6 @@ public class MageEnemy : Enemy
         if (target != null)
         {
             target.OnDestroyed -= StartTurning;
-
         }
     }
     void Start()
@@ -34,7 +33,6 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Mage, soundData);
     }
     private void Update()
     {
@@ -173,14 +171,5 @@ public class MageEnemy : Enemy
         if (targetYRotation < currentRotation) return DirectionChange.TurnLeft;
         else if (targetYRotation > currentRotation) return DirectionChange.TurnRight;
         else return DirectionChange.None;
-    }
-    protected override void PlayAttackSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Mage, soundData, transform);
-    }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Mage, soundData, transform);
-
     }
 }

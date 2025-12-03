@@ -14,9 +14,6 @@ public class WizardTower : Tower
     [SerializeField, Range(1, 200)]
     float shellDamage;
 
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -29,10 +26,6 @@ public class WizardTower : Tower
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        if (towerAudioSource == null)
-        {
-            towerAudioSource = GetComponent<AudioSource>();
-        }
     }
     void Start()
     {
@@ -43,8 +36,13 @@ public class WizardTower : Tower
         model = Models[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
-
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        PlayTowerSFX(SD_TowerAction, PlaceSfx);
+        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
+        Destroy(effect, 2f);
+        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
+        Destroy(effect, 2f);
     }
 
     void Update()
@@ -54,7 +52,7 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                TowerAudio(TowerActionSound, towerAudioSource);
+                PlayTowerSFX(SD_TowerAction, ShootSfx);
                 Launch(target);
             }
             launchProgress = 0;
@@ -127,6 +125,7 @@ public class WizardTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
+            StartCoroutine(PlayUpdateSfxs());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -158,7 +157,6 @@ public class WizardTower : Tower
                 currentDebuffs.Add(currentDebuff);
             }
         }
+        StopCoroutine(PlayUpdateSfxs());
     }
-
-
 }

@@ -1,20 +1,11 @@
-using AudioSystem;
-using System;
-using System.Collections.Generic;
+﻿using AudioSystem;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UIElements;
-using Random = UnityEngine.Random;
-
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] AudioMixerGroup masterMixerGroup;
-    [SerializeField] GameSFX gameSFX;
+    [SerializeField] Clips TotalClips;
+    [SerializeField] SoundData SoundDataEnemy;
+    [SerializeField] SoundData SoundDataTower;
 
-    [SerializeField] SoundData enemySFXSourceSettings;
-    [SerializeField] SoundData towerSFXSourceSettings;
-
-    //AudioSource audioSource;
     #region Singleton
     private static AudioManager _instance;
     public static AudioManager Instance
@@ -47,156 +38,39 @@ public class AudioManager : MonoBehaviour
     #endregion
     private void Start()
     {
-        gameSFX.OrganizeByType();
+        TotalClips.OrganizeAll();
     }
-
-
-
-    /*
-     * ------------ TODO ----------------------------------------------------------------------------
-     * get data and set it for each keeper
-     * get data and set it for each clip if it's an object with the clip arrays
-     * have a functions that set the certain clip to the sound data depend on the key typs
-     * have functions to play the clips 
-     * 
-     */
-    void SetData(SoundData fromData, SoundData toData)
+    public SoundData SetData(
+        SoundData data,
+        MixerFor mixer,
+        object type = null)
     {
-        toData = fromData;
-    }
-    public SoundData GetData(SoundData data, SFXGroupType sfxType, UnitType unitType = 0, TowerType towerType = 0)
-    {
-        if (data == null)
-        {
-            Debug.LogError("resieved data is null!");
-            return null;
-        }
-
-        switch (sfxType)
-        {
-            case SFXGroupType.Enemy:
-                SetData(enemySFXSourceSettings, data);
-                data.mixerGroup = gameSFX.EnemySFXData(unitType).mixerGroup;
-                break;
-            case SFXGroupType.Tower:
-                SetData(enemySFXSourceSettings, data);
-                data.mixerGroup = gameSFX.TowerSFXData(towerType).mixerGroup;
-                break;
-            default: break;
-        }
+        data = SoundDataEnemy;
+        data.mixerGroup = TotalClips.GetMixer(mixer, type);
 
         return data;
     }
-    public SoundData SetClip(SoundData data, ClipType clipType, UnitType unitType = 0, TowerType towerType = 0)
+    public void PlaySFX(SoundData data, Transform position, ClipFor clipFor, UnitType unitType)
     {
-        //var enemySFX = gameSFX.EnemySFXData(type);
-        //switch (parametor)
-        //{
-        //    case SoundDataParametor.ClipAttack:
-        //        data.clip = enemySFX.attack;
-        //        break;
-        //    case SoundDataParametor.ClipMove:
-        //        int randomClip = Random.Range(0, enemySFX.move.Length);
-        //        data.clip = enemySFX.move[randomClip];
-        //        break;
-        //    case SoundDataParametor.MixerGroup:
-        //        data.mixerGroup = enemySFX.enemyMixerGroup;
-        //        break;
-        //    default: break;
-        //}
-
-        return data;
+        data.clip = TotalClips.GetClip(clipFor, unitType);
+        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    //public void PlayEnemySFX(SoundDataParametor parametor, UnitType type, SoundData data, Transform transform)
-    //{
-    //    //data = SetParametor(parametor, type, data);
-    //    //switch (parametor)
-    //    //{
-    //    //    case SoundDataParametor.ClipAttack:
-    //    //        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).Play(data);
-    //    //        break;
-    //    //    case SoundDataParametor.ClipMove:
-    //    //        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().WithPosition(transform.position).Play(data);
-    //    //        break;
-    //    //    default: break;
-    //    //}
-    //}
-
-
-
-
-}
-[Serializable]
-public class EnemySFX
-{
-    public UnitType type;
-    public AudioClip attack;
-    public AudioClip[] move;
-    public AudioMixerGroup mixerGroup;
-}
-[Serializable]
-public class TowerSFX
-{
-    public TowerType type;
-    public AudioClip place;
-    public AudioClip denied;
-    public AudioClip shoot;
-    public AudioClip hit;
-    public AudioMixerGroup mixerGroup;
-}
-[Serializable]
-public class GameSFX
-{
-    public EnemySFX[] enemySFX;
-    public TowerSFX[] towerSFX;
-    Dictionary<UnitType, EnemySFX> enemySFXLookUp = new Dictionary<UnitType, EnemySFX>();
-    Dictionary<TowerType, TowerSFX> towerSFXLookUp = new Dictionary<TowerType, TowerSFX>();
-
-    public void OrganizeByType()
+    public void PlaySFX(SoundData data, Transform position, ClipFor clipFor, TowerType towerType)
     {
-        SortDictionary(enemySFXLookUp, enemySFX, enemyType => enemyType.type);
-        SortDictionary(towerSFXLookUp, towerSFX, towerType => towerType.type);
+        data.clip = TotalClips.GetClip(clipFor, towerType);
+        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    private void SortDictionary<TKey, TValue>(Dictionary<TKey, TValue> dict, TValue[] items, Func<TValue, TKey> keySelector)
+    public void PlaySFX(SoundData data, ClipFor clipFor)
     {
-        dict.Clear();
-
-        foreach (var item in items)
-        {
-            if (item == null) continue;
-            TKey key = keySelector(item);
-            dict[key] = item;
-        }
+        data.clip = TotalClips.GetClip(clipFor);
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);
     }
 
-    private TValue Lookup<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey key)
-    {
-        if (!dict.TryGetValue(key, out var value))
-        {
-            Debug.LogError($"Dictionary does NOT contain key: {key}");
-            return default;
-        }
-        return value;
-    }
-    public EnemySFX EnemySFXData(UnitType type) => Lookup(enemySFXLookUp, type);
-    public TowerSFX TowerSFXData(TowerType type) => Lookup(towerSFXLookUp, type);
-    
 }
-
-public enum ClipType
-{
-    ClipAttack,
-    ClipMove,
-    ClipShoot,
-    ClipHit,
-    ClipPlace,
-    ClipDenied
-}
-public enum SFXGroupType
-{
-    Enemy,
-    Tower
-}
+//public void PlaySFX(SoundData data, AudioClip clip)
+//{
+//    SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);
+//}
 
 
 /*private void Start()

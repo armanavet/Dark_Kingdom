@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DefaultEnemy : Enemy
 {
-    [SerializeField] UnitType unitType;
     void Start()
     {
         currentSpeed = maxSpeed;
@@ -14,7 +13,6 @@ public class DefaultEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        //soundData = AudioManager.Instance.GetData(soundData,SFXGroupType.Enemy,UnitType.Regular);
     }
     void Update()
     {
@@ -34,14 +32,5 @@ public class DefaultEnemy : Enemy
             target.ApplyDamage(damage);
             attackCooldown = 1 / attackSpeed;
         }
-    }
-    protected override void PlayAttackSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, unitType, soundData,transform);
-    }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, unitType, soundData, transform);
-
     }
 }

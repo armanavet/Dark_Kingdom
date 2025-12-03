@@ -35,33 +35,60 @@ namespace AudioSystem
 
         public AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic;
     }
-    public class EnemySoundData
-    {
-        public bool loop = false;
-        public bool playOnAwake = false;
+}
+public class SoundData_Enemy
+{
+    public bool mute = false;
+    public bool bypassEffects = false;
+    public bool bypassListenerEffetcs = false;
+    public bool bypassReverbZones = false;
+    public bool loop = false;
+    public bool playOnAwake = false;
 
-        public float volume = 0.7f;
-        public float spatialBlend = 1f;
-        
-        public float dopplerLevel = 0f;
-        public float spread = 30f;
-        public float minDistance = 10f;
-        public float maxDistance = 30f;
-        public AudioRolloffMode rolloffMode = AudioRolloffMode.Linear;
-    }
-    public class TowerSoundData
-    {
-        public bool loop = false;
-        public bool playOnAwake = false;
+    public bool frequentSound = false;
 
-        public float volume = 0.8f;
-        public float spatialBlend = 1f;
+    public int priority = 128;
+    public float volume = 0.7f;
+    public float pitch = 1f;
+    public float panStereo = 0;
+    public float spatialBlend = 1f;
+    public float reverbZoneMix = 1f;
 
-        public float dopplerLevel = 0f;
-        public float spread = 30f;
-        public float minDistance = 10f;
-        public float maxDistance = 30f;
-        public AudioRolloffMode rolloffMode = AudioRolloffMode.Linear;
-    }
+    public float dopplerLevel = 0f;
+    public float spread = 30f;
+    public float minDistance = 10f;
+    public float maxDistance = 30f;
+    public AudioRolloffMode rolloffMode = AudioRolloffMode.Linear;
+
+    public bool ignoreListenerVolume;
+    public bool ignoreListenerPause;
 
 }
+public class SoundData_Tower
+{
+    public bool mute = false;
+    public bool bypassEffects = false;
+    public bool bypassListenerEffetcs = false;
+    public bool bypassReverbZones = false;
+    public bool loop = false;
+    public bool playOnAwake = false;
+
+    public bool frequentSound = false;
+
+    public int priority = 128;
+    public float volume = 0.8f;
+    public float pitch = 1f;
+    public float panStereo = 0;
+    public float spatialBlend = 1f;
+    public float reverbZoneMix = 1f;
+
+    public float dopplerLevel = 0f;
+    public float spread = 30f;
+    public float minDistance = 10f;
+    public float maxDistance = 30f;
+    public AudioRolloffMode rolloffMode = AudioRolloffMode.Linear;
+
+    public bool ignoreListenerVolume;
+    public bool ignoreListenerPause;
+}
+

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ArcherTower : Tower
 {
+    [SerializeField] AudioClip HitSfx;
     [Header("Archer Tower Parameters")]
     [SerializeField] List<float> shootingPointPositions;
     [SerializeField] Transform shootingPoint;
@@ -13,21 +14,10 @@ public class ArcherTower : Tower
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
 
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
-    
+
     float attackCooldown;
     float damage;
     Enemy target;
-
-    //private void Awake()
-    //{
-    //    if (towerAudioSource == null)
-    //    {
-    //        towerAudioSource = GetComponent<AudioSource>();
-    //    }
-    //}
 
     private void Start()
     {
@@ -43,7 +33,12 @@ public class ArcherTower : Tower
 
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
-        //soundData = null;
+        PlayTowerSFX(SD_TowerAction, PlaceSfx);
+        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
+        Destroy(effect, 2f);
+        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
+        Destroy(effect, 2f);
     }
 
     void Update()
@@ -62,9 +57,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        //
-        TowerAudio(TowerActionSound,towerAudioSource);
-        //
+        PlayTowerSFX(SD_TowerAction, ShootSfx);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -72,14 +65,13 @@ public class ArcherTower : Tower
         newProjectile.GetComponent<Arrow>()?.Initialize(projectileSpeed);
         StartCoroutine(HitTarget(newProjectile, travelTime));
     }
-
     bool AcquireTarget()
     {
         Collider[] targets;
         targets = Physics.OverlapSphere(transform.position, attackRange, portalMask);
         if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
         if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
-        
+
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;
@@ -125,11 +117,12 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
+            StartCoroutine(PlayUpdateSfxs());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-            if(CurrentLevel < UpgradePrices.Count)
+            if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
@@ -158,6 +151,7 @@ public class ArcherTower : Tower
                 currentDebuffs.Add(newDebuff);
             }
         }
+        StopCoroutine(PlayUpdateSfxs());
     }
 
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
@@ -172,9 +166,7 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        //
-        TowerAudio(TowerHitSound, towerAudioSource);
-        //
+        PlayTowerSFX(SD_TowerAction, HitSfx);
         Destroy(currentProjectile);
     }
 }

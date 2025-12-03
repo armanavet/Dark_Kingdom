@@ -15,7 +15,6 @@ public class ExplosionEnemy : Enemy
         health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
-        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Kamikadze, soundData);
     }
     void Update()
     {
@@ -50,6 +49,7 @@ public class ExplosionEnemy : Enemy
     protected override void Attack() => OnDeath();
     IEnumerator DestroyObject(GameObject[] effects)
     {
+        //AudioManager.Instance.PlaySFX(EnemySoundData,EnemyAttackSound);
         GameObject effect;
         foreach (var item in effects)
         {
@@ -66,13 +66,4 @@ public class ExplosionEnemy : Enemy
         yield break;
     }
 
-    protected override void PlayAttackSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Kamikadze, soundData, transform);
-    }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Kamikadze, soundData, transform);
-
-    }
 }

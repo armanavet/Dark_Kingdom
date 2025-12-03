@@ -12,7 +12,6 @@ public class Illusion : Enemy
         health = maxHP;
         animator = GetComponent<Animator>();
         Destroy(gameObject, duration);
-        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Illusionist, soundData);
     }
     void Update()
     {
@@ -29,12 +28,5 @@ public class Illusion : Enemy
             animator.SetBool("isIdle", true);
         }
     }
-    protected override void Attack()
-    {
-    }
-    protected override void PlayAttackSound() { }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Illusionist, soundData, transform);
-    }
+    protected override void Attack() { }
 }

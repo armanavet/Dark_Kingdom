@@ -26,7 +26,6 @@ public class FlyingEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Flying, soundData);
     }
     void Update()
     {
@@ -98,15 +97,5 @@ public class FlyingEnemy : Enemy
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
-    }
-
-    protected override void PlayAttackSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Flying, soundData, transform);
-    }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Flying, soundData, transform);
-
     }
 }

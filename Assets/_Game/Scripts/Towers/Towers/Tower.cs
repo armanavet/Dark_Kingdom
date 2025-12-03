@@ -2,6 +2,7 @@ using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,15 +19,21 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected Debuff[] Debuffs;
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models;
-    [SerializeField] protected SoundData[] soundData;
+    [SerializeField] protected GameObject[] effects;
+    [SerializeField] protected SoundData SD_TowerAction;
+    [SerializeField] protected SoundData SD_TowerUpgrade;
+    [SerializeField] protected SoundData SD_TowerVfx;
+    [SerializeField] protected AudioClip UpgradeSfx;
+    [SerializeField] protected AudioClip VfxSfx;
+    [SerializeField] protected AudioClip ShootSfx;
+    [SerializeField] protected AudioClip PlaceSfx;
+    [SerializeField] protected AudioClip DeniedSfx;
 
-    protected AudioSource towerAudioSource;
     protected float maxHP;
     protected float currentHP;
     protected List<Debuff> currentDebuffs = new List<Debuff>();
-    protected GameObject projectile;
-    protected GameObject model;
-    
+    protected GameObject projectile, model, effect;
+
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
@@ -36,7 +43,7 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public int PurchasePrice;
     [HideInInspector] public TowerType Type;
     [HideInInspector] public TowerData saveData;
-    
+
     public GameObject TowerPanel;
     public event System.Action OnDestroyed;
 
@@ -53,10 +60,12 @@ public abstract class Tower : MonoBehaviour
             Destroy();
         }
     }
-    public void TowerAudio(AudioClip audioClip, AudioSource audioSource)
+    public void PlayTowerSFX(SoundData data, AudioClip clip)
     {
         //set the sound data in the audio manager
-        //AudioManager.Instance.PlayTowerActionSound(audioClip, audioSource);
+        if (data == null || clip == null) return;
+        //AudioManager.Instance.PlaySFX(data, clip);
+
     }
     void Destroy()
     {
@@ -79,4 +88,14 @@ public abstract class Tower : MonoBehaviour
     }
 
     public abstract void Upgrade();
+    public virtual IEnumerator PlayUpdateSfxs()
+    {
+        PlayTowerSFX(SD_TowerUpgrade, UpgradeSfx);
+        yield return new WaitForSeconds(UpgradeSfx.length);
+        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
+        effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Destroy(effect, 2f);
+        yield break;
+    }
 }

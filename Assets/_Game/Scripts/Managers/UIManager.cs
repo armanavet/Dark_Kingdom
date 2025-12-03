@@ -199,14 +199,15 @@ public class UIManager : MonoBehaviour
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
                 //AudioManager.Instance.PlayTowerPuffEffectSoundDelayed();
-                effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
-                Destroy(effect, 2f);
-                effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
-                Destroy(effect, 2f);
+                //effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
+                //Destroy(effect, 2f);
+                //effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
+                //Destroy(effect, 2f);
             }
             else
             {
                 //AudioManager.Instance.PlayTowerPlacementDeniedSound();
+                
             }
         }
         else

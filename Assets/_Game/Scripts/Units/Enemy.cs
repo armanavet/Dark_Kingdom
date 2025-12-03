@@ -17,10 +17,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [Header("Audio Parameters")]
     [SerializeField] protected AudioClip[] EnemyMovingSounds;
     [SerializeField] protected AudioClip EnemyAttackSound;
-    [SerializeField] protected SoundData soundData;
-    //[SerializeField] SoundData movingSoundData;
+    [SerializeField] protected SoundData EnemySoundData;
 
-    //protected AudioSource enemyAudioSource;
     protected Animator animator;
     protected float currentSpeed;
     protected float health;
@@ -46,7 +44,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         this.positionOffset = positionOffset;
         PrepareInitialMove();
         progress = 0;
-        //AudioManager.Instance.EnemyAudioSettings(soundData);
     }
     void PrepareInitialMove()
     {
@@ -163,8 +160,13 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
-    protected abstract void PlayAttackSound();
-    protected abstract void PlayMovingSound();
+    protected void PlayAttackSound() {
+        //AudioManager.Instance.PlaySFX(EnemySoundData, EnemyAttackSound);
+    }
+    protected void PlayMovingSound() {
+        int randomClip = Random.Range(0, EnemyMovingSounds.Length);
+        //AudioManager.Instance.PlaySFX(EnemySoundData, EnemyMovingSounds[randomClip]);
+    }
 }
 
 

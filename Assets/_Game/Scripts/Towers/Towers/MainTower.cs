@@ -25,6 +25,7 @@ public class TowersRootPointPositions
 }
 public class MainTower : Tower
 {
+    [SerializeField] AudioClip HitSFX;
     [Header("Main Tower Parameters")]
     [SerializeField] List<int> GoldGenerationList;
     [SerializeField] private List<MainTowerDefender> Defender;
@@ -40,19 +41,8 @@ public class MainTower : Tower
     [Range(0f, 1f)]
     public float alpha = 0.5f;
 
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
-
     float damage;
     Vector3 range;
-    private void Awake()
-    {
-        if (towerAudioSource == null)
-        {
-            towerAudioSource = GetComponent<AudioSource>();
-        }
-    }
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
@@ -124,6 +114,7 @@ public class MainTower : Tower
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
+            StartCoroutine(PlayUpdateSfxs());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -147,13 +138,13 @@ public class MainTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-
+        StopCoroutine(PlayUpdateSfxs());
 
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        TowerAudio(TowerActionSound, towerAudioSource);
+        PlayTowerSFX(SD_TowerAction, ShootSfx);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -217,7 +208,17 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        TowerAudio(TowerHitSound, towerAudioSource);
+        PlayTowerSFX(SD_TowerAction, HitSFX);
         Destroy(currentProjectile);
+    }
+    public override IEnumerator PlayUpdateSfxs()
+    {
+        PlayTowerSFX(SD_TowerUpgrade, UpgradeSfx);
+        yield return new WaitForSeconds(UpgradeSfx.length);
+        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
+        effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Destroy(effect, 2f);
+        yield break;
     }
 }

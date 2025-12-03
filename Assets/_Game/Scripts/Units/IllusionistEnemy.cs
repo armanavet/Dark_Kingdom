@@ -18,7 +18,6 @@ public class IllusionistEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        //soundData = AudioManager.Instance.SetEnemySFXData(UnitType.Illusionist, soundData);
     }
     void Update()
     {
@@ -61,14 +60,5 @@ public class IllusionistEnemy : Enemy
             illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
             illusion.OnSpawn(tileFrom, 0);
         }
-    }
-    protected override void PlayAttackSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipAttack, UnitType.Illusionist, soundData, transform);
-    }
-    protected override void PlayMovingSound()
-    {
-        //AudioManager.Instance.PlayEnemySFX(SoundDataParametor.ClipMove, UnitType.Illusionist, soundData, transform);
-
     }
 }
