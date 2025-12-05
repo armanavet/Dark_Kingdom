@@ -16,19 +16,15 @@ public class GoldMineTower : Tower
         maxHP = HP[CurrentLevel];
         model = Models[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        PlayTowerSFX(SD_TowerAction, PlaceSfx);
-        PlayTowerSFX(SD_TowerVfx, VfxSfx);
-        effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
-        Destroy(effect, 2f);
-        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
-        Destroy(effect, 2f);
+        StartCoroutine(PlayPlaceSFX());
+
     }
 
     public override void Upgrade()
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-           StartCoroutine(PlayUpdateSfxs());
+           StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -46,6 +42,6 @@ public class GoldMineTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-        StopCoroutine(PlayUpdateSfxs());
+        StopCoroutine(PlayUpdateSfx());
     }
 }

@@ -60,6 +60,11 @@ public class AudioManager : MonoBehaviour
         data.clip = TotalClips.GetClip(clipFor, towerType);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
+    public void PlaySFX(SoundData data,Transform transform, ClipFor clipFor)
+    {
+        data.clip = TotalClips.GetClip(clipFor);
+        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
+    }
     public void PlaySFX(SoundData data, ClipFor clipFor)
     {
         data.clip = TotalClips.GetClip(clipFor);

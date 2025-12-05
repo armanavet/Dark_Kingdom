@@ -7,6 +7,7 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [Header("Enemy Parameters")]
+    [SerializeField] protected UnitType unitType;
     [SerializeField] protected Transform model;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
@@ -14,9 +15,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
 
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip[] EnemyMovingSounds;
-    [SerializeField] protected AudioClip EnemyAttackSound;
     [SerializeField] protected SoundData EnemySoundData;
 
     protected Animator animator;
@@ -161,11 +159,10 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
     protected void PlayAttackSound() {
-        //AudioManager.Instance.PlaySFX(EnemySoundData, EnemyAttackSound);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform,ClipFor.Attack,unitType);
     }
     protected void PlayMovingSound() {
-        int randomClip = Random.Range(0, EnemyMovingSounds.Length);
-        //AudioManager.Instance.PlaySFX(EnemySoundData, EnemyMovingSounds[randomClip]);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipFor.Move, unitType);
     }
 }
 

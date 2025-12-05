@@ -25,7 +25,6 @@ public class TowersRootPointPositions
 }
 public class MainTower : Tower
 {
-    [SerializeField] AudioClip HitSFX;
     [Header("Main Tower Parameters")]
     [SerializeField] List<int> GoldGenerationList;
     [SerializeField] private List<MainTowerDefender> Defender;
@@ -114,7 +113,7 @@ public class MainTower : Tower
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
-            StartCoroutine(PlayUpdateSfxs());
+            StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -138,13 +137,13 @@ public class MainTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-        StopCoroutine(PlayUpdateSfxs());
+        StopCoroutine(PlayUpdateSfx());
 
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        PlayTowerSFX(SD_TowerAction, ShootSfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData,defender.turret.transform, ClipFor.Launch, towerType);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -208,14 +207,12 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        PlayTowerSFX(SD_TowerAction, HitSFX);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit);
         Destroy(currentProjectile);
     }
-    public override IEnumerator PlayUpdateSfxs()
+    public override IEnumerator PlayUpdateSfx()
     {
-        PlayTowerSFX(SD_TowerUpgrade, UpgradeSfx);
-        yield return new WaitForSeconds(UpgradeSfx.length);
-        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx);
         effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(effect, 2f);

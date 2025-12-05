@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
+using AudioSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] LayerMask towerMask, tileMask;
     [SerializeField] float towerPurchasePanelYHidden;
     [SerializeField] float towerPanelYOffset;
-    
+    [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
 
     Camera mainCamera;
@@ -193,20 +194,14 @@ public class UIManager : MonoBehaviour
 
             if (towerPreview.canPlace)
             {
-                //AudioManager.Instance.PlayTowerPlaceSound();
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
                 EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
-                //AudioManager.Instance.PlayTowerPuffEffectSoundDelayed();
-                //effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
-                //Destroy(effect, 2f);
-                //effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
-                //Destroy(effect, 2f);
             }
             else
             {
-                //AudioManager.Instance.PlayTowerPlacementDeniedSound();
+                AudioManager.Instance.PlaySFX(UISoundData, transform, ClipFor.Denied);
                 
             }
         }

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public abstract class Tower : MonoBehaviour
 {
     [Header("Tower Parameters")]
+    [SerializeField] protected TowerType towerType;
     [SerializeField] protected LayerMask enemyMask;
     [SerializeField] protected LayerMask illusionMask;
     [SerializeField] protected LayerMask portalMask;
@@ -20,14 +21,9 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models;
     [SerializeField] protected GameObject[] effects;
-    [SerializeField] protected SoundData SD_TowerAction;
+    [SerializeField] protected SoundData TowerSoundData;
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
-    [SerializeField] protected AudioClip UpgradeSfx;
-    [SerializeField] protected AudioClip VfxSfx;
-    [SerializeField] protected AudioClip ShootSfx;
-    [SerializeField] protected AudioClip PlaceSfx;
-    [SerializeField] protected AudioClip DeniedSfx;
 
     protected float maxHP;
     protected float currentHP;
@@ -60,13 +56,13 @@ public abstract class Tower : MonoBehaviour
             Destroy();
         }
     }
-    public void PlayTowerSFX(SoundData data, AudioClip clip)
-    {
-        //set the sound data in the audio manager
-        if (data == null || clip == null) return;
-        //AudioManager.Instance.PlaySFX(data, clip);
+    //public void PlayTowerSFX(SoundData data, AudioClip clip)
+    //{
+    //    //set the sound data in the audio manager
+    //    if (data == null || clip == null) return;
+    //    //AudioManager.Instance.PlaySFX(data, clip);
 
-    }
+    //}
     void Destroy()
     {
         TowerManager.Instance.Towers.Remove(this);
@@ -88,13 +84,21 @@ public abstract class Tower : MonoBehaviour
     }
 
     public abstract void Upgrade();
-    public virtual IEnumerator PlayUpdateSfxs()
+    public virtual IEnumerator PlayUpdateSfx()
     {
-        PlayTowerSFX(SD_TowerUpgrade, UpgradeSfx);
-        yield return new WaitForSeconds(UpgradeSfx.length);
-        PlayTowerSFX(SD_TowerVfx, VfxSfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx);
         effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Destroy(effect, 2f);
+        yield break;
+    }
+    public virtual IEnumerator PlayPlaceSFX()
+    {
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.Place, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.PlaceVfx, towerType);
+        effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
+        Destroy(effect, 2f);
+        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
         Destroy(effect, 2f);
         yield break;
     }

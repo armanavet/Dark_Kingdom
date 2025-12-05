@@ -61,7 +61,6 @@ public class TowerClips : AudioBase
     public TowerType towerType;
     public AudioMixerGroup mixerGroupTower;
     public AudioClip place;
-    public AudioClip denied;
     public AudioClip launch;
     public AudioClip hit;
     public AudioClip placeVfx_Sfx;
@@ -73,7 +72,6 @@ public class TowerClips : AudioBase
         mixerBase = new Dictionary<MixerFor, AudioMixerGroup>();
 
         if (place != null) clipBase[ClipFor.Place] = place;
-        if (denied != null) clipBase[ClipFor.Denied] = denied;
         if (launch != null) clipBase[ClipFor.Launch] = launch;
         if (hit != null) clipBase[ClipFor.Hit] = hit;
         if (placeVfx_Sfx != null) clipBase[ClipFor.PlaceVfx] = placeVfx_Sfx;
@@ -89,6 +87,7 @@ public class UIClips : AudioBase
     public AudioClip click;
     public AudioClip sell;
     public AudioClip upgrade;
+    public AudioClip denied;
 
     public override void BuildBase()
     {
@@ -98,6 +97,7 @@ public class UIClips : AudioBase
         if (click != null) clipBase[ClipFor.ClickUi] = click;
         if (sell != null) clipBase[ClipFor.ClickSellUi] = sell;
         if (upgrade != null) clipBase[ClipFor.ClickUpgradeUi] = upgrade;
+        if (denied != null) clipBase[ClipFor.Denied] = denied;
 
         if (mixerGroupUI != null) mixerBase[MixerFor.Ui] = mixerGroupUI;
     }
@@ -135,7 +135,7 @@ public class Clips
 {
     public AudioMixerGroup mixerGroup;
     public EnemyClips[] enemyClips;
-    public TowerClips towerClips;
+    public TowerClips[] towerClips;
     public UIClips uiClips;
     public StateClips stateClips;
 
@@ -170,7 +170,7 @@ public class Clips
         allClips = new List<AudioBase[]>
         {
             enemyClips,
-            //towerClips,
+            towerClips,
             //uiClips,
             //stateClips
         };
@@ -184,7 +184,7 @@ public class Clips
     {
         OrganizeClips();
         FillDictionary(enemyDict, enemyClips, type => type.unitType);
-        //FillDictionary(towerDict, towerClips, type => type.towerType);
+        FillDictionary(towerDict, towerClips, type => type.towerType);
     }
     public AudioClip GetClip(ClipFor clipFor, object type = null)
     {

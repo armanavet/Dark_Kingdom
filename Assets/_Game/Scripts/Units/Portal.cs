@@ -29,7 +29,7 @@ public class Portal : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<Portal>();
+                _instance = FindObjectOfType<Portal>();
             }
 
             return _instance;

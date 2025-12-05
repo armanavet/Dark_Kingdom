@@ -27,7 +27,7 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
-        //AudioManager.Instance.PlayExplosionSound(EnemyAttackSound, transform);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipFor.Attack);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -37,19 +37,12 @@ public class ExplosionEnemy : Enemy
             }
         }
         WaveManager.Instance.OnEnemyDeath(this);
-        //foreach (var effect in Effects)
-        //{
-        //    Instantiate(effect, transform.position, Quaternion.identity);
-        //    Destroy(effect);
-        //}
-        //Destroy(gameObject);
         StartCoroutine(DestroyObject(Effects));
     }
 
     protected override void Attack() => OnDeath();
     IEnumerator DestroyObject(GameObject[] effects)
     {
-        //AudioManager.Instance.PlaySFX(EnemySoundData,EnemyAttackSound);
         GameObject effect;
         foreach (var item in effects)
         {

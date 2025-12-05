@@ -33,12 +33,7 @@ public class ArcherTower : Tower
 
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
-        PlayTowerSFX(SD_TowerAction, PlaceSfx);
-        PlayTowerSFX(SD_TowerVfx, VfxSfx);
-        effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
-        Destroy(effect, 2f);
-        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
-        Destroy(effect, 2f);
+        StartCoroutine(PlayPlaceSFX());
     }
 
     void Update()
@@ -57,7 +52,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        PlayTowerSFX(SD_TowerAction, ShootSfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.Launch, towerType);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -117,7 +112,7 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            StartCoroutine(PlayUpdateSfxs());
+            StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -151,7 +146,7 @@ public class ArcherTower : Tower
                 currentDebuffs.Add(newDebuff);
             }
         }
-        StopCoroutine(PlayUpdateSfxs());
+        StopCoroutine(PlayUpdateSfx());
     }
 
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
@@ -166,7 +161,7 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        PlayTowerSFX(SD_TowerAction, HitSfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit);
         Destroy(currentProjectile);
     }
 }

@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip ExplodeSound;
+    [SerializeField] protected SoundData ExplodeSoundData;
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask EnemyMask;
     [SerializeField] LayerMask PortalMask;
@@ -65,6 +66,7 @@ public class Shell : MonoBehaviour
             }
         }
         //AudioManager.Instance.PlayExplosionSound(ExplodeSound,transform);
+        AudioManager.Instance.PlaySFX(ExplodeSoundData, transform,ClipFor.Launch);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
