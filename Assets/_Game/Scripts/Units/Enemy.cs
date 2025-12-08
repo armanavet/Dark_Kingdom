@@ -7,14 +7,14 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [Header("Enemy Parameters")]
-    [SerializeField] protected UnitType unitType;
+    [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
+    [SerializeField] protected UnitType unitType;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-
     [SerializeField] protected SoundData EnemySoundData;
 
     protected Animator animator;

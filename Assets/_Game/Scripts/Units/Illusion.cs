@@ -12,6 +12,7 @@ public class Illusion : Enemy
         health = maxHP;
         animator = GetComponent<Animator>();
         Destroy(gameObject, duration);
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
     }
     void Update()
     {

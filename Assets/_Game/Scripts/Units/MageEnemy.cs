@@ -33,6 +33,7 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
     }
     private void Update()
     {

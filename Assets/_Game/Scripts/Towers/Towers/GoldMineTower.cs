@@ -17,7 +17,7 @@ public class GoldMineTower : Tower
         model = Models[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
     }
 
     public override void Upgrade()

@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     TowerPreview towerPreview;
     Button[] towerPurchaseButtons;
     float TowerPurchasePanelYInitial;
-   
+
     bool isPanelActive = false;
     #region Singleton 
     private static UIManager _instance;
@@ -51,10 +51,10 @@ public class UIManager : MonoBehaviour
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
-        
+
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
-        
+
         mainCamera = Camera.main;
 
     }
@@ -94,7 +94,7 @@ public class UIManager : MonoBehaviour
         {
             activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
         }
-        
+
         if (Input.GetKeyDown("escape"))
         {
             PauseMenuManager.Instance.a_BTPause();
@@ -202,12 +202,10 @@ public class UIManager : MonoBehaviour
             else
             {
                 AudioManager.Instance.PlaySFX(UISoundData, transform, ClipFor.Denied);
-                
             }
         }
         else
         {
-
             if (towerPreview != null)
             {
                 Destroy(towerPreview.gameObject);
@@ -227,13 +225,14 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + currentWave.ToString();
-            if(currentWave == WaveManager.Instance.waveLength)
+            if (currentWave == WaveManager.Instance.waveLength)
             {
                 activeStateText.text = string.Empty;
                 activeStateText.text = "Destroy The Portal!";
                 waveText.text = "Wave: " + currentWave.ToString();
             }
-        }else if (newState == GameState.End)
+        }
+        else if (newState == GameState.End)
         {
             activeStatePanel.SetActive(false);
             passiveStatePanel.SetActive(false);
@@ -250,6 +249,15 @@ public class UIManager : MonoBehaviour
     {
         endGameMenuPanel.SetActive(true);
         Time.timeScale = 0;
+
+    }
+    public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
+    {
+        if (damageTextPopup == null || target == null) return;
+        Vector3 top = target.hitPointStartPos.transform.position;
+        HitPointPopup HitPointPopup = Instantiate(damageTextPopup, top, Quaternion.identity);
+        HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);
+        HitPointPopup.HitPointText(damage);
     }
     Quaternion LookAtCamera(Transform cameraTransform)
     {
@@ -265,5 +273,5 @@ public class UIManager : MonoBehaviour
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
     }
-    
+
 }

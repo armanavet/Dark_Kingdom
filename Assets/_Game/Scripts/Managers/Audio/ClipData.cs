@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using Random = UnityEngine.Random;
+using AudioSystem;
 
 public abstract class AudioBase
 {
@@ -142,20 +143,6 @@ public class Clips
     Dictionary<UnitType, EnemyClips> enemyDict = new Dictionary<UnitType, EnemyClips>();
     Dictionary<TowerType, TowerClips> towerDict = new Dictionary<TowerType, TowerClips>();
     List<AudioBase[]> allClips;
-    private void FillDictionary<TKey, TValue>(
-    Dictionary<TKey, TValue> dict,
-    TValue[] items,
-    Func<TValue, TKey> keySelector)
-    {
-        dict.Clear();
-
-        foreach (var item in items)
-        {
-            if (item == null) continue;
-            TKey key = keySelector(item);
-            dict[key] = item;
-        }
-    }
     //private TData Get<TEnum, TData>(TEnum key, Dictionary<TEnum, TData> dict)
     //{
     //    if (!dict.TryGetValue(key, out var value))
@@ -183,8 +170,8 @@ public class Clips
     public void OrganizeAll()
     {
         OrganizeClips();
-        FillDictionary(enemyDict, enemyClips, type => type.unitType);
-        FillDictionary(towerDict, towerClips, type => type.towerType);
+        FillSelectedDictionary.Fill(enemyDict, enemyClips, type => type.unitType);
+        FillSelectedDictionary.Fill(towerDict, towerClips, type => type.towerType);
     }
     public AudioClip GetClip(ClipFor clipFor, object type = null)
     {

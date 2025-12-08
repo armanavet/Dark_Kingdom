@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class MainTowerDefender
@@ -60,6 +55,7 @@ public class MainTower : Tower
             defender.cooldown = 1 / AttackSpeed;
         }
         range = new Vector3(attackRange, attackRange, attackRange);
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
     }
 
     private void Update()
@@ -201,18 +197,20 @@ public class MainTower : Tower
 
         if (defender.target != null)
         {
+            UIManager.Instance.ShowDamage(hitPointPopup, defender.target, damage);
             defender.target.ApplyDamage(damage);
+
             //foreach (var debuff in currentDebuffs)
             //{
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit,towerType);
         Destroy(currentProjectile);
     }
     public override IEnumerator PlayUpdateSfx()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx, towerType);
         effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(effect, 2f);

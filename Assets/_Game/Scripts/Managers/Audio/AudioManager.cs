@@ -1,10 +1,46 @@
 ﻿using AudioSystem;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum SoundDataFor
+{
+    Enemy,
+    EnemyProjectile,
+    Tower,
+    UI,
+    Music
+}
+[Serializable]
+public class SoundDataSettings
+{
+    public SoundDataFor type;
+    public SoundData data;
+}
+[Serializable]
+public class SoundDataStorage
+{
+    public SoundDataSettings[] soundDataSettings;
+    Dictionary<SoundDataFor, SoundDataSettings> soundDataDict = new Dictionary<SoundDataFor, SoundDataSettings>();
+
+    public void Organize()
+    {
+        FillSelectedDictionary.Fill(soundDataDict, soundDataSettings, type => type.type);
+    }
+    public SoundData GetSoundDataByType(SoundDataFor soundDataType)
+    {
+        if(!soundDataDict.TryGetValue(soundDataType, out var item))
+        {
+            Debug.LogError($"SoundData for {soundDataType} not found!");
+            return null;
+        }
+        return item.data;
+    }
+}
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] Clips TotalClips;
-    [SerializeField] SoundData SoundDataEnemy;
-    [SerializeField] SoundData SoundDataTower;
+    [SerializeField] SoundDataStorage SoundDataStorage;
 
     #region Singleton
     private static AudioManager _instance;
@@ -39,13 +75,15 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         TotalClips.OrganizeAll();
+        SoundDataStorage.Organize();
     }
     public SoundData SetData(
         SoundData data,
+        SoundDataFor soundDataType,
         MixerFor mixer,
         object type = null)
     {
-        data = SoundDataEnemy;
+        data = SoundDataStorage.GetSoundDataByType(soundDataType);
         data.mixerGroup = TotalClips.GetMixer(mixer, type);
 
         return data;
@@ -72,10 +110,6 @@ public class AudioManager : MonoBehaviour
     }
 
 }
-//public void PlaySFX(SoundData data, AudioClip clip)
-//{
-//    SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);
-//}
 
 
 /*private void Start()

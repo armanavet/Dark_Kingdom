@@ -3,6 +3,7 @@ using System.Collections.Generic;
 //using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using VFXTools;
 
 public class DefaultEnemy : Enemy
 {
@@ -13,6 +14,7 @@ public class DefaultEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
     }
     void Update()
     {

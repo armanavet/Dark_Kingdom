@@ -15,6 +15,7 @@ public class ExplosionEnemy : Enemy
         health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
     }
     void Update()
     {

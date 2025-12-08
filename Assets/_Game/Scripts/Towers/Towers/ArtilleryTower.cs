@@ -38,7 +38,7 @@ public class ArtilleryTower : Tower
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataFor.Tower, MixerFor.Tower, towerType);
     }
 
     void Update()
@@ -81,7 +81,7 @@ public class ArtilleryTower : Tower
         float sinTheta = Mathf.Sin(theta);
         
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs,hitPointPopup,towerType);
     }
     bool AcquireTarget()
     {

@@ -24,6 +24,7 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected SoundData TowerSoundData;
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
+    [SerializeField] protected HitPointPopup hitPointPopup;
 
     protected float maxHP;
     protected float currentHP;
@@ -56,13 +57,6 @@ public abstract class Tower : MonoBehaviour
             Destroy();
         }
     }
-    //public void PlayTowerSFX(SoundData data, AudioClip clip)
-    //{
-    //    //set the sound data in the audio manager
-    //    if (data == null || clip == null) return;
-    //    //AudioManager.Instance.PlaySFX(data, clip);
-
-    //}
     void Destroy()
     {
         TowerManager.Instance.Towers.Remove(this);
@@ -86,7 +80,7 @@ public abstract class Tower : MonoBehaviour
     public abstract void Upgrade();
     public virtual IEnumerator PlayUpdateSfx()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx, towerType);
         effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(effect, 2f);

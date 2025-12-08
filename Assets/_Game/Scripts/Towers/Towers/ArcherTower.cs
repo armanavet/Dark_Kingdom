@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ArcherTower : Tower
 {
-    [SerializeField] AudioClip HitSfx;
     [Header("Archer Tower Parameters")]
     [SerializeField] List<float> shootingPointPositions;
     [SerializeField] Transform shootingPoint;
@@ -34,6 +33,7 @@ public class ArcherTower : Tower
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
         StartCoroutine(PlayPlaceSFX());
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
     }
 
     void Update()
@@ -155,13 +155,14 @@ public class ArcherTower : Tower
 
         if (target != null)
         {
+            UIManager.Instance.ShowDamage(hitPointPopup,target, damage);
             target.ApplyDamage(damage);
             foreach (var debuff in currentDebuffs)
             {
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit, towerType);
         Destroy(currentProjectile);
     }
 }

@@ -1,13 +1,11 @@
 using AudioSystem;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
-    [SerializeField] protected SoundData ExplodeSoundData;
+    [SerializeField] protected SoundData ExplosionSoundData;
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask EnemyMask;
     [SerializeField] LayerMask PortalMask;
@@ -15,16 +13,12 @@ public class Shell : MonoBehaviour
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
-
-    protected AudioSource audioSource;
+    HitPointPopup hitPointPopup;
+    TowerType towerType;
     private void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataFor.EnemyProjectile, MixerFor.Enemy);
     }
-
     void Update()
     {
         age += Time.deltaTime;
@@ -39,7 +33,7 @@ public class Shell : MonoBehaviour
         }
 
     }
-    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs)
+    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs,HitPointPopup hitPointPopup, TowerType towerType)
     {
         this.launchPoint = launchPoint;
         this.targetPoint = targetPoint;
@@ -47,6 +41,8 @@ public class Shell : MonoBehaviour
         this.blastRadius = blastRadius;
         this.damage = damage;
         this.debuffs = debuffs;
+        this.hitPointPopup = hitPointPopup;
+        this.towerType = towerType;
     }
     void Explode()
     {
@@ -58,6 +54,7 @@ public class Shell : MonoBehaviour
             foreach (var target in targets)
             {
                 Enemy enemy = target.GetComponent<Enemy>();
+                UIManager.Instance.ShowDamage(hitPointPopup,enemy, damage);
                 enemy.ApplyDamage(damage);
                 foreach (var debuff in debuffs)
                 {
@@ -65,8 +62,7 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        //AudioManager.Instance.PlayExplosionSound(ExplodeSound,transform);
-        AudioManager.Instance.PlaySFX(ExplodeSoundData, transform,ClipFor.Launch);
+        AudioManager.Instance.PlaySFX(ExplosionSoundData, transform,ClipFor.Launch,towerType);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
