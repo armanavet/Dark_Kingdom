@@ -17,7 +17,7 @@ public class Shell : MonoBehaviour
     TowerType towerType;
     private void Start()
     {
-        ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataFor.EnemyProjectile, MixerFor.Enemy);
+        ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Enemy);
     }
     void Update()
     {
@@ -62,7 +62,7 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.Instance.PlaySFX(ExplosionSoundData, transform,ClipFor.Launch,towerType);
+        AudioManager.Instance.PlaySFX(ExplosionSoundData, transform,ClipType.Launch,towerType);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));

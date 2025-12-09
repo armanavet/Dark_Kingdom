@@ -201,7 +201,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                AudioManager.Instance.PlaySFX(UISoundData, transform, ClipFor.Denied);
+                AudioManager.Instance.PlaySFX(UISoundData, transform, ClipType.Denied);
             }
         }
         else

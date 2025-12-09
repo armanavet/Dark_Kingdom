@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -33,7 +34,7 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     private void Update()
     {

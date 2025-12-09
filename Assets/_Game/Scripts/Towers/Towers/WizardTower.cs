@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,7 +39,7 @@ public class WizardTower : Tower
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     void Update()
@@ -48,7 +49,7 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.Launch, towerType);
+                AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.Launch, towerType);
                 Launch(target);
             }
             launchProgress = 0;

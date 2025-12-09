@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class GoldMineTower : Tower
         model = Models[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     public override void Upgrade()

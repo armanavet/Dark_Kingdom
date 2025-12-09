@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,7 +16,7 @@ public class ExplosionEnemy : Enemy
         health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataFor.Enemy, MixerFor.Enemy, unitType);
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {
@@ -28,7 +29,7 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipFor.Attack);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipType.Attack);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {

@@ -80,7 +80,7 @@ public abstract class Tower : MonoBehaviour
     public abstract void Upgrade();
     public virtual IEnumerator PlayUpdateSfx()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.UpgardeVfx, towerType);
         effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(effect, 2f);
@@ -88,8 +88,8 @@ public abstract class Tower : MonoBehaviour
     }
     public virtual IEnumerator PlayPlaceSFX()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.Place, towerType);
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.PlaceVfx, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.Place, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.PlaceVfx, towerType);
         effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
         Destroy(effect, 2f);
         effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);

@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,7 +56,7 @@ public class MainTower : Tower
             defender.cooldown = 1 / AttackSpeed;
         }
         range = new Vector3(attackRange, attackRange, attackRange);
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     private void Update()
@@ -139,7 +140,7 @@ public class MainTower : Tower
 
     void Shoot(MainTowerDefender defender)
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData,defender.turret.transform, ClipFor.Launch, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData,defender.turret.transform, ClipType.Launch, towerType);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -205,12 +206,12 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit,towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipType.Hit,towerType);
         Destroy(currentProjectile);
     }
     public override IEnumerator PlayUpdateSfx()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.UpgardeVfx, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.UpgardeVfx, towerType);
         effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
         effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(effect, 2f);

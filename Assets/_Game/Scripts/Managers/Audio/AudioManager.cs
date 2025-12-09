@@ -1,46 +1,11 @@
 ﻿using AudioSystem;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public enum SoundDataFor
-{
-    Enemy,
-    EnemyProjectile,
-    Tower,
-    UI,
-    Music
-}
-[Serializable]
-public class SoundDataSettings
-{
-    public SoundDataFor type;
-    public SoundData data;
-}
-[Serializable]
-public class SoundDataStorage
-{
-    public SoundDataSettings[] soundDataSettings;
-    Dictionary<SoundDataFor, SoundDataSettings> soundDataDict = new Dictionary<SoundDataFor, SoundDataSettings>();
 
-    public void Organize()
-    {
-        FillSelectedDictionary.Fill(soundDataDict, soundDataSettings, type => type.type);
-    }
-    public SoundData GetSoundDataByType(SoundDataFor soundDataType)
-    {
-        if(!soundDataDict.TryGetValue(soundDataType, out var item))
-        {
-            Debug.LogError($"SoundData for {soundDataType} not found!");
-            return null;
-        }
-        return item.data;
-    }
-}
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] Clips TotalClips;
-    [SerializeField] SoundDataStorage SoundDataStorage;
+    [SerializeField] SoundDataRepository TotalSoundData;
 
     #region Singleton
     private static AudioManager _instance;
@@ -75,35 +40,35 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         TotalClips.OrganizeAll();
-        SoundDataStorage.Organize();
+        TotalSoundData.Organize();
     }
     public SoundData SetData(
         SoundData data,
-        SoundDataFor soundDataType,
-        MixerFor mixer,
+        SoundDataType soundDataType,
+        MixerType mixer,
         object type = null)
     {
-        data = SoundDataStorage.GetSoundDataByType(soundDataType);
+        data = TotalSoundData.GetSoundDataByType(soundDataType);
         data.mixerGroup = TotalClips.GetMixer(mixer, type);
 
         return data;
     }
-    public void PlaySFX(SoundData data, Transform position, ClipFor clipFor, UnitType unitType)
+    public void PlaySFX(SoundData data, Transform position, ClipType clipFor, UnitType unitType)
     {
         data.clip = TotalClips.GetClip(clipFor, unitType);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data, Transform position, ClipFor clipFor, TowerType towerType)
+    public void PlaySFX(SoundData data, Transform position, ClipType clipFor, TowerType towerType)
     {
         data.clip = TotalClips.GetClip(clipFor, towerType);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data,Transform transform, ClipFor clipFor)
+    public void PlaySFX(SoundData data,Transform transform, ClipType clipFor)
     {
         data.clip = TotalClips.GetClip(clipFor);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data, ClipFor clipFor)
+    public void PlaySFX(SoundData data, ClipType clipFor)
     {
         data.clip = TotalClips.GetClip(clipFor);
         SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);

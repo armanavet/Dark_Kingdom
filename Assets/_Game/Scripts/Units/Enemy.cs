@@ -159,10 +159,10 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
     protected void PlayAttackSound() {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform,ClipFor.Attack,unitType);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform,ClipType.Attack,unitType);
     }
     protected void PlayMovingSound() {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipFor.Move, unitType);
+        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipType.Move, unitType);
     }
 }
 

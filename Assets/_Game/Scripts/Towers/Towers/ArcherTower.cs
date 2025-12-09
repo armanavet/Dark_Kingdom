@@ -1,3 +1,4 @@
+using AudioSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ public class ArcherTower : Tower
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
         StartCoroutine(PlayPlaceSFX());
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData,SoundDataFor.Tower, MixerFor.Tower,towerType);
+        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     void Update()
@@ -52,7 +53,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipFor.Launch, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.Launch, towerType);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -162,7 +163,7 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipFor.Hit, towerType);
+        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipType.Hit, towerType);
         Destroy(currentProjectile);
     }
 }
