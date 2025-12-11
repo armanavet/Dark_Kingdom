@@ -1,7 +1,9 @@
 ﻿using AudioSystem;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
-
+//public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] Clips TotalClips;
@@ -42,35 +44,39 @@ public class AudioManager : MonoBehaviour
         TotalClips.OrganizeAll();
         TotalSoundData.Organize();
     }
-    public SoundData SetData(
+    public SoundData SetData<TEnum>(
         SoundData data,
         SoundDataType soundDataType,
         MixerType mixer,
-        object type = null)
+        TEnum type) where TEnum : Enum
     {
         data = TotalSoundData.GetSoundDataByType(soundDataType);
-        data.mixerGroup = TotalClips.GetMixer(mixer, type);
-
+        data.mixerGroup = TotalClips.GetMixer<TEnum>(mixer, type);
         return data;
     }
-    public void PlaySFX(SoundData data, Transform position, ClipType clipFor, UnitType unitType)
+    public SoundData SetData(
+        SoundData data,
+        SoundDataType soundDataType,
+        MixerType mixer)
     {
-        data.clip = TotalClips.GetClip(clipFor, unitType);
+        data = TotalSoundData.GetSoundDataByType(soundDataType);
+        data.mixerGroup = TotalClips.GetMixer(mixer);
+        return data;
+    }
+    public void PlaySFX<TEnum>(SoundData data, Transform transform, ClipType clipType, TEnum type)
+    where TEnum : Enum
+    {
+        data.clip = TotalClips.GetClip<TEnum>(clipType, type);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data, Transform position, ClipType clipFor, TowerType towerType)
+    public void PlaySFX(SoundData data, Transform transform, ClipType clipType)
     {
-        data.clip = TotalClips.GetClip(clipFor, towerType);
+        data.clip = TotalClips.GetClip(clipType);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data,Transform transform, ClipType clipFor)
+    public void PlaySFX(SoundData data, ClipType clipType)
     {
-        data.clip = TotalClips.GetClip(clipFor);
-        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
-    }
-    public void PlaySFX(SoundData data, ClipType clipFor)
-    {
-        data.clip = TotalClips.GetClip(clipFor);
+        data.clip = TotalClips.GetClip(clipType);
         SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);
     }
 

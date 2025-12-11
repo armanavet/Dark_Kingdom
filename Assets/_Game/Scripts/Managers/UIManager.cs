@@ -237,6 +237,7 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(false);
             passiveStatePanel.SetActive(false);
         }
+        else if (newState == GameState.Paused) { }
         /*
          * if state == end 
          * activesState true

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -173,45 +172,44 @@ public class Clips
         FillSelectedDictionary.Fill(enemyDict, enemyClips, type => type.unitType);
         FillSelectedDictionary.Fill(towerDict, towerClips, type => type.towerType);
     }
-    public AudioClip GetClip(ClipType clipFor, object type = null)
+    public AudioClip GetClip(ClipType clipFor)
     {
-        if (type is UnitType enemyType && enemyDict.TryGetValue(enemyType, out var enemy))
-            return enemy.GetClip(clipFor);
-
-        if (type is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
-            return tower.GetClip(clipFor);
-
-        //foreach (var ui in uiClips)
         if (uiClips.clipBase.ContainsKey(clipFor))
             return uiClips.GetClip(clipFor);
-
-        //foreach (var st in stateClips)
         if (stateClips.clipBase.ContainsKey(clipFor))
             return stateClips.GetClip(clipFor);
-
         Debug.LogError($"ClipFor {clipFor} not found!");
         return null;
     }
-    public AudioMixerGroup GetMixer(MixerType mixerFor, object type = null)
+    public AudioClip GetClip<TEnum>(ClipType clipFor, TEnum type)
+        where TEnum : Enum
+    {
+        if (type is UnitType enemyType && enemyDict.TryGetValue(enemyType, out var enemy))
+            return enemy.GetClip(clipFor);
+        if (type is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
+            return tower.GetClip(clipFor);
+        Debug.LogError($"ClipFor {clipFor} not found!");
+        return null;
+    }
+    public AudioMixerGroup GetMixer<TEnum>(MixerType mixerFor, TEnum type) 
+        where TEnum : Enum
     {
         if (type is UnitType enemyType && enemyDict.TryGetValue(enemyType, out var enemy))
             return enemy.GetMixer(mixerFor);
-
         if (type is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
             return tower.GetMixer(mixerFor);
-
-        //foreach (var ui in uiClips)
-        if (uiClips.mixerBase.ContainsKey(mixerFor))
-            return uiClips.GetMixer(mixerFor);
-
-        //foreach (var st in stateClips)
-        if (uiClips.mixerBase.ContainsKey(mixerFor))
-            return uiClips.GetMixer(mixerFor);
-
         Debug.LogError($"ClipFor {mixerFor} not found!");
         return null;
     }
-
+    public AudioMixerGroup GetMixer(MixerType mixerFor)
+    {
+        if (uiClips.mixerBase.ContainsKey(mixerFor))
+            return uiClips.GetMixer(mixerFor);
+        if (uiClips.mixerBase.ContainsKey(mixerFor))
+            return uiClips.GetMixer(mixerFor);
+        Debug.LogError($"ClipFor {mixerFor} not found!");
+        return null;
+    }
 }
 public enum ClipType
 {
