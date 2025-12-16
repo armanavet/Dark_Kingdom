@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.ComponentModel.Design;
 using Unity.VisualScripting;
+using AudioSystem;
 
 public class WaveManager : MonoBehaviour, ISaveable
 {
@@ -112,6 +113,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     IEnumerator SpawnFlow(GameObject spawner, Wave wave)
     {
+
         // 1. Pre-activate portal
         yield return Portal.Instance.ActivateVisual();
         // 2. Spawn enemies
@@ -164,6 +166,7 @@ public class WaveManager : MonoBehaviour, ISaveable
                 spawnPoint.Restore();
                 enemyPath.ForEach(x => Destroy(x));
                 StateManager.Instance.ChangeGameStateTo(GameState.Passive);
+
             }
         }
         else if (portalMode == PortalMode.BossMode)

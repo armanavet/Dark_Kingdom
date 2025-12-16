@@ -9,8 +9,8 @@ public class PauseMenuManager : MonoBehaviour
     public string _SceneToLoad;
     [SerializeField] GameObject _PauseMenuPanel = null;
     //[SerializeField] GameObject _PauseMenuContainer = null;
-    bool isActive;
-    float a;
+    //bool isActive;
+    //float a;
     #region Singleton 
     private static PauseMenuManager _instance;
     public static PauseMenuManager Instance
@@ -32,17 +32,21 @@ public class PauseMenuManager : MonoBehaviour
     #endregion
     void Update()
     {
-        if (Input.GetKeyDown("escape"))
-        {
-            a_BTPause();
-        }
+        //if (Input.GetKeyDown("escape"))
+        //{
+        //    a_BTPause();
+        //}
         // else => continue all actions
     }
-    public void a_BTPause()
+    //public void a_BTPause()
+    //{
+    //    isActive = !isActive;
+    //    _PauseMenuPanel.SetActive(isActive);
+    //    Time.timeScale = isActive ? 0 : 1;
+    //}
+    public void ShowPauseMenu(bool b)
     {
-        isActive = !isActive;
-        _PauseMenuPanel.SetActive(isActive);
-        Time.timeScale = isActive ? 0 : 1;
+        _PauseMenuPanel.SetActive(b);
     }
     public void b_BTAudioPlay()
     {

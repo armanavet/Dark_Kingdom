@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 
 public class TowerPanel : MonoBehaviour
 {
+    [SerializeField] SoundData TowerPanelSoundData;
     [SerializeField] Button UpgradeButton;
     Tower tower;
 
@@ -29,12 +31,12 @@ public class TowerPanel : MonoBehaviour
     }
     public void ButtonTowerSell()
     {
-        //AudioManager.Instance.PlayClickSoundForPanelUI();
+        //AudioManager.Instance.Play(TowerPanelSoundData,ClipType.OnSellButtonClick_UI);
         tower.Sell(tower.SellPrice);
     }
     public void ButtonTowerUpgrade()
     {
-        //AudioManager.Instance.PlayTowerUpgradeSound();
+        //AudioManager.Instance.Play(TowerPanelSoundData,ClipType.OnUpgradeButtonClick_UI);
         tower.Upgrade();
     }
 }

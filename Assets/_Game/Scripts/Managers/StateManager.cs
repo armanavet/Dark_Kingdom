@@ -1,3 +1,4 @@
+using AudioSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,9 +8,10 @@ using UnityEngine;
 
 public class StateManager : MonoBehaviour, ISaveable
 {
-
+    [SerializeField] SoundData StateSoundData;
     [SerializeField] float[] TimeUntilNextWave;
     [HideInInspector] public GameState State;
+    GameState PreviusState;
     float Timer;
     public int timeMultiplier = 1;
     int currentWave = 0;
@@ -37,7 +39,8 @@ public class StateManager : MonoBehaviour, ISaveable
 
     public void Initialize()
     {
-        ChangeGameStateTo(GameState.Passive);
+        //StateSoundData = AudioManager.Instance.SetData(StateSoundData,SoundDataType.Music, MixerType.State);
+        ChangeGameStateTo(GameState.Passive); 
     }
 
     void Update()
@@ -50,32 +53,39 @@ public class StateManager : MonoBehaviour, ISaveable
         }
         else if (State == GameState.End)
         {
-            UIManager.Instance.ShowEndGamePanel();
+            //UIManager.Instance.ShowEndGamePanel();
         }
     }
     public void ChangeGameStateTo(GameState newState)
     {
+        //AudioManager.Instance.Play(StateSoundData, newState);
         int wave = currentWave;
         if (newState == GameState.Active)
         {
             State = GameState.Active;
+            PreviusState = State;
             timeMultiplier = 1;
-            //AudioManager.Instance.PlayBackgroundMusic(newState);
             WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
-            //if (wave < WaveManager.Instance.waveLength)
-            //{
-            // this if is not necessary 
             State = GameState.Passive;
+            PreviusState = State;
             Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[wave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-            //AudioManager.Instance.PlayBackgroundMusic(newState);
             if (wave == WaveManager.Instance.waveLength - 1) WaveManager.Instance.GetPhaseCommands(wave, true);
             else WaveManager.Instance.GetPhaseCommands(wave);
             currentWave++;
             SaveManager.Save();
-            //}
+        }
+        else if (newState == GameState.Paused)
+        {
+            State = GameState.Paused;
+            PauseMenuManager.Instance.ShowPauseMenu(true);
+        }
+        else if (newState == GameState.Resume)
+        {
+            State = PreviusState;
+            PauseMenuManager.Instance.ShowPauseMenu(false);
         }
         else if (newState == GameState.End)
         {
@@ -115,5 +125,6 @@ public enum GameState
     Active,
     Passive,
     Paused,
+    Resume,
     End
 }

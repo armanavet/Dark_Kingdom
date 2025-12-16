@@ -16,7 +16,7 @@ public class ExplosionEnemy : Enemy
         health = maxHP;
         damage = maxDamage;
         animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {
@@ -29,7 +29,6 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipType.Attack);
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -45,6 +44,8 @@ public class ExplosionEnemy : Enemy
     protected override void Attack() => OnDeath();
     IEnumerator DestroyObject(GameObject[] effects)
     {
+        //AudioManager.Instance.Play(EnemySoundData, transform, ClipType.OnAttack_Enemy);
+        yield return new WaitForSeconds(1.5f);
         GameObject effect;
         foreach (var item in effects)
         {

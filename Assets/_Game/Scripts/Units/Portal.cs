@@ -9,16 +9,16 @@ public class Portal : MonoBehaviour
     [Header("Set Portal Visual Parameters")]
     [SerializeField] public Gradient emissionColor;
     [SerializeField] public ParticleSystem orbParticlesL, orbParticlesR, fireParticles;
-    [SerializeField] public AudioSource gateAudio, screamAudio, orbLAudio, orbRAudio, fireAudio;
+    //[SerializeField] public AudioSource gateAudio, screamAudio, orbLAudio, orbRAudio, fireAudio;
     [SerializeField] public Light gateLight;
     [SerializeField] public Renderer gateRenderer, gateEffectRenderer;
 
     Material gateMaterial, gateEffectMaterial;
     GameObject gateEffectObj;
 
-    float gateAudioMaxVolume = 0.3f,
-         gateLightMaxIntencity = 5f,
-         fireAudioMaxVolume = 0.6f;
+    float gateLightMaxIntencity = 5f;
+          //gateAudioMaxVolume = 0.3f,
+          //fireAudioMaxVolume = 0.6f;
     bool hellGateOn;
 
     #region Singleton 
@@ -85,13 +85,13 @@ public class Portal : MonoBehaviour
             if (transitionTimer >= rand1 && !orbParticlesL.isPlaying)
             {
                 orbParticlesL.Play();
-                orbLAudio.Play();
+                //orbLAudio.Play();
             }
 
             if (transitionTimer >= rand2 && !orbParticlesR.isPlaying)
             {
                 orbParticlesR.Play();
-                orbRAudio.Play();
+                //orbRAudio.Play();
             }
 
             gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(transitionTimer));
@@ -112,10 +112,10 @@ public class Portal : MonoBehaviour
         gateLight.gameObject.SetActive(true);
 
         fireParticles.Play();
-        fireAudio.volume = fireAudioMaxVolume;
-        fireAudio.Play();
-        screamAudio.Play();
-        gateAudio.Play();
+        //fireAudio.volume = fireAudioMaxVolume;
+        //fireAudio.Play();
+        //screamAudio.Play();
+        //gateAudio.Play();
 
         while (transitionTimer < 1f)
         {
@@ -124,14 +124,14 @@ public class Portal : MonoBehaviour
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer * 0.75f);
 
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            gateAudio.volume = transitionTimer * gateAudioMaxVolume;
+            //gateAudio.volume = transitionTimer * gateAudioMaxVolume;
 
             yield return null;
         }
 
         gateEffectMaterial.SetFloat("_Alpha", 0f);
         gateLight.intensity = gateLightMaxIntencity;
-        gateAudio.volume = gateAudioMaxVolume;
+        //gateAudio.volume = gateAudioMaxVolume;
 
         yield return new WaitForSeconds(1f);
         WaveManager.Instance.isPortalOn = true;
@@ -153,8 +153,8 @@ public class Portal : MonoBehaviour
 
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer);
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            gateAudio.volume = transitionTimer * gateAudioMaxVolume;
-            fireAudio.volume = transitionTimer * fireAudioMaxVolume;
+            //gateAudio.volume = transitionTimer * gateAudioMaxVolume;
+            //fireAudio.volume = transitionTimer * fireAudioMaxVolume;
             yield return null;
         }
 
@@ -162,8 +162,8 @@ public class Portal : MonoBehaviour
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0f));
         gateEffectObj.SetActive(false);
         gateLight.gameObject.SetActive(false);
-        gateAudio.Stop();
-        fireAudio.Stop();
+        //gateAudio.Stop();
+        //fireAudio.Stop();
         WaveManager.Instance.isPortalOff = true;
         yield break;
     }

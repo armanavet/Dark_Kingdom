@@ -18,14 +18,14 @@ public class GoldMineTower : Tower
         model = Models[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     public override void Upgrade()
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-           StartCoroutine(PlayUpdateSfx());
+           //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -43,6 +43,6 @@ public class GoldMineTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-        StopCoroutine(PlayUpdateSfx());
+        //StopCoroutine(PlayUpdateSfx());
     }
 }

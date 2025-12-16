@@ -1,13 +1,15 @@
 ﻿using AudioSystem;
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
 //public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] Clips TotalClips;
+    [SerializeField] ClipsRepository TotalClips;
     [SerializeField] SoundDataRepository TotalSoundData;
+    [SerializeField] AudioSource BackgroundMusicSource;
 
     #region Singleton
     private static AudioManager _instance;
@@ -41,7 +43,7 @@ public class AudioManager : MonoBehaviour
     #endregion
     private void Start()
     {
-        TotalClips.OrganizeAll();
+        TotalClips.Organize();
         TotalSoundData.Organize();
     }
     public SoundData SetData<TEnum>(
@@ -51,7 +53,7 @@ public class AudioManager : MonoBehaviour
         TEnum type) where TEnum : Enum
     {
         data = TotalSoundData.GetSoundDataByType(soundDataType);
-        data.mixerGroup = TotalClips.GetMixer<TEnum>(mixer, type);
+        data.mixerGroup = TotalClips.GetMixer(mixer, type);
         return data;
     }
     public SoundData SetData(
@@ -61,25 +63,56 @@ public class AudioManager : MonoBehaviour
     {
         data = TotalSoundData.GetSoundDataByType(soundDataType);
         data.mixerGroup = TotalClips.GetMixer(mixer);
+        if(data.mixerGroup == null)
+        {
+            Debug.LogError($"Mixer is null. Sound Data Type - {soundDataType}");
+        }
         return data;
     }
-    public void PlaySFX<TEnum>(SoundData data, Transform transform, ClipType clipType, TEnum type)
+    public void Play<TEnum>(SoundData data, Transform transform, ClipType clipType, TEnum type)
     where TEnum : Enum
     {
-        data.clip = TotalClips.GetClip<TEnum>(clipType, type);
+        data.clip = TotalClips.GetClip(clipType, type);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data, Transform transform, ClipType clipType)
+    public void Play(SoundData data, Transform transform, ClipType clipType)
     {
         data.clip = TotalClips.GetClip(clipType);
         SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
-    public void PlaySFX(SoundData data, ClipType clipType)
+    public void Play(SoundData data, ClipType clipType)
     {
         data.clip = TotalClips.GetClip(clipType);
-        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(data);
+        SoundManager.Instance.CreateSoundBuilder().Play(data);
     }
-
+    //public void Play(SoundData data, GameState gameState)
+    //{
+    //    SoundManager soundManager = SoundManager.Instance;
+    //    if (data.clip != null)
+    //    {
+    //        StopCoroutine(PlayWithDelay(data, gameState, soundManager));
+    //    }
+    //    StartCoroutine(PlayWithDelay(data, gameState, soundManager));
+    //}
+    //IEnumerator PlayWithDelay(SoundData data, GameState gameState, SoundManager soundManager)
+    //{
+    //    if (gameState == GameState.Active)
+    //    {
+    //        data.clip = TotalClips.GetClip(ClipType.OnWaveStart_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //        yield return new WaitForSeconds(data.clip.length);
+    //        data.clip = null;
+    //        data.clip = TotalClips.GetClip(ClipType.OnActive_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //    }
+    //    else if (gameState == GameState.Passive)
+    //    {
+    //        data.clip = null;
+    //        data.clip = TotalClips.GetClip(ClipType.OnPassive_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //    }
+    //    yield break;
+    //}
 }
 
 

@@ -27,7 +27,7 @@ public class FlyingEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {

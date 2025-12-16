@@ -39,7 +39,7 @@ public class ArtilleryTower : Tower
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         StartCoroutine(PlayPlaceSFX());
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower, towerType);
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower, towerType);
     }
 
     void Update()
@@ -49,7 +49,7 @@ public class ArtilleryTower : Tower
         {
             if (AcquireTarget())
             {
-                AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.Launch, towerType);
+                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -122,7 +122,7 @@ public class ArtilleryTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            StartCoroutine(PlayUpdateSfx());
+            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -140,6 +140,6 @@ public class ArtilleryTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-        StopCoroutine(PlayUpdateSfx());
+        //StopCoroutine(PlayUpdateSfx());
     }
 }

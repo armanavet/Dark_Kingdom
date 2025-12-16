@@ -159,10 +159,10 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
     protected void PlayAttackSound() {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform,ClipType.Attack,unitType);
+        //AudioManager.Instance.Play(EnemySoundData, transform,ClipType.OnAttack_Enemy,unitType);
     }
     protected void PlayMovingSound() {
-        AudioManager.Instance.PlaySFX(EnemySoundData, transform, ClipType.Move, unitType);
+        //AudioManager.Instance.Play(EnemySoundData, transform, ClipType.OnMove_Enemy, unitType);
     }
 }
 
@@ -183,5 +183,6 @@ public enum UnitType
     Kamikadze,
     Flying,
     Illusionist,
+    Illusion,
     Portal
 }

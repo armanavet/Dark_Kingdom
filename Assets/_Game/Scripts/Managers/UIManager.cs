@@ -12,7 +12,7 @@ using AudioSystem;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, endGameMenuPanel;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask towerMask, tileMask;
@@ -57,6 +57,7 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
 
+        //UISoundData = AudioManager.Instance.SetData(UISoundData, SoundDataType.UI, MixerType.UI);
     }
     void LateUpdate()
     {
@@ -93,11 +94,6 @@ public class UIManager : MonoBehaviour
         if (isPanelActive && activePanel != null)
         {
             activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
-        }
-
-        if (Input.GetKeyDown("escape"))
-        {
-            PauseMenuManager.Instance.a_BTPause();
         }
     }
     void ChangeUiButtonVisibility()
@@ -181,6 +177,7 @@ public class UIManager : MonoBehaviour
     {
         if (towerPreview == null)
         {
+            //AudioManager.Instance.Play(UISoundData,ClipType.OnPurchaseButtonClick_UI);
             ShowTowerPurchasePanel(false);
             TowerPreview prefab = TowerManager.Instance.GetPreviewByType((TowerType)type);
             towerPreview = Instantiate(prefab);
@@ -201,7 +198,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                AudioManager.Instance.PlaySFX(UISoundData, transform, ClipType.Denied);
+                //AudioManager.Instance.Play(UISoundData, transform, ClipType.OnDenied_Tower);
             }
         }
         else
@@ -245,12 +242,6 @@ public class UIManager : MonoBehaviour
          * wave.text + currentwave
          * activ.text + "destroy the portal to finish the game"
          */
-    }
-    public void ShowEndGamePanel()
-    {
-        endGameMenuPanel.SetActive(true);
-        Time.timeScale = 0;
-
     }
     public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
     {

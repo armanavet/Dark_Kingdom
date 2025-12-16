@@ -17,7 +17,7 @@ public class Shell : MonoBehaviour
     TowerType towerType;
     private void Start()
     {
-        ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Enemy);
+        //ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Projectile_Shell);
     }
     void Update()
     {
@@ -33,7 +33,7 @@ public class Shell : MonoBehaviour
         }
 
     }
-    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs,HitPointPopup hitPointPopup, TowerType towerType)
+    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs, HitPointPopup hitPointPopup, TowerType towerType)
     {
         this.launchPoint = launchPoint;
         this.targetPoint = targetPoint;
@@ -54,7 +54,7 @@ public class Shell : MonoBehaviour
             foreach (var target in targets)
             {
                 Enemy enemy = target.GetComponent<Enemy>();
-                UIManager.Instance.ShowDamage(hitPointPopup,enemy, damage);
+                UIManager.Instance.ShowDamage(hitPointPopup, enemy, damage);
                 enemy.ApplyDamage(damage);
                 foreach (var debuff in debuffs)
                 {
@@ -62,7 +62,7 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.Instance.PlaySFX(ExplosionSoundData, transform,ClipType.Launch,towerType);
+        //AudioManager.Instance.Play(ExplosionSoundData, transform, ClipType.OnLaunch_Tower, towerType);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));

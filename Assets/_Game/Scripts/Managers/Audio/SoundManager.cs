@@ -55,6 +55,13 @@ namespace AudioSystem
                 soundEmitter.Stop();
             }
         }
+        public void StopFrequent()
+        {
+            foreach (var soundEmitter in FrequentSoundEmitters)
+            {
+               soundEmitter.Stop();
+            }
+        }
         void InitializePool()
         {
             soundEmitterPool = new ObjectPool<SoundEmitter>(

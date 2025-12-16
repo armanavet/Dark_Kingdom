@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
+using AudioSystem;
 
 public class TowerManager : MonoBehaviour, ISaveable
 {
@@ -8,7 +10,7 @@ public class TowerManager : MonoBehaviour, ISaveable
     public TowerPreview[] TowerPreviews;
     Dictionary<TowerType, Tower> prefabsByType = new Dictionary<TowerType, Tower>();
     Dictionary<TowerType, TowerPreview> previewsByType = new Dictionary<TowerType, TowerPreview>();
-    [HideInInspector]public List<Tower> Towers;
+    [HideInInspector] public List<Tower> Towers;
     [SerializeField] Tile mainTowerTile;
 
     #region Singleton 
@@ -34,13 +36,10 @@ public class TowerManager : MonoBehaviour, ISaveable
 
     public void Initialize()
     {
-        foreach (var prefab in TowerPrefabs)
-            prefabsByType.Add(prefab.Type, prefab);
+        FillSelectedDictionary.Fill(prefabsByType, TowerPrefabs, type => type.Type);
+        FillSelectedDictionary.Fill(previewsByType, TowerPreviews, type => type.Type);
 
-        foreach (var preview in TowerPreviews)
-            previewsByType.Add(preview.Type, preview);
-
-        BuildTower(TowerType.MainTower,mainTowerTile);
+        BuildTower(TowerType.MainTower, mainTowerTile);
         mainTowerTile.SetType(TileType.Destination);
         foreach (var tile in mainTowerTile.surroundingTiles)
         {
@@ -69,7 +68,7 @@ public class TowerManager : MonoBehaviour, ISaveable
         Tower tower = Instantiate(prefab, tile.transform.position, Quaternion.identity, parentObject);
         tower.tile = tile;
         tile.isEmpty = false;
-        if(type != TowerType.MainTower) tile.ClaimSurroundingTiles();
+        if (type != TowerType.MainTower) tile.ClaimSurroundingTiles();
         Towers.Add(tower);
         return tower;
     }
@@ -110,5 +109,6 @@ public enum TowerType
     WizardTower,
     ArtilleryTower,
     CrystalMine,
-    MainTower
+    MainTower,
+    Null
 }

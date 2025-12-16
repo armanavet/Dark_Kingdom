@@ -28,9 +28,8 @@ public class Tile : MonoBehaviour
     public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
     bool canBePath => (Type == TileType.Neutral ||
                        Type == TileType.Own ||
-                       Type == TileType.Claimed ||
                        Type == TileType.Bridge);
-    bool canBeRiverPath => (Type == TileType.ObstructedRiver || Type == TileType.Bridge);
+    bool canBeRiverPath => (Type == TileType.Obstructed_River || Type == TileType.Bridge);
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
     public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
@@ -74,7 +73,7 @@ public class Tile : MonoBehaviour
                     currentModel = ObstructedTiles[random];
                 }
                 break;
-            case TileType.ObstructedRiver:
+            case TileType.Obstructed_River:
                 Connect(ObstructedRiverTiles, true);
                 break;
             default: break;
@@ -174,7 +173,7 @@ public class Tile : MonoBehaviour
             else if (east != null && south != null && east.canBePath && south.canBePath) yRotation = 180f;
             else if (south != null && west != null && south.canBePath && west.canBePath) yRotation = 270f;
         }
-        else if (Type == TileType.ObstructedRiver)
+        else if (Type == TileType.Obstructed_River)
         {
             if (north != null && east != null && north.canBeRiverPath && east.canBeRiverPath) yRotation = 90f;
             else if (east != null && south != null && east.canBeRiverPath && south.canBeRiverPath) yRotation = 180f;
@@ -286,17 +285,14 @@ public class Tile : MonoBehaviour
             else continue;
         }
     }
-    public bool CanBePurchased()
-    {
-        if (Type == TileType.Claimed) return true;
-        else return false;
-    }
     public void Corrupt()
     {
         currentModel.GetComponent<Renderer>().material.color = corruptedColor;
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = corruptedColor;
+            if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Claimed_Obstructed);
+            else if (neighbor.Type == TileType.Own) neighbor.SetType(TileType.Claimed_Own);
         }
     }
     public void Restore()
@@ -305,9 +301,10 @@ public class Tile : MonoBehaviour
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
+            if (neighbor.Type == TileType.Claimed_Obstructed) neighbor.SetType(TileType.Obstructed);
+            else if (neighbor.Type == TileType.Claimed_Own) neighbor.SetType(TileType.Own);
         }
     }
-    
     public TileData OnSave()
     {
         return new TileData(Type, DistanceToDestinationOriginal);
@@ -323,8 +320,9 @@ public enum TileType
     Neutral,
     Bridge,
     Own,
-    Claimed,
+    Claimed_Obstructed,
+    Claimed_Own,
     Obstructed,
-    ObstructedRiver,
+    Obstructed_River,
     Destination
 }

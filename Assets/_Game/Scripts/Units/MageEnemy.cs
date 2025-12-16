@@ -1,10 +1,6 @@
 using AudioSystem;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class MageEnemy : Enemy
 {
@@ -34,7 +30,7 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     private void Update()
     {
@@ -65,6 +61,10 @@ public class MageEnemy : Enemy
             if (facingTarget)
             {
                 Attack();
+            }
+            else 
+            {
+                return;
             }
         }
     }

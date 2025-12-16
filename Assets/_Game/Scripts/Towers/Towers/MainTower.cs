@@ -56,7 +56,7 @@ public class MainTower : Tower
             defender.cooldown = 1 / AttackSpeed;
         }
         range = new Vector3(attackRange, attackRange, attackRange);
-        TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     private void Update()
@@ -110,7 +110,7 @@ public class MainTower : Tower
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
-            StartCoroutine(PlayUpdateSfx());
+            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -134,13 +134,13 @@ public class MainTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-        StopCoroutine(PlayUpdateSfx());
+        //StopCoroutine(PlayUpdateSfx());
 
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData,defender.turret.transform, ClipType.Launch, towerType);
+        //AudioManager.Instance.Play(TowerSoundData,defender.turret.transform, ClipType.OnLaunch_Tower, towerType);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -206,15 +206,15 @@ public class MainTower : Tower
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        AudioManager.Instance.PlaySFX(TowerSoundData, currentProjectile.transform, ClipType.Hit,towerType);
+        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower,towerType);
         Destroy(currentProjectile);
     }
     public override IEnumerator PlayUpdateSfx()
     {
-        AudioManager.Instance.PlaySFX(TowerSoundData, transform, ClipType.UpgardeVfx, towerType);
-        effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
-        effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        Destroy(effect, 2f);
+        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnUpgradeVisualEffect_Tower, towerType);
+        //effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
+        //effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        //Destroy(effect, 2f);
         yield break;
     }
 }
