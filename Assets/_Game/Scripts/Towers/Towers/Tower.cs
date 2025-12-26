@@ -38,7 +38,7 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public int LevelMax = 1;
     [HideInInspector] public int CurrentLevel = 0;
     [HideInInspector] public int PurchasePrice;
-    [HideInInspector] public TowerType Type;
+    [HideInInspector] public TowerType Type => towerType;
     [HideInInspector] public TowerData saveData;
 
     public GameObject TowerPanel;

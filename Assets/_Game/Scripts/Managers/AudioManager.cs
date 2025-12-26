@@ -51,14 +51,7 @@ public class AudioManager : MonoBehaviour
         //gameEnums = gameObject.GetComponent<SoundTypeResolver>();
         //TotalClips.Organize();
         TotalSoundData.Organize();
-        func(GamePlaySFX_Type.TowerPuffVFX);
     }
-    void func(Enum type)
-    {
-        SoundType a = resolver.Resolve(type);
-        Debug.Log(a);
-    }
-
     public SoundData SetData<TEnum>(
         SoundData data,
         SoundDataType soundDataType,

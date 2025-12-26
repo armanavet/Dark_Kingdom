@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using AudioSystem;
+using System;
 
 public class TowerManager : MonoBehaviour, ISaveable
 {
@@ -36,16 +37,9 @@ public class TowerManager : MonoBehaviour, ISaveable
 
     public void Initialize()
     {
-        foreach (var item in TowerPrefabs)
-        {
-            if (prefabsByType.ContainsKey(TowerType.Null)) continue;
-            prefabsByType[item.Type] = item;
-        }
-        foreach (var item in TowerPreviews)
-        {
-            if (previewsByType.ContainsKey(TowerType.Null)) continue;
-            previewsByType[item.Type] = item;
-        }
+        foreach (var item in TowerPrefabs) prefabsByType[item.Type] = item;
+        foreach (var item in TowerPreviews) previewsByType[item.Type] = item;
+
         BuildTower(TowerType.MainTower, mainTowerTile);
         mainTowerTile.SetType(TileType.Destination);
         foreach (var tile in mainTowerTile.surroundingTiles)
