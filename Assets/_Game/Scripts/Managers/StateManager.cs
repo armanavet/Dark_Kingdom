@@ -14,7 +14,7 @@ public class StateManager : MonoBehaviour, ISaveable
     GameState PreviusState;
     float Timer;
     public int timeMultiplier = 1;
-    int currentWave = 0;
+    int currentWave = 9;
 
     #region Singleton
     private static StateManager _instance;

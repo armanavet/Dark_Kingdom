@@ -36,9 +36,16 @@ public class TowerManager : MonoBehaviour, ISaveable
 
     public void Initialize()
     {
-        FillSelectedDictionary.Fill(prefabsByType, TowerPrefabs, type => type.Type);
-        FillSelectedDictionary.Fill(previewsByType, TowerPreviews, type => type.Type);
-
+        foreach (var item in TowerPrefabs)
+        {
+            if (prefabsByType.ContainsKey(TowerType.Null)) continue;
+            prefabsByType[item.Type] = item;
+        }
+        foreach (var item in TowerPreviews)
+        {
+            if (previewsByType.ContainsKey(TowerType.Null)) continue;
+            previewsByType[item.Type] = item;
+        }
         BuildTower(TowerType.MainTower, mainTowerTile);
         mainTowerTile.SetType(TileType.Destination);
         foreach (var tile in mainTowerTile.surroundingTiles)
@@ -105,10 +112,10 @@ public class TowerManager : MonoBehaviour, ISaveable
 
 public enum TowerType
 {
+    Null,
     ArcherTower,
     WizardTower,
     ArtilleryTower,
     CrystalMine,
-    MainTower,
-    Null
+    MainTower
 }

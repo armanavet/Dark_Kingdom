@@ -30,20 +30,6 @@ public class PauseMenuManager : MonoBehaviour
         _instance = this;
     }
     #endregion
-    void Update()
-    {
-        //if (Input.GetKeyDown("escape"))
-        //{
-        //    a_BTPause();
-        //}
-        // else => continue all actions
-    }
-    //public void a_BTPause()
-    //{
-    //    isActive = !isActive;
-    //    _PauseMenuPanel.SetActive(isActive);
-    //    Time.timeScale = isActive ? 0 : 1;
-    //}
     public void ShowPauseMenu(bool b)
     {
         _PauseMenuPanel.SetActive(b);
