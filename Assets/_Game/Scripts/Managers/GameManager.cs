@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    static bool IsPaused;
     #region Singleton
     private static GameManager _instance;
     public static GameManager Instance
@@ -31,4 +32,28 @@ public class GameManager : MonoBehaviour
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
     }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            IsPaused = !IsPaused;
+            PauseGame();
+        }
+    }
+    public void PauseGame()
+    {
+        if (IsPaused)
+        {
+            Time.timeScale = 0f;
+            StateManager.Instance.ChangeGameStateTo(GameState.Paused);
+            AudioListener.pause = true;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            StateManager.Instance.ChangeGameStateTo(GameState.Resume);
+            AudioListener.pause = false;
+        }
+    }
+
 }

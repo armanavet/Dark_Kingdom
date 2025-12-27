@@ -43,15 +43,12 @@ public class OptionsMenuPanelManager : MonoBehaviour
 
     void Awake()
     {
-        // Find all Buttons
         foreach (Button btn in FindObjectsOfType<Button>(true))
             btn.onClick.AddListener(() => n_BTAudioPlay());
 
-        // Find all Toggles
         foreach (Toggle toggle in FindObjectsOfType<Toggle>(true))
             toggle.onValueChanged.AddListener((_) => n_BTAudioPlay());
 
-        // Find all Dropdowns
         foreach (Dropdown dropdown in FindObjectsOfType<Dropdown>(true))
             dropdown.onValueChanged.AddListener((_) => n_BTAudioPlay());
     }

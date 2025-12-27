@@ -8,9 +8,6 @@ public class PauseMenuManager : MonoBehaviour
 {
     public string _SceneToLoad;
     [SerializeField] GameObject _PauseMenuPanel = null;
-    //[SerializeField] GameObject _PauseMenuContainer = null;
-    //bool isActive;
-    //float a;
     #region Singleton 
     private static PauseMenuManager _instance;
     public static PauseMenuManager Instance

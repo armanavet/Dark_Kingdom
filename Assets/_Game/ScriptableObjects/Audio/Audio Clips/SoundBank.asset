@@ -34,11 +34,11 @@ MonoBehaviour:
   - Type: 8
     Entry: {fileID: 11400000, guid: 75d15197a107e5d46b3f062bade5579e, type: 2}
   towerSoundEffectsSO:
-  - Type: 0
-    Entry: {fileID: 11400000, guid: 08fdb79a8d445104eabab3ef17a2117e, type: 2}
   - Type: 1
-    Entry: {fileID: 11400000, guid: fa00e0fc05c66ca40bb537453731667c, type: 2}
+    Entry: {fileID: 11400000, guid: 08fdb79a8d445104eabab3ef17a2117e, type: 2}
   - Type: 2
+    Entry: {fileID: 11400000, guid: fa00e0fc05c66ca40bb537453731667c, type: 2}
+  - Type: 3
     Entry: {fileID: 11400000, guid: 406ba7f46ea76984187a38cfc998042c, type: 2}
-  - Type: 4
+  - Type: 5
     Entry: {fileID: 11400000, guid: f7211e84382ba634f997265d762f741f, type: 2}
