@@ -14,7 +14,6 @@ public class Tile : MonoBehaviour
     [SerializeField] Color regularColor, corruptedColor;
     [SerializeField] int distanceToDestination = 0;
     [SerializeField] GameObject currentModel;
-    [SerializeField] AudioSource source;
     public Vector2Int coordinates;
     public Direction pathDirection;
     public Vector3 exitPoint;
@@ -282,7 +281,6 @@ public class Tile : MonoBehaviour
         foreach (var neighbor in surroundingTiles)
         {
             if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
-            else continue;
         }
     }
     public void Corrupt()
@@ -291,8 +289,8 @@ public class Tile : MonoBehaviour
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = corruptedColor;
-            if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Claimed_Obstructed);
-            else if (neighbor.Type == TileType.Own) neighbor.SetType(TileType.Claimed_Own);
+            //if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Claimed_Obstructed);
+            //else if (neighbor.Type == TileType.Own) neighbor.SetType(TileType.Claimed_Own);
         }
     }
     public void Restore()
@@ -301,8 +299,8 @@ public class Tile : MonoBehaviour
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
-            if (neighbor.Type == TileType.Claimed_Obstructed) neighbor.SetType(TileType.Obstructed);
-            else if (neighbor.Type == TileType.Claimed_Own) neighbor.SetType(TileType.Own);
+            //if (neighbor.Type == TileType.Claimed_Obstructed) neighbor.SetType(TileType.Obstructed);
+            //else if (neighbor.Type == TileType.Claimed_Own) neighbor.SetType(TileType.Own);
         }
     }
     public TileData OnSave()
