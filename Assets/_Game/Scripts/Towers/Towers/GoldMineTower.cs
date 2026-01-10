@@ -11,7 +11,7 @@ public class GoldMineTower : Tower
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
-        GoldGenerated = GoldGenerationList[CurrentLevel];
+        CrystelGenerated = GoldGenerationList[CurrentLevel];
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         maxHP = HP[CurrentLevel];
@@ -27,12 +27,12 @@ public class GoldMineTower : Tower
         {
            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
-            GoldGenerated = GoldGenerationList[CurrentLevel];
+            CrystelGenerated = GoldGenerationList[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
 
             model.SetActive(false);

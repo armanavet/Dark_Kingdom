@@ -21,7 +21,7 @@ public class SaveData
 public class GeneralData : ISaveData
 {
     public int CurrentWave;
-    public int CurrentGold;
+    public int CurrentCrystel;
     public int EnemySpawnTile;
 }
 

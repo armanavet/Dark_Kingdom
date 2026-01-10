@@ -6,13 +6,13 @@ using UnityEngine;
 public class SaveMetaData
 {
     public int PlayTime;
-    public int CurrentGold;
+    public int CurrentCrystel;
     public int CurrentWave;
 
-    public SaveMetaData(int playTime, int currentGold, int currentWave)
+    public SaveMetaData(int playTime, int currentCrystel, int currentWave)
     {
         PlayTime = playTime;
-        CurrentGold = currentGold;
+        CurrentCrystel = currentCrystel;
         CurrentWave = currentWave;
     }
     

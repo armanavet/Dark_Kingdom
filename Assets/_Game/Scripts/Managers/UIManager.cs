@@ -192,7 +192,7 @@ public class UIManager : MonoBehaviour
             if (towerPreview.canPlace)
             {
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
-                EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
+                EconomyManager.Instance.ChangeCrystelAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
             }

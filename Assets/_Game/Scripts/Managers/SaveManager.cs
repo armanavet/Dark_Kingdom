@@ -79,7 +79,7 @@ public static class SaveManager
         }
         GeneralData economyData = (GeneralData)saveData.Get(nameof(EconomyManager));
         GeneralData stateData = (GeneralData)saveData.Get(nameof(StateManager));
-        SaveMetaData metaData = new SaveMetaData(69420, economyData.CurrentGold, stateData.CurrentWave);
+        SaveMetaData metaData = new SaveMetaData(69420, economyData.CurrentCrystel, stateData.CurrentWave);
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
         {

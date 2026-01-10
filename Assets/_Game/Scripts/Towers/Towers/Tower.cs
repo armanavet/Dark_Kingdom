@@ -34,7 +34,7 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
-    [HideInInspector] public int GoldGenerated = 0;
+    [HideInInspector] public int CrystelGenerated = 0;
     [HideInInspector] public int LevelMax = 1;
     [HideInInspector] public int CurrentLevel = 0;
     [HideInInspector] public int PurchasePrice;
@@ -46,7 +46,7 @@ public abstract class Tower : MonoBehaviour
 
     public void Sell(int price)
     {
-        EconomyManager.Instance.ChangeGoldAmount(price);
+        EconomyManager.Instance.ChangeCrystelAmount(price);
         Destroy();
     }
     public void ApplyDamage(float damage)
