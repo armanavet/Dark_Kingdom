@@ -38,6 +38,8 @@ public class ArtilleryTower : Tower
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        healthBar.SetMaxHealth(currentHP);
+        HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x, (HealthBarPanel.transform.position.y * 0) + healthBarPoints[CurrentLevel], HealthBarPanel.transform.position.z);
         StartCoroutine(PlayPlaceSFX());
         //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower, towerType);
     }
@@ -135,10 +137,15 @@ public class ArtilleryTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             model.SetActive(true);
+            HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x,
+                (HealthBarPanel.transform.position.y * 0) + healthBarPoints[CurrentLevel],
+                HealthBarPanel.transform.position.z);
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            healthBar.SetMaxHealth(currentHP);
+
         }
         //StopCoroutine(PlayUpdateSfx());
     }

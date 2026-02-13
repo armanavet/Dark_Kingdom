@@ -1,25 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Portal : MonoBehaviour
 {
+    [SerializeField] public Tile SpawnTile;
+    [SerializeField] int id;
     [Header("Set Portal Layer")]
     [SerializeField] string portalLayerName = "Portal";
     [Header("Set Portal Visual Parameters")]
-    [SerializeField] public Gradient emissionColor;
-    [SerializeField] public ParticleSystem orbParticlesL, orbParticlesR, fireParticles;
+    [SerializeField] Gradient emissionColor;
+    [SerializeField] ParticleSystem orbParticlesL, orbParticlesR, fireParticles;
     //[SerializeField] public AudioSource gateAudio, screamAudio, orbLAudio, orbRAudio, fireAudio;
-    [SerializeField] public Light gateLight;
-    [SerializeField] public Renderer gateRenderer, gateEffectRenderer;
+    //It needs a sound data for clips
+    [SerializeField] Light gateLight;
+    [SerializeField] Renderer gateRenderer, gateEffectRenderer;
 
+    [HideInInspector] public List<GameObject> path;
+    
     Material gateMaterial, gateEffectMaterial;
     GameObject gateEffectObj;
-
     float gateLightMaxIntencity = 5f;
-          //gateAudioMaxVolume = 0.3f,
-          //fireAudioMaxVolume = 0.6f;
+    //gateAudioMaxVolume = 0.3f,
+    //fireAudioMaxVolume = 0.6f;
     bool hellGateOn;
+    public int ID => id;
 
     #region Singleton 
     private static Portal _instance;
@@ -70,7 +77,7 @@ public class Portal : MonoBehaviour
         //gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0));
         //gateLight.intensity = 0;
     }
-
+    
     public IEnumerator ActivateVisual()
     {
 
@@ -101,7 +108,7 @@ public class Portal : MonoBehaviour
 
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(1f));
 
-        StartCoroutine(ActivateGate());
+        yield return StartCoroutine(ActivateGate());
     }
 
     public IEnumerator ActivateGate()
@@ -133,8 +140,7 @@ public class Portal : MonoBehaviour
         gateLight.intensity = gateLightMaxIntencity;
         //gateAudio.volume = gateAudioMaxVolume;
 
-        yield return new WaitForSeconds(1f);
-        WaveManager.Instance.isPortalOn = true;
+        //yield return new WaitForSeconds(1f);
     }
 
     public IEnumerator DeactivateVisual()
@@ -164,7 +170,7 @@ public class Portal : MonoBehaviour
         gateLight.gameObject.SetActive(false);
         //gateAudio.Stop();
         //fireAudio.Stop();
-        WaveManager.Instance.isPortalOff = true;
+        //WaveManager.Instance.isPortalOff = true;
         yield break;
     }
 }

@@ -25,6 +25,8 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
     [SerializeField] protected HitPointPopup hitPointPopup;
+    [SerializeField] protected List<float> healthBarPoints;
+    [SerializeField] protected HealthBar healthBar;
 
     protected float maxHP;
     protected float currentHP;
@@ -42,6 +44,7 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public TowerData saveData;
 
     public GameObject TowerPanel;
+    public GameObject HealthBarPanel;
     public event System.Action OnDestroyed;
 
     public void Sell(int price)
@@ -52,6 +55,8 @@ public abstract class Tower : MonoBehaviour
     public void ApplyDamage(float damage)
     {
         currentHP -= damage;
+        healthBar.SetHealth(currentHP);
+        if(Type == TowerType.MainTower) UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         if (currentHP <= 0)
         {
             Destroy();
@@ -59,6 +64,10 @@ public abstract class Tower : MonoBehaviour
     }
     void Destroy()
     {
+        if(Type == TowerType.MainTower)
+        {
+            //StateManager.Instance.ChangeGameStateTo();
+        }
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;

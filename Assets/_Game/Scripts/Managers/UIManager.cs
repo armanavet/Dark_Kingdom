@@ -8,9 +8,11 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 using AudioSystem;
+using UnityEditor.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] public HealthBar MainTowerHB;
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
@@ -22,7 +24,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public float GameTimer;
 
     Camera mainCamera;
-    GameObject activePanel, previousHit, effect;
+    GameObject activePanel, previousHit, effect, activeBar;
     TowerPreview towerPreview;
     Button[] towerPurchaseButtons;
     float TowerPurchasePanelYInitial;
@@ -68,10 +70,10 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         ChangeUiButtonVisibility();
-
+        ShowTowerHealthBar();
         if (Input.GetMouseButtonDown(0))
         {
-            if (IsClickOnTowerPanelUI()) return; // Check if the click was performed on the Tower UI panel
+            if (IsClickOnTowerPanelUI()) { return; } // Check if the click was performed on the Tower UI panel
             if (EventSystem.current.IsPointerOverGameObject()) //Check if the click was performed on a UI element
             {
                 ShowTowerPanel(false);
@@ -81,7 +83,8 @@ public class UIManager : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
             if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) 
+                ShowTowerPanel(true, towerHit.transform);
             else ShowTowerPanel(false);
         }
         else if (Input.GetMouseButton(1))
@@ -89,11 +92,6 @@ public class UIManager : MonoBehaviour
             ShowTowerPanel(false);
             PlaceTower(false);
 
-        }
-
-        if (isPanelActive && activePanel != null)
-        {
-            activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
         }
     }
     void ChangeUiButtonVisibility()
@@ -109,6 +107,30 @@ public class UIManager : MonoBehaviour
             {
                 towerPurchaseButtons[i].interactable = false;
             }
+        }
+    }
+
+    void ShowTowerHealthBar()
+    {
+        if (isPanelActive == true && activeBar != null)
+        {
+            activeBar.SetActive(false);
+            return;
+        }
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask))
+        {
+            //Debug.Log("enter");
+            Tower tower = towerHit.transform.GetComponent<Tower>();
+            GameObject healthBar = tower.HealthBarPanel;
+            if (healthBar == null) return;
+
+            activeBar = healthBar;
+            activeBar.SetActive(true);
+        }
+        else
+        {
+            if (activeBar != null) activeBar.SetActive(false);
         }
     }
     void ShowTowerPanel(bool value, Transform selectedTower = null)
@@ -132,12 +154,13 @@ public class UIManager : MonoBehaviour
             isPanelActive = false;
         }
     }
+
     void SetTowerPanelPosition(GameObject panel, Tower tower)
     {
         Transform panelPos = panel.transform;
-        float towerPositionX = tower.transform.position.x;
-        float towerPositionY = tower.transform.position.y;
-        float towerPositionZ = tower.transform.position.z;
+        float x = tower.transform.position.x;
+        float y = tower.transform.position.y;
+        float z = tower.transform.position.z;
         float yOffset = towerPanelYOffset;
 
         if (tower.CompareTag("ArcherTower")) yOffset = 2.6f;
@@ -145,7 +168,7 @@ public class UIManager : MonoBehaviour
         else if (tower.CompareTag("ArtilleryTower")) yOffset = 2.6f;
         else if (tower.CompareTag("GoldMine")) yOffset = 2.6f;
 
-        SetPosition(panelPos, yOffset, towerPositionX, towerPositionY, towerPositionZ);
+        SetPosition(panelPos, yOffset, x, y, z);
 
     }
     void SetPosition(Transform positionToPlace, float yOffsetNumber, float x, float y, float z)

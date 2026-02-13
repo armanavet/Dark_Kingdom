@@ -30,8 +30,9 @@ public class ArcherTower : Tower
         projectile = Projectiles[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
-
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        healthBar.SetMaxHealth(currentHP);
+        HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x, (HealthBarPanel.transform.position.y*0) + healthBarPoints[CurrentLevel], HealthBarPanel.transform.position.z);
         attackCooldown = 1 / attackSpeed;
         StartCoroutine(PlayPlaceSFX());
         //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
@@ -128,10 +129,12 @@ public class ArcherTower : Tower
             model = Models[CurrentLevel];
             shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
             model.SetActive(true);
-
+            HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x, (HealthBarPanel.transform.position.y*0) + healthBarPoints[CurrentLevel], HealthBarPanel.transform.position.z);
+            
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            healthBar.SetMaxHealth(currentHP);
 
             Debuff newDebuff = Debuffs[CurrentLevel];
             if (newDebuff != null)

@@ -22,7 +22,8 @@ public class GeneralData : ISaveData
 {
     public int CurrentWave;
     public int CurrentCrystel;
-    public int EnemySpawnTile;
+    //public int EnemySpawnTile;
+    public List<int> activePortalIDs = new List<int>();
 }
 
 [System.Serializable]

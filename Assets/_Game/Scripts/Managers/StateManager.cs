@@ -45,6 +45,7 @@ public class StateManager : MonoBehaviour, ISaveable
 
     void Update()
     {
+        Time.timeScale = timeMultiplier;
         if (State == GameState.Passive)
         {
             Timer -= Time.deltaTime * timeMultiplier;
@@ -62,9 +63,10 @@ public class StateManager : MonoBehaviour, ISaveable
         int wave = currentWave;
         if (newState == GameState.Active)
         {
+            Debug.Log("enter the active phase " + currentWave + " times.");
             State = GameState.Active;
             PreviusState = State;
-            timeMultiplier = 1;
+            //timeMultiplier = 1;
             WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
