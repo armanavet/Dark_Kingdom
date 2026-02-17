@@ -1,11 +1,7 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class MainTowerDefender
@@ -35,20 +31,13 @@ public class MainTower : Tower
     [SerializeField] float AttackSpeed;
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
-    
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
-    
-    float damage;
 
-    private void Awake()
-    {
-        if (towerAudioSource == null)
-        {
-            towerAudioSource = GetComponent<AudioSource>();
-        }
-    }
+    public Vector3 size = Vector3.one;
+    [Range(0f, 1f)]
+    public float alpha = 0.5f;
+
+    float damage;
+    Vector3 range;
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
@@ -66,10 +55,13 @@ public class MainTower : Tower
             defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
         }
+        range = new Vector3(attackRange, attackRange, attackRange);
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     private void Update()
     {
+
         foreach (var defender in Defender)
         {
             if (defender.cooldown <= 0)
@@ -85,24 +77,40 @@ public class MainTower : Tower
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        //Gizmos.color = Color.yellow;
+        //foreach (var defender in Defender)
+        //{
+        //    position = defender.turretRoot.position;
+        //    Gizmos.DrawCube(position, attackRange);
+        //}
+        ////Vector3 posiion = transform.position;
+        //Gizmos.color = Color.red;
+        ////if (target != null)
+        ////{
+        ////    Gizmos.DrawLine(transform.position, target.transform.position);
+        ////}
+        ///
+
+
+        // Set the color with custom alpha.
+        Gizmos.color = new Color(0f, 1f, 0f, alpha); // Green with custom alpha
         Vector3 position = new Vector3();
+
+        // Draw the cube.
         foreach (var defender in Defender)
         {
             position = defender.turretRoot.position;
-            Gizmos.DrawWireSphere(position, attackRange);
+            Gizmos.DrawCube(position, size);
         }
-        //Vector3 posiion = transform.position;
-        Gizmos.color = Color.red;
-        //if (target != null)
-        //{
-        //    Gizmos.DrawLine(transform.position, target.transform.position);
-        //}
+        // Draw a wire cube outline.
+        //Gizmos.color = Color.white;
+        //Gizmos.DrawWireCube(position, size);
     }
     public override void Upgrade()
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
+            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -126,13 +134,13 @@ public class MainTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
-
+        //StopCoroutine(PlayUpdateSfx());
 
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        TowerAudio(TowerActionSound, towerAudioSource);
+        //AudioManager.Instance.Play(TowerSoundData,defender.turret.transform, ClipType.OnLaunch_Tower, towerType);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -143,8 +151,9 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
-        Collider[] PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, illusionMask);
-        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapSphere(defender.turretRoot.position, attackRange, enemyMask);
+
+        Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, illusionMask);
+        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, enemyMask);
         if (PotentialTargets.Length > 0)
         {
             if (defender.target == null)
@@ -180,7 +189,7 @@ public class MainTower : Tower
     {
         for (int j = 0; j < towersRootPoints.Count; j++)
         {
-            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y, towersRootPointPositions[currentLevel].y[j]);
+            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y * 0, towersRootPointPositions[currentLevel].y[j]);
         }
     }
     IEnumerator HitTarget(MainTowerDefender defender, GameObject currentProjectile, float arriveTime)
@@ -189,13 +198,23 @@ public class MainTower : Tower
 
         if (defender.target != null)
         {
+            UIManager.Instance.ShowDamage(hitPointPopup, defender.target, damage);
             defender.target.ApplyDamage(damage);
+
             //foreach (var debuff in currentDebuffs)
             //{
             //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
             //}
         }
-        TowerAudio(TowerHitSound, towerAudioSource);
+        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower,towerType);
         Destroy(currentProjectile);
+    }
+    public override IEnumerator PlayUpdateSfx()
+    {
+        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnUpgradeVisualEffect_Tower, towerType);
+        //effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
+        //effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        //Destroy(effect, 2f);
+        yield break;
     }
 }

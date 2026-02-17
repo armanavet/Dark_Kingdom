@@ -1,28 +1,42 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.ComponentModel.Design;
+using Unity.VisualScripting;
+using AudioSystem;
 
 public class WaveManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] Units units;
-    [SerializeField] Wave[] waves;
-    [SerializeField] GameObject spawnerPrefab;
-    [SerializeField] GameObject enemyPathPrefab;
-    [SerializeField] float delayBetweenSpawns;
-    [SerializeField] int spawnerDestroyTime;
-    [SerializeField] int spawnDistanceFromCenter;
-    [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
+    [Header("Set Wave Parameters")]       
+        [SerializeField] Units units;
+        [SerializeField] Wave[] waves;
+        [SerializeField] GameObject spawnerPrefab;
+        [SerializeField] GameObject enemyPathPrefab;
+        [SerializeField] float delayBetweenSpawns;
+        [SerializeField] float spawnerDestroyTime;
+        [SerializeField] int spawnDistanceFromCenter;
+        [SerializeField, FloatRangeSlider(-10f, 10f)] FloatRange distanceVariance = new FloatRange(0f);
+    [Header("For Fast testing")]
+        [SerializeField] bool a;
+        [SerializeField] Tile SpawnPoint;
     
-    [SerializeField] bool a;
-    [SerializeField] Tile SpawnPoint;
-    
-    bool cantFindPath => spawnPoint.NextOnPath == null;
+    GameObject spawner;
     List<GameObject> enemyPath = new List<GameObject>();
     List<Enemy> enemies = new List<Enemy>();
+    Wave enemiesToSpawn;
+    //Wave[] reserveWave;//this line is not necessary
     Tile spawnPoint;
 
+    int currentWave;
+    bool cantFindPath => spawnPoint.NextOnPath == null;
+    bool isPortalDead;
+
+    public PortalMode portalMode;
     public int totalEnemiesInWave = 0;
+    public int waveLength;
+    public bool isPortalOn;
+    public bool isPortalOff;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -43,23 +57,35 @@ public class WaveManager : MonoBehaviour, ISaveable
         RegisterSaveable();
     }
     #endregion
-
     public void Initialize()
     {
         units.OrganizeByType();
+        waveLength = waves.Length;
+        isPortalDead = false;
+        isPortalOn = false;
+        isPortalOff = false;
     }
-
-    public void SpawnWave(int wave)
+    public void GetPhaseCommands(int wave, bool isLastWave = false)
     {
         if (waves == null || waves.Length == 0) return;
         if (wave >= waves.Length) return;
-
-        Wave enemiesToSpawn = waves[wave];
-        spawnPoint.Corrupt();
-        GameObject spawner = Instantiate(spawnerPrefab, spawnPoint.transform.localPosition, spawnPoint.pathDirection.GetRotation());
-        StartCoroutine(SpawnUnits(enemiesToSpawn, spawner));
+        //reserveWave = waves;//this line is not necessary
+        currentWave = wave;
+        TotalEnemiesInWave(wave);
+        DrawEnemyPath();
+        if (!isLastWave) portalMode = PortalMode.NormalMode;
+        else portalMode = PortalMode.BossMode;
     }
-
+    public void StartSpawn()
+    {
+        spawner = Instantiate(spawnerPrefab, spawnPoint.transform.localPosition, spawnPoint.pathDirection.GetRotation());
+        spawnPoint.Corrupt();
+        StartCoroutine(SpawnFlow(spawner, enemiesToSpawn));
+    }
+    //void StartCoroutines(GameObject spawner, Wave enemies)
+    //{
+    //    StartCoroutine(SpawnUnits(spawner, enemies));
+    //}
     void CalculateSpawnPoint()
     {
         if (a)
@@ -70,7 +96,6 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             List<Tile> potentialPoints = new List<Tile>();
             int variance = (int)distanceVariance.RandomValueInRange;
-
             foreach (var tile in GameBoard.Instance.Tiles)
             {
                 if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
@@ -78,16 +103,32 @@ public class WaveManager : MonoBehaviour, ISaveable
                     potentialPoints.Add(tile);
                 }
             }
-
             spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
         }
-
     }
     public void TotalEnemiesInWave(int currentWave)
     {
+        enemiesToSpawn = waves[currentWave];
         totalEnemiesInWave = waves[currentWave].Enemies.Sum(e => e.Count);
     }
-    IEnumerator SpawnUnits(Wave wave, GameObject spawner)
+    IEnumerator SpawnFlow(GameObject spawner, Wave wave)
+    {
+
+        // 1. Pre-activate portal
+        yield return Portal.Instance.ActivateVisual();
+        // 2. Spawn enemies
+        yield return new WaitUntil(() => isPortalOn == true);
+        yield return SpawnUnits(spawner, wave);
+        // 3. Deactivate portal
+        yield return new WaitUntil(() => isPortalOn == false);
+        yield return Portal.Instance.DeactivateVisual();
+        // 4. Destroy portal
+        yield return new WaitUntil(() => isPortalOff == true);
+        Destroy(spawner, spawnerDestroyTime);
+        yield break;
+    }
+
+    IEnumerator SpawnUnits(GameObject spawner, Wave wave)
     {
         foreach (var enemyType in wave.Enemies)
         {
@@ -104,27 +145,73 @@ public class WaveManager : MonoBehaviour, ISaveable
                     Destroy(path);
                 }
                 enemyPath.Clear();
-                yield return new WaitForSeconds(delayBetweenSpawns);
+
+                bool islastUint = (totalEnemiesInWave == 1);
+                if (!islastUint)
+                    yield return new WaitForSeconds(delayBetweenSpawns);
             }
         }
-        Destroy(spawner, spawnerDestroyTime);
-        spawnPoint.Restore();
+        yield break;
     }
 
-    public void OnEnemyDeath(Enemy enemy)
+    void IsWaveEnd()
     {
-        if (!enemies.Contains(enemy)) return;
-
-        enemies.Remove(enemy);
-        totalEnemiesInWave--;
-        if (totalEnemiesInWave == 0)
+        if (portalMode == PortalMode.NormalMode)
         {
-            enemyPath.ForEach(x => Destroy(x));
-            StateManager.Instance.ChangeGameStateTo(GameState.Passive);
+            if (totalEnemiesInWave == 0)
+            {
+                isPortalOn = false;
+                enemiesToSpawn = null;
+                enemies.Clear();
+                spawnPoint.Restore();
+                enemyPath.ForEach(x => Destroy(x));
+                StateManager.Instance.ChangeGameStateTo(GameState.Passive);
+
+            }
+        }
+        else if (portalMode == PortalMode.BossMode)
+        {
+            if (isPortalDead == true)
+            {
+                isPortalOn = false;
+                enemiesToSpawn = null;
+                enemies.Clear();
+                spawnPoint.Restore();
+                enemyPath.ForEach(x => Destroy(x));
+                StateManager.Instance.ChangeGameStateTo(GameState.End);
+            }
+            else if (isPortalDead == false && totalEnemiesInWave == 0)
+            {
+                TotalEnemiesInWave(currentWave);
+                StartCoroutine(SpawnUnits(spawner, enemiesToSpawn));
+            }
         }
     }
+    public void OnEnemyDeath(Enemy enemy)
+    {
+        if (portalMode == PortalMode.NormalMode && !enemies.Contains(enemy))
+        {
+            return;
+        }
+        else if (portalMode == PortalMode.BossMode && !enemies.Contains(enemy))
+        {
+            isPortalDead = true;
+        }
+        enemies.Remove(enemy);
+        totalEnemiesInWave--;
+        IsWaveEnd();
 
-    public void DrawEnemyPath()
+    }
+    /*public void OnPortalDeath(Enemy enemy)
+    {
+        isPortalDead = true;
+        isPortalDeath == true
+        enemypath => destroy()
+        enemies remove all
+        change state to end
+         
+    }*/
+    void DrawEnemyPath()
     {
         CalculateSpawnPoint();
         Tile tile = spawnPoint;
@@ -138,28 +225,23 @@ public class WaveManager : MonoBehaviour, ISaveable
             tile = tile.NextOnPath;
         }
     }
-
     public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
-
     public string GetUniqueSaveID()
     {
         return nameof(WaveManager);
     }
-
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
         saveData.EnemySpawnTile = spawnPoint.Index;
         return saveData;
     }
-
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
         spawnPoint = GameBoard.Instance.Tiles[saveData.EnemySpawnTile];
     }
 }
-
 #region Wave
 [System.Serializable]
 public class Unit
@@ -178,6 +260,7 @@ public class Units
     {
         foreach (var unit in UnitList)
         {
+            if(unit != null)
             UnitsByType.Add(unit.Type, unit.Prefab);
         }
     }
@@ -202,3 +285,12 @@ public class EnemiesToSpawn
 }
 
 #endregion
+
+#region PortalPhase
+public enum PortalMode
+{
+    NormalMode,
+    BossMode
+}
+#endregion
+

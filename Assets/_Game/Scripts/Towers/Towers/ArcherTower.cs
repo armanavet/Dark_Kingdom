@@ -1,3 +1,4 @@
+using AudioSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,21 +14,10 @@ public class ArcherTower : Tower
     [SerializeField, Range(1, 10f)]
     float attackRange = 2f;
 
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-    [SerializeField] protected AudioClip TowerHitSound;
-    
+
     float attackCooldown;
     float damage;
     Enemy target;
-
-    private void Awake()
-    {
-        if (towerAudioSource == null)
-        {
-            towerAudioSource = GetComponent<AudioSource>();
-        }
-    }
 
     private void Start()
     {
@@ -43,7 +33,8 @@ public class ArcherTower : Tower
 
         currentHP = currentHP == 0 ? maxHP : currentHP;
         attackCooldown = 1 / attackSpeed;
-
+        StartCoroutine(PlayPlaceSFX());
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     void Update()
@@ -62,7 +53,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        TowerAudio(TowerActionSound,towerAudioSource);
+        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -70,15 +61,13 @@ public class ArcherTower : Tower
         newProjectile.GetComponent<Arrow>()?.Initialize(projectileSpeed);
         StartCoroutine(HitTarget(newProjectile, travelTime));
     }
-
     bool AcquireTarget()
     {
         Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if (targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
-        }
+        targets = Physics.OverlapSphere(transform.position, attackRange, portalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;
@@ -124,11 +113,12 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
+            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
             CurrentLevel++;
-            if(CurrentLevel < UpgradePrices.Count)
+            if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
@@ -157,6 +147,7 @@ public class ArcherTower : Tower
                 currentDebuffs.Add(newDebuff);
             }
         }
+        //StopCoroutine(PlayUpdateSfx());
     }
 
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
@@ -165,13 +156,14 @@ public class ArcherTower : Tower
 
         if (target != null)
         {
+            UIManager.Instance.ShowDamage(hitPointPopup,target, damage);
             target.ApplyDamage(damage);
             foreach (var debuff in currentDebuffs)
             {
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        TowerAudio(TowerHitSound, towerAudioSource);
+        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower, towerType);
         Destroy(currentProjectile);
     }
 }

@@ -1,25 +1,21 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using VFXTools;
 
 public class DefaultEnemy : Enemy
-{   
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
+{
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, unitType);
     }
     void Update()
     {

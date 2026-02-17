@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,14 +16,16 @@ public class GoldMineTower : Tower
         UpgradePrice = UpgradePrices[CurrentLevel];
         maxHP = HP[CurrentLevel];
         model = Models[CurrentLevel];
-
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        StartCoroutine(PlayPlaceSFX());
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     public override void Upgrade()
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
+           //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -40,5 +43,6 @@ public class GoldMineTower : Tower
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
         }
+        //StopCoroutine(PlayUpdateSfx());
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using AudioSystem;
 
 public class FlyingEnemy : Enemy
 {
@@ -16,23 +17,17 @@ public class FlyingEnemy : Enemy
     Quaternion targetRotation;
     
     float rotationProgress;
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {

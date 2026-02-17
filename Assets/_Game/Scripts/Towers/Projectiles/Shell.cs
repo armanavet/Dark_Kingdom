@@ -1,28 +1,26 @@
-using System.Collections;
+using AudioSystem;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip ExplodeSound;
-    protected AudioSource audioSource;
-    public LayerMask EnemyMask;
+    [SerializeField] protected SoundData ExplosionSoundData;
+    [SerializeField] GameObject[] effects;
+    [SerializeField] LayerMask EnemyMask;
+    [SerializeField] LayerMask PortalMask;
+    GameObject effect;
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
-
+    HitPointPopup hitPointPopup;
+    TowerType towerType;
     private void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        //ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Projectile_Shell);
     }
-
     void Update()
-    { 
+    {
         age += Time.deltaTime;
         Vector3 p = launchPoint + launchVelocity * age;
         p.y -= 0.5f * 9.81f * age * age;
@@ -31,13 +29,11 @@ public class Shell : MonoBehaviour
         d.y -= 9.81f * age;
         if (transform.position.y < 0f)
         {
-            
             Explode();
-
         }
 
     }
-    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs)
+    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs, HitPointPopup hitPointPopup, TowerType towerType)
     {
         this.launchPoint = launchPoint;
         this.targetPoint = targetPoint;
@@ -45,16 +41,20 @@ public class Shell : MonoBehaviour
         this.blastRadius = blastRadius;
         this.damage = damage;
         this.debuffs = debuffs;
+        this.hitPointPopup = hitPointPopup;
+        this.towerType = towerType;
     }
     void Explode()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
+        Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, PortalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
 
         if (targets.Length > 0)
         {
-            foreach(var target in targets)
+            foreach (var target in targets)
             {
                 Enemy enemy = target.GetComponent<Enemy>();
+                UIManager.Instance.ShowDamage(hitPointPopup, enemy, damage);
                 enemy.ApplyDamage(damage);
                 foreach (var debuff in debuffs)
                 {
@@ -62,7 +62,12 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.instance.PlayExplosionSound(ExplodeSound);
+        //AudioManager.Instance.Play(ExplosionSoundData, transform, ClipType.OnLaunch_Tower, towerType);
+        if (effects.Length != 0)
+        {
+            effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
+            Destroy(effect, 2f);
+        }
         Destroy(gameObject);
 
     }

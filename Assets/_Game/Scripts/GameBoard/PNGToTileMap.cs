@@ -52,6 +52,8 @@ public class PNGToTileMap : MonoBehaviour
         if (isColorClose(color, Color.white)) return TileType.Neutral;
         if (isColorClose(color, Color.yellow)) return TileType.Own;
         if (isColorClose(color, Color.black)) return TileType.Obstructed;
+        if (isColorClose(color, Color.blue)) return TileType.Obstructed_River;
+        if (isColorClose(color, Color.red)) return TileType.Bridge;
         return TileType.Neutral;
     }
 

@@ -50,7 +50,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public void OnEconomicStructureChange(Tower structure)
     {
         if (structure == null) return;
-        if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
+        if (structure.Type != TowerType.CrystalMine && structure.Type != TowerType.MainTower) return;
 
         if (EconomicBuildings.Contains(structure))
         {

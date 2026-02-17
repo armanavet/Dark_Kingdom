@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -8,10 +9,11 @@ public class Tile : MonoBehaviour
     public TileType Type;
 
     //[SerializeField] Transform arrow;
-    [SerializeField] GameObject[] NeutralTiles, OwnTiles, ObstructedTiles;
+    [SerializeField] GameObject[] NeutralTiles, OwnTiles, ObstructedTiles, ObstructedRiverTiles;
     [SerializeField] Tile north, south, east, west, nextOnPath;
     [SerializeField] Color regularColor, corruptedColor;
     [SerializeField] int distanceToDestination = 0;
+    [SerializeField] GameObject currentModel;
     public Vector2Int coordinates;
     public Direction pathDirection;
     public Vector3 exitPoint;
@@ -19,16 +21,14 @@ public class Tile : MonoBehaviour
     public int TilePrice;
     public List<Tile> surroundingTiles = new List<Tile>();
     List<Tile> neighbors = new List<Tile>();
-    [SerializeField] GameObject currentModel;
 
-    
     public Tile NextOnPath => nextOnPath;
     public int DistanceToDestinationOriginal { get; private set; }
     public int Index => GameBoard.Instance.Length * coordinates.y + coordinates.x;
     bool canBePath => (Type == TileType.Neutral ||
                        Type == TileType.Own ||
-                       Type == TileType.Claimed);
-
+                       Type == TileType.Bridge);
+    bool canBeRiverPath => (Type == TileType.Obstructed_River || Type == TileType.Bridge);
     public Tile GrowPathNorth(bool ignoreTowers) => GrowPathTo(north, Direction.South, ignoreTowers);
     public Tile GrowPathSouth(bool ignoreTowers) => GrowPathTo(south, Direction.North, ignoreTowers);
     public Tile GrowPathEast(bool ignoreTowers) => GrowPathTo(east, Direction.West, ignoreTowers);
@@ -43,99 +43,143 @@ public class Tile : MonoBehaviour
         Type = type;
         if (setModel) SetModel();
     }
-
     public void SetModel()
     {
         NeutralTiles.ToList().ForEach(x => x.SetActive(false));
         OwnTiles.ToList().ForEach(x => x.SetActive(false));
         ObstructedTiles.ToList().ForEach(x => x.SetActive(false));
+        ObstructedRiverTiles.ToList().ForEach(x => x.SetActive(false));
 
         int random;
         switch (Type)
         {
             case TileType.Neutral:
-                ConnectRoads();
-                break;
-            case TileType.Claimed:
-                ConnectRoads();
+            case TileType.Bridge:
+                Connect(NeutralTiles);
                 break;
             case TileType.Own:
             case TileType.Destination:
-                random = Random.Range(0, OwnTiles.Length);
                 if (OwnTiles.Length > 0)
+                {
+                    random = Random.Range(0, OwnTiles.Length);
                     currentModel = OwnTiles[random];
+                }
                 break;
             case TileType.Obstructed:
-                random = Random.Range(0, ObstructedTiles.Length);
                 if (ObstructedTiles.Length > 0)
+                {
+                    random = Random.Range(0, ObstructedTiles.Length);
                     currentModel = ObstructedTiles[random];
+                }
+                break;
+            case TileType.Obstructed_River:
+                Connect(ObstructedRiverTiles, true);
                 break;
             default: break;
         }
         currentModel.SetActive(true);
     }
-
-    void ConnectRoads()
+    void Connect(GameObject[] tilesModels, bool isRiver = false)
     {
-        if (NeutralTiles.Length == 0) return;
+        if (tilesModels == null || tilesModels.Length == 0) return;
 
-        if (NeutralTiles.Length < 5)
+        GameObject straight = null, corner = null, end = null, tSection = null, crossroads = null, bridge = null;
+
+        if (isRiver == false && tilesModels.Length == NeutralTiles.Length)
         {
-            NeutralTiles[0].SetActive(true);
+            straight = NeutralTiles[0];
+            corner = NeutralTiles[1];
+            end = NeutralTiles[2];
+            tSection = NeutralTiles[3];
+            crossroads = NeutralTiles[4];
+            bridge = NeutralTiles[5];
+        }
+        else if (ObstructedRiverTiles.Length == ObstructedRiverTiles.Length)
+        {
+            straight = ObstructedRiverTiles[0];
+            corner = ObstructedRiverTiles[1];
+            end = ObstructedRiverTiles[2];
+        }
+        else
+        {
+            Debug.Log("You're trying to connect the wrong tiles!!!");
+        }
+
+        // Get neighbors that matter (river vs road)
+        List<Tile> neighborsList = neighbors
+            .Where(x => x != null && (isRiver ? x.canBeRiverPath : x.canBePath))
+            .ToList();
+
+        int count = neighborsList.Count;
+
+        //Fallback if not enough models
+        if (tilesModels.Length <= count)
+        {
+            ActivateModel(tilesModels[0]);
             return;
         }
-        var straight = NeutralTiles[0];
-        var corner = NeutralTiles[1];
-        var tSection = NeutralTiles[2];
-        var crossroads = NeutralTiles[3];
-        var end = NeutralTiles[4];
 
-        List<Tile> surroundingRoads = neighbors.Where(x => x.canBePath).ToList();
-        switch (surroundingRoads.Count)
+        switch (count)
         {
-            case 1:
-                currentModel = end;
-                currentModel.SetActive(true);
-                currentModel.transform.LookAt(surroundingRoads[0].transform);
+            case 0:
+                currentModel = end; // end tile fallback
                 break;
+
+            case 1:
+                currentModel = end; // end
+                LookAtTile(neighborsList[0].transform);
+                break;
+
             case 2:
-                if (VectorOperations.PointsLineUp(surroundingRoads[0].coordinates, surroundingRoads[1].coordinates))
+                if (VectorOperations.PointsLineUp(neighborsList[0].coordinates, neighborsList[1].coordinates))
                 {
-                    currentModel = straight;
-                    currentModel.transform.LookAt(surroundingRoads[0].transform);
+                    if (isRiver == false && IsBridgeCase())
+                    {
+                        currentModel = bridge;
+                        currentModel.transform.rotation = SetBridgeRotation();
+                    }
+                    else
+                    {
+                        currentModel = straight;
+                        LookAtTile(neighborsList[0].transform);
+                    }
                 }
                 else
                 {
                     currentModel = corner;
-                    currentModel.SetActive(true);
                     currentModel.transform.rotation = SetCornerRotation();
                 }
                 break;
+
             case 3:
-                currentModel = tSection;
-                currentModel.SetActive(true);
+                currentModel = tSection; // T-section
                 currentModel.transform.rotation = SetTSectionRotation();
                 break;
+
             case 4:
-                currentModel = crossroads;
-                currentModel.SetActive(true);
-                break;
-            default:
+                currentModel = crossroads; // Crossroad
                 break;
         }
+
+        ActivateModel(currentModel);
     }
-
-
     Quaternion SetCornerRotation()
     {
         float yRotation = 0;
-        if (north != null && east != null && north.canBePath && east.canBePath) yRotation = 90f;
-        else if (east != null && south != null && east.canBePath && south.canBePath) yRotation = 180f;
-        else if (south != null && west != null && south.canBePath && west.canBePath) yRotation = 270f;
-
+        if (Type == TileType.Neutral)
+        {
+            if (north != null && east != null && north.canBePath && east.canBePath) yRotation = 90f;
+            else if (east != null && south != null && east.canBePath && south.canBePath) yRotation = 180f;
+            else if (south != null && west != null && south.canBePath && west.canBePath) yRotation = 270f;
+        }
+        else if (Type == TileType.Obstructed_River)
+        {
+            if (north != null && east != null && north.canBeRiverPath && east.canBeRiverPath) yRotation = 90f;
+            else if (east != null && south != null && east.canBeRiverPath && south.canBeRiverPath) yRotation = 180f;
+            else if (south != null && west != null && south.canBeRiverPath && west.canBeRiverPath) yRotation = 270f;
+        }
         return Quaternion.Euler(0, yRotation, 0);
     }
-
     Quaternion SetTSectionRotation()
     {
         float yRotation = 0;
@@ -145,7 +189,29 @@ public class Tile : MonoBehaviour
 
         return Quaternion.Euler(0, yRotation, 0);
     }
+    Quaternion SetBridgeRotation()
+    {
+        float yRotation = 0;
+        if (north != null && south != null && north.canBePath && south.canBePath) yRotation = 90f;
+        else if (west != null && east != null && west.canBePath && east.canBePath) yRotation = 0;
 
+        return Quaternion.Euler(0, yRotation, 0);
+    }
+    bool IsBridgeCase()
+    {
+        bool eastWest = west?.canBeRiverPath == true && east?.canBeRiverPath == true;
+        bool northSouth = north?.canBeRiverPath == true && south?.canBeRiverPath == true;
+        return eastWest || northSouth;
+    }
+    void ActivateModel(GameObject model)
+    {
+        currentModel = model;
+        currentModel.SetActive(true);
+    }
+    void LookAtTile(Transform target)
+    {
+        currentModel.transform.LookAt(target);
+    }
     public void SetSurroundingTiles()
     {
         surroundingTiles = new List<Tile>()
@@ -160,7 +226,6 @@ public class Tile : MonoBehaviour
             west?.north
         };
     }
-
     public void SetNeighbors()
     {
         if (north != null) neighbors.Add(north);
@@ -168,19 +233,16 @@ public class Tile : MonoBehaviour
         if (south != null) neighbors.Add(south);
         if (west != null) neighbors.Add(west);
     }
-
     public void MakeEastWestConnection(Tile east, Tile west)
     {
         east.west = west;
         west.east = east;
     }
-
     public void MakeNorthSouthConnection(Tile north, Tile south)
     {
         north.south = south;
         south.north = north;
     }
-
     public void BecomeDestination()
     {
         distanceToDestination = 0;
@@ -189,13 +251,11 @@ public class Tile : MonoBehaviour
         exitPoint = transform.localPosition;
         isEmpty = false;
     }
-
     public void ClearPath()
     {
         distanceToDestination = int.MaxValue;
         nextOnPath = null;
     }
-
     Tile GrowPathTo(Tile nextTile, Direction direction, bool ignoreTowers)
     {
         if (nextTile == null || !nextTile.canBePath || nextTile.distanceToDestination != int.MaxValue) return null;
@@ -216,58 +276,51 @@ public class Tile : MonoBehaviour
         }
         return nextTile;
     }
-
     public void ClaimSurroundingTiles()
     {
         foreach (var neighbor in surroundingTiles)
         {
-            if (neighbor == null || neighbor.Type == TileType.Own || neighbor.Type == TileType.Claimed) continue; 
-            else if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
-            else if (neighbor.Type == TileType.Neutral) neighbor.SetType(TileType.Claimed);
+            if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Own);
         }
     }
-
-    public bool CanBePurchased()
-    {
-        if (Type == TileType.Claimed) return true;
-        else return false;
-    }
-
     public void Corrupt()
     {
         currentModel.GetComponent<Renderer>().material.color = corruptedColor;
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = corruptedColor;
+            //if (neighbor.Type == TileType.Obstructed) neighbor.SetType(TileType.Claimed_Obstructed);
+            //else if (neighbor.Type == TileType.Own) neighbor.SetType(TileType.Claimed_Own);
         }
     }
-
     public void Restore()
     {
         currentModel.GetComponent<Renderer>().material.color = regularColor;
         foreach (var neighbor in surroundingTiles)
         {
             neighbor.currentModel.GetComponent<Renderer>().material.color = regularColor;
+            //if (neighbor.Type == TileType.Claimed_Obstructed) neighbor.SetType(TileType.Obstructed);
+            //else if (neighbor.Type == TileType.Claimed_Own) neighbor.SetType(TileType.Own);
         }
     }
-
     public TileData OnSave()
     {
         return new TileData(Type, DistanceToDestinationOriginal);
     }
-
     public void OnLoad(TileData data)
     {
         Type = data.Type;
         DistanceToDestinationOriginal = data.DistanceToDestinationOriginal;
     }
 }
-
 public enum TileType
 {
     Neutral,
+    Bridge,
     Own,
-    Claimed,
+    Claimed_Obstructed,
+    Claimed_Own,
     Obstructed,
+    Obstructed_River,
     Destination
 }

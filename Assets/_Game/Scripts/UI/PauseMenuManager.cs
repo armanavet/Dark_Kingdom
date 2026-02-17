@@ -8,26 +8,32 @@ public class PauseMenuManager : MonoBehaviour
 {
     public string _SceneToLoad;
     [SerializeField] GameObject _PauseMenuPanel = null;
-    //[SerializeField] GameObject _PauseMenuContainer = null;
-    bool isActive;
-    float a;
-    void Update()
+    #region Singleton 
+    private static PauseMenuManager _instance;
+    public static PauseMenuManager Instance
     {
-        if (Input.GetKeyDown("escape"))
+        get
         {
-            a_BTPause();
+            if (_instance == null)
+            {
+                _instance = GameObject.FindObjectOfType<PauseMenuManager>();
+            }
+
+            return _instance;
         }
-        // else => continue all actions
     }
-    public void a_BTPause()
+    private void Awake()
     {
-        isActive = !isActive;
-        _PauseMenuPanel.SetActive(isActive);
-        Time.timeScale = isActive ? 0 : 1;
+        _instance = this;
+    }
+    #endregion
+    public void ShowPauseMenu(bool b)
+    {
+        _PauseMenuPanel.SetActive(b);
     }
     public void b_BTAudioPlay()
     {
-        AudioManager.instance.PlayClickSoundForUI();
+        //AudioManager.Instance.PlayClickSoundForUI();
     }
     public void z_BTExitToMenuButton()
     {

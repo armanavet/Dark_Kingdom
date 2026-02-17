@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6f90a9e146ef94791c7ea91d1df670, type: 3}
+  m_Name: SoundBank
+  m_EditorClassIdentifier: 
+  musicSO: {fileID: 11400000, guid: bd8162735e9d4ad429f318455645563d, type: 2}
+  uiSoundEffectsSO: {fileID: 11400000, guid: 24b311456ff91f847a78282d49fcdb31, type: 2}
+  gameplaySoundEffectsSO: {fileID: 11400000, guid: bc5fe55e8d116ad48ba19a68380219ca,
+    type: 2}
+  enemySoundEffectsSO:
+  - Type: 1
+    Entry: {fileID: 11400000, guid: bd948bad69d58f84e93f4bc3e4e32781, type: 2}
+  - Type: 2
+    Entry: {fileID: 11400000, guid: f23991addbbc1464d8ae64dfd842701b, type: 2}
+  - Type: 3
+    Entry: {fileID: 11400000, guid: 68f48de75bcbb274d979d821015c5fd0, type: 2}
+  - Type: 4
+    Entry: {fileID: 11400000, guid: 6974baacbf2ede94db740271b2756e1c, type: 2}
+  - Type: 5
+    Entry: {fileID: 11400000, guid: 597b16bccd2446440868e17b46849ac8, type: 2}
+  - Type: 6
+    Entry: {fileID: 11400000, guid: 0c292e5f87690074b9c917a8fbd19f89, type: 2}
+  - Type: 7
+    Entry: {fileID: 11400000, guid: 1f94786fd9f1e7040a5a6c46f47e3a11, type: 2}
+  - Type: 8
+    Entry: {fileID: 11400000, guid: 75d15197a107e5d46b3f062bade5579e, type: 2}
+  towerSoundEffectsSO:
+  - Type: 1
+    Entry: {fileID: 11400000, guid: 08fdb79a8d445104eabab3ef17a2117e, type: 2}
+  - Type: 2
+    Entry: {fileID: 11400000, guid: fa00e0fc05c66ca40bb537453731667c, type: 2}
+  - Type: 3
+    Entry: {fileID: 11400000, guid: 406ba7f46ea76984187a38cfc998042c, type: 2}
+  - Type: 5
+    Entry: {fileID: 11400000, guid: f7211e84382ba634f997265d762f741f, type: 2}

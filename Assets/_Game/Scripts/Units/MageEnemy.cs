@@ -1,9 +1,6 @@
+using AudioSystem;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class MageEnemy : Enemy
 {
@@ -13,7 +10,7 @@ public class MageEnemy : Enemy
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
-    
+
     float TarggetPoint = 2f;
     float rotationProgress;
     float initialRotation;
@@ -24,23 +21,16 @@ public class MageEnemy : Enemy
         if (target != null)
         {
             target.OnDestroyed -= StartTurning;
-
-        }
-    }
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
         }
     }
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     private void Update()
     {
@@ -70,7 +60,11 @@ public class MageEnemy : Enemy
             bool facingTarget = FaceTarget();
             if (facingTarget)
             {
-                //Attack();
+                Attack();
+            }
+            else 
+            {
+                return;
             }
         }
     }

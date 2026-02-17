@@ -1,33 +1,24 @@
+﻿using AudioSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
+//public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
 {
-    
-    
-    AudioSource audioSource;
-    [Header("Audio Clips")]
-    [SerializeField] AudioClip menuItemsClickSound;
-    [SerializeField] AudioClip towerPanelBuyClickSound;
-    [SerializeField] AudioClip towerUpgradeClip;
-    [SerializeField] AudioClip towerPlaceClip;
-    [SerializeField] AudioClip towerPuffEffectClip;
-    [SerializeField] AudioClip towerPlacementDeniedClip;
-    [Header("Audio Sources")]
-    [SerializeField] AudioSource towerPuffEffectSource;
-    
-    
-    //[SerializeField] AudioSource explosionSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
-    //[SerializeField] AudioClip menuItemsClickSound;
+    //[SerializeField] ClipsRepository TotalClips;
+    [SerializeField] SoundDataRepository TotalSoundData;
+    //[SerializeField] AudioClipCollector Collector;
+    [SerializeField] SoundBank soundBank;
+    [SerializeField] AudioSource BackgroundMusicSource;
 
+    private SoundTypeResolver resolver = new SoundTypeResolver();
     #region Singleton
     private static AudioManager _instance;
-    public static AudioManager instance
+    public static AudioManager Instance
     {
         get
         {
@@ -50,72 +41,139 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         _instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: keep across scenes
+
+        //DontDestroyOnLoad(gameObject); // Optional: keep across scenes
     }
     #endregion
-
-
     private void Start()
     {
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        //gameEnums = gameObject.GetComponent<SoundTypeResolver>();
+        //TotalClips.Organize();
+        TotalSoundData.Organize();
     }
-    public void PlayClickSoundForUI()
+    public SoundData SetData<TEnum>(
+        SoundData data,
+        SoundDataType soundDataType,
+        //MixerType mixer,
+        TEnum type) where TEnum : Enum
     {
-        audioSource.PlayOneShot(menuItemsClickSound);
+        data = TotalSoundData.GetSoundDataByType(soundDataType);
+        //data.mixerGroup = TotalClips.GetMixer(mixer, type);
+        return data;
     }
-    public void PlayClickSoundForPanelUI()
+    //public SoundData SetData(
+    //    SoundData data,
+    //    SoundDataType soundDataType,
+    //    MixerType mixer)
+    //{
+    //    data = TotalSoundData.GetSoundDataByType(soundDataType);
+    //    data.mixerGroup = TotalClips.GetMixer(mixer);
+    //    if (data.mixerGroup == null)
+    //    {
+    //        Debug.LogError($"Mixer is null. Sound Data Type - {soundDataType}");
+    //    }
+    //    return data;
+    //}
+    public void Play<TSound, TSource>(SoundData data, Transform transform, TSound type, TSource stype)
+    where TSound : Enum
+        where TSource : Enum
     {
-        audioSource.PlayOneShot(towerPanelBuyClickSound);
+        //data.clip = soundBank.GetClip(resolver.Resolve(type), SoundRequest.SoundWithSource(type,stype));
+        data.clip = soundBank.GetClip(stype, type);
+        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
     }
+    //public void Play(SoundData data, Transform transform, ClipType clipType)
+    //{
+    //    data.clip = TotalClips.GetClip(clipType);
+    //    SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
+    //}
+    //public void Play(SoundData data, ClipType clipType)
+    //{
+    //    data.clip = TotalClips.GetClip(clipType);
+    //    SoundManager.Instance.CreateSoundBuilder().Play(data);
+    //}
+    //public void Play(SoundData data, GameState gameState)
+    //{
+    //    SoundManager soundManager = SoundManager.Instance;
+    //    if (data.clip != null)
+    //    {
+    //        StopCoroutine(PlayWithDelay(data, gameState, soundManager));
+    //    }
+    //    StartCoroutine(PlayWithDelay(data, gameState, soundManager));
+    //}
+    //IEnumerator PlayWithDelay(SoundData data, GameState gameState, SoundManager soundManager)
+    //{
+    //    if (gameState == GameState.Active)
+    //    {
+    //        data.clip = TotalClips.GetClip(ClipType.OnWaveStart_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //        yield return new WaitForSeconds(data.clip.length);
+    //        data.clip = null;
+    //        data.clip = TotalClips.GetClip(ClipType.OnActive_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //    }
+    //    else if (gameState == GameState.Passive)
+    //    {
+    //        data.clip = null;
+    //        data.clip = TotalClips.GetClip(ClipType.OnPassive_State);
+    //        soundManager.CreateSoundBuilder().Play(data);
+    //    }
+    //    yield break;
+    //}
+}
 
-    public void PlayExplosionSound(AudioClip soundClip)
-    {
-        audioSource.PlayOneShot(soundClip);
-    }
-
-    public void PlayTowerActionSound(AudioClip audioClip, AudioSource audioSource)
-    {
-        audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
-    }
-    public void EnemyAttackSound(AudioClip audioClip, AudioSource audioSource)
-    {
-        audioSource.clip = audioClip;
-        audioSource.PlayOneShot(audioClip);
-    }
-    public void EnemyMovingSound(AudioClip[] audioClips, AudioSource audioSource)
-    {
-        int randomSound = Random.Range(0, audioClips.Length);
-        audioSource.clip = audioClips[randomSound];
-        audioSource.PlayOneShot(audioClips[randomSound]);
-    }
-    public void PlayTowerUpgradeSound()
-    {
-        audioSource.PlayOneShot(towerUpgradeClip);
-    }
-    public void PlayTowerPlaceSound()
-    {
-        audioSource.PlayOneShot(towerPlaceClip);
-    }
-    public void PlayTowerPuffEffectSoundDelayed(float delay = 0.08f)
-    {
-        StartCoroutine(PlayWithDelay(towerPuffEffectSource, towerPuffEffectClip, delay));
-    }
-    public void PlayTowerPlacementDeniedSound()
-    {
-        audioSource.PlayOneShot(towerPlacementDeniedClip);
-    }
-    
-
-    private IEnumerator PlayWithDelay(AudioSource source, AudioClip clip, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (clip != null && source != null)
-            source.PlayOneShot(clip);
-    }
+public enum MixerType
+{
+    Null,
+    UI,
+    Music,
+    Ambient
+}
+public enum SoundType
+{
+    Null,
+    Music,
+    UISFX,
+    GameplaySFX,
+    EnemySFX,
+    TowerSFX,
+    Ambient
+}
+public enum MusicType
+{
+    Null,
+    InWave,
+    InNormal
+}
+public enum UISFX_Type
+{
+    Null,
+    MouseLeftButton,  //Click on the UI element in the Menu 
+    TowerBuyButton,
+    TowerSellButton,
+    TowerUpgradeButton,
+    PlacementDenied   // Plays when player try to build tower in the forbidden place.
+}
+public enum GamePlaySFX_Type
+{
+    Null,
+    TowerUpgradeVFX,
+    TowerPuffVFX,
+    TowerPlace,
+    TowerShoot,
+    TowerProjectileHit,
+    EnemyAttack,
+    EnemyMove,
+    WaveStart,
+    PortalGate
+}
+public enum AmbientType
+{
+    Null,
+    //--Portal--
+    OrbParticalL,
+    OrbParticalR,
+    FireOnTop,
+    //----------
 }

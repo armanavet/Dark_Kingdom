@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,19 +7,13 @@ public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
     [SerializeField] float duration;
-    private void Awake()
-    {
-        if (enemyAudioSource == null)
-        {
-            enemyAudioSource = GetComponent<AudioSource>();
-        }
-    }
     void Start()
     {
         currentSpeed = maxSpeed;
-        help = maxHP;
+        health = maxHP;
         animator = GetComponent<Animator>();
-        Destroy(gameObject,duration);
+        Destroy(gameObject, duration);
+        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {
@@ -35,6 +30,5 @@ public class Illusion : Enemy
             animator.SetBool("isIdle", true);
         }
     }
-    protected override void Attack(){
-    }
+    protected override void Attack() { }
 }

@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +14,7 @@ public class WizardTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage;
-    
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip TowerActionSound;
-    
+
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -29,10 +27,6 @@ public class WizardTower : Tower
         float x = TarggetRange + 0.250001f;
         float y = -mortal.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
-        if (towerAudioSource == null)
-        {
-            towerAudioSource = GetComponent<AudioSource>();
-        }
     }
     void Start()
     {
@@ -43,8 +37,9 @@ public class WizardTower : Tower
         model = Models[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
-
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        StartCoroutine(PlayPlaceSFX());
+        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
 
     void Update()
@@ -54,7 +49,7 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                TowerAudio(TowerActionSound, towerAudioSource);
+                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -75,7 +70,7 @@ public class WizardTower : Tower
         float x = dir.magnitude;
         float y = -launchPoint.y;
         dir /= x;
-        
+
         float s = launchSpeed;
         float s2 = s * s;
         float r = s2 * s2 - g * (g * x * x + 2f * y * s2);
@@ -86,17 +81,15 @@ public class WizardTower : Tower
         float sinTheta = Mathf.Sin(theta);
 
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs);
-        
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, hitPointPopup, towerType);
+
     }
     bool AcquireTarget()
     {
         Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
-        if (targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
-        }
+        targets = Physics.OverlapSphere(transform.position, TarggetPoint, portalMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
+        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
         if (targets.Length > 0)
         {
             int ClosestTargetIndex = 0;
@@ -129,6 +122,7 @@ public class WizardTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
+            //StartCoroutine(PlayUpdateSfx());
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
 
@@ -160,7 +154,6 @@ public class WizardTower : Tower
                 currentDebuffs.Add(currentDebuff);
             }
         }
+        //StopCoroutine(PlayUpdateSfx());
     }
-
-
 }

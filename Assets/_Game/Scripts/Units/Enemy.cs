@@ -1,3 +1,4 @@
+using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
@@ -6,28 +7,26 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [Header("Enemy Parameters")]
+    [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
+    [SerializeField] protected UnitType unitType;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    
-    [Header("Audio Parameters")]
-    [SerializeField] protected AudioClip[] EnemyMovingSounds;
-    [SerializeField] protected AudioClip EnemyAttackSound;
+    [SerializeField] protected SoundData EnemySoundData;
 
-    protected AudioSource enemyAudioSource;
     protected Animator animator;
     protected float currentSpeed;
-    protected float help;
+    protected float health;
     protected float damage;
     protected float attackSpeed;
     protected float attackCooldown;
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
-    
+
     Vector3 positionFrom, positionTo;
     Direction direction;
     DirectionChange directionChange;
@@ -35,7 +34,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
-    
+
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -77,7 +76,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
             transform.localRotation = Quaternion.Euler(0, angle, 0);
         }
     }
-
     void PrepareNextMove()
     {
         model.localScale = new Vector3(0.4f, 0.4f, 0.4f);
@@ -129,7 +127,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
         {
             target = hitInfo.transform.GetComponent<Tower>();
-
         }
         return true;
     }
@@ -137,8 +134,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     {
         if (state == EnemyState.Dead) return;
 
-        help -= damage;
-        if (help <= 0)
+        health -= damage;
+        if (health <= 0)
         {
             OnDeath();
         }
@@ -146,31 +143,29 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
-        animator?.SetBool("isDead", true);
+        if (animator != null) animator?.SetBool("isDead", true);
+        else return;
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
-
-    void DestroyModel() 
+    void DestroyModel()
     {
         DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }
-
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
-    public void PlayAttackSound()
-    {
-        AudioManager.instance.EnemyAttackSound(EnemyAttackSound,enemyAudioSource);
+    protected void PlayAttackSound() {
+        AudioManager.Instance.Play(EnemySoundData, transform,GamePlaySFX_Type.EnemyAttack,unitType);
     }
-    public void PlayMovingSound()
-    {
-        AudioManager.instance.EnemyMovingSound(EnemyMovingSounds,enemyAudioSource);
+    protected void PlayMovingSound() {
+        //AudioManager.Instance.Play(EnemySoundData, transform, ClipType.OnMove_Enemy, unitType);
     }
 }
+
 
 public enum EnemyState
 {
@@ -180,11 +175,14 @@ public enum EnemyState
 }
 public enum UnitType
 {
+    Null,
     Regular,
     Fast,
     Tank,
     Mage,
     Kamikadze,
     Flying,
-    Illusionist
+    Illusionist,
+    Illusion,
+    Portal
 }

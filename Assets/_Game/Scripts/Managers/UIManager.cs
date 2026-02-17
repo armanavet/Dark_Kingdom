@@ -1,30 +1,33 @@
 using DG.Tweening;
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
+using System.Linq;
+using AudioSystem;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel, tilePanelPrefab, selectionMarkPrefab;
+    [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
+    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
-    [SerializeField] float towerPurchasePanelYHidden;
-    [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float towerPanelYOffset, tilePanelYOffset;
     [SerializeField] GameObject[] effects;
+    [SerializeField] LayerMask towerMask, tileMask;
+    [SerializeField] float towerPurchasePanelYHidden;
+    [SerializeField] float towerPanelYOffset;
+    [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
-    GameObject tilePanel, activePanel, previousHit, effect, selectionMark, activeSelectionMark;
-    Button[] towerPurchaseButtons;
-    TowerPreview towerPreview;
-    float TowerPurchasePanelYInitial;
-    bool isPanelActive = false;
 
+    Camera mainCamera;
+    GameObject activePanel, previousHit, effect;
+    TowerPreview towerPreview;
+    Button[] towerPurchaseButtons;
+    float TowerPurchasePanelYInitial;
+
+    bool isPanelActive = false;
     #region Singleton 
     private static UIManager _instance;
     public static UIManager Instance
@@ -44,54 +47,55 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
     #endregion
-
-
     public void Initialize()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
         towerPurchaseButtons = towerPurchasePanel.GetComponentsInChildren<Button>();
-        tilePanel = Instantiate(tilePanelPrefab);
-        selectionMark = Instantiate(selectionMarkPrefab);
-        tilePanel.SetActive(false);
-        selectionMark.SetActive(false);
+
         activeStatePanel.SetActive(false);
         passiveStatePanel.SetActive(false);
+
+        mainCamera = Camera.main;
+
+        //UISoundData = AudioManager.Instance.SetData(UISoundData, SoundDataType.UI, MixerType.UI);
+    }
+    void LateUpdate()
+    {
+        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
+        timerText.text = Mathf.Round(GameTimer).ToString();
+
     }
     void Update()
     {
         ChangeUiButtonVisibility();
-        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
-        timerText.text = Mathf.Round(GameTimer).ToString();
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject()) return; //Check if the click was performed on a UI element
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
-            else if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask)) ShowTilePanel(true, tileHit.transform);
-            else
+            if (IsClickOnTowerPanelUI()) return; // Check if the click was performed on the Tower UI panel
+            if (EventSystem.current.IsPointerOverGameObject()) //Check if the click was performed on a UI element
             {
                 ShowTowerPanel(false);
-                ShowTilePanel(false);
+                return;
             }
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (towerPreview != null) PlaceTower(true);
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) ShowTowerPanel(true, towerHit.transform);
+            else ShowTowerPanel(false);
         }
-        else if (Input.GetMouseButton(1) || Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetMouseButton(1))
         {
             ShowTowerPanel(false);
-            ShowTilePanel(false);
             PlaceTower(false);
 
         }
+
         if (isPanelActive && activePanel != null)
         {
-            Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward);
-            activePanel.transform.rotation = rotation;
+            activePanel.transform.rotation = LookAtCamera(mainCamera.transform);
         }
-
     }
-
     void ChangeUiButtonVisibility()
     {
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
@@ -107,7 +111,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     void ShowTowerPanel(bool value, Transform selectedTower = null)
     {
         if (value == true)
@@ -129,82 +132,25 @@ public class UIManager : MonoBehaviour
             isPanelActive = false;
         }
     }
-
     void SetTowerPanelPosition(GameObject panel, Tower tower)
     {
-        if (tower.CompareTag("ArcherTower"))
-        {
-            towerPanelYOffset = 2.6f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("WizardTower"))
-        {
-            towerPanelYOffset = 2.25f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("ArtilleryTower"))
-        {
-            towerPanelYOffset = 2.3f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
-        }
-        else if (tower.CompareTag("GoldMine"))
-        {
-            towerPanelYOffset = 1.3f;
-            panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        Transform panelPos = panel.transform;
+        float towerPositionX = tower.transform.position.x;
+        float towerPositionY = tower.transform.position.y;
+        float towerPositionZ = tower.transform.position.z;
+        float yOffset = towerPanelYOffset;
 
-        }
-        else panel.transform.position = new Vector3(tower.transform.position.x, tower.transform.position.y + towerPanelYOffset, tower.transform.position.z);
+        if (tower.CompareTag("ArcherTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("WizardTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("ArtilleryTower")) yOffset = 2.6f;
+        else if (tower.CompareTag("GoldMine")) yOffset = 2.6f;
+
+        SetPosition(panelPos, yOffset, towerPositionX, towerPositionY, towerPositionZ);
 
     }
-
-    void ShowTilePanel(bool value, Transform selectedTile = null)
+    void SetPosition(Transform positionToPlace, float yOffsetNumber, float x, float y, float z)
     {
-        if (tilePanel == null && selectionMark == null) return;
-
-        if (value == true)
-        {
-            Tile tile = selectedTile.GetComponent<Tile>();
-            if (tile.CanBePurchased())
-            {
-                if (activePanel != null) activePanel.SetActive(false);
-                if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
-                activePanel = tilePanel;
-                activeSelectionMark = selectionMark;
-                isPanelActive = true;
-                tilePanel.SetActive(true);
-                selectionMark.SetActive(true);
-                tilePanel.GetComponent<TileBuy>().tile = tile;
-                tilePanel.transform.position = tile.transform.position + new Vector3(0, tilePanelYOffset, 0);
-                selectionMark.transform.position = tile.transform.position + new Vector3(0, 0.245f, 0);
-
-                selectionMark.transform.DOKill();
-                selectionMark.transform.DOMoveY(0.3f, 0.7f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1, LoopType.Yoyo);
-                selectionMark.transform.DOScale(new Vector3(1.2f, 1, 1.2f), 0.6f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1, LoopType.Yoyo);
-                return;
-            }
-        }
-        if (activePanel != null) activePanel.SetActive(false);
-        if (activeSelectionMark != null) activeSelectionMark.SetActive(false);
-
-        isPanelActive = false;
-    }
-    void OutlineForTile()
-    {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit tileHit, Mathf.Infinity, tileMask))
-        {
-            Transform a = tileHit.collider.transform.Find("OutlineForTile");
-            if (a.gameObject != null)
-            {
-                a.gameObject.SetActive(true);
-            }
-            else a.gameObject.SetActive(false);
-        }
+        positionToPlace.position = new Vector3(x, y + yOffsetNumber, z);
     }
     void ShowTowerPurchasePanel(bool value)
     {
@@ -227,17 +173,16 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void PurchaseTower(int type)
     {
         if (towerPreview == null)
         {
+            //AudioManager.Instance.Play(UISoundData,ClipType.OnPurchaseButtonClick_UI);
             ShowTowerPurchasePanel(false);
             TowerPreview prefab = TowerManager.Instance.GetPreviewByType((TowerType)type);
             towerPreview = Instantiate(prefab);
         }
     }
-
     void PlaceTower(bool value)
     {
         if (value == true)
@@ -246,25 +191,18 @@ public class UIManager : MonoBehaviour
 
             if (towerPreview.canPlace)
             {
-                AudioManager.instance.PlayTowerPlaceSound();
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
                 EconomyManager.Instance.ChangeGoldAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
-                AudioManager.instance.PlayTowerPuffEffectSoundDelayed();
-                effect = Instantiate(effects[1], new Vector3(tower.transform.position.x, 0.15f, tower.transform.position.z), Quaternion.Euler(-90f, tower.transform.rotation.y, tower.transform.rotation.z));
-                Destroy(effect, 2f);
-                effect = Instantiate(effects[0], new Vector3(tower.transform.position.x, 0.8f, tower.transform.position.z), Quaternion.identity);
-                Destroy(effect, 2f);
             }
             else
             {
-                AudioManager.instance.PlayTowerPlacementDeniedSound();
+                //AudioManager.Instance.Play(UISoundData, transform, ClipType.OnDenied_Tower);
             }
         }
         else
         {
-
             if (towerPreview != null)
             {
                 Destroy(towerPreview.gameObject);
@@ -272,7 +210,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void OnGameStateChanged(GameState newState, int currentWave)
     {
         if (newState == GameState.Passive)
@@ -285,8 +222,48 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + currentWave.ToString();
+            if (currentWave == WaveManager.Instance.waveLength)
+            {
+                activeStateText.text = string.Empty;
+                activeStateText.text = "Destroy The Portal!";
+                waveText.text = "Wave: " + currentWave.ToString();
+            }
         }
+        else if (newState == GameState.End)
+        {
+            activeStatePanel.SetActive(false);
+            passiveStatePanel.SetActive(false);
+        }
+        else if (newState == GameState.Paused) { }
+        /*
+         * if state == end 
+         * activesState true
+         * passive false
+         * wave.text + currentwave
+         * activ.text + "destroy the portal to finish the game"
+         */
     }
+    public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
+    {
+        if (damageTextPopup == null || target == null) return;
+        Vector3 top = target.hitPointStartPos.transform.position;
+        HitPointPopup HitPointPopup = Instantiate(damageTextPopup, top, Quaternion.identity);
+        HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);
+        HitPointPopup.HitPointText(damage);
+    }
+    Quaternion LookAtCamera(Transform cameraTransform)
+    {
+        return Quaternion.LookRotation(cameraTransform.forward);
+    }
+    bool IsClickOnTowerPanelUI()
+    {
+        var eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
 
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
+    }
 
 }
