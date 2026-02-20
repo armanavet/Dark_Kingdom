@@ -25,8 +25,8 @@ public class MageEnemy : Enemy
     }
     void Start()
     {
-        currentSpeed = maxSpeed;
         health = maxHP;
+        currentSpeed = maxSpeed;
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();

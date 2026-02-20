@@ -15,7 +15,7 @@ public class StateManager : MonoBehaviour, ISaveable
     float Timer;
     public int timeMultiplier = 1;
     int currentWave = 0;
-
+    public event Action<GameState> OnGameStateChanged;
     #region Singleton
     private static StateManager _instance;
     public static StateManager Instance
@@ -93,8 +93,8 @@ public class StateManager : MonoBehaviour, ISaveable
         {
             State = GameState.End;
         }
-
-        UIManager.Instance.OnGameStateChanged(newState, currentWave);
+        OnGameStateChanged?.Invoke(newState);
+        UIManager.Instance.OnGameStateChanged(currentWave);
     }
     public void ButtonToMakeFaster(int multiplier)
     {

@@ -1,13 +1,21 @@
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-public class Portal : MonoBehaviour
+public class Portal : Enemy
 {
+    [Header("Portal Parametors")]
     [SerializeField] public Tile SpawnTile;
     [SerializeField] int id;
+
+    [SerializeField] Transform shootingPoint;
+    [SerializeField] GameObject Projectile;
+    [SerializeField] float projectileSpeed;
+    //[SerializeField] float attackSpeed;
+    [SerializeField, Range(1, 10f)] float attackRange = 2f;
+
+
     [Header("Set Portal Layer")]
     [SerializeField] string portalLayerName = "Portal";
     [Header("Set Portal Visual Parameters")]
@@ -19,32 +27,29 @@ public class Portal : MonoBehaviour
     [SerializeField] Renderer gateRenderer, gateEffectRenderer;
 
     [HideInInspector] public List<GameObject> path;
-    
+    [HideInInspector] public int ID => id;
+    [HideInInspector] public bool IsDestroyed = false;
+
     Material gateMaterial, gateEffectMaterial;
     GameObject gateEffectObj;
+
+    //Tower target;
+    //float attackCooldown;
+    //float damage;
     float gateLightMaxIntencity = 5f;
     //gateAudioMaxVolume = 0.3f,
     //fireAudioMaxVolume = 0.6f;
-    bool hellGateOn;
-    public int ID => id;
 
-    #region Singleton 
-    private static Portal _instance;
-    public static Portal Instance
+    private void Start()
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<Portal>();
-            }
+        gameObject.layer = LayerMask.NameToLayer(portalLayerName);
 
-            return _instance;
-        }
-    }
-    private void Awake()
-    {
-        _instance = this;
+        health = maxHP;
+        currentSpeed = maxSpeed;
+        damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
+        attackCooldown = 1 / attackSpeed;
+
         gateEffectObj = gateEffectRenderer.gameObject;
         gateEffectMaterial = gateEffectRenderer.material;
 
@@ -57,27 +62,93 @@ public class Portal : MonoBehaviour
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0));
         gateLight.intensity = 0;
     }
-    #endregion
-    private void Start()
+    private void Update()
     {
-        if (WaveManager.Instance.portalMode == PortalMode.BossMode)
-        {
-            gameObject.layer = LayerMask.NameToLayer(portalLayerName);
-        }
-
-        //gateEffectObj = gateEffectRenderer.gameObject;
-        //gateEffectMaterial = gateEffectRenderer.material;
-
-        //gateMaterial = gateRenderer.material;
-
-        //gateEffectObj.SetActive(false);
-        //gateLight.gameObject.SetActive(false);
-
-        //gateEffectMaterial.SetFloat("_Alpha", 0);
-        //gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0));
-        //gateLight.intensity = 0;
+        if (!IsDestroyed && health <= 0) OnDestroyed();
+        Attack();
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Vector3 posiion = transform.position;
+        Gizmos.DrawWireSphere(posiion, attackRange);
+        Gizmos.color = Color.red;
+        if (target != null)
+        {
+            Gizmos.DrawLine(transform.position, target.transform.position);
+        }
+    }
+    void Shoot()
+    {
+        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
+        Vector3 point = target.transform.position + new Vector3(0,1.5f,0);
+        float travelDistance = Vector3.Distance(shootingPoint.position, point);
+        float travelTime = travelDistance / projectileSpeed;
+        GameObject newProjectile = Instantiate(Projectile, shootingPoint.position, Quaternion.LookRotation(point - shootingPoint.position));
+        newProjectile.GetComponent<Mage>()?.Initialize(projectileSpeed);
+        StartCoroutine(HitTarget(newProjectile, travelTime));
+    }
+    protected override bool AcquireTarget()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, attackRange, towerMask);
+        if (targets.Length > 0)
+        {
+            int ClosestTargetIndex = 0;
+            float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
+            
+            for (int i = 1; i < targets.Length; i++)
+            {
+                if (MinDist <= MinDist + i)
+                {
+                    float dist = Vector3.Distance(transform.position, targets[i].transform.position);
+                    if (dist < MinDist)
+                    {
+                        MinDist = dist;
+                        ClosestTargetIndex = i;
+                    }
+                }
+            }
+            target = targets[ClosestTargetIndex].GetComponent<Tower>();
+            
+            if (target != null) return true;
+            else return false;
+        }
+        target = null;
+        return false;
+    }
+
+    IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
+    {
+        yield return new WaitForSeconds(arriveTime);
+
+        if (target != null)
+        {
+            target.ApplyDamage(damage);
+        }
+        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower, towerType);
+        Destroy(currentProjectile);
+    }
+    #region Visual
+    public void OnDestroyed()
+    {
+        if (IsDestroyed) return;
+        IsDestroyed = true;
+
+        StopAllCoroutines();
+
+        PortalManager.Instance.OnPortalDestroy(this);
+
+        fireParticles.Stop();
+        orbParticlesL.Stop();
+        orbParticlesR.Stop();
+
+        gateEffectObj.SetActive(false);
+        gateLight.gameObject.SetActive(false);
+
+        gameObject.SetActive(false);
+
+    }
     public IEnumerator ActivateVisual()
     {
 
@@ -145,6 +216,12 @@ public class Portal : MonoBehaviour
 
     public IEnumerator DeactivateVisual()
     {
+        if (WaveManager.Instance.IsLastWave())
+            yield break;
+
+        if (IsDestroyed)
+            yield break;
+
         float transitionTimer = 1;
 
         orbParticlesL.Stop();
@@ -173,4 +250,19 @@ public class Portal : MonoBehaviour
         //WaveManager.Instance.isPortalOff = true;
         yield break;
     }
+    #endregion
+    protected override void OnDeath() { }
+    protected override void Attack()
+    {
+        if (attackCooldown <= 0)
+        {
+            if (AcquireTarget())
+            {
+                Shoot();
+            }
+            attackCooldown = 1 / attackSpeed;
+        }
+        attackCooldown -= Time.deltaTime;
+    }
+
 }

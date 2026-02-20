@@ -186,9 +186,7 @@ public class MainTower : Tower
         }
         defender.target = null;
         return false;
-
     }
-
     void CountTowerPointPositionsOnEachLevel(int currentLevel, List<Transform> towersRootPoints, TowersRootPointPositions[] towersRootPointPositions)
     {
         for (int j = 0; j < towersRootPoints.Count; j++)

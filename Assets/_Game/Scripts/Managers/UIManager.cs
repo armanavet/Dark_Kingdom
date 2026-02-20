@@ -9,6 +9,8 @@ using UnityEngine.EventSystems;
 using System.Linq;
 using AudioSystem;
 using UnityEditor.UI;
+using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,10 +25,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
 
+    GameState currentState;
     Camera mainCamera;
     GameObject activePanel, previousHit, effect, activeBar;
     TowerPreview towerPreview;
     Button[] towerPurchaseButtons;
+
+    Dictionary<TowerType, float> towerOffset;
+    
     float TowerPurchasePanelYInitial;
 
     bool isPanelActive = false;
@@ -163,17 +169,22 @@ public class UIManager : MonoBehaviour
         float z = tower.transform.position.z;
         float yOffset = towerPanelYOffset;
 
-        if (tower.CompareTag("ArcherTower")) yOffset = 2.6f;
-        else if (tower.CompareTag("WizardTower")) yOffset = 2.6f;
-        else if (tower.CompareTag("ArtilleryTower")) yOffset = 2.6f;
-        else if (tower.CompareTag("GoldMine")) yOffset = 2.6f;
-
         SetPosition(panelPos, yOffset, x, y, z);
 
     }
     void SetPosition(Transform positionToPlace, float yOffsetNumber, float x, float y, float z)
     {
         positionToPlace.position = new Vector3(x, y + yOffsetNumber, z);
+    }
+    float SetOffset(Tower tower)
+    {
+        float offset = 0;
+        if (tower.CompareTag("ArcherTower")) offset = 2.6f;
+        else if (tower.CompareTag("WizardTower")) offset = 2.6f;
+        else if (tower.CompareTag("ArtilleryTower")) offset = 2.6f;
+        else if (tower.CompareTag("GoldMine")) offset = 2.6f;
+        else if (tower.CompareTag("MainTower")) offset = 2.6f;
+        return offset;
     }
     void ShowTowerPurchasePanel(bool value)
     {
@@ -233,14 +244,14 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void OnGameStateChanged(GameState newState, int currentWave)
+    public void OnGameStateChanged(int currentWave)
     {
-        if (newState == GameState.Passive)
+        if (currentState == GameState.Passive)
         {
             activeStatePanel.SetActive(false);
             passiveStatePanel.SetActive(true);
         }
-        else if (newState == GameState.Active)
+        else if (currentState == GameState.Active)
         {
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
@@ -252,12 +263,12 @@ public class UIManager : MonoBehaviour
                 waveText.text = "Wave: " + currentWave.ToString();
             }
         }
-        else if (newState == GameState.End)
+        else if (currentState == GameState.End)
         {
             activeStatePanel.SetActive(false);
             passiveStatePanel.SetActive(false);
         }
-        else if (newState == GameState.Paused) { }
+        else if (currentState == GameState.Paused) { }
         /*
          * if state == end 
          * activesState true
@@ -288,5 +299,19 @@ public class UIManager : MonoBehaviour
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
     }
+    private void OnEnable()
+    {
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+    }
 
+    private void OnDisable()
+    {
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+    }
+
+    void HandleStateChanged(GameState state)
+    {
+        currentState = state;
+    }
 }
