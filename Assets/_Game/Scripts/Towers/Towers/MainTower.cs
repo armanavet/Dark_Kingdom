@@ -51,10 +51,10 @@ public class MainTower : Tower
         currentHP = currentHP == 0 ? maxHP : currentHP;
         //healthBar.SetMaxHealth(currentHP);
         UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
-        CountTowerPointPositionsOnEachLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+        CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
         foreach (var defender in Defender)
         {
-            defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
+            defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
         }
         range = new Vector3(attackRange, attackRange, attackRange);
@@ -125,10 +125,10 @@ public class MainTower : Tower
 
             model.SetActive(false);
             model = Models[CurrentLevel];
-            CountTowerPointPositionsOnEachLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+            CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
             foreach (var defender in Defender)
             {
-                defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
+                defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             }
             model.SetActive(true);
 
@@ -187,11 +187,14 @@ public class MainTower : Tower
         defender.target = null;
         return false;
     }
-    void CountTowerPointPositionsOnEachLevel(int currentLevel, List<Transform> towersRootPoints, TowersRootPointPositions[] towersRootPointPositions)
+    void CountPointForLevel(int currentLevel, List<Transform> towersRootPoints, TowersRootPointPositions[] towersRootPointPositions)
     {
         for (int j = 0; j < towersRootPoints.Count; j++)
         {
-            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y * 0, towersRootPointPositions[currentLevel].y[j]);
+            towersRootPoints[j].position = new Vector3(
+                towersRootPointPositions[currentLevel].x[j],
+                towersRootPoints[j].position.y,
+                towersRootPointPositions[currentLevel].y[j]);
         }
     }
     IEnumerator HitTarget(MainTowerDefender defender, GameObject currentProjectile, float arriveTime)

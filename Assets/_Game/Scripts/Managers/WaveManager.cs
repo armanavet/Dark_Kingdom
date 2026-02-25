@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
-public class WaveManager : MonoBehaviour
+public class WaveManager : MonoBehaviour, ISaveable
 {
     [Header("Set Wave Parameters")]
     [SerializeField] Units units;
@@ -19,6 +19,7 @@ public class WaveManager : MonoBehaviour
     [Header("for testing")]
     public int waveLength;
 
+    public int CurrentWave => currentWave;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -36,6 +37,7 @@ public class WaveManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
     public void Initialize()
@@ -50,13 +52,11 @@ public class WaveManager : MonoBehaviour
         spawnedEnemies.Clear();
         enemiesToSpawn = waves[currentWave];
     }
-    public void GetPhaseCommands(int wave, bool isLastWave = false)
+    public void GetPhaseCommands()
     {
         if (waves == null || waves.Length == 0) return;
-        if (wave >= waves.Length) return;
 
-        this.isLastWave = isLastWave;
-        currentWave = wave;
+        if (currentWave == waves.Length - 1) isLastWave = true;
         TotalEnemiesInWave(currentWave);
 
         PortalManager.Instance.CalculateActivePortals(currentWave);
@@ -135,6 +135,7 @@ public class WaveManager : MonoBehaviour
     }
     void EndWave(bool endImmediately = false)
     {
+        currentWave++;
         enemiesToSpawn = null;
         spawnedEnemies.Clear();
         PortalManager.Instance.Clear();
@@ -187,6 +188,26 @@ public class WaveManager : MonoBehaviour
         EndWave(endImmediately: true);
     }
     #endregion
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
+
+    public string GetUniqueSaveID()
+    {
+        return nameof(WaveManager);
+    }
+
+    public ISaveData SaveState()
+    {
+        GeneralData saveData = new GeneralData();
+        saveData.CurrentWave = currentWave;
+        return saveData;
+    }
+
+    public void LoadState(ISaveData data)
+    {
+        GeneralData saveData = data as GeneralData;
+        currentWave = saveData.CurrentWave;
+    }
+
 }
 #region Wave
 [System.Serializable]

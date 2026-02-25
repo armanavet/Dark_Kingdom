@@ -244,7 +244,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void OnGameStateChanged(int currentWave)
+    public void OnGameStateChanged()
     {
         if (currentState == GameState.Passive)
         {
@@ -255,12 +255,12 @@ public class UIManager : MonoBehaviour
         {
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
-            waveText.text = "Wave: " + currentWave.ToString();
-            if (currentWave == WaveManager.Instance.waveLength)
+            waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
+            if (WaveManager.Instance.CurrentWave == WaveManager.Instance.waveLength)
             {
                 activeStateText.text = string.Empty;
                 activeStateText.text = "Destroy The Portal!";
-                waveText.text = "Wave: " + currentWave.ToString();
+                waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
             }
         }
         else if (currentState == GameState.End)
