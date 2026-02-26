@@ -30,7 +30,6 @@ public class MageEnemy : Enemy
         damage = maxDamage;
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     private void Update()
     {
@@ -64,6 +63,9 @@ public class MageEnemy : Enemy
             }
             else 
             {
+                facingPath = true;
+                //StartTurning();
+                //target.OnDestroyed -= StartTurning();
                 return;
             }
         }
@@ -145,7 +147,7 @@ public class MageEnemy : Enemy
             return false;
         }
         model.rotation = Quaternion.Euler(model.rotation.x, targetYRotation, model.rotation.z);
-        Attack();
+        //Attack();
         return true;
     }
     IEnumerator FacePath()

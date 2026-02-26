@@ -60,7 +60,6 @@ public class IllusionistEnemy : Enemy
         if (illusion == null)
         {
             illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
-            illusion.OnSpawn(tileFrom, 0);
         }
     }
 }
