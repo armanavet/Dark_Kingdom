@@ -49,7 +49,6 @@ public class MainTower : Tower
         model = Models[CurrentLevel];
         projectile = Projectiles[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        //healthBar.SetMaxHealth(currentHP);
         UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
         CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
         UpdateCanvasHeight(CurrentLevel);
