@@ -28,10 +28,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UIManager.Instance.Initialize();
+        PortalManager.Instance.Initialize();
         TowerManager.Instance.Initialize();
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
-        PortalManager.Instance.Initialize();
     }
     void Update()
     {

@@ -60,7 +60,7 @@ public class PortalManager : MonoBehaviour, ISaveable
             if (id % 2 == 1) lookRotation = Quaternion.Euler(0, 90f, 0);
 
             Portal portal = Instantiate(portalPrefab, spawnPos, lookRotation, transform);
-            
+
             portal.id = id;
             portal.SpawnTile = spawnPoint;
             allPortals.Add(portal);
@@ -87,7 +87,11 @@ public class PortalManager : MonoBehaviour, ISaveable
     }
     public void CalculateActivePortals(int waveIndex)
     {
-        if (allPortals == null) return;
+        if (allPortals == null)
+        {
+            Debug.LogWarning("null");
+            return;
+        }
         ActivePortals.Clear();
 
         numberOfActivePortals = GetPortalCountForWave(waveIndex);
@@ -102,8 +106,8 @@ public class PortalManager : MonoBehaviour, ISaveable
     }
     public void DrawEnemyPath()
     {
-
         if (ActivePortals == null) return;
+
         foreach (var portal in ActivePortals)
         {
             GameBoard.Instance.BuildPathToDestination(ignoreTowers: false);

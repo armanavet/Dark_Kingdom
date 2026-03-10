@@ -24,9 +24,11 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected SoundData TowerSoundData;
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
-    [SerializeField] protected HitPointPopup hitPointPopup;
-    [SerializeField] protected List<float> healthBarPoints;
+    [SerializeField] protected HitPointPopup unitHitPointPopup;
+    [SerializeField] protected List<float> canvasHeightByLevel;
     [SerializeField] protected HealthBar healthBar;
+    [SerializeField] protected GameObject towerCanvas;
+    [SerializeField] protected GameObject healthBarCanvas;
 
     protected float maxHP;
     protected float currentHP;
@@ -43,8 +45,8 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public TowerType Type => towerType;
     [HideInInspector] public TowerData saveData;
 
-    public GameObject TowerPanel;
-    public GameObject HealthBarPanel;
+    [HideInInspector] public GameObject TowerPanel => towerCanvas;
+    [HideInInspector] public GameObject HealthBar => healthBarCanvas;
     public event System.Action OnDestroyed;
 
     public void Sell(int price)
@@ -56,7 +58,7 @@ public abstract class Tower : MonoBehaviour
     {
         currentHP -= damage;
         healthBar.SetHealth(currentHP);
-        if(Type == TowerType.MainTower) UIManager.Instance.MainTowerHB.SetHealth(currentHP);
+        if (Type == TowerType.MainTower) UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         if (currentHP <= 0)
         {
             Destroy();
@@ -64,7 +66,7 @@ public abstract class Tower : MonoBehaviour
     }
     void Destroy()
     {
-        if(Type == TowerType.MainTower)
+        if (Type == TowerType.MainTower)
         {
             //StateManager.Instance.ChangeGameStateTo();
         }
@@ -74,7 +76,38 @@ public abstract class Tower : MonoBehaviour
         OnDestroyed?.Invoke();
         Destroy(gameObject);
     }
+    public void UpdateCanvasHeight(int levelIndex)
+    {
+        if (canvasHeightByLevel == null || canvasHeightByLevel.Count == 0)
+        {
+            Debug.LogWarning("Canvas height configuration is missing.");
+            return;
+        }
 
+        if (levelIndex < 0 || levelIndex >= canvasHeightByLevel.Count)
+        {
+            Debug.LogWarning("Level index is out of range.");
+            return;
+        }
+
+        float targetHeight = canvasHeightByLevel[levelIndex];
+
+        if (Type != TowerType.MainTower) ApplyHeight(healthBarCanvas.transform);
+        ApplyHeight(towerCanvas.transform);
+
+        void ApplyHeight(Transform canvasTransform)
+        {
+            if (canvasTransform == null) return;
+
+            canvasTransform.position = SetY(canvasTransform.position, targetHeight);
+        }
+    }
+
+    private Vector3 SetY(Vector3 position, float newY)
+    {
+        position.y = newY;
+        return position;
+    }
     public TowerData OnSave()
     {
         return new TowerData(Type, tile.Index, CurrentLevel, currentHP);

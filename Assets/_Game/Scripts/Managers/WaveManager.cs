@@ -13,7 +13,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     List<Enemy> spawnedEnemies = new List<Enemy>();
     Wave enemiesToSpawn;
 
-    int currentWave;
+    int currentWave = 0;
     bool cantFindPath;
     bool isLastWave;
     [Header("for testing")]
@@ -58,7 +58,6 @@ public class WaveManager : MonoBehaviour, ISaveable
 
         if (currentWave == waves.Length - 1) isLastWave = true;
         TotalEnemiesInWave(currentWave);
-
         PortalManager.Instance.CalculateActivePortals(currentWave);
     }
     public void StartSpawn()

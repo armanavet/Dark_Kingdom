@@ -34,6 +34,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float progress, progressFactor;
     float positionOffset;
     public Vector3 CurrentPosition => model.position;
+    public UnitType Type => unitType;
 
     public void OnSpawn(Tile startingTile, float positionOffset)
     {

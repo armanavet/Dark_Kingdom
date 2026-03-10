@@ -52,6 +52,7 @@ public class MainTower : Tower
         //healthBar.SetMaxHealth(currentHP);
         UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
         CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+        UpdateCanvasHeight(CurrentLevel);
         foreach (var defender in Defender)
         {
             defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
@@ -132,6 +133,8 @@ public class MainTower : Tower
             }
             model.SetActive(true);
 
+            UpdateCanvasHeight(CurrentLevel);
+
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
@@ -203,7 +206,7 @@ public class MainTower : Tower
 
         if (defender.target != null)
         {
-            UIManager.Instance.ShowDamage(hitPointPopup, defender.target, damage);
+            UIManager.Instance.ShowDamage(unitHitPointPopup, defender.target, damage);
             defender.target.ApplyDamage(damage);
 
             //foreach (var debuff in currentDebuffs)

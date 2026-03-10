@@ -126,9 +126,10 @@ public class UIManager : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask))
         {
-            //Debug.Log("enter");
             Tower tower = towerHit.transform.GetComponent<Tower>();
-            GameObject healthBar = tower.HealthBarPanel;
+            if (tower.Type == TowerType.MainTower) return;
+
+            GameObject healthBar = tower.HealthBar;
             if (healthBar == null) return;
 
             activeBar = healthBar;
@@ -149,7 +150,7 @@ public class UIManager : MonoBehaviour
             if (activePanel != null) activePanel.SetActive(false);
 
             activePanel = towerPanel;
-            SetTowerPanelPosition(activePanel, tower);
+            //SetTowerPanelPosition(activePanel, tower);
             activePanel.SetActive(true);
 
             isPanelActive = true;
@@ -279,7 +280,7 @@ public class UIManager : MonoBehaviour
     }
     public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
     {
-        if (damageTextPopup == null || target == null) return;
+        if (damageTextPopup == null || target == null || target.hitPointStartPos == null) return;
         Vector3 top = target.hitPointStartPos.transform.position;
         HitPointPopup HitPointPopup = Instantiate(damageTextPopup, top, Quaternion.identity);
         HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);

@@ -39,7 +39,7 @@ public class WizardTower : Tower
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         healthBar.SetMaxHealth(currentHP);
-        HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x, (HealthBarPanel.transform.position.y * 0) + healthBarPoints[CurrentLevel], HealthBarPanel.transform.position.z);
+        UpdateCanvasHeight(CurrentLevel);
         StartCoroutine(PlayPlaceSFX());
         //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
     }
@@ -83,7 +83,7 @@ public class WizardTower : Tower
         float sinTheta = Mathf.Sin(theta);
 
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, hitPointPopup, towerType);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, unitHitPointPopup, towerType);
 
     }
     bool AcquireTarget()
@@ -137,9 +137,8 @@ public class WizardTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             model.SetActive(true);
-            HealthBarPanel.transform.position = new Vector3(HealthBarPanel.transform.position.x,
-                (HealthBarPanel.transform.position.y * 0) + healthBarPoints[CurrentLevel],
-                HealthBarPanel.transform.position.z);
+            UpdateCanvasHeight(CurrentLevel);
+
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
