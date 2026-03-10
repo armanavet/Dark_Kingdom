@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class Portal : Enemy
 {
-    [Header("Portal Parametors")]
-    [SerializeField] public Tile SpawnTile;
-    [SerializeField] int id;
 
+    [Header("Portal Parametors")]
     [SerializeField] Transform shootingPoint;
     [SerializeField] GameObject Projectile;
     [SerializeField] float projectileSpeed;
@@ -26,6 +24,8 @@ public class Portal : Enemy
     [SerializeField] Light gateLight;
     [SerializeField] Renderer gateRenderer, gateEffectRenderer;
 
+    [HideInInspector] public Tile SpawnTile;
+    [HideInInspector] public int id;
     [HideInInspector] public List<GameObject> path;
     [HideInInspector] public int ID => id;
     [HideInInspector] public bool IsDestroyed = false;

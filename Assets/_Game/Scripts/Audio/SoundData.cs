@@ -36,40 +36,33 @@ namespace AudioSystem
 
         public AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic;
     }
-    public enum SoundDataType
-    {
-        Enemy,
-        EnemyProjectile,
-        Tower,
-        UI,
-        Music
-    }
-    [Serializable]
-    public class SoundDataStorage
-    {
-        public SoundDataType type;
-        public SoundData data;
-    }
-    [Serializable]
-    public class SoundDataRepository
-    {
-        public SoundDataStorage[] soundDataStorage;
-        Dictionary<SoundDataType, SoundDataStorage> soundDataDict = new Dictionary<SoundDataType, SoundDataStorage>();
+    
+    //[Serializable]
+    //public class SoundDataStorage
+    //{
+    //    public SoundDataType type;
+    //    public SoundData data;
+    //}
+    //[Serializable]
+    //public class SoundDataRepository
+    //{
+    //    public SoundDataStorage[] soundDataStorage;
+    //    Dictionary<SoundDataType, SoundDataStorage> soundDataDict = new Dictionary<SoundDataType, SoundDataStorage>();
 
-        public void Organize()
-        {
-            FillSelectedDictionary.Fill(soundDataDict, soundDataStorage, type => type.type);
-        }
-        public SoundData GetSoundDataByType(SoundDataType soundDataType)
-        {
-            if (!soundDataDict.TryGetValue(soundDataType, out var item))
-            {
-                Debug.LogError($"SoundData for {soundDataType} not found!");
-                return null;
-            }
-            return item.data;
-        }
-    }
+    //    public void Organize()
+    //    {
+    //        FillSelectedDictionary.Fill(soundDataDict, soundDataStorage, type => type.type);
+    //    }
+    //    public SoundData GetSoundDataByType(SoundDataType soundDataType)
+    //    {
+    //        if (!soundDataDict.TryGetValue(soundDataType, out var item))
+    //        {
+    //            Debug.LogError($"SoundData for {soundDataType} not found!");
+    //            return null;
+    //        }
+    //        return item.data;
+    //    }
+    //}
 }
 //public class SoundData_Enemy
 //{

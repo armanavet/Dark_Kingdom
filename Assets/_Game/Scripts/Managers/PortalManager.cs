@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class PortalManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] List<Portal> allPortals;
+    [SerializeField] Portal portalPrefab;
     [SerializeField] GameObject enemyPathPrefab;
+    [SerializeField] List<Tile> SpawnPoints;
     [HideInInspector] public List<Portal> ActivePortals = new();
+    List<Portal> allPortals = new();
     int numberOfActivePortals = 1;
     Dictionary<int, Portal> portalsByID;
     GameState currentState;
@@ -40,11 +43,31 @@ public class PortalManager : MonoBehaviour, ISaveable
     }
     void StorePortals()
     {
+        SpawnPortals();
         if (allPortals == null) return;
         portalsByID = new Dictionary<int, Portal>();
         foreach (var portal in allPortals) portalsByID.Add(portal.ID, portal);
     }
+    void SpawnPortals()
+    {
+        int id = 0;
 
+        foreach (var spawnPoint in SpawnPoints)
+        {
+            Vector3 spawnPos = spawnPoint.transform.position + new Vector3(0, 0.2f, 0);
+            Quaternion lookRotation = Quaternion.identity;
+
+            if (id % 2 == 1) lookRotation = Quaternion.Euler(0, 90f, 0);
+
+            Portal portal = Instantiate(portalPrefab, spawnPos, lookRotation, transform);
+            
+            portal.id = id;
+            portal.SpawnTile = spawnPoint;
+            allPortals.Add(portal);
+
+            id++;
+        }
+    }
     int GetPortalCountForWave(int wave)
     {
         if (wave < 3) return 1;

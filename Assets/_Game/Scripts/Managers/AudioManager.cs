@@ -10,12 +10,10 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     //[SerializeField] ClipsRepository TotalClips;
-    [SerializeField] SoundDataRepository TotalSoundData;
     //[SerializeField] AudioClipCollector Collector;
     [SerializeField] SoundBank soundBank;
     [SerializeField] AudioSource BackgroundMusicSource;
 
-    private SoundTypeResolver resolver = new SoundTypeResolver();
     #region Singleton
     private static AudioManager _instance;
     public static AudioManager Instance
@@ -48,9 +46,7 @@ public class AudioManager : MonoBehaviour
     #endregion
     private void Start()
     {
-        //gameEnums = gameObject.GetComponent<SoundTypeResolver>();
         //TotalClips.Organize();
-        TotalSoundData.Organize();
     }
     public SoundData SetData<TEnum>(
         SoundData data,
@@ -58,7 +54,6 @@ public class AudioManager : MonoBehaviour
         //MixerType mixer,
         TEnum type) where TEnum : Enum
     {
-        data = TotalSoundData.GetSoundDataByType(soundDataType);
         //data.mixerGroup = TotalClips.GetMixer(mixer, type);
         return data;
     }
@@ -122,7 +117,13 @@ public class AudioManager : MonoBehaviour
     //    yield break;
     //}
 }
-
+public enum SoundDataType
+{
+    Null,
+    Music,
+    UI,
+    Gameplay
+}
 public enum MixerType
 {
     Null,
@@ -166,7 +167,10 @@ public enum GamePlaySFX_Type
     EnemyAttack,
     EnemyMove,
     WaveStart,
-    PortalGate
+    PortalGate,
+    PortalOrb,
+    PortalTopFire,
+    PortalScreaming
 }
 public enum AmbientType
 {
