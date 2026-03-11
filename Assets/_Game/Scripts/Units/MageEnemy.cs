@@ -10,6 +10,7 @@ public class MageEnemy : Enemy
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
+    [SerializeField] GameObject fire;
 
     float TarggetPoint = 2f;
     float rotationProgress;
@@ -61,7 +62,7 @@ public class MageEnemy : Enemy
             {
                 Attack();
             }
-            else 
+            else
             {
                 facingPath = true;
                 //StartTurning();
@@ -126,11 +127,19 @@ public class MageEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
+        GameObject fireObj = null;
         if (target != null)
         {
+            fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
+
+        if (fireObj != null)
+        {
+            yield return new WaitForSeconds(3f);
+            Destroy(fireObj);
+        }
     }
 
     bool FaceTarget()
