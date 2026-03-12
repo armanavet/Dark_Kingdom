@@ -21,7 +21,7 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models;
     [SerializeField] protected GameObject[] effects;
-    [SerializeField] protected SoundData TowerSoundData;
+    [SerializeField] protected SoundData towerSoundData;
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
     [SerializeField] protected HitPointPopup unitHitPointPopup;
@@ -47,6 +47,7 @@ public abstract class Tower : MonoBehaviour
 
     [HideInInspector] public GameObject TowerPanel => towerCanvas;
     [HideInInspector] public GameObject HealthBar => healthBarCanvas;
+    [HideInInspector] public SoundData SoundData => towerSoundData;
     public event System.Action OnDestroyed;
 
     public void Sell(int price)
@@ -108,6 +109,44 @@ public abstract class Tower : MonoBehaviour
         position.y = newY;
         return position;
     }
+    protected void SetSoundData()
+    {
+        towerSoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+    }
+    protected void OnUpgrade()
+    {
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerUpgradeVFX, towerSoundData, transform);
+        effect = Instantiate
+            (effects[2]
+            , new Vector3(transform.position.x, 0.5f, transform.position.z)
+            , Quaternion.identity);
+
+        effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        float duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+    }
+    protected void OnPlace()
+    {
+        float duration = 0;
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPlace, towerSoundData, transform);
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPuffVFX, towerSoundData, transform);
+
+        effect = Instantiate
+            (effects[1], 
+            new Vector3(transform.position.x, 0.15f, transform.position.z), 
+            Quaternion.identity);
+
+        duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+
+        effect = Instantiate
+            (effects[0], 
+            new Vector3(transform.position.x, 0.8f, transform.position.z), 
+            Quaternion.identity);
+
+        duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+    }
     public TowerData OnSave()
     {
         return new TowerData(Type, tile.Index, CurrentLevel, currentHP);
@@ -120,22 +159,5 @@ public abstract class Tower : MonoBehaviour
     }
 
     public abstract void Upgrade();
-    public virtual IEnumerator PlayUpdateSfx()
-    {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnUpgradeVisualEffect_Tower, towerType);
-        //effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
-        //effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        //Destroy(effect, 2f);
-        yield break;
-    }
-    public virtual IEnumerator PlayPlaceSFX()
-    {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnPlace_Tower, towerType);
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnPlaceVisualEffect_Tower, towerType);
-        //effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
-        //Destroy(effect, 2f);
-        //effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
-        //Destroy(effect, 2f);
-        yield break;
-    }
+
 }

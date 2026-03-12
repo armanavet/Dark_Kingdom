@@ -40,8 +40,8 @@ public class WizardTower : Tower
         currentHP = currentHP == 0 ? maxHP : currentHP;
         healthBar.SetMaxHealth(currentHP);
         UpdateCanvasHeight(CurrentLevel);
-        StartCoroutine(PlayPlaceSFX());
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        OnPlace();
+        SetSoundData();
     }
 
     void Update()
@@ -51,7 +51,6 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -82,6 +81,7 @@ public class WizardTower : Tower
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Shell sh = Instantiate(shell);
         sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, unitHitPointPopup, towerType);
 
@@ -124,7 +124,7 @@ public class WizardTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
@@ -159,6 +159,5 @@ public class WizardTower : Tower
                 currentDebuffs.Add(currentDebuff);
             }
         }
-        //StopCoroutine(PlayUpdateSfx());
     }
 }

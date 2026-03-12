@@ -40,7 +40,8 @@ MonoBehaviour:
   - Type: 1
     Data:
       clip: {fileID: 0}
-      mixerGroup: {fileID: 0}
+      mixerGroup: {fileID: 95943906775732657, guid: 067c64e07b6d5e14bb15ab2246372ea3,
+        type: 2}
       loop: 0
       playOnAwake: 0
       frequentSound: 0
@@ -64,7 +65,8 @@ MonoBehaviour:
   - Type: 2
     Data:
       clip: {fileID: 0}
-      mixerGroup: {fileID: 0}
+      mixerGroup: {fileID: 95943906775732657, guid: 067c64e07b6d5e14bb15ab2246372ea3,
+        type: 2}
       loop: 0
       playOnAwake: 0
       frequentSound: 0

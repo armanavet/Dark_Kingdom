@@ -26,11 +26,7 @@ public class MageEnemy : Enemy
     }
     void Start()
     {
-        health = maxHP;
-        currentSpeed = maxSpeed;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
+        SetParameters();
     }
     private void Update()
     {
@@ -131,6 +127,7 @@ public class MageEnemy : Enemy
         if (target != null)
         {
             fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
+            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);

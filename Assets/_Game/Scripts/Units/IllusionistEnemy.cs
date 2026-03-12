@@ -14,12 +14,7 @@ public class IllusionistEnemy : Enemy
     Illusion illusion;
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        SetParameters();
     }
     void Update()
     {

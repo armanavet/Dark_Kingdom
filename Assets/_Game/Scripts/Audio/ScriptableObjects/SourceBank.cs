@@ -65,31 +65,26 @@ public class SourceBank : ScriptableObject
         }
 
     }
-    public SoundData GetData<T>(T type)
-    where T : Enum
+    public SoundData GetData(SoundDataType type)
     {
-        if (so != null && type is SoundDataType dataType)
+        if (so != null)
         {
-            return so.Get(dataType);
+            return so.Get(type);
         }
 
         Debug.LogWarning($"No source registered");
         return null;
     }
-    public SoundData GetData<TDataSource, TDataType>(TDataSource source, TDataType type)
-       where TDataSource : Enum
-       where TDataType : Enum
+    public SoundData GetData<T>(T source, SoundDataType type)
+       where T : Enum
     {
-        if (type is SoundDataType data)
+        if (source is UnitType unitType && enemyDict.TryGetValue(unitType, out var enemy))
         {
-            if (source is UnitType unitType && enemyDict.TryGetValue(unitType, out var enemy))
-            {
-                return enemy.Get(data);
-            }
-            if (source is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
-            {
-                return tower.Get(data);
-            }
+            return enemy.Get(type);
+        }
+        if (source is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
+        {
+            return tower.Get(type);
         }
         Debug.LogWarning($"I got the wrong source type '{source}',or the wrong data type '{type}'");
         return null;

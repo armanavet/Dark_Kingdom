@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AudioSystem;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -23,6 +24,9 @@ public class Portal : Enemy
     //It needs a sound data for clips
     [SerializeField] Light gateLight;
     [SerializeField] Renderer gateRenderer, gateEffectRenderer;
+    [SerializeField] SoundData gateData;
+    [SerializeField] SoundData topFireData;
+    [SerializeField] SoundData screamData;
 
     [HideInInspector] public Tile SpawnTile;
     [HideInInspector] public int id;
@@ -32,23 +36,15 @@ public class Portal : Enemy
 
     Material gateMaterial, gateEffectMaterial;
     GameObject gateEffectObj;
-
-    //Tower target;
-    //float attackCooldown;
-    //float damage;
-    float gateLightMaxIntencity = 5f;
-    //gateAudioMaxVolume = 0.3f,
-    //fireAudioMaxVolume = 0.6f;
+    float gateLightMaxIntencity = 5f
+    , gateAudioMaxVolume = 0.3f
+    , fireAudioMaxVolume = 0.6f;
 
     private void Start()
     {
-        gameObject.layer = LayerMask.NameToLayer(portalLayerName);
-
-        health = maxHP;
-        currentSpeed = maxSpeed;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
+        SetParameters();
         attackCooldown = 1 / attackSpeed;
+        gameObject.layer = LayerMask.NameToLayer(portalLayerName);
 
         gateEffectObj = gateEffectRenderer.gameObject;
         gateEffectMaterial = gateEffectRenderer.material;
@@ -61,6 +57,7 @@ public class Portal : Enemy
         gateEffectMaterial.SetFloat("_Alpha", 0);
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0));
         gateLight.intensity = 0;
+
     }
     private void Update()
     {
@@ -81,8 +78,8 @@ public class Portal : Enemy
     }
     void Shoot()
     {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
-        Vector3 point = target.transform.position + new Vector3(0,1.5f,0);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
+        Vector3 point = target.transform.position + new Vector3(0, 1.5f, 0);
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
         GameObject newProjectile = Instantiate(Projectile, shootingPoint.position, Quaternion.LookRotation(point - shootingPoint.position));
@@ -96,7 +93,7 @@ public class Portal : Enemy
         {
             int ClosestTargetIndex = 0;
             float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
-            
+
             for (int i = 1; i < targets.Length; i++)
             {
                 if (MinDist <= MinDist + i)
@@ -110,7 +107,7 @@ public class Portal : Enemy
                 }
             }
             target = targets[ClosestTargetIndex].GetComponent<Tower>();
-            
+
             if (target != null) return true;
             else return false;
         }
@@ -126,7 +123,7 @@ public class Portal : Enemy
         {
             target.ApplyDamage(damage);
         }
-        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower, towerType);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         Destroy(currentProjectile);
     }
     #region Visual
@@ -163,13 +160,13 @@ public class Portal : Enemy
             if (transitionTimer >= rand1 && !orbParticlesL.isPlaying)
             {
                 orbParticlesL.Play();
-                //orbLAudio.Play();
+                AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesL.transform);
             }
 
             if (transitionTimer >= rand2 && !orbParticlesR.isPlaying)
             {
                 orbParticlesR.Play();
-                //orbRAudio.Play();
+                AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesR.transform);
             }
 
             gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(transitionTimer));
@@ -190,10 +187,11 @@ public class Portal : Enemy
         gateLight.gameObject.SetActive(true);
 
         fireParticles.Play();
-        //fireAudio.volume = fireAudioMaxVolume;
-        //fireAudio.Play();
-        //screamAudio.Play();
-        //gateAudio.Play();
+        topFireData.volume = fireAudioMaxVolume;
+
+        AudioManager.Instance.Play(GamePlaySFX_Type.PortalTopFire, topFireData, orbParticlesR.transform);
+        AudioManager.Instance.Play(GamePlaySFX_Type.PortalScreaming, screamData, orbParticlesR.transform);
+        AudioManager.Instance.Play(GamePlaySFX_Type.PortalGate, gateData, orbParticlesR.transform);
 
         while (transitionTimer < 1f)
         {
@@ -202,16 +200,14 @@ public class Portal : Enemy
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer * 0.75f);
 
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            //gateAudio.volume = transitionTimer * gateAudioMaxVolume;
+            gateData.volume = transitionTimer * gateAudioMaxVolume;
 
             yield return null;
         }
 
         gateEffectMaterial.SetFloat("_Alpha", 0f);
         gateLight.intensity = gateLightMaxIntencity;
-        //gateAudio.volume = gateAudioMaxVolume;
-
-        //yield return new WaitForSeconds(1f);
+        gateData.volume = gateAudioMaxVolume;
     }
 
     public IEnumerator DeactivateVisual()
@@ -236,8 +232,8 @@ public class Portal : Enemy
 
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer);
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            //gateAudio.volume = transitionTimer * gateAudioMaxVolume;
-            //fireAudio.volume = transitionTimer * fireAudioMaxVolume;
+            gateData.volume = transitionTimer * gateAudioMaxVolume;
+            topFireData.volume = transitionTimer * fireAudioMaxVolume;
             yield return null;
         }
 
@@ -245,9 +241,7 @@ public class Portal : Enemy
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0f));
         gateEffectObj.SetActive(false);
         gateLight.gameObject.SetActive(false);
-        //gateAudio.Stop();
-        //fireAudio.Stop();
-        //WaveManager.Instance.isPortalOff = true;
+        AudioManager.Instance.Stop();
         yield break;
     }
     #endregion

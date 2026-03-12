@@ -12,11 +12,7 @@ public class ExplosionEnemy : Enemy
     List<GameObject> effectsToDestroy = new List<GameObject>();
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        SetParameters();
     }
     void Update()
     {

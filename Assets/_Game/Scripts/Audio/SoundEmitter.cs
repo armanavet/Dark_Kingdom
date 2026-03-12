@@ -11,7 +11,7 @@ namespace AudioSystem
     {
         public SoundData Data { get; private set; }
         public LinkedListNode<SoundEmitter> Node { get; set; }
-    
+
         AudioSource audioSource;
         Coroutine playingCoroutine;
 
@@ -49,7 +49,7 @@ namespace AudioSystem
 
             audioSource.rolloffMode = data.rolloffMode;
         }
-        
+
         public void Play()
         {
             if (playingCoroutine != null)
@@ -59,7 +59,7 @@ namespace AudioSystem
             audioSource.Play();
             playingCoroutine = StartCoroutine(WaitForSoundToEnd());
         }
-         IEnumerator WaitForSoundToEnd()
+        IEnumerator WaitForSoundToEnd()
         {
             yield return new WaitWhile(() => audioSource.isPlaying);
             Stop();
@@ -82,4 +82,3 @@ namespace AudioSystem
         }
     }
 }
- 

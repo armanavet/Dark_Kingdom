@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
-    [SerializeField] protected SoundData ExplosionSoundData;
+    [SerializeField] protected SoundData soundData;
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask EnemyMask;
     [SerializeField] LayerMask PortalMask;
@@ -17,7 +17,7 @@ public class Shell : MonoBehaviour
     TowerType towerType;
     private void Start()
     {
-        //ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Projectile_Shell);
+        //soundData = AudioManager.Instance.SetData(SoundDataType.Gameplay);
     }
     void Update()
     {
@@ -62,7 +62,7 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        //AudioManager.Instance.Play(ExplosionSoundData, transform, ClipType.OnLaunch_Tower, towerType);
+        AudioManager.Instance.Play(towerType, GamePlaySFX_Type.EnemyAttack, soundData, transform);
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));

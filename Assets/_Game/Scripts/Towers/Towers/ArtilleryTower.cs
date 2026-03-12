@@ -14,7 +14,7 @@ public class ArtilleryTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
-    
+
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -39,9 +39,9 @@ public class ArtilleryTower : Tower
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
         healthBar.SetMaxHealth(currentHP);
-        StartCoroutine(PlayPlaceSFX());
+        OnPlace();
         UpdateCanvasHeight(CurrentLevel);
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower, towerType);
+        SetSoundData();
     }
 
     void Update()
@@ -51,7 +51,6 @@ public class ArtilleryTower : Tower
         {
             if (AcquireTarget())
             {
-                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -82,9 +81,10 @@ public class ArtilleryTower : Tower
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
-        
+
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs,unitHitPointPopup,towerType);
+        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, unitHitPointPopup, towerType);
     }
     bool AcquireTarget()
     {
@@ -124,7 +124,7 @@ public class ArtilleryTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
             EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
@@ -145,6 +145,5 @@ public class ArtilleryTower : Tower
             healthBar.SetMaxHealth(currentHP);
 
         }
-        //StopCoroutine(PlayUpdateSfx());
     }
 }

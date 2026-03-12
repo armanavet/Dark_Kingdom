@@ -37,7 +37,6 @@ public class StateManager : MonoBehaviour//, ISaveable
 
     public void Initialize()
     {
-        //StateSoundData = AudioManager.Instance.SetData(StateSoundData,SoundDataType.Music, MixerType.State);
         ChangeGameStateTo(GameState.Passive); 
     }
 

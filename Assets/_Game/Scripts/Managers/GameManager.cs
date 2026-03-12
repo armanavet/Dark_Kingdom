@@ -1,9 +1,10 @@
+using AudioSystem;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] SoundData music;
     static bool IsPaused;
     #region Singleton
     private static GameManager _instance;
@@ -27,11 +28,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        music = AudioManager.Instance.SetData(SoundDataType.Music);
         UIManager.Instance.Initialize();
         PortalManager.Instance.Initialize();
         TowerManager.Instance.Initialize();
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
+
     }
     void Update()
     {
@@ -40,6 +43,15 @@ public class GameManager : MonoBehaviour
             IsPaused = !IsPaused;
             PauseGame();
         }
+    }
+    public void PlayMusic(GameState state)
+    {
+        if (music.clip != null)
+        {
+            music.clip = null;
+            StopAllCoroutines();
+        }
+        StartCoroutine(ChooseTheMusic(state));
     }
     public void PauseGame()
     {
@@ -56,5 +68,17 @@ public class GameManager : MonoBehaviour
             AudioListener.pause = false;
         }
     }
-
+    IEnumerator ChooseTheMusic(GameState state)
+    {
+        if (state == GameState.Passive)
+        {
+            AudioManager.Instance.Play(MusicType.InNormal, music, transform);
+        }
+        else if (state == GameState.Active)
+        {
+            AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music, transform);
+            yield return new WaitForSeconds(music.clip.length);
+            AudioManager.Instance.Play(MusicType.InWave, music, transform);
+        }
+    }
 }

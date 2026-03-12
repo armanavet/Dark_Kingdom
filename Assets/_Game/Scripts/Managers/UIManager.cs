@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
     Button[] towerPurchaseButtons;
 
     Dictionary<TowerType, float> towerOffset;
-    
+
     float TowerPurchasePanelYInitial;
 
     bool isPanelActive = false;
@@ -64,8 +64,7 @@ public class UIManager : MonoBehaviour
         passiveStatePanel.SetActive(false);
 
         mainCamera = Camera.main;
-
-        //UISoundData = AudioManager.Instance.SetData(UISoundData, SoundDataType.UI, MixerType.UI);
+        UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
     }
     void LateUpdate()
     {
@@ -89,7 +88,7 @@ public class UIManager : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
             if (towerPreview != null) PlaceTower(true);
-            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask)) 
+            else if (Physics.Raycast(ray, out RaycastHit towerHit, Mathf.Infinity, towerMask))
                 ShowTowerPanel(true, towerHit.transform);
             else ShowTowerPanel(false);
         }
@@ -150,7 +149,6 @@ public class UIManager : MonoBehaviour
             if (activePanel != null) activePanel.SetActive(false);
 
             activePanel = towerPanel;
-            //SetTowerPanelPosition(activePanel, tower);
             activePanel.SetActive(true);
 
             isPanelActive = true;
@@ -161,38 +159,15 @@ public class UIManager : MonoBehaviour
             isPanelActive = false;
         }
     }
-
-    void SetTowerPanelPosition(GameObject panel, Tower tower)
-    {
-        Transform panelPos = panel.transform;
-        float x = tower.transform.position.x;
-        float y = tower.transform.position.y;
-        float z = tower.transform.position.z;
-        float yOffset = towerPanelYOffset;
-
-        SetPosition(panelPos, yOffset, x, y, z);
-
-    }
-    void SetPosition(Transform positionToPlace, float yOffsetNumber, float x, float y, float z)
-    {
-        positionToPlace.position = new Vector3(x, y + yOffsetNumber, z);
-    }
-    float SetOffset(Tower tower)
-    {
-        float offset = 0;
-        if (tower.CompareTag("ArcherTower")) offset = 2.6f;
-        else if (tower.CompareTag("WizardTower")) offset = 2.6f;
-        else if (tower.CompareTag("ArtilleryTower")) offset = 2.6f;
-        else if (tower.CompareTag("GoldMine")) offset = 2.6f;
-        else if (tower.CompareTag("MainTower")) offset = 2.6f;
-        return offset;
-    }
     void ShowTowerPurchasePanel(bool value)
     {
         if (value == true)
         {
             DOTween.Kill("HidePanel");
-            towerPurchasePanel.transform.DOMoveY(TowerPurchasePanelYInitial, 1).SetId("ShowPanel").SetEase(Ease.OutQuad);
+            towerPurchasePanel.transform
+                .DOMoveY(TowerPurchasePanelYInitial, 1)
+                .SetId("ShowPanel")
+                .SetEase(Ease.OutQuad);
             foreach (var button in towerPurchaseButtons)
             {
                 button.interactable = true;
@@ -201,7 +176,10 @@ public class UIManager : MonoBehaviour
         else
         {
             DOTween.Kill("ShowPanel");
-            towerPurchasePanel.transform.DOMoveY(towerPurchasePanelYHidden, 1).SetId("HidePanel").SetEase(Ease.OutQuad);
+            towerPurchasePanel.transform
+                .DOMoveY(towerPurchasePanelYHidden, 1)
+                .SetId("HidePanel")
+                .SetEase(Ease.OutQuad);
             foreach (var button in towerPurchaseButtons)
             {
                 button.interactable = false;
@@ -212,7 +190,7 @@ public class UIManager : MonoBehaviour
     {
         if (towerPreview == null)
         {
-            //AudioManager.Instance.Play(UISoundData,ClipType.OnPurchaseButtonClick_UI);
+            AudioManager.Instance.Play(UISFX_Type.TowerBuyButton, UISoundData);
             ShowTowerPurchasePanel(false);
             TowerPreview prefab = TowerManager.Instance.GetPreviewByType((TowerType)type);
             towerPreview = Instantiate(prefab);
@@ -233,7 +211,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                //AudioManager.Instance.Play(UISoundData, transform, ClipType.OnDenied_Tower);
+                AudioManager.Instance.Play(UISFX_Type.PlacementDenied, UISoundData);
             }
         }
         else
