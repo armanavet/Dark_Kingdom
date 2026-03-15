@@ -91,6 +91,7 @@ public class FlyingEnemy : Enemy
 
         if (target != null)
         {
+            //auido
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);

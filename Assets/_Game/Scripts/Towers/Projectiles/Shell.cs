@@ -1,4 +1,5 @@
 using AudioSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,6 @@ public class Shell : MonoBehaviour
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask EnemyMask;
     [SerializeField] LayerMask PortalMask;
-    GameObject effect;
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
@@ -62,14 +62,20 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        AudioManager.Instance.Play(towerType, GamePlaySFX_Type.EnemyAttack, soundData, transform);
+        DestroyObject(effects);
+    }
+    IEnumerator DestroyObject(GameObject[] effects)
+    {
+        AudioManager.Instance.Play(towerType, GamePlaySFX_Type.TowerShoot, soundData, transform);
+        GameObject effect;
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
             Destroy(effect, 2f);
         }
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(soundData.clip.length);
         Destroy(gameObject);
-
+        yield break;
     }
-
 }

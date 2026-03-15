@@ -191,7 +191,7 @@ public class Portal : Enemy
 
         AudioManager.Instance.Play(GamePlaySFX_Type.PortalTopFire, topFireData, orbParticlesR.transform);
         AudioManager.Instance.Play(GamePlaySFX_Type.PortalScreaming, screamData, orbParticlesR.transform);
-        AudioManager.Instance.Play(GamePlaySFX_Type.PortalGate, gateData, orbParticlesR.transform);
+        //AudioManager.Instance.Play(GamePlaySFX_Type.PortalGate, gateData, orbParticlesR.transform);
 
         while (transitionTimer < 1f)
         {
@@ -200,14 +200,14 @@ public class Portal : Enemy
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer * 0.75f);
 
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            gateData.volume = transitionTimer * gateAudioMaxVolume;
+            //gateData.volume = transitionTimer * gateAudioMaxVolume;
 
             yield return null;
         }
 
         gateEffectMaterial.SetFloat("_Alpha", 0f);
         gateLight.intensity = gateLightMaxIntencity;
-        gateData.volume = gateAudioMaxVolume;
+        //gateData.volume = gateAudioMaxVolume;
     }
 
     public IEnumerator DeactivateVisual()
@@ -232,7 +232,7 @@ public class Portal : Enemy
 
             gateEffectMaterial.SetFloat("_Alpha", 1f - transitionTimer);
             gateLight.intensity = transitionTimer * gateLightMaxIntencity;
-            gateData.volume = transitionTimer * gateAudioMaxVolume;
+            //gateData.volume = transitionTimer * gateAudioMaxVolume;
             topFireData.volume = transitionTimer * fireAudioMaxVolume;
             yield return null;
         }
@@ -241,7 +241,9 @@ public class Portal : Enemy
         gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(0f));
         gateEffectObj.SetActive(false);
         gateLight.gameObject.SetActive(false);
-        AudioManager.Instance.Stop();
+        //gateData.clip = null;
+        topFireData.clip = null;
+        //AudioManager.Instance.Stop();
         yield break;
     }
     #endregion

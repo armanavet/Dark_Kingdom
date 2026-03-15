@@ -15,7 +15,7 @@ MonoBehaviour:
   entries:
   - Type: 3
     Data:
-      clip: {fileID: 0}
+      clip: {fileID: 8300000, guid: 31ba81fb9cac3084399defc68c6572dc, type: 3}
       mixerGroup: {fileID: 6143356568566563004, guid: 067c64e07b6d5e14bb15ab2246372ea3,
         type: 2}
       loop: 0
@@ -25,16 +25,16 @@ MonoBehaviour:
       bypassEffects: 0
       bypassListenerEffetcs: 0
       bypassReverbZones: 0
-      priority: 0
-      volume: 0
-      pitch: 0
+      priority: 128
+      volume: 0.7
+      pitch: 1
       panStereo: 0
-      spatialBlend: 0
-      reverbZoneMix: 0
+      spatialBlend: 1
+      reverbZoneMix: 1
       dopplerLevel: 0
-      spread: 0
-      minDistance: 0
-      maxDistance: 0
+      spread: 30
+      minDistance: 10
+      maxDistance: 30
       ignoreListenerVolume: 0
       ignoreListenerPause: 0
-      rolloffMode: 0
+      rolloffMode: 1

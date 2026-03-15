@@ -83,7 +83,15 @@ public class WizardTower : Tower
 
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, unitHitPointPopup, towerType);
+        sh.Initialize
+            (launchPoint
+            , TargetPoint
+            , new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y)
+            , shellBlastRadius
+            , shellDamage
+            , currentDebuffs
+            , unitHitPointPopup
+            , towerType);
 
     }
     bool AcquireTarget()

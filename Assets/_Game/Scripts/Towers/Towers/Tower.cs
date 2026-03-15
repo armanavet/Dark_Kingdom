@@ -116,8 +116,9 @@ public abstract class Tower : MonoBehaviour
     protected void OnUpgrade()
     {
         AudioManager.Instance.Play(GamePlaySFX_Type.TowerUpgradeVFX, towerSoundData, transform);
+        int index = (Type == TowerType.MainTower) ? 0 : 2;
         effect = Instantiate
-            (effects[2]
+            (effects[index]
             , new Vector3(transform.position.x, 0.5f, transform.position.z)
             , Quaternion.identity);
 
@@ -132,16 +133,16 @@ public abstract class Tower : MonoBehaviour
         AudioManager.Instance.Play(GamePlaySFX_Type.TowerPuffVFX, towerSoundData, transform);
 
         effect = Instantiate
-            (effects[1], 
-            new Vector3(transform.position.x, 0.15f, transform.position.z), 
+            (effects[1],
+            new Vector3(transform.position.x, 0.15f, transform.position.z),
             Quaternion.identity);
 
         duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
         Destroy(effect, duration);
 
         effect = Instantiate
-            (effects[0], 
-            new Vector3(transform.position.x, 0.8f, transform.position.z), 
+            (effects[0],
+            new Vector3(transform.position.x, 0.8f, transform.position.z),
             Quaternion.identity);
 
         duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;

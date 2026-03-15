@@ -62,11 +62,14 @@ public class AudioManager : MonoBehaviour
                 .WithRandomPitch()
                 .Play(data);
         }
-        SoundManager.Instance
-            .CreateSoundBuilder()
-            .WithPosition(transform.position)
-            .WithRandomPitch()
-            .Play(data);
+        else
+        {
+            SoundManager.Instance
+                .CreateSoundBuilder()
+                .WithPosition(transform.position)
+                .WithRandomPitch()
+                .Play(data);
+        }
     }
     public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, SoundData data, Transform transform)
         where T_Sound : Enum
