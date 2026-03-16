@@ -20,8 +20,6 @@ public class Portal : Enemy
     [Header("Set Portal Visual Parameters")]
     [SerializeField] Gradient emissionColor;
     [SerializeField] ParticleSystem orbParticlesL, orbParticlesR, fireParticles;
-    //[SerializeField] public AudioSource gateAudio, screamAudio, orbLAudio, orbRAudio, fireAudio;
-    //It needs a sound data for clips
     [SerializeField] Light gateLight;
     [SerializeField] Renderer gateRenderer, gateEffectRenderer;
     [SerializeField] SoundData gateData;
@@ -119,11 +117,11 @@ public class Portal : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (target != null)
         {
             target.ApplyDamage(damage);
         }
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         Destroy(currentProjectile);
     }
     #region Visual

@@ -201,12 +201,12 @@ public class MainTower : Tower
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (defender.target != null)
         {
             UIManager.Instance.ShowDamage(unitHitPointPopup, defender.target, damage);
             defender.target.ApplyDamage(damage);
         }
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         Destroy(currentProjectile);
     }
 }

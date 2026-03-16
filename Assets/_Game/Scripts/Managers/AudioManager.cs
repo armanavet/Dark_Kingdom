@@ -154,12 +154,12 @@ public enum GamePlaySFX_Type
     PortalTopFire,
     PortalScreaming
 }
-public enum AmbientType
-{
-    Null,
-    //--Portal--
-    OrbParticalL,
-    OrbParticalR,
-    FireOnTop,
-    //----------
-}
+//public enum AmbientType
+//{
+//    Null,
+//    //--Portal--
+//    OrbParticalL,
+//    OrbParticalR,
+//    FireOnTop,
+//    //----------
+//}

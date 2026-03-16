@@ -6,7 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class StateManager : MonoBehaviour//, ISaveable
+public class StateManager : MonoBehaviour
 {
     [SerializeField] SoundData StateSoundData;
     [SerializeField] float[] TimeUntilNextWave;
@@ -37,7 +37,7 @@ public class StateManager : MonoBehaviour//, ISaveable
 
     public void Initialize()
     {
-        ChangeGameStateTo(GameState.Passive); 
+        ChangeGameStateTo(GameState.Passive);
     }
 
     void Update()
@@ -56,20 +56,17 @@ public class StateManager : MonoBehaviour//, ISaveable
     }
     public void ChangeGameStateTo(GameState newState)
     {
-        //AudioManager.Instance.Play(StateSoundData, newState);
         if (newState == GameState.Active)
         {
             State = GameState.Active;
             PreviusState = State;
             timeMultiplier = 1;
-            //WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
             State = GameState.Passive;
             PreviusState = State;
             Timer = (WaveManager.Instance.CurrentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-            //WaveManager.Instance.GetPhaseCommands();
             SaveManager.Save();
         }
         else if (newState == GameState.Paused)
@@ -104,7 +101,7 @@ public class StateManager : MonoBehaviour//, ISaveable
     //public ISaveData SaveState()
     //{
     //    GeneralData saveData = new GeneralData();
-        
+
     //    return saveData;
     //}
 

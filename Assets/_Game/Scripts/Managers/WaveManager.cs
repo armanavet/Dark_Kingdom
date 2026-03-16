@@ -183,7 +183,7 @@ public class WaveManager : MonoBehaviour, ISaveable
 
         if (GameManager.Instance != null)
             GameManager.Instance.OnWaveIntroFinished -= StartSpawn;
-        
+
         if (StateManager.Instance != null)
             StateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
     }
@@ -270,87 +270,3 @@ public class EnemiesToSpawn
 }
 
 #endregion
-
-
-
-//PortalManager.Instance.OnAllActivePortalsDestroyed += HandleAllActivePortalsDestroyed;
-//PortalManager.Instance.OnAllActivePortalsDestroyed -= HandleAllActivePortalsDestroyed;
-//private void HandleAcctivePortalsDestroyed()
-//{
-//    
-//}
-
-//activeSpawnPoints.Clear();
-//void CalculateSpawnPoint()
-//{
-//    if (a)
-//    {
-//        spawnPoint = SpawnPoint;
-//    }
-//    else
-//    {
-//        List<Tile> potentialPoints = new List<Tile>();
-//        int variance = (int)distanceVariance.RandomValueInRange;
-//        foreach (var tile in GameBoard.Instance.Tiles)
-//        {
-//            if (tile.DistanceToDestinationOriginal == spawnDistanceFromCenter + variance)
-//            {
-//                potentialPoints.Add(tile);
-//            }
-//        }
-//        spawnPoint = potentialPoints[Random.Range(0, potentialPoints.Count - 1)];
-//    }
-//}
-
-//List<PortalSpawnPoint> available = new List<PortalSpawnPoint>(allPortals);
-//int count = Mathf.Min(activePortals, available.Count);
-//var shuffled = allPortals.OrderBy(_ => Random.value).ToList();
-
-//for (int i = 0; i < count; i++)
-//{
-//    activeSpawnPoints.Add(shuffled[i]);
-//}
-//activeSpawnPoints = portalManager.GetActivePortals();
-
-//CalculateSpawnPoint();
-
-//Tile tile = spawnPoint;
-//GameBoard.Instance.BuildPathToDestination(ignoreTowers: false);
-//if (cantFindPath) GameBoard.Instance.BuildPathToDestination(ignoreTowers: true);
-
-//while (tile != null && tile.Type != TileType.Destination)
-//{
-//    GameObject path = Instantiate(enemyPathPrefab, tile.transform.position, tile.pathDirection.GetRotation());
-//    enemyPath.Add(path);
-//    tile = tile.NextOnPath;
-//}
-
-//for (int i = 1; i < count; i++)
-//{
-//    int index = Random.Range(0, available.Count - 1);
-//    activeSpawnPoints.Add(available[index]);
-//    available.RemoveAt(index);
-//}
-//Debug.Log(activeSpawnPoints);
-
-
-//foreach (var spawnTile in activeSpawnPoints)
-//{
-//    GameBoard.Instance.BuildPathToDestination(ignoreTowers: false);
-//    if (spawnTile.SpawnTile.NextOnPath == null)
-//        GameBoard.Instance.BuildPathToDestination(ignoreTowers: true);
-
-//    Tile tile = spawnTile.SpawnTile;
-
-//    while (tile != null && tile.Type != TileType.Destination)
-//    {
-//        GameObject path = Instantiate(
-//            enemyPathPrefab,
-//            tile.transform.position,
-//            tile.pathDirection.GetRotation()
-//        );
-
-//        enemyPath.Add(path);
-//        tile = tile.NextOnPath;
-//    }
-//}

@@ -89,9 +89,9 @@ public class FlyingEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, transform);
         if (target != null)
         {
-            //auido
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);

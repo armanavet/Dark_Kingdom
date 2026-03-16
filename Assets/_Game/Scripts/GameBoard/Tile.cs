@@ -212,6 +212,12 @@ public class Tile : MonoBehaviour
     {
         currentModel.transform.LookAt(target);
     }
+    public Quaternion PortalRotationHelper()
+    {
+        float yRotation = 0;
+        if (west != null && east != null && west.canBePath && east.canBePath) yRotation = 90f;
+        return Quaternion.Euler(0, yRotation, 0);
+    }
     public void SetSurroundingTiles()
     {
         surroundingTiles = new List<Tile>()

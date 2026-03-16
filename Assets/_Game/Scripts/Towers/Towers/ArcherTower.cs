@@ -156,6 +156,7 @@ public class ArcherTower : Tower
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (target != null)
         {
             UIManager.Instance.ShowDamage(unitHitPointPopup, target, damage);
@@ -165,7 +166,6 @@ public class ArcherTower : Tower
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         Destroy(currentProjectile);
     }
 }

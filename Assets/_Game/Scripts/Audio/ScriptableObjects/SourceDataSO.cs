@@ -6,8 +6,4 @@ using UnityEngine;
     menuName = "ScriptableObjects/Audio/SourceData")]
 public class SourceDataSO : SourceLibrary<SoundDataType>
 {
-    //internal SoundData Get<T>(T type)
-    //{
-    //    throw new NotImplementedException();
-    //}
 }

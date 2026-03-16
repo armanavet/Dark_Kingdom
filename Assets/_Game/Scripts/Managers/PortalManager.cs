@@ -59,10 +59,12 @@ public class PortalManager : MonoBehaviour, ISaveable
 
             if (id % 2 == 1) lookRotation = Quaternion.Euler(0, 90f, 0);
 
-            Portal portal = Instantiate(portalPrefab, spawnPos, lookRotation, transform);
+            Portal portal = Instantiate(portalPrefab, spawnPos, Quaternion.identity, transform);
 
             portal.id = id;
             portal.SpawnTile = spawnPoint;
+            portal.transform.rotation = portal.SpawnTile.PortalRotationHelper();
+
             allPortals.Add(portal);
 
             id++;
@@ -236,8 +238,3 @@ public class PortalManager : MonoBehaviour, ISaveable
     }
     #endregion
 }
-//public event PortalsDestroyed OnAllActivePortalsDestroyed;
-//void CheckAllActivePortals()
-//{
-//    if (!ActivePortals.Any()) OnAllActivePortalsDestroyed?.Invoke();
-//}

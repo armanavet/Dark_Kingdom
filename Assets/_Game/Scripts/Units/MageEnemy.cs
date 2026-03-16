@@ -61,8 +61,6 @@ public class MageEnemy : Enemy
             else
             {
                 facingPath = true;
-                //StartTurning();
-                //target.OnDestroyed -= StartTurning();
                 return;
             }
         }
@@ -123,11 +121,10 @@ public class MageEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
-        GameObject fireObj = null;
+        GameObject fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
         if (target != null)
         {
-            fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
-            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
@@ -148,12 +145,10 @@ public class MageEnemy : Enemy
             float rotationTime = rotationDifference / rotationSpeed;
             rotationProgress += Time.deltaTime / rotationTime;
             float yRotation = Mathf.LerpAngle(model.eulerAngles.y, targetYRotation, rotationProgress);
-            //model.rotation = Quaternion.Euler(model.rotation.x, yRotation, model.rotation.z);
 
             return false;
         }
         model.rotation = Quaternion.Euler(model.rotation.x, targetYRotation, model.rotation.z);
-        //Attack();
         return true;
     }
     IEnumerator FacePath()
