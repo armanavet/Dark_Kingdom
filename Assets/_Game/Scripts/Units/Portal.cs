@@ -37,7 +37,7 @@ public class Portal : Enemy
     Material gateMaterial, gateEffectMaterial;
     GameObject gateEffectObj;
     float gateLightMaxIntencity = 5f
-    , gateAudioMaxVolume = 0.3f
+    //, gateAudioMaxVolume = 0.3f
     , fireAudioMaxVolume = 0.6f;
 
     private void Start()

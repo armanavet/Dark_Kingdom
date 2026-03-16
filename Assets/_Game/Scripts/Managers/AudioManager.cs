@@ -41,6 +41,11 @@ public class AudioManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject); // Optional: keep across scenes
     }
     #endregion
+    public void Initialize()
+    {
+        soundBank.Build();
+        sourceBank.Build();
+    }
     public SoundData SetData<T>(T sourceType, SoundDataType soundDataType)
         where T : Enum
     {
@@ -50,32 +55,39 @@ public class AudioManager : MonoBehaviour
     {
         return sourceBank.GetData(soundDataType);
     }
-    public void Play<T>(T soundType, SoundData data, Transform transform = null)
+    public void Play<T>(T soundType, SoundData data, Transform target = null)
         where T : Enum
     {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
+
         data.clip = soundBank.GetClip(soundType);
-        if (transform == null)
-        {
-            SoundManager.Instance
-                .CreateSoundBuilder()
-                .WithPosition(this.transform.position)
-                .WithRandomPitch()
-                .Play(data);
-        }
-        else
-        {
-            SoundManager.Instance
-                .CreateSoundBuilder()
-                .WithPosition(transform.position)
-                .WithRandomPitch()
-                .Play(data);
-        }
+
+        Vector3 position = target != null ? target.position : transform.position;
+
+        SoundManager.Instance
+            .CreateSoundBuilder()
+            .WithPosition(position)
+            .WithRandomPitch()
+            .Play(data);
     }
-    public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, SoundData data, Transform transform)
+    public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, SoundData data, Transform target)
         where T_Sound : Enum
             where T_Source : Enum
     {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
+
         data.clip = soundBank.GetClip(sourcType, soundType);
+
+        Vector3 position = target != null ? target.position : transform.position;
+
         SoundManager.Instance
             .CreateSoundBuilder()
             .WithPosition(transform.position)

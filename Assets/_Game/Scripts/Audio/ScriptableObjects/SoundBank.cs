@@ -143,11 +143,8 @@ public class SoundBank : ScriptableObject
     Dictionary<UnitType, GameplaySoundLibrary> enemyDict = new Dictionary<UnitType, GameplaySoundLibrary>();
     Dictionary<TowerType, GameplaySoundLibrary> towerDict = new Dictionary<TowerType, GameplaySoundLibrary>();
     Dictionary<Type, ISoundProvider> providerMap = new();
-    void OnEnable()
-    {
-        Build();
-    }
-    void Build()
+    
+    public void Build()
     {
         enemyDict.Clear(); 
         towerDict.Clear();
@@ -169,24 +166,6 @@ public class SoundBank : ScriptableObject
     {
         providerMap[provider.SoundType] = provider; 
     }
-    //public AudioClip GetClip<TSoundType>(TSoundType soundType) 
-    //    where TSoundType : Enum
-    //{
-    //    if (soundType is UISFX_Type uiSFX_Type)
-    //    {
-    //        return uiSoundEffectsSO.GetClip(uiSFX_Type);
-    //    }
-    //    if (soundType is MusicType musicType)
-    //    {
-    //        return musicSO.GetClip(musicType);
-    //    }
-    //    if (soundType is GamePlaySFX_Type gamePlaySFX_Type)
-    //    {
-    //        return gameplaySoundEffectsSO.GetClip(gamePlaySFX_Type);
-    //    }
-    //    Debug.LogWarning($"I got the sound type '{soundType}'");
-    //    return null;
-    //}
 
     public AudioClip GetClip<TSoundType>(TSoundType soundType)
     where TSoundType : Enum

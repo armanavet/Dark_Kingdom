@@ -20,4 +20,10 @@ MonoBehaviour:
     Clips:
     - {fileID: 8300000, guid: 0b4651f8ba4edde40bdcb65a70e3bddd, type: 3}
   - Type: 5
-    Clips: []
+    Clips:
+    - {fileID: 8300000, guid: 8812cffbe4e811a4f8e6d345ff9dde3f, type: 3}
+    - {fileID: 8300000, guid: e05b6b06aba0c5948a4b74b7ced2987f, type: 3}
+    - {fileID: 8300000, guid: de41148cd836ecf428fcaa9a1d1885d5, type: 3}
+    - {fileID: 8300000, guid: a05331369eb3f5c40a88eae6f8d6730d, type: 3}
+    - {fileID: 8300000, guid: d529c6cf181cab743bbda557ed624f22, type: 3}
+    - {fileID: 8300000, guid: 4e58e760bf443a54bb25614745b68838, type: 3}

@@ -44,13 +44,7 @@ public class SourceBank : ScriptableObject
 
     Dictionary<UnitType, SourceDataSO> enemyDict = new Dictionary<UnitType, SourceDataSO>();
     Dictionary<TowerType, SourceDataSO> towerDict = new Dictionary<TowerType, SourceDataSO>();
-
-
-    void OnEnable()
-    {
-        Build();
-    }
-    void Build()
+    public void Build()
     {
         enemyDict.Clear();
         towerDict.Clear();

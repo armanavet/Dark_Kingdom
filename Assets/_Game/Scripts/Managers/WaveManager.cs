@@ -172,14 +172,32 @@ public class WaveManager : MonoBehaviour, ISaveable
     #region Link with Portal Manager
     private void OnEnable()
     {
+        StateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        GameManager.Instance.OnWaveIntroFinished += StartSpawn;
         PortalManager.Instance.OnAllPortalsDestroyed += HandleAllPortalsDestroyed;
     }
     private void OnDisable()
     {
         if (PortalManager.Instance != null)
-        {
-
             PortalManager.Instance.OnAllPortalsDestroyed -= HandleAllPortalsDestroyed;
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnWaveIntroFinished -= StartSpawn;
+        
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+    }
+    void HandleGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.Passive:
+                GetPhaseCommands();
+                break;
+
+            case GameState.Active:
+                // spawning will be triggered by GameManager event
+                break;
         }
     }
     private void HandleAllPortalsDestroyed()
@@ -187,6 +205,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         EndWave(endImmediately: true);
     }
     #endregion
+
     public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()

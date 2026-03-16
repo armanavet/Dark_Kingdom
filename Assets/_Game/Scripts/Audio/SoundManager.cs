@@ -16,8 +16,9 @@ namespace AudioSystem
         [SerializeField] int maxPoolSize = 100;
         [SerializeField] int maxSoundInstances = 30;
 
-        void Start()
+        protected override void Awake()
         {
+            base.Awake();
             InitializePool();
         }
         public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);

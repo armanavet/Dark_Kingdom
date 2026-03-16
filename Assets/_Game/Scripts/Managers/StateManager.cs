@@ -62,14 +62,14 @@ public class StateManager : MonoBehaviour//, ISaveable
             State = GameState.Active;
             PreviusState = State;
             timeMultiplier = 1;
-            WaveManager.Instance.StartSpawn();
+            //WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
             State = GameState.Passive;
             PreviusState = State;
             Timer = (WaveManager.Instance.CurrentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-            WaveManager.Instance.GetPhaseCommands();
+            //WaveManager.Instance.GetPhaseCommands();
             SaveManager.Save();
         }
         else if (newState == GameState.Paused)
