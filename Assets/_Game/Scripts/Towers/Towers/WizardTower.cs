@@ -38,8 +38,10 @@ public class WizardTower : Tower
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        StartCoroutine(PlayPlaceSFX());
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        healthBar.SetMaxHealth(currentHP);
+        UpdateCanvasHeight(CurrentLevel);
+        OnPlace();
+        SetSoundData();
     }
 
     void Update()
@@ -51,7 +53,6 @@ public class WizardTower : Tower
         {
             if (AcquireTarget())
             {
-                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -82,8 +83,17 @@ public class WizardTower : Tower
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage, currentDebuffs, hitPointPopup, towerType);
+        sh.Initialize
+            (launchPoint
+            , TargetPoint
+            , new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y)
+            , shellBlastRadius
+            , shellDamage
+            , currentDebuffs
+            , unitHitPointPopup
+            , towerType);
 
     }
     bool AcquireTarget()
@@ -124,9 +134,9 @@ public class WizardTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
@@ -137,10 +147,13 @@ public class WizardTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             model.SetActive(true);
+            UpdateCanvasHeight(CurrentLevel);
+
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            healthBar.SetMaxHealth(currentHP);
 
             Debuff currentDebuff = Debuffs[CurrentLevel];
             if (currentDebuff != null)
@@ -156,6 +169,5 @@ public class WizardTower : Tower
                 currentDebuffs.Add(currentDebuff);
             }
         }
-        //StopCoroutine(PlayUpdateSfx());
     }
 }

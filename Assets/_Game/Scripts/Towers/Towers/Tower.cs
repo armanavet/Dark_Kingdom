@@ -21,10 +21,14 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected GameObject[] Projectiles;
     [SerializeField] protected GameObject[] Models;
     [SerializeField] protected GameObject[] effects;
-    [SerializeField] protected SoundData TowerSoundData;
+    [SerializeField] protected SoundData towerSoundData;
     [SerializeField] protected SoundData SD_TowerUpgrade;
     [SerializeField] protected SoundData SD_TowerVfx;
-    [SerializeField] protected HitPointPopup hitPointPopup;
+    [SerializeField] protected HitPointPopup unitHitPointPopup;
+    [SerializeField] protected List<float> canvasHeightByLevel;
+    [SerializeField] protected HealthBar healthBar;
+    [SerializeField] protected GameObject towerCanvas;
+    [SerializeField] protected GameObject healthBarCanvas;
 
     protected float maxHP;
     protected float currentHP;
@@ -34,24 +38,28 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
-    [HideInInspector] public int GoldGenerated = 0;
+    [HideInInspector] public int CrystelGenerated = 0;
     [HideInInspector] public int LevelMax = 1;
     [HideInInspector] public int CurrentLevel = 0;
     [HideInInspector] public int PurchasePrice;
     [HideInInspector] public TowerType Type => towerType;
     [HideInInspector] public TowerData saveData;
 
-    public GameObject TowerPanel;
+    [HideInInspector] public GameObject TowerPanel => towerCanvas;
+    [HideInInspector] public GameObject HealthBar => healthBarCanvas;
+    [HideInInspector] public SoundData SoundData => towerSoundData;
     public event System.Action OnDestroyed;
 
     public void Sell(int price)
     {
-        EconomyManager.Instance.ChangeGoldAmount(price);
+        EconomyManager.Instance.ChangeCrystelAmount(price);
         Destroy();
     }
     public void ApplyDamage(float damage)
     {
         currentHP -= damage;
+        healthBar.SetHealth(currentHP);
+        if (Type == TowerType.MainTower) UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         if (currentHP <= 0)
         {
             Destroy();
@@ -59,13 +67,87 @@ public abstract class Tower : MonoBehaviour
     }
     void Destroy()
     {
+        if (Type == TowerType.MainTower)
+        {
+            //StateManager.Instance.ChangeGameStateTo();
+        }
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
         OnDestroyed?.Invoke();
         Destroy(gameObject);
     }
+    public void UpdateCanvasHeight(int levelIndex)
+    {
+        if (canvasHeightByLevel == null || canvasHeightByLevel.Count == 0)
+        {
+            Debug.LogWarning("Canvas height configuration is missing.");
+            return;
+        }
 
+        if (levelIndex < 0 || levelIndex >= canvasHeightByLevel.Count)
+        {
+            Debug.LogWarning("Level index is out of range.");
+            return;
+        }
+
+        float targetHeight = canvasHeightByLevel[levelIndex];
+
+        if (Type != TowerType.MainTower) ApplyHeight(healthBarCanvas.transform);
+        ApplyHeight(towerCanvas.transform);
+
+        void ApplyHeight(Transform canvasTransform)
+        {
+            if (canvasTransform == null) return;
+
+            canvasTransform.position = SetY(canvasTransform.position, targetHeight);
+        }
+    }
+
+    private Vector3 SetY(Vector3 position, float newY)
+    {
+        position.y = newY;
+        return position;
+    }
+    protected void SetSoundData()
+    {
+        towerSoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+    }
+    protected void OnUpgrade()
+    {
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerUpgradeVFX, towerSoundData, transform);
+        int index = (Type == TowerType.MainTower) ? 0 : 2;
+        effect = Instantiate
+            (effects[index]
+            , new Vector3(transform.position.x, 0.5f, transform.position.z)
+            , Quaternion.identity);
+
+        effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        float duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+    }
+    protected void OnPlace()
+    {
+        float duration = 0;
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPlace, towerSoundData, transform);
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPuffVFX, towerSoundData, transform);
+
+        effect = Instantiate
+            (effects[1],
+            new Vector3(transform.position.x, 0.15f, transform.position.z),
+            Quaternion.identity);
+
+        duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+
+        effect = Instantiate
+            (effects[0],
+            new Vector3(transform.position.x, 0.8f, transform.position.z),
+            Quaternion.identity);
+
+        duration = effect.GetComponent<ParticleSystem>().main.startLifetime.constantMax;
+        Destroy(effect, duration);
+    }
     public TowerData OnSave()
     {
         return new TowerData(Type, tile.Index, CurrentLevel, currentHP);
@@ -78,22 +160,5 @@ public abstract class Tower : MonoBehaviour
     }
 
     public abstract void Upgrade();
-    public virtual IEnumerator PlayUpdateSfx()
-    {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnUpgradeVisualEffect_Tower, towerType);
-        //effect = Instantiate(effects[2], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
-        //effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        //Destroy(effect, 2f);
-        yield break;
-    }
-    public virtual IEnumerator PlayPlaceSFX()
-    {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnPlace_Tower, towerType);
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnPlaceVisualEffect_Tower, towerType);
-        //effect = Instantiate(effects[1], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
-        //Destroy(effect, 2f);
-        //effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
-        //Destroy(effect, 2f);
-        yield break;
-    }
+
 }

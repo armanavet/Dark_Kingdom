@@ -10,12 +10,7 @@ public class DefaultEnemy : Enemy
 {
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, unitType);
+        SetParameters();
     }
     void Update()
     {
@@ -28,10 +23,10 @@ public class DefaultEnemy : Enemy
     {
         animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
-        
-        attackCooldown -=Time.deltaTime;
-        if (target != null&& attackCooldown<=0)
-        { 
+
+        attackCooldown -= Time.deltaTime;
+        if (target != null && attackCooldown <= 0)
+        {
             target.ApplyDamage(damage);
             attackCooldown = 1 / attackSpeed;
         }

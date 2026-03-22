@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 727932114c39cd44b9d2ad9455382be0, type: 3}
+  m_Name: Illusion
+  m_EditorClassIdentifier: 
+  Entries:
+  - Type: 6
+    Clips:
+    - {fileID: 8300000, guid: e87f13e7077dbe743b4e73c5f5f2db58, type: 3}
+  - Type: 7
+    Clips:
+    - {fileID: 8300000, guid: fd9038fa9332477439e2ded75120bbef, type: 3}
+    - {fileID: 8300000, guid: 5c9f2078fc633804c993e9571931244c, type: 3}
+    - {fileID: 8300000, guid: 5871f1869422bfa4f9d3b2eebd6fec11, type: 3}
+    - {fileID: 8300000, guid: 833104eeaeca04e41a2321012b893db8, type: 3}
+    - {fileID: 8300000, guid: 84f27543311072144bae4b4546f2f983, type: 3}
+    - {fileID: 8300000, guid: dd4c8be3b03edd3448287c1e56e4f940, type: 3}
+    - {fileID: 8300000, guid: c2bc3749006a8f048b910cd07c3f8170, type: 3}
+    - {fileID: 8300000, guid: 366a6a8a6e15ec04f8248916d8541705, type: 3}
+    - {fileID: 8300000, guid: 1713fdd29f09c79499ef26d0f371ef59, type: 3}
+    - {fileID: 8300000, guid: 8cd107f8c3595ba42acab923b3c645e6, type: 3}

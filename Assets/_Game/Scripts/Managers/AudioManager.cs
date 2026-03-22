@@ -9,13 +9,8 @@ using UnityEngine;
 //public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
 {
-    //[SerializeField] ClipsRepository TotalClips;
-    [SerializeField] SoundDataRepository TotalSoundData;
-    //[SerializeField] AudioClipCollector Collector;
     [SerializeField] SoundBank soundBank;
-    [SerializeField] AudioSource BackgroundMusicSource;
-
-    private SoundTypeResolver resolver = new SoundTypeResolver();
+    [SerializeField] SourceBank sourceBank;
     #region Singleton
     private static AudioManager _instance;
     public static AudioManager Instance
@@ -46,83 +41,71 @@ public class AudioManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject); // Optional: keep across scenes
     }
     #endregion
-    private void Start()
+    public void Initialize()
     {
-        //gameEnums = gameObject.GetComponent<SoundTypeResolver>();
-        //TotalClips.Organize();
-        TotalSoundData.Organize();
+        soundBank.Build();
+        sourceBank.Build();
     }
-    public SoundData SetData<TEnum>(
-        SoundData data,
-        SoundDataType soundDataType,
-        //MixerType mixer,
-        TEnum type) where TEnum : Enum
+    public SoundData SetData<T>(T sourceType, SoundDataType soundDataType)
+        where T : Enum
     {
-        data = TotalSoundData.GetSoundDataByType(soundDataType);
-        //data.mixerGroup = TotalClips.GetMixer(mixer, type);
-        return data;
+        return sourceBank.GetData(sourceType, soundDataType);
     }
-    //public SoundData SetData(
-    //    SoundData data,
-    //    SoundDataType soundDataType,
-    //    MixerType mixer)
-    //{
-    //    data = TotalSoundData.GetSoundDataByType(soundDataType);
-    //    data.mixerGroup = TotalClips.GetMixer(mixer);
-    //    if (data.mixerGroup == null)
-    //    {
-    //        Debug.LogError($"Mixer is null. Sound Data Type - {soundDataType}");
-    //    }
-    //    return data;
-    //}
-    public void Play<TSound, TSource>(SoundData data, Transform transform, TSound type, TSource stype)
-    where TSound : Enum
-        where TSource : Enum
+    public SoundData SetData(SoundDataType soundDataType)
     {
-        //data.clip = soundBank.GetClip(resolver.Resolve(type), SoundRequest.SoundWithSource(type,stype));
-        data.clip = soundBank.GetClip(stype, type);
-        SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
+        return sourceBank.GetData(soundDataType);
     }
-    //public void Play(SoundData data, Transform transform, ClipType clipType)
-    //{
-    //    data.clip = TotalClips.GetClip(clipType);
-    //    SoundManager.Instance.CreateSoundBuilder().WithPosition(transform.position).WithRandomPitch().Play(data);
-    //}
-    //public void Play(SoundData data, ClipType clipType)
-    //{
-    //    data.clip = TotalClips.GetClip(clipType);
-    //    SoundManager.Instance.CreateSoundBuilder().Play(data);
-    //}
-    //public void Play(SoundData data, GameState gameState)
-    //{
-    //    SoundManager soundManager = SoundManager.Instance;
-    //    if (data.clip != null)
-    //    {
-    //        StopCoroutine(PlayWithDelay(data, gameState, soundManager));
-    //    }
-    //    StartCoroutine(PlayWithDelay(data, gameState, soundManager));
-    //}
-    //IEnumerator PlayWithDelay(SoundData data, GameState gameState, SoundManager soundManager)
-    //{
-    //    if (gameState == GameState.Active)
-    //    {
-    //        data.clip = TotalClips.GetClip(ClipType.OnWaveStart_State);
-    //        soundManager.CreateSoundBuilder().Play(data);
-    //        yield return new WaitForSeconds(data.clip.length);
-    //        data.clip = null;
-    //        data.clip = TotalClips.GetClip(ClipType.OnActive_State);
-    //        soundManager.CreateSoundBuilder().Play(data);
-    //    }
-    //    else if (gameState == GameState.Passive)
-    //    {
-    //        data.clip = null;
-    //        data.clip = TotalClips.GetClip(ClipType.OnPassive_State);
-    //        soundManager.CreateSoundBuilder().Play(data);
-    //    }
-    //    yield break;
-    //}
-}
+    public void Play<T>(T soundType, SoundData data, Transform target = null)
+        where T : Enum
+    {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
 
+        data.clip = soundBank.GetClip(soundType);
+
+        Vector3 position = target != null ? target.position : transform.position;
+
+        SoundManager.Instance
+            .CreateSoundBuilder()
+            .WithPosition(position)
+            .WithRandomPitch()
+            .Play(data);
+    }
+    public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, SoundData data, Transform target)
+        where T_Sound : Enum
+            where T_Source : Enum
+    {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
+
+        data.clip = soundBank.GetClip(sourcType, soundType);
+
+        Vector3 position = target != null ? target.position : transform.position;
+
+        SoundManager.Instance
+            .CreateSoundBuilder()
+            .WithPosition(transform.position)
+            .WithRandomPitch()
+            .Play(data);
+    }
+    public void Stop()
+    {
+        SoundManager.Instance.StopFrequent();
+    }
+}
+public enum SoundDataType
+{
+    Null,
+    Music,
+    UI,
+    Gameplay
+}
 public enum MixerType
 {
     Null,
@@ -162,18 +145,21 @@ public enum GamePlaySFX_Type
     TowerPuffVFX,
     TowerPlace,
     TowerShoot,
-    TowerProjectileHit,
+    ProjectileHit,
     EnemyAttack,
     EnemyMove,
     WaveStart,
-    PortalGate
+    PortalGate,
+    PortalOrb,
+    PortalTopFire,
+    PortalScreaming
 }
-public enum AmbientType
-{
-    Null,
-    //--Portal--
-    OrbParticalL,
-    OrbParticalR,
-    FireOnTop,
-    //----------
-}
+//public enum AmbientType
+//{
+//    Null,
+//    //--Portal--
+//    OrbParticalL,
+//    OrbParticalR,
+//    FireOnTop,
+//    //----------
+//}

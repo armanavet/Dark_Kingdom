@@ -10,6 +10,7 @@ public class MageEnemy : Enemy
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
     [SerializeField] Transform targetModel;
+    [SerializeField] GameObject fire;
 
     float TarggetPoint = 2f;
     float rotationProgress;
@@ -25,12 +26,7 @@ public class MageEnemy : Enemy
     }
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        SetParameters();
     }
     private void Update()
     {
@@ -62,8 +58,9 @@ public class MageEnemy : Enemy
             {
                 Attack();
             }
-            else 
+            else
             {
+                facingPath = true;
                 return;
             }
         }
@@ -124,11 +121,19 @@ public class MageEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
+        GameObject fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
         if (target != null)
         {
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
+
+        if (fireObj != null)
+        {
+            yield return new WaitForSeconds(3f);
+            Destroy(fireObj);
+        }
     }
 
     bool FaceTarget()
@@ -140,12 +145,10 @@ public class MageEnemy : Enemy
             float rotationTime = rotationDifference / rotationSpeed;
             rotationProgress += Time.deltaTime / rotationTime;
             float yRotation = Mathf.LerpAngle(model.eulerAngles.y, targetYRotation, rotationProgress);
-            //model.rotation = Quaternion.Euler(model.rotation.x, yRotation, model.rotation.z);
 
             return false;
         }
         model.rotation = Quaternion.Euler(model.rotation.x, targetYRotation, model.rotation.z);
-        Attack();
         return true;
     }
     IEnumerator FacePath()

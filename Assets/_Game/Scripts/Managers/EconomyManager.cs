@@ -6,10 +6,10 @@ using TMPro;
 
 public class EconomyManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] int currentGold;
+    [SerializeField] int currentCrystel;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
     float timer = 0;
-    public int CurrentGold { get => currentGold; }
+    public int CurrentGold { get => currentCrystel; }
 
     #region Singleton 
     private static EconomyManager _instance;
@@ -37,14 +37,14 @@ public class EconomyManager : MonoBehaviour, ISaveable
         timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
         if(timer >= 1)
         {
-            GenerateGold();
+            CurrentCrystel();
             timer = 0;
         }
     }
     
-    public void ChangeGoldAmount(int amount)
+    public void ChangeCrystelAmount(int amount)
     {
-        currentGold += amount;
+        currentCrystel += amount;
     }
 
     public void OnEconomicStructureChange(Tower structure)
@@ -60,14 +60,14 @@ public class EconomyManager : MonoBehaviour, ISaveable
         EconomicBuildings.Add(structure);
     }
 
-    void GenerateGold()
+    void CurrentCrystel()
     {
         if (StrategyManager.Instance.CurrentStrategy != StrategyType.Economy) return;
 
         foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;
-            ChangeGoldAmount(building.GoldGenerated);
+            ChangeCrystelAmount(building.CrystelGenerated);
         }
     }
 
@@ -81,14 +81,14 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentGold = currentGold;
+        saveData.CurrentCrystel = currentCrystel;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentGold = saveData.CurrentGold;
+        currentCrystel = saveData.CurrentCrystel;
     }
 }
 

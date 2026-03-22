@@ -30,11 +30,12 @@ public class ArcherTower : Tower
         projectile = Projectiles[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
-
         currentHP = currentHP == 0 ? maxHP : currentHP;
+        healthBar.SetMaxHealth(currentHP);
         attackCooldown = 1 / attackSpeed;
-        StartCoroutine(PlayPlaceSFX());
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        UpdateCanvasHeight(CurrentLevel);
+        OnPlace();
+        SetSoundData();
     }
 
     void Update()
@@ -54,7 +55,7 @@ public class ArcherTower : Tower
 
     void Shoot()
     {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Vector3 point = target.transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
@@ -114,9 +115,9 @@ public class ArcherTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
@@ -129,10 +130,12 @@ public class ArcherTower : Tower
             model = Models[CurrentLevel];
             shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
             model.SetActive(true);
+            UpdateCanvasHeight(CurrentLevel);
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            healthBar.SetMaxHealth(currentHP);
 
             Debuff newDebuff = Debuffs[CurrentLevel];
             if (newDebuff != null)
@@ -148,23 +151,22 @@ public class ArcherTower : Tower
                 currentDebuffs.Add(newDebuff);
             }
         }
-        //StopCoroutine(PlayUpdateSfx());
     }
 
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (target != null)
         {
-            UIManager.Instance.ShowDamage(hitPointPopup,target, damage);
+            UIManager.Instance.ShowDamage(unitHitPointPopup, target, damage);
             target.ApplyDamage(damage);
             foreach (var debuff in currentDebuffs)
             {
                 DebuffManager.Instance.ApplyDebuff(target, debuff);
             }
         }
-        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower, towerType);
         Destroy(currentProjectile);
     }
 }

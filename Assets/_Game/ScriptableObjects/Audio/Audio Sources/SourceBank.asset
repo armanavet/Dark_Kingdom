@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 827559d7983fabd498b2d7e344d42834, type: 3}
+  m_Name: SourceBank
+  m_EditorClassIdentifier: 
+  so: {fileID: 11400000, guid: 50a8bb4d0871b4a44b58313d1d65d59f, type: 2}
+  enemy:
+  - Type: 1
+    Entry: {fileID: 11400000, guid: 40d07b2e6312f0241b97e7be3a292b7c, type: 2}
+  - Type: 2
+    Entry: {fileID: 11400000, guid: ae755f888f7106445a41277c458b72de, type: 2}
+  - Type: 3
+    Entry: {fileID: 11400000, guid: 1afac7bc610bb324988b4fb07a1ca488, type: 2}
+  - Type: 4
+    Entry: {fileID: 11400000, guid: 4673a32fdcbba5e4baa73ee9d51b6ce9, type: 2}
+  - Type: 5
+    Entry: {fileID: 11400000, guid: 927c7f47329b29a4db440621dc0f04d5, type: 2}
+  - Type: 6
+    Entry: {fileID: 11400000, guid: 78685553c0750d544b89236bf6968dbd, type: 2}
+  - Type: 7
+    Entry: {fileID: 11400000, guid: d25f0077182c253429796fb9681e8316, type: 2}
+  - Type: 8
+    Entry: {fileID: 11400000, guid: 3418f7029297eb448b11ec16119cf922, type: 2}
+  - Type: 9
+    Entry: {fileID: 11400000, guid: 8c7cd6819ef49bd4a9cd8faf1463a6da, type: 2}
+  tower:
+  - Type: 1
+    Entry: {fileID: 11400000, guid: 724fce74a77830844873267d76f00ec8, type: 2}
+  - Type: 2
+    Entry: {fileID: 11400000, guid: 50c76cb034f4014418676e543bb77737, type: 2}
+  - Type: 3
+    Entry: {fileID: 11400000, guid: 79f04d15df8a8044da8ec0602952938f, type: 2}
+  - Type: 4
+    Entry: {fileID: 11400000, guid: 3bbd2c8051783cb4eb3da3cc0c7d7e6e, type: 2}
+  - Type: 5
+    Entry: {fileID: 11400000, guid: f71ab5d89826dbf45840e8120c084528, type: 2}
