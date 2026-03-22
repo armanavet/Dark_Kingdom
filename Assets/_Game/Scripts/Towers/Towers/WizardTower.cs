@@ -45,6 +45,8 @@ public class WizardTower : Tower
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
+
         if (launchProgress > 4)
         {
             if (AcquireTarget())

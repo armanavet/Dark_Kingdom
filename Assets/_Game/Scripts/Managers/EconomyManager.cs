@@ -62,6 +62,8 @@ public class EconomyManager : MonoBehaviour, ISaveable
 
     void GenerateGold()
     {
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Economy) return;
+
         foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;

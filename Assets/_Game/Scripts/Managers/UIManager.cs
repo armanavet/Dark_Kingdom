@@ -47,6 +47,17 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
     #endregion
+
+    private void OnEnable()
+    {
+        StrategyManager.OnStrategyChanged += OnStrategyChanged;
+    }
+
+    private void OnDisable()
+    {
+        StrategyManager.OnStrategyChanged -= OnStrategyChanged;
+    }
+
     public void Initialize()
     {
         TowerPurchasePanelYInitial = towerPurchasePanel.transform.position.y;
@@ -243,6 +254,20 @@ public class UIManager : MonoBehaviour
          * activ.text + "destroy the portal to finish the game"
          */
     }
+
+    private void OnStrategyChanged(StrategyType newStrategy)
+    {
+        if (newStrategy == StrategyType.Construction)
+        {
+            ShowTowerPurchasePanel(true);
+        }
+        else
+        {
+            ShowTowerPurchasePanel(false);
+            PlaceTower(false);
+        }
+    }
+
     public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
     {
         if (damageTextPopup == null || target == null) return;
@@ -251,10 +276,12 @@ public class UIManager : MonoBehaviour
         HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);
         HitPointPopup.HitPointText(damage);
     }
+
     Quaternion LookAtCamera(Transform cameraTransform)
     {
         return Quaternion.LookRotation(cameraTransform.forward);
     }
+
     bool IsClickOnTowerPanelUI()
     {
         var eventData = new PointerEventData(EventSystem.current);

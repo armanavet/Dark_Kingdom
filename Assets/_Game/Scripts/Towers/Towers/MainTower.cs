@@ -61,9 +61,11 @@ public class MainTower : Tower
 
     private void Update()
     {
-
         foreach (var defender in Defender)
         {
+            defender.cooldown -= Time.deltaTime;
+            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) continue;
+
             if (defender.cooldown <= 0)
             {
                 if (AcquireTarget(defender))
@@ -72,7 +74,6 @@ public class MainTower : Tower
                 }
                 defender.cooldown = 1 / AttackSpeed;
             }
-            defender.cooldown -= Time.deltaTime;
         }
     }
     private void OnDrawGizmos()

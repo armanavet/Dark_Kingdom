@@ -39,6 +39,9 @@ public class ArcherTower : Tower
 
     void Update()
     {
+        attackCooldown -= Time.deltaTime;
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
+
         if (attackCooldown <= 0)
         {
             if (AcquireTarget())
@@ -47,8 +50,6 @@ public class ArcherTower : Tower
             }
             attackCooldown = 1 / attackSpeed;
         }
-        attackCooldown -= Time.deltaTime;
-
     }
 
     void Shoot()
