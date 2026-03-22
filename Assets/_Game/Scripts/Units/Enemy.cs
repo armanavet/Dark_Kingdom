@@ -15,7 +15,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    [SerializeField] protected SoundData EnemySoundData;
+    [SerializeField] protected SoundData enemySoundData;
 
     protected Animator animator;
     protected float currentSpeed;
@@ -33,7 +33,9 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     float directionAngleFrom, directionAngleTo;
     float progress, progressFactor;
     float positionOffset;
-    public Vector3 CurrentPosition => model.position;
+    [HideInInspector] public Vector3 CurrentPosition => model.position;
+    [HideInInspector] public UnitType Type => unitType;
+    [HideInInspector] public SoundData SoundData => enemySoundData;
 
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
@@ -120,7 +122,19 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         model.localPosition = new Vector3(positionOffset - 0.5f, 0, 0);
         transform.localPosition = positionFrom;
     }
-
+    protected void SetParameters()
+    {
+        currentSpeed = maxSpeed;
+        health = maxHP;
+        damage = maxDamage;
+        attackSpeed = maxAttackSpeed;
+        animator = GetComponent<Animator>();
+        SetSoundData();
+    }
+    protected void SetSoundData()
+    {
+        enemySoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+    }
     protected abstract void Attack();
     protected virtual bool AcquireTarget()
     {
@@ -158,11 +172,13 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
-    protected void PlayAttackSound() {
-        AudioManager.Instance.Play(EnemySoundData, transform,GamePlaySFX_Type.EnemyAttack,unitType);
+    protected void PlayAttackSound()
+    {
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, enemySoundData, transform);
     }
-    protected void PlayMovingSound() {
-        //AudioManager.Instance.Play(EnemySoundData, transform, ClipType.OnMove_Enemy, unitType);
+    protected void PlayMovingSound()
+    {
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyMove, enemySoundData, transform);
     }
 }
 

@@ -14,12 +14,7 @@ public class IllusionistEnemy : Enemy
     Illusion illusion;
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        SetParameters();
     }
     void Update()
     {
@@ -60,7 +55,6 @@ public class IllusionistEnemy : Enemy
         if (illusion == null)
         {
             illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
-            illusion.OnSpawn(tileFrom, 0);
         }
     }
 }

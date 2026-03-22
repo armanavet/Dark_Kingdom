@@ -21,8 +21,9 @@ public class SaveData
 public class GeneralData : ISaveData
 {
     public int CurrentWave;
-    public int CurrentGold;
-    public int EnemySpawnTile;
+    public int CurrentCrystel;
+    //public int EnemySpawnTile;
+    public List<int> activePortalIDs = new List<int>();
 }
 
 [System.Serializable]

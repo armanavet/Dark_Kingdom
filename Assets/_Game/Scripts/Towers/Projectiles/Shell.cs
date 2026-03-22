@@ -1,15 +1,15 @@
 using AudioSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Shell : MonoBehaviour
 {
     [Header("Audio Parameters")]
-    [SerializeField] protected SoundData ExplosionSoundData;
+    [SerializeField] protected SoundData soundData;
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask EnemyMask;
     [SerializeField] LayerMask PortalMask;
-    GameObject effect;
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
@@ -17,7 +17,7 @@ public class Shell : MonoBehaviour
     TowerType towerType;
     private void Start()
     {
-        //ExplosionSoundData = AudioManager.Instance.SetData(ExplosionSoundData, SoundDataType.EnemyProjectile, MixerType.Projectile_Shell);
+        //soundData = AudioManager.Instance.SetData(SoundDataType.Gameplay);
     }
     void Update()
     {
@@ -62,14 +62,20 @@ public class Shell : MonoBehaviour
                 }
             }
         }
-        //AudioManager.Instance.Play(ExplosionSoundData, transform, ClipType.OnLaunch_Tower, towerType);
+        DestroyObject(effects);
+    }
+    IEnumerator DestroyObject(GameObject[] effects)
+    {
+        AudioManager.Instance.Play(towerType, GamePlaySFX_Type.TowerShoot, soundData, transform);
+        GameObject effect;
         if (effects.Length != 0)
         {
             effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z));
             Destroy(effect, 2f);
         }
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(soundData.clip.length);
         Destroy(gameObject);
-
+        yield break;
     }
-
 }

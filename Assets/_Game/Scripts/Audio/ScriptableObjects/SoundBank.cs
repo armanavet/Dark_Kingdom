@@ -1,15 +1,14 @@
-using AudioSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SoundClipSet<TSound>
-    where TSound : Enum
+public class SoundClipSet<T>
+    where T : Enum
 {
-    private readonly Dictionary<TSound, AudioClip[]> dictionary = new();
+    private readonly Dictionary<T, AudioClip[]> dictionary = new();
 
-    public void BuildDictionary(IEnumerable<SoundEntry<TSound>> clipCollector)
+    public void BuildDictionary(IEnumerable<SoundEntry<T>> clipCollector)
     {
         dictionary.Clear();
         if (clipCollector == null)
@@ -43,7 +42,7 @@ public class SoundClipSet<TSound>
         }
     }
 
-    public AudioClip GetClip(TSound soundType)
+    public AudioClip GetClip(T soundType)
     {
         #region Error Check 
         if (!dictionary.TryGetValue(soundType, out var clips))
@@ -56,16 +55,17 @@ public class SoundClipSet<TSound>
     }
 }
 
-public abstract class SoundLibrary<TSound> : ScriptableObject, ISoundProvider
-    where TSound : Enum
+public abstract class SoundLibrary<T> : ScriptableObject, ISoundProvider
+    where T : Enum
 {
-    [SerializeField] public List<SoundEntry<TSound>> Entries;
+    [SerializeField] public List<SoundEntry<T>> Entries;
 
-    SoundClipSet<TSound> clipsDictionary;
+    SoundClipSet<T> clipsDictionary;
 
+    public Type SoundType => typeof(T);
     public virtual void OnEnable()
     {
-        Validate(); // VAlidation warns about a data issues.
+        Validate(); // Validation warns about a data issues.
         Build(); // Build always succeeds using last-write-wins policy.
     }
     void Validate()
@@ -76,7 +76,7 @@ public abstract class SoundLibrary<TSound> : ScriptableObject, ISoundProvider
             return;
         }
 
-        var keySet = new HashSet<TSound>();
+        var keySet = new HashSet<T>();
 
         foreach (var entry in Entries)
         {
@@ -104,13 +104,13 @@ public abstract class SoundLibrary<TSound> : ScriptableObject, ISoundProvider
     }
     void Build()
     {
-        clipsDictionary = new SoundClipSet<TSound>();
+        clipsDictionary = new SoundClipSet<T>();
         clipsDictionary.BuildDictionary(Entries);
     }
     public AudioClip GetClip(Enum type)
     {
         #region Error Check 
-        if (type is not TSound soundType)
+        if (type is not T soundType)
         {
             Debug.LogError($"[{name}] invalid sound type '{type}'.", this);
             return null;
@@ -134,47 +134,51 @@ public abstract class SoundLibrary<TSound> : ScriptableObject, ISoundProvider
 [CreateAssetMenu(fileName = "SoundBank", menuName = "ScriptableObjects/SoundBank")]
 public class SoundBank : ScriptableObject
 {
-    public Music musicSO;
-    public UISoundEffects uiSoundEffectsSO;
-    public GameplaySoundEffects gameplaySoundEffectsSO;
-    public List<SoEntry<UnitType>> enemySoundEffectsSO;
-    public List<SoEntry<TowerType>> towerSoundEffectsSO;
+    public MusicLibrary music;
+    public UISoundLibrary ui;
+    public GameplaySoundLibrary gameplay;
+    public List<SoundSOEntry<UnitType>> enemy;
+    public List<SoundSOEntry<TowerType>> tower;
 
-    Dictionary<UnitType, GameplaySoundEffects> enemySoundDict = new Dictionary<UnitType, GameplaySoundEffects>();
-    Dictionary<TowerType, GameplaySoundEffects> towerSoundDict = new Dictionary<TowerType, GameplaySoundEffects>();
+    Dictionary<UnitType, GameplaySoundLibrary> enemyDict = new Dictionary<UnitType, GameplaySoundLibrary>();
+    Dictionary<TowerType, GameplaySoundLibrary> towerDict = new Dictionary<TowerType, GameplaySoundLibrary>();
+    Dictionary<Type, ISoundProvider> providerMap = new();
+    
+    public void Build()
+    {
+        enemyDict.Clear(); 
+        towerDict.Clear();
 
-    void OnEnable()
-    {
-        Build();
+        foreach (var item in enemy)
+        {
+            enemyDict.Add(item.Type, item.Entry);
+        }
+        foreach (var item in tower)
+        {
+            towerDict.Add(item.Type, item.Entry);
+        }
+        providerMap.Clear();
+        Register(music);
+        Register(ui);
+        Register(gameplay);
     }
-    void Build()
+    public void Register(ISoundProvider provider)
     {
-        foreach (var item in enemySoundEffectsSO)
-        {
-            enemySoundDict.Add(item.Type, item.Entry);
-        }
-        foreach (var item in towerSoundEffectsSO)
-        {
-            towerSoundDict.Add(item.Type, item.Entry);
-        }
+        providerMap[provider.SoundType] = provider; 
     }
-    public AudioClip GetClip<TSoundType>(TSoundType soundType) 
-        where TSoundType : Enum
+
+    public AudioClip GetClip<TSoundType>(TSoundType soundType)
+    where TSoundType : Enum
     {
-        if (soundType is UISFX_Type uiSFX_Type)
+        var enumType = typeof(TSoundType);
+
+        if (!providerMap.TryGetValue(enumType, out var provider))
         {
-            return uiSoundEffectsSO.GetClip(uiSFX_Type);
+            Debug.LogError($"No sound provider registered for {enumType}");
+            return null;
         }
-        if (soundType is MusicType musicType)
-        {
-            return musicSO.GetClip(musicType);
-        }
-        if (soundType is GamePlaySFX_Type gamePlaySFX_Type)
-        {
-            return gameplaySoundEffectsSO.GetClip(gamePlaySFX_Type);
-        }
-        Debug.LogWarning($"I got the sound type '{soundType}'");
-        return null;
+
+        return provider.GetClip(soundType);
     }
     public AudioClip GetClip<TSourceType, TSoundType>(TSourceType sourceType, TSoundType soundType)
         where TSourceType : Enum
@@ -182,11 +186,11 @@ public class SoundBank : ScriptableObject
     {
         if (soundType is GamePlaySFX_Type gamePlaySFX_Type)
         {
-            if (sourceType is UnitType unitType && enemySoundDict.TryGetValue(unitType, out var enemy))
+            if (sourceType is UnitType unitType && enemyDict.TryGetValue(unitType, out var enemy))
             {
                 return enemy.GetClip(gamePlaySFX_Type);
             }
-            if (sourceType is TowerType towerType && towerSoundDict.TryGetValue(towerType, out var tower))
+            if (sourceType is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
             {
                 return tower.GetClip(gamePlaySFX_Type);
             }
@@ -195,188 +199,3 @@ public class SoundBank : ScriptableObject
         return null;
     }
 }
-
-
-
-
-
-//public abstract class OwnerSoundLibrary<TSource, TSound> : ScriptableObject, ISoundProvider
-//    where TSource : Enum
-//    where TSound : Enum
-//{
-//    [SerializeField] protected List<SourceSoundEntry<TSource, TSound>> Libraries;
-
-//    Dictionary<TSource, SoundClipSet<TSound>> library;
-
-//    public virtual void OnEnable()
-//    {
-//        Validate(); // VAlidation warns about a data issues.
-//        Build(); // Build always succeeds using last-write-wins policy.
-//    }
-
-//    void Validate()
-//    {
-//        if (Libraries == null || Libraries.Count == 0)
-//        {
-//            Debug.LogWarning($"[{name}] has no libraris assigned.", this);
-//            return;
-//        }
-//        var ownerSet = new HashSet<TSource>();
-
-//        foreach (var ownerEntry in Libraries)
-//        {
-//            if (!ownerSet.Add(ownerEntry.OwnerType))
-//            {
-//                Debug.LogWarning($"[{name}] Dublicate owner type, '{ownerEntry.OwnerType}'", this);
-//                continue;
-//            }
-//            if (ownerEntry.OwnerClips == null || ownerEntry.OwnerClips.Length == 0)
-//            {
-//                Debug.LogWarning($"[{name}] Owner '{ownerEntry.OwnerType}' has no clip entries.", this);
-//                continue;
-//            }
-//            ValidateOwnerClips(ownerEntry);
-//        }
-//    }
-//    void ValidateOwnerClips(SourceSoundEntry<TSource, TSound> ownerEntry)
-//    {
-//        var clipTypeSet = new HashSet<TSound>();
-
-//        foreach (var clipEntry in ownerEntry.OwnerClips)
-//        {
-//            if (!clipTypeSet.Add(clipEntry.Type))
-//            {
-//                Debug.LogWarning(
-//                    $"[{name}] Duplicate clip type '{clipEntry.Type}' " +
-//                    $"for owner '{ownerEntry.OwnerType}'.",
-//                    this
-//                );
-//                continue;
-//            }
-
-//            if (clipEntry.Clips == null || clipEntry.Clips.Length == 0)
-//            {
-//                Debug.LogWarning(
-//                    $"[{name}] Clip type '{clipEntry.Type}' for owner " +
-//                    $"'{ownerEntry.OwnerType}' has no AudioClips assigned.",
-//                    this
-//                );
-//                continue;
-//            }
-
-//            for (int i = 0; i < clipEntry.Clips.Length; i++)
-//            {
-//                if (clipEntry.Clips[i] == null)
-//                {
-//                    Debug.LogWarning(
-//                        $"[{name}] Null AudioClip at index {i} in clip type " +
-//                        $"'{clipEntry.Type}' for owner '{ownerEntry.OwnerType}'.",
-//                        this
-//                    );
-//                }
-//            }
-//        }
-//    }
-//    void Build()
-//    {
-//        library = new Dictionary<TSource, SoundClipSet<TSound>>();
-
-//        foreach (var entry in Libraries)
-//        {
-//            var clipsDictionary = new SoundClipSet<TSound>();
-//            clipsDictionary.BuildDictionary(entry.OwnerClips);
-//            library.Add(entry.OwnerType, clipsDictionary);
-//        }
-//    }
-//    public AudioClip GetClip(SoundRequest request)
-//    {
-//        #region Error Check 
-//        if (!request.HasSource)
-//        {
-//            Debug.LogError($"[{name}] requires only source - based request.", this);
-//            return null;
-//        }
-//        if (request.SourceType is not TSource sourceType)
-//        {
-//            Debug.LogError($"[{name}] invalid source type '{request.SourceType}'.", this);
-//            return null;
-//        }
-//        if (request.SoundType is not TSound soundType)
-//        {
-//            Debug.LogError($"[{name}] invalid clip type '{request.SoundType}'.", this);
-//            return null;
-//        }
-//        if (!library.TryGetValue(sourceType, out var clipsDictionary))
-//        {
-//            Debug.LogError($"[{name}] No clips registered for source '{sourceType}'.", this);
-//            return null;
-//        }
-//        #endregion
-//        return clipsDictionary.GetClip(soundType);
-//    }
-//}
-
-//---------------------
-//{
-//[SerializeField] 
-//public List<SoundProviderEntry> Providers;
-//Dictionary<SoundType, ISoundProvider> providerMap = new Dictionary<SoundType, ISoundProvider>();
-//void OnEnable()
-//{
-//    Build();    
-//}
-//void Build()
-//{
-//    providerMap.Clear();
-//    foreach (var provider in Providers)
-//    {
-//        if(provider.ClipsLibrary == null)
-//        {
-//            throw new ArgumentNullException(nameof(provider.ClipsLibrary));
-//        }
-
-//        var soundProvider = provider.ClipsLibrary as ISoundProvider;
-//        if (soundProvider == null)
-//        {
-//            Debug.LogError(
-//                $"[{name}] '{provider.ClipsLibrary.name}' does not implement ISoundProvider.",
-//                this
-//            );
-//            continue;
-//        }
-//        if (providerMap.ContainsKey(provider.Type))
-//        {
-//            Debug.LogWarning($"[{name}] Duplicate type '{provider.Type}'.",this);
-//            continue;
-//        }
-//        if (!providerMap.TryAdd(provider.Type, soundProvider))
-//        {
-//            Debug.LogWarning($"[{name}] Duplicate SoundType '{provider.Type}'.", this);
-//        }
-//    }
-//}
-
-//public AudioClip GetClip(Enum type, SoundRequest request)
-//{
-//    if (type is not SoundType soundType) 
-//    {
-//        Debug.LogError($"[{name}] is received wrong type, '{type}'");
-//        return null;
-//    }
-//    if (Convert.ToInt32(type) == 0)
-//    {
-//        Debug.LogWarning($"[{name}] SoundType has null type, '{type}'", this);
-//        return null;
-//    }
-
-//    if (!providerMap.TryGetValue(soundType, out var provider))
-//    {
-//        Debug.LogError($"[{name}] No ISoundProvider found for SoundType '{request.SoundType}'.", this);
-//        return null;
-//    }
-
-//    return provider.GetClip(request);
-//}
-//}
-
-

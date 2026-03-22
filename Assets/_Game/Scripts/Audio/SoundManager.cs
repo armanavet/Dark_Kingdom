@@ -16,8 +16,9 @@ namespace AudioSystem
         [SerializeField] int maxPoolSize = 100;
         [SerializeField] int maxSoundInstances = 30;
 
-        void Start()
+        protected override void Awake()
         {
+            base.Awake();
             InitializePool();
         }
         public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);
@@ -59,7 +60,7 @@ namespace AudioSystem
         {
             foreach (var soundEmitter in FrequentSoundEmitters)
             {
-               soundEmitter.Stop();
+                soundEmitter.Stop();
             }
         }
         void InitializePool()
@@ -88,7 +89,7 @@ namespace AudioSystem
 
         void OnReturnedToPool(SoundEmitter soundEmitter)
         {
-            if(soundEmitter.Node != null)
+            if (soundEmitter.Node != null)
             {
                 FrequentSoundEmitters.Remove(soundEmitter.Node);
                 soundEmitter.Node = null;

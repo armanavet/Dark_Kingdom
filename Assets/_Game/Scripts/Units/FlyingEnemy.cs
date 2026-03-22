@@ -15,38 +15,33 @@ public class FlyingEnemy : Enemy
 
     Vector3 targetPoint;
     Quaternion targetRotation;
-    
+
     float rotationProgress;
     void Start()
     {
+        SetParameters();
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {
-        if (state == EnemyState.Dead) 
+        if (state == EnemyState.Dead)
         {
-            Fall(); 
-            return; 
-        } 
+            Fall();
+            return;
+        }
         if (FlyUp()) return;
         else if (FaceTarget()) return;
         else if (Vector3.Distance(transform.position, targetPoint) > distanceToAttack) Move();
         else Attack();
-        
+
     }
     protected override void Move()
     {
         animator.SetBool("isMoving", true);
         animator.SetBool("isAttacking", false);
-        transform.Translate(Vector3.forward * currentSpeed*Time.deltaTime);
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
     protected override void Attack()
     {
@@ -65,22 +60,22 @@ public class FlyingEnemy : Enemy
             arrow.Initialize(projectileSpeed);
             StartCoroutine(HitTarget(arrow, travelTime));
         }
-        
+
     }
     bool FaceTarget()
     {
         float rotationDifference = targetRotation.eulerAngles.y - transform.rotation.y;
-        float rotationTime=rotationDifference/rotationSpeed;
+        float rotationTime = rotationDifference / rotationSpeed;
         rotationProgress += Time.deltaTime / rotationTime;
-        if(rotationProgress>=1)return false;
-        float yRotation=Mathf.LerpAngle(transform.rotation.y,targetRotation.eulerAngles.y,rotationProgress);
+        if (rotationProgress >= 1) return false;
+        float yRotation = Mathf.LerpAngle(transform.rotation.y, targetRotation.eulerAngles.y, rotationProgress);
         transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
         return true;
     }
     bool FlyUp()
     {
-        if (transform.position.y>=height) return false;
-        transform.Translate(transform.up * flyUpSpeed*Time.deltaTime);
+        if (transform.position.y >= height) return false;
+        transform.Translate(transform.up * flyUpSpeed * Time.deltaTime);
         return true;
     }
 
@@ -94,6 +89,7 @@ public class FlyingEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, transform);
         if (target != null)
         {
             target.ApplyDamage(damage);

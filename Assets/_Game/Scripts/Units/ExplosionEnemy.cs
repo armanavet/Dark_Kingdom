@@ -12,11 +12,7 @@ public class ExplosionEnemy : Enemy
     List<GameObject> effectsToDestroy = new List<GameObject>();
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        animator = GetComponent<Animator>();
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
+        SetParameters();
     }
     void Update()
     {
@@ -41,11 +37,10 @@ public class ExplosionEnemy : Enemy
         StartCoroutine(DestroyObject(Effects));
     }
 
-    protected override void Attack() => OnDeath();
     IEnumerator DestroyObject(GameObject[] effects)
     {
-        //AudioManager.Instance.Play(EnemySoundData, transform, ClipType.OnAttack_Enemy);
-        yield return new WaitForSeconds(1.5f);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
+        yield return new WaitForSeconds(SoundData.clip.length);
         GameObject effect;
         foreach (var item in effects)
         {
@@ -61,5 +56,6 @@ public class ExplosionEnemy : Enemy
         Destroy(gameObject);
         yield break;
     }
+    protected override void Attack() => OnDeath();
 
 }
