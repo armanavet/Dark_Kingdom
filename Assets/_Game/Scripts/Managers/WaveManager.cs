@@ -28,7 +28,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<WaveManager>();
+                _instance = GameObject.FindFirstObjectByType<WaveManager>();
             }
 
             return _instance;

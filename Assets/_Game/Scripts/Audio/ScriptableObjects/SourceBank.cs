@@ -30,8 +30,8 @@ public abstract class SourceLibrary<T> : ScriptableObject
             Debug.LogError($"Source data for {type} not found.");
             return null;
         }
-
-        return data;
+        SoundData dataa = data;
+        return dataa;
     }
 }
 

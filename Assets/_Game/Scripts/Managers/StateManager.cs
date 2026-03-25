@@ -23,7 +23,7 @@ public class StateManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<StateManager>();
+                _instance = FindFirstObjectByType<StateManager>();
             }
 
             return _instance;

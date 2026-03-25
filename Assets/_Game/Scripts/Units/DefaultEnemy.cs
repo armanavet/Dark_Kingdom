@@ -1,10 +1,4 @@
-using AudioSystem;
-using System.Collections;
-using System.Collections.Generic;
-//using System.Diagnostics;
-using UnityEditor;
 using UnityEngine;
-using VFXTools;
 
 public class DefaultEnemy : Enemy
 {
@@ -23,7 +17,6 @@ public class DefaultEnemy : Enemy
     {
         animator.SetBool("isMoving", false);
         animator.SetBool("isAttacking", true);
-
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

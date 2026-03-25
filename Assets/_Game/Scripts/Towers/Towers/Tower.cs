@@ -74,6 +74,7 @@ public abstract class Tower : MonoBehaviour
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;
+        towerSoundData = new SoundData();
         OnDestroyed?.Invoke();
         Destroy(gameObject);
     }
@@ -115,7 +116,8 @@ public abstract class Tower : MonoBehaviour
     }
     protected void OnUpgrade()
     {
-        AudioManager.Instance.Play(GamePlaySFX_Type.TowerUpgradeVFX, towerSoundData, transform);
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerUpgradeVFX, SoundData, transform);
+        Debug.Log(SoundData.volume);
         int index = (Type == TowerType.MainTower) ? 0 : 2;
         effect = Instantiate
             (effects[index]
@@ -129,9 +131,9 @@ public abstract class Tower : MonoBehaviour
     protected void OnPlace()
     {
         float duration = 0;
-        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPlace, towerSoundData, transform);
-        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPuffVFX, towerSoundData, transform);
-
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPlace, SoundData, transform);
+        SoundData.volume = 1f;
+        AudioManager.Instance.Play(GamePlaySFX_Type.TowerPuffVFX, SoundData, transform);
         effect = Instantiate
             (effects[1],
             new Vector3(transform.position.x, 0.15f, transform.position.z),

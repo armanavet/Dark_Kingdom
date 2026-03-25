@@ -17,7 +17,7 @@ public class GameBoard : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<GameBoard>();
+                _instance = FindFirstObjectByType<GameBoard>();
             }
 
             return _instance;

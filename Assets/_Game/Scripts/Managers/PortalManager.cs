@@ -25,7 +25,7 @@ public class PortalManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<PortalManager>();
+                _instance = FindFirstObjectByType<PortalManager>();
             }
 
             return _instance;

@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<UIManager>();
+                _instance = FindFirstObjectByType<UIManager>();
             }
 
             return _instance;

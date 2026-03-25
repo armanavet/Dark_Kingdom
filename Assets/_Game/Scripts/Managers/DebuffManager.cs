@@ -17,7 +17,7 @@ public class DebuffManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<DebuffManager>();
+                _instance = FindFirstObjectByType<DebuffManager>();
             }
 
             return _instance;

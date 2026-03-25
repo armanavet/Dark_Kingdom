@@ -15,7 +15,7 @@ MonoBehaviour:
   entries:
   - Type: 3
     Data:
-      clip: {fileID: 8300000, guid: 7c0943868e4260948813c9edd3dc18fa, type: 3}
+      clip: {fileID: 0}
       mixerGroup: {fileID: -5909059130724223278, guid: 067c64e07b6d5e14bb15ab2246372ea3,
         type: 2}
       loop: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
       bypassListenerEffetcs: 0
       bypassReverbZones: 0
       priority: 128
-      volume: 0.7
+      volume: 0.6
       pitch: 1
       panStereo: 0
       spatialBlend: 1

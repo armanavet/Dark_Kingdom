@@ -2,6 +2,7 @@ using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable
@@ -159,6 +160,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         state = EnemyState.Dead;
         if (animator != null) animator?.SetBool("isDead", true);
         else return;
+        enemySoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }

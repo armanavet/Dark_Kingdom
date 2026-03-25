@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<GameManager>();
+                _instance = FindFirstObjectByType<GameManager>();
             }
 
             return _instance;
@@ -88,9 +88,11 @@ public class GameManager : MonoBehaviour
         if (state == GameState.Passive)
         {
             AudioManager.Instance.Play(MusicType.InNormal, music, transform);
+            Debug.Log(music.clip);
         }
         else if (state == GameState.Active)
         {
+            //music.clip = null;
             AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music, transform);
             yield return new WaitForSeconds(music.clip.length);
             OnWaveIntroFinished?.Invoke();
