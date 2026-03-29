@@ -41,7 +41,7 @@ public class MainTower : Tower
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
-        GoldGenerated = GoldGenerationList[CurrentLevel];
+        CrystelGenerated = GoldGenerationList[CurrentLevel];
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
@@ -49,21 +49,25 @@ public class MainTower : Tower
         model = Models[CurrentLevel];
         projectile = Projectiles[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        CountTowerPointPositionsOnEachLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+        UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
+        CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+        UpdateCanvasHeight(CurrentLevel);
         foreach (var defender in Defender)
         {
-            defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
+            defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             defender.cooldown = 1 / AttackSpeed;
         }
         range = new Vector3(attackRange, attackRange, attackRange);
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower,towerType);
+        SetSoundData();
     }
 
     private void Update()
     {
-
         foreach (var defender in Defender)
         {
+            defender.cooldown -= Time.deltaTime;
+            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) continue;
+
             if (defender.cooldown <= 0)
             {
                 if (AcquireTarget(defender))
@@ -72,7 +76,6 @@ public class MainTower : Tower
                 }
                 defender.cooldown = 1 / AttackSpeed;
             }
-            defender.cooldown -= Time.deltaTime;
         }
     }
     private void OnDrawGizmos()
@@ -110,37 +113,39 @@ public class MainTower : Tower
     {
         if (CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
-            GoldGenerated = GoldGenerationList[CurrentLevel];
+            CrystelGenerated = GoldGenerationList[CurrentLevel];
 
             model.SetActive(false);
             model = Models[CurrentLevel];
-            CountTowerPointPositionsOnEachLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
+            CountPointForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
             foreach (var defender in Defender)
             {
-                defender.turret.position = new Vector3(defender.turret.position.x, ShootingPointPositions[CurrentLevel], defender.turret.position.z);
+                defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
             }
             model.SetActive(true);
+
+            UpdateCanvasHeight(CurrentLevel);
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
         }
-        //StopCoroutine(PlayUpdateSfx());
 
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        //AudioManager.Instance.Play(TowerSoundData,defender.turret.transform, ClipType.OnLaunch_Tower, towerType);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, defender.turret.transform);
         Vector3 point = defender.target.transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
@@ -182,39 +187,27 @@ public class MainTower : Tower
         }
         defender.target = null;
         return false;
-
     }
-
-    void CountTowerPointPositionsOnEachLevel(int currentLevel, List<Transform> towersRootPoints, TowersRootPointPositions[] towersRootPointPositions)
+    void CountPointForLevel(int currentLevel, List<Transform> towersRootPoints, TowersRootPointPositions[] towersRootPointPositions)
     {
         for (int j = 0; j < towersRootPoints.Count; j++)
         {
-            towersRootPoints[j].position = new Vector3(towersRootPointPositions[currentLevel].x[j], towersRootPoints[j].position.y * 0, towersRootPointPositions[currentLevel].y[j]);
+            towersRootPoints[j].position = new Vector3(
+                towersRootPointPositions[currentLevel].x[j],
+                towersRootPoints[j].position.y,
+                towersRootPointPositions[currentLevel].y[j]);
         }
     }
     IEnumerator HitTarget(MainTowerDefender defender, GameObject currentProjectile, float arriveTime)
     {
         yield return new WaitForSeconds(arriveTime);
 
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (defender.target != null)
         {
-            UIManager.Instance.ShowDamage(hitPointPopup, defender.target, damage);
+            UIManager.Instance.ShowDamage(unitHitPointPopup, defender.target, damage);
             defender.target.ApplyDamage(damage);
-
-            //foreach (var debuff in currentDebuffs)
-            //{
-            //    DebuffManager.Instance.ApplyDebuff(defender.target, debuff);
-            //}
         }
-        //AudioManager.Instance.Play(TowerSoundData, currentProjectile.transform, ClipType.OnHit_Tower,towerType);
         Destroy(currentProjectile);
-    }
-    public override IEnumerator PlayUpdateSfx()
-    {
-        //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnUpgradeVisualEffect_Tower, towerType);
-        //effect = Instantiate(effects[0], new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
-        //effect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        //Destroy(effect, 2f);
-        yield break;
     }
 }

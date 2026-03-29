@@ -1,9 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class SaveData
 {
     Dictionary<string, ISaveData> data = new Dictionary<string, ISaveData>();
@@ -17,15 +16,16 @@ public class SaveData
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class GeneralData : ISaveData
 {
     public int CurrentWave;
-    public int CurrentGold;
-    public int EnemySpawnTile;
+    public int CurrentCrystals;
+    //public int EnemySpawnTile;
+    public List<int> activePortalIDs = new List<int>();
 }
 
-[System.Serializable]
+[Serializable]
 public class DataList<T> : ISaveData, IEnumerable<T>
 {
     List<T> items = new List<T>();
@@ -55,7 +55,7 @@ public class DataList<T> : ISaveData, IEnumerable<T>
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class TileData
 {
     public TileType Type;
@@ -68,7 +68,7 @@ public class TileData
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class TowerData
 {
     public TowerType Type;

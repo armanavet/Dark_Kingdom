@@ -26,12 +26,6 @@ namespace AudioSystem
                 return instance;
             }
         }
-
-        /*
-         * <summary>
-         * make sure to call bas.Awake() in override if you need asake.
-         * </summary>
-         */
         protected virtual void Awake()
         {
             InitializeSingleton();
@@ -46,9 +40,10 @@ namespace AudioSystem
             {
                 instance = this as T;
                 DontDestroyOnLoad(gameObject);
-            } else
+            }
+            else
             {
-                if(instance != this)
+                if (instance != this)
                 {
                     Destroy(gameObject);
                 }

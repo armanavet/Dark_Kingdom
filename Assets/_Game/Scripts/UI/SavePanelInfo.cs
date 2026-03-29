@@ -21,7 +21,7 @@ public class SavePanelInfo : MonoBehaviour
             SavedDataPanel.SetActive(true);
             NewGameText.gameObject.SetActive(false);
             PlayTimeText.text = "Play Time = " + saveMetaData.PlayTime.ToString();
-            GoldAmountText.text = "Current Gold = " + saveMetaData.CurrentGold.ToString();
+            GoldAmountText.text = "Current Crystel = " + saveMetaData.CurrentCrystel.ToString();
             CurrentWavetext.text = "Current Wave = " + saveMetaData.CurrentWave.ToString();
 
         }

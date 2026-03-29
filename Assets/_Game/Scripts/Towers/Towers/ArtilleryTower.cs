@@ -14,7 +14,7 @@ public class ArtilleryTower : Tower
     float shellBlastRadius = 1;
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
-    
+
     Enemy target;
     float TarggetRange = 2f;
     float g = 9.81f;
@@ -38,18 +38,21 @@ public class ArtilleryTower : Tower
         if (Debuffs[CurrentLevel] != null)
             currentDebuffs.Add(Debuffs[CurrentLevel]);
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        StartCoroutine(PlayPlaceSFX());
-        //TowerSoundData = AudioManager.Instance.SetData(TowerSoundData, SoundDataType.Tower, MixerType.Tower, towerType);
+        healthBar.SetMaxHealth(currentHP);
+        OnPlace();
+        UpdateCanvasHeight(CurrentLevel);
+        SetSoundData();
     }
 
     void Update()
     {
         launchProgress += shotsPerSecond * Time.deltaTime;
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
+
         if (launchProgress > 4)
         {
             if (AcquireTarget())
             {
-                //AudioManager.Instance.Play(TowerSoundData, transform, ClipType.OnLaunch_Tower, towerType);
                 Launch(target);
             }
             launchProgress = 0;
@@ -80,9 +83,18 @@ public class ArtilleryTower : Tower
         float theta = Mathf.Atan(tanTheta);
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
-        
+
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
         Shell sh = Instantiate(shell);
-        sh.Initialize(launchPoint, TargetPoint, new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y), shellBlastRadius, shellDamage,currentDebuffs,hitPointPopup,towerType);
+        sh.Initialize
+            (launchPoint
+            , TargetPoint
+            , new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y)
+            , shellBlastRadius
+            , shellDamage
+            , currentDebuffs
+            , unitHitPointPopup
+            , Type);
     }
     bool AcquireTarget()
     {
@@ -122,9 +134,9 @@ public class ArtilleryTower : Tower
     {
         if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
         {
-            //StartCoroutine(PlayUpdateSfx());
+            OnUpgrade();
             UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
+            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
 
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
@@ -135,11 +147,13 @@ public class ArtilleryTower : Tower
             model.SetActive(false);
             model = Models[CurrentLevel];
             model.SetActive(true);
+            UpdateCanvasHeight(CurrentLevel);
 
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
+            healthBar.SetMaxHealth(currentHP);
+
         }
-        //StopCoroutine(PlayUpdateSfx());
     }
 }

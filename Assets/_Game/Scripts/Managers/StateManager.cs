@@ -6,7 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class StateManager : MonoBehaviour, ISaveable
+public class StateManager : MonoBehaviour
 {
     [SerializeField] SoundData StateSoundData;
     [SerializeField] float[] TimeUntilNextWave;
@@ -14,8 +14,7 @@ public class StateManager : MonoBehaviour, ISaveable
     GameState PreviusState;
     float Timer;
     public int timeMultiplier = 1;
-    int currentWave = 0;
-
+    public event Action<GameState> OnGameStateChanged;
     #region Singleton
     private static StateManager _instance;
     public static StateManager Instance
@@ -33,18 +32,17 @@ public class StateManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
-        RegisterSaveable();
     }
     #endregion
 
     public void Initialize()
     {
-        //StateSoundData = AudioManager.Instance.SetData(StateSoundData,SoundDataType.Music, MixerType.State);
-        ChangeGameStateTo(GameState.Passive); 
+        ChangeGameStateTo(GameState.Passive);
     }
 
     void Update()
     {
+        Time.timeScale = timeMultiplier;
         if (State == GameState.Passive)
         {
             Timer -= Time.deltaTime * timeMultiplier;
@@ -58,23 +56,17 @@ public class StateManager : MonoBehaviour, ISaveable
     }
     public void ChangeGameStateTo(GameState newState)
     {
-        //AudioManager.Instance.Play(StateSoundData, newState);
-        int wave = currentWave;
         if (newState == GameState.Active)
         {
             State = GameState.Active;
             PreviusState = State;
             timeMultiplier = 1;
-            WaveManager.Instance.StartSpawn();
         }
         else if (newState == GameState.Passive)
         {
             State = GameState.Passive;
             PreviusState = State;
-            Timer = (currentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[wave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
-            if (wave == WaveManager.Instance.waveLength - 1) WaveManager.Instance.GetPhaseCommands(wave, true);
-            else WaveManager.Instance.GetPhaseCommands(wave);
-            currentWave++;
+            Timer = (WaveManager.Instance.CurrentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
             SaveManager.Save();
         }
         else if (newState == GameState.Paused)
@@ -91,33 +83,32 @@ public class StateManager : MonoBehaviour, ISaveable
         {
             State = GameState.End;
         }
-
-        UIManager.Instance.OnGameStateChanged(newState, currentWave);
+        OnGameStateChanged?.Invoke(newState);
+        UIManager.Instance.OnGameStateChanged();
     }
     public void ButtonToMakeFaster(int multiplier)
     {
         timeMultiplier = (timeMultiplier == multiplier) ? (timeMultiplier = 1) : (timeMultiplier = multiplier);
     }
 
-    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
+    //public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
-    public string GetUniqueSaveID()
-    {
-        return nameof(StateManager);
-    }
+    //public string GetUniqueSaveID()
+    //{
+    //    return nameof(StateManager);
+    //}
 
-    public ISaveData SaveState()
-    {
-        GeneralData saveData = new GeneralData();
-        saveData.CurrentWave = currentWave;
-        return saveData;
-    }
+    //public ISaveData SaveState()
+    //{
+    //    GeneralData saveData = new GeneralData();
 
-    public void LoadState(ISaveData data)
-    {
-        GeneralData saveData = data as GeneralData;
-        currentWave = saveData.CurrentWave;
-    }
+    //    return saveData;
+    //}
+
+    //public void LoadState(ISaveData data)
+    //{
+    //    GeneralData saveData = data as GeneralData;
+    //}
 }
 
 public enum GameState

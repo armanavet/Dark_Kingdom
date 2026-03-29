@@ -223,7 +223,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BackgroundMusic
+  m_Name: Music
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 9f3e793cab77b784a9825c10745c7c42
   m_Children: []
@@ -335,20 +335,6 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
---- !u!244 &-3349678421652897651
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: b3f4f233ef4122d489ef6d61ecd32091
-  m_EffectName: Attenuation
-  m_MixLevel: 7a1a7924392ee8344846e86bda011edf
-  m_Parameters: []
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
 --- !u!244 &-3279751726314305626
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -425,25 +411,6 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
---- !u!243 &-1875731988811725201
-AudioMixerGroupController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Tower
-  m_AudioMixer: {fileID: 24100000}
-  m_GroupID: 45835bff35ba30548be5fddafb7e605a
-  m_Children: []
-  m_Volume: 751ef9dc7389b4541b7adabcad120761
-  m_Pitch: d23693f263a705f4a8a389ae889c2834
-  m_Send: 00000000000000000000000000000000
-  m_Effects:
-  - {fileID: -3349678421652897651}
-  m_UserColorIndex: 0
-  m_Mute: 0
-  m_Solo: 0
-  m_BypassEffects: 0
 --- !u!244 &-1625576680895252466
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -491,7 +458,6 @@ AudioMixerController:
     - 6f2d16a39d71d81498777127c53b8955
     - 09d6af48f98c24c4ea2f0437d56b272b
     - 0178380b57a35f3478110a821255ff92
-    - 45835bff35ba30548be5fddafb7e605a
     - 39da6f6c8f5e5854f9b7921495124bf0
     - 1f4039a0981a22c4990eed4227a54ad5
     - 7f895a63777f32c4b8447ba35cb03642
@@ -514,8 +480,8 @@ AudioMixerGroupController:
   m_GroupID: db532ddc95cdc5640b0092613af61fc4
   m_Children:
   - {fileID: -4767610313204884721}
-  - {fileID: -4919172919659740487}
   - {fileID: 95943906775732657}
+  - {fileID: -4919172919659740487}
   - {fileID: -3378447652063252422}
   - {fileID: -2004070872528212611}
   m_Volume: f5e7a3b380f1c0e43b89d298033490f2
@@ -564,8 +530,7 @@ AudioMixerGroupController:
   m_Name: UI
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 21893b5b55b12074895d620badb728f6
-  m_Children:
-  - {fileID: -1875731988811725201}
+  m_Children: []
   m_Volume: 0c0e95ff70c34a645b8d1ab84a9c6ce4
   m_Pitch: bd1fed0ca82628f41b61d185e63d7097
   m_Send: 00000000000000000000000000000000
