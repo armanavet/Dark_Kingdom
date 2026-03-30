@@ -8,10 +8,10 @@ public class SaveData
     Dictionary<string, ISaveData> data = new Dictionary<string, ISaveData>();
 
     public void Add(string id, ISaveData saveData) => data[id] = saveData;
-    public ISaveData Get(string id) 
-    { 
-        if (data.ContainsKey(id)) 
-            return data[id]; 
+    public ISaveData Get(string id)
+    {
+        if (data.ContainsKey(id))
+            return data[id];
         return null;
     }
 }
@@ -21,7 +21,7 @@ public class GeneralData : ISaveData
 {
     public int CurrentWave;
     public int CurrentCrystals;
-    //public int EnemySpawnTile;
+    public StrategyType CurrentStrategy;
     public List<int> activePortalIDs = new List<int>();
 }
 

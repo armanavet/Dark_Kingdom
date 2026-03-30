@@ -59,11 +59,15 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         StrategyManager.OnStrategyChanged += OnStrategyChanged;
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+
     }
 
     private void OnDisable()
     {
         StrategyManager.OnStrategyChanged -= OnStrategyChanged;
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
 
     public void Initialize()
@@ -303,16 +307,6 @@ public class UIManager : MonoBehaviour
         EventSystem.current.RaycastAll(eventData, results);
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
-    }
-    private void OnEnable()
-    {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-    }
-
-    private void OnDisable()
-    {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
 
     void HandleStateChanged(GameState state)

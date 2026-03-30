@@ -6,10 +6,10 @@ using TMPro;
 
 public class EconomyManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] int currentCrystel;
+    [SerializeField] int currentCrystal;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
     float timer = 0;
-    public int CurrentGold { get => currentCrystel; }
+    public int CurrentGold { get => currentCrystal; }
 
     #region Singleton 
     private static EconomyManager _instance;
@@ -35,16 +35,16 @@ public class EconomyManager : MonoBehaviour, ISaveable
     void Update()
     {
         timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
-        if(timer >= 1)
+        if (timer >= 1)
         {
             CurrentCrystel();
             timer = 0;
         }
     }
-    
+
     public void ChangeCrystelAmount(int amount)
     {
-        currentCrystel += amount;
+        currentCrystal += amount;
     }
 
     public void OnEconomicStructureChange(Tower structure)
@@ -81,14 +81,14 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentCrystel = currentCrystel;
+        saveData.CurrentCrystals = currentCrystal;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentCrystel = saveData.CurrentCrystel;
+        currentCrystal = saveData.CurrentCrystals;
     }
 }
 

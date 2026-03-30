@@ -12,7 +12,7 @@ public class StrategyManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<StrategyManager>();
+                _instance = FindFirstObjectByType<StrategyManager>();
             }
 
             return _instance;
