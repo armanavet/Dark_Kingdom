@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<UIManager>();
+                _instance = FindFirstObjectByType<UIManager>();
             }
 
             return _instance;
@@ -246,7 +246,6 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            if (WaveManager.Instance.CurrentWave == WaveManager.Instance.waveLength)
             {
                 activeStateText.text = string.Empty;
                 activeStateText.text = "Destroy The Portal!";

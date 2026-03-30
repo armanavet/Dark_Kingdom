@@ -16,7 +16,7 @@ public class PauseMenuManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<PauseMenuManager>();
+                _instance = FindFirstObjectByType<PauseMenuManager>();
             }
 
             return _instance;

@@ -19,7 +19,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<EconomyManager>();
+                _instance = FindFirstObjectByType<EconomyManager>();
             }
 
             return _instance;
