@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PAMaskTint02
-  m_Shader: {fileID: -6465566751694194690, guid: 29193446d6a6e1f49bda1c6a5d3945cc, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 29193446d6a6e1f49bda1c6a5d3945cc,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,19 +26,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_1d75964074f841a6a59fe0aee3c4ee05:
-        m_Texture: {fileID: 2800000, guid: d84cc81065ac4648aceaf93b68ea05cf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 02e9f372d53fcda45ac39cc739ed4195, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_48F7EBCA:
-        m_Texture: {fileID: 2800000, guid: c601ddfcb6934adf83886fee2ba9ad04, type: 3}
+        m_Texture: {fileID: 2800000, guid: c0167a11f6e5e1341ab388e0a009e694, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_55FDBEBE:
-        m_Texture: {fileID: 2800000, guid: 956b49f59147498aa59dff0c107cac03, type: 3}
+        m_Texture: {fileID: 2800000, guid: c4e61ffb1ad7321409391331fd899292, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_811EFFB:
-        m_Texture: {fileID: 2800000, guid: 3107e2afcb02411d902c3f3b12faa750, type: 3}
+        m_Texture: {fileID: 2800000, guid: bc5e71feee7a40d44a5e476ec0a83da9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Albedo:
@@ -61,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask03:
-        m_Texture: {fileID: 2800000, guid: 03197a20c1284e9a8a66793b14b02f76, type: 3}
+        m_Texture: {fileID: 2800000, guid: eb756e7f945a4ae428bd9bab964363f1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicSmoothness:
@@ -121,7 +122,8 @@ Material:
     - Color_B672769A: {r: 0.3684267, g: 0.4433962, b: 0, a: 0}
     - Color_C5D962E7: {r: 0.18890828, g: 0.3301887, b: 0.03893734, a: 0}
     - Color_E64BA0E: {r: 0.2063882, g: 0.5283019, b: 0, a: 0}
-    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 47.937256, g: 47.937256, b: 47.937256, a: 0}
+    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 47.937256, g: 47.937256, b: 47.937256,
+        a: 0}
     - _Color01: {r: 0, g: 0.33682296, b: 0.8962264, a: 0}
     - _Color02: {r: 0.10234961, g: 0.31568846, b: 0.9433962, a: 0}
     - _Color03: {r: 0.21106264, g: 0.3215749, b: 0.8773585, a: 0}

@@ -14,6 +14,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     Wave enemiesToSpawn;
 
     int currentWave = 0;
+    bool lastEnemy = false;
     bool cantFindPath;
     bool isLastWave;
     [Header("for testing")]
@@ -122,6 +123,7 @@ public class WaveManager : MonoBehaviour, ISaveable
                 startIndex++;
                 spawned++;
                 if (spawned < totalEnemies) yield return new WaitForSeconds(delayBetweenSpawns);
+                else lastEnemy = true;
             }
         }
         yield break;
@@ -165,7 +167,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         if (!spawnedEnemies.Contains(enemy)) return;
 
         spawnedEnemies.Remove(enemy);
-        if (spawnedEnemies.Count <= 0)
+        if (spawnedEnemies.Count <= 0 && lastEnemy == true)
             Check();
     }
     #endregion
@@ -196,7 +198,6 @@ public class WaveManager : MonoBehaviour, ISaveable
                 break;
 
             case GameState.Active:
-                // spawning will be triggered by GameManager event
                 break;
         }
     }

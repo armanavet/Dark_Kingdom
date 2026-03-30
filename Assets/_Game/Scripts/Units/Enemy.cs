@@ -158,14 +158,24 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
-        if (animator != null) animator?.SetBool("isDead", true);
-        else return;
+        if (animator != null)
+        {
+            animator?.SetBool("isDead", true);
+            Debug.Log("animation was triggered by");
+        }
+
+        else
+        {
+            Debug.Log("animator is null");
+            return;
+        }
         enemySoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
     void DestroyModel()
     {
+        Debug.Log("destroed the model");
         DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }

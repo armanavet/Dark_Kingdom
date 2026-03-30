@@ -23,7 +23,7 @@ Material:
   m_Name: PAMaskTint01
   m_Shader: {fileID: -6465566751694194690, guid: 29193446d6a6e1f49bda1c6a5d3945cc,
     type: 3}
-  m_Parent: {fileID: 2100000, guid: 1344b3d6d15749aa95fc5c23c6f9a4b9, type: 2}
+  m_Parent: {fileID: 2100000, guid: 963f000a4a33f55489bb6a0a1ca452d7, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -37,7 +37,27 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - Texture2D_1d75964074f841a6a59fe0aee3c4ee05:
+        m_Texture: {fileID: 2800000, guid: 02e9f372d53fcda45ac39cc739ed4195, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_48F7EBCA:
+        m_Texture: {fileID: 2800000, guid: c0167a11f6e5e1341ab388e0a009e694, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_55FDBEBE:
+        m_Texture: {fileID: 2800000, guid: c4e61ffb1ad7321409391331fd899292, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_811EFFB:
+        m_Texture: {fileID: 2800000, guid: bc5e71feee7a40d44a5e476ec0a83da9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask03:
+        m_Texture: {fileID: 2800000, guid: eb756e7f945a4ae428bd9bab964363f1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
     m_Colors:
@@ -57,3 +77,4 @@ Material:
     - _Color09: {r: 0.8867924, g: 0.6526626, b: 0.4224813, a: 0}
     - _Color09_Skin: {r: 0.7264151, g: 0.48260903, b: 0.2021627, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
