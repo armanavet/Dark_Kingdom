@@ -235,7 +235,6 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            if (WaveManager.Instance.CurrentWave == WaveManager.Instance.waveLength)
             {
                 activeStateText.text = string.Empty;
                 activeStateText.text = "Destroy The Portal!";

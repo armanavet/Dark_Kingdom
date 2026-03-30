@@ -66,7 +66,7 @@ public class StateManager : MonoBehaviour
         {
             State = GameState.Passive;
             PreviusState = State;
-            Timer = (WaveManager.Instance.CurrentWave <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWave] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
+            Timer = (WaveManager.Instance.CurrentWaveIndex <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWaveIndex] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
             SaveManager.Save();
         }
         else if (newState == GameState.Paused)

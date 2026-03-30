@@ -13,14 +13,15 @@ public class WaveManager : MonoBehaviour, ISaveable
     List<Enemy> spawnedEnemies = new List<Enemy>();
     Wave enemiesToSpawn;
 
-    int currentWave = 0;
+    int currentWaveIndex = 0;
     bool lastEnemy = false;
     bool cantFindPath;
     bool isLastWave;
     [Header("for testing")]
     public int waveLength;
 
-    public int CurrentWave => currentWave;
+    public int CurrentWaveIndex => currentWaveIndex;
+    public int CurrentWave => currentWaveIndex + 1;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -29,7 +30,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindFirstObjectByType<WaveManager>();
+                _instance = FindFirstObjectByType<WaveManager>();
             }
 
             return _instance;
@@ -57,9 +58,9 @@ public class WaveManager : MonoBehaviour, ISaveable
     {
         if (waves == null || waves.Length == 0) return;
 
-        if (currentWave == waves.Length - 1) isLastWave = true;
-        TotalEnemiesInWave(currentWave);
-        PortalManager.Instance.CalculateActivePortals(currentWave);
+        if (currentWaveIndex == waves.Length - 1) isLastWave = true;
+        TotalEnemiesInWave(currentWaveIndex);
+        PortalManager.Instance.CalculateActivePortals(currentWaveIndex);
     }
     public void StartSpawn()
     {
@@ -136,7 +137,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     void EndWave(bool endImmediately = false)
     {
-        currentWave++;
+        currentWaveIndex++;
         enemiesToSpawn = null;
         spawnedEnemies.Clear();
         PortalManager.Instance.Clear();
@@ -150,7 +151,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     void RepeatLastWave()
     {
-        TotalEnemiesInWave(currentWave);
+        TotalEnemiesInWave(currentWaveIndex);
         StartCoroutine(SpawnUnits(PortalManager.Instance.ActivePortals, enemiesToSpawn));
     }
     void Check()
@@ -217,14 +218,14 @@ public class WaveManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentWave = currentWave;
+        saveData.CurrentWave = currentWaveIndex;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentWave = saveData.CurrentWave;
+        currentWaveIndex = saveData.CurrentWave;
     }
 
 }
