@@ -8,15 +8,19 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 using AudioSystem;
-using UnityEditor.UI;
-using UnityEngine.Rendering;
-using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] public HealthBar MainTowerHB;
-    [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
+    [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
+    [SerializeField] Transform activeStateWarningParent;
+    [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
+    [SerializeField] TextMeshProUGUI activeStateWarningText;
+    [SerializeField] private float activeStateEnableDuration = 1f;
+    [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
+    [SerializeField] private float activeStateDisableDuration = 0.5f;
+    [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask towerMask, tileMask;
@@ -58,6 +62,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
         StrategyManager.OnStrategyChanged += OnStrategyChanged;
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
 
@@ -250,11 +255,14 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            {
-                activeStateText.text = string.Empty;
-                activeStateText.text = "Destroy The Portal!";
-                waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            }
+
+            activeStateWarningParent.gameObject.SetActive(true);
+            activeStateWarningParent.localScale = Vector3.zero;
+            Sequence seq = DOTween.Sequence();
+            seq.Append(activeStateWarningParent.DOScale(1f, activeStateEnableDuration)).SetEase(activeStateEnableEase)
+               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.5f))
+               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.5f))
+               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.5f));
         }
         else if (currentState == GameState.End)
         {
