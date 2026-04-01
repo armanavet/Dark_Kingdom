@@ -159,6 +159,7 @@ public abstract class Tower : MonoBehaviour
     {
         CurrentLevel = data.Level;
         currentHP = data.CurrentHP;
+        if (Type == TowerType.MainTower) UIManager.Instance.MainTowerHB.SetHealth(currentHP);
     }
 
     public abstract void Upgrade();
