@@ -52,7 +52,8 @@ namespace AudioSystem
             }
             soundEmitter.Play();
         }
-        public void Stop(SoundData soundData) { }
+        public void Stop(SoundData soundData) {
+        }
     }
 }
 

@@ -19,7 +19,7 @@ public class HitPointPopup : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<HitPointPopup>();
+                _instance = FindFirstObjectByType<HitPointPopup>();
             }
 
             return _instance;

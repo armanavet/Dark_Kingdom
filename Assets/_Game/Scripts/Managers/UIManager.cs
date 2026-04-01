@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<UIManager>();
+                _instance = FindFirstObjectByType<UIManager>();
             }
 
             return _instance;
@@ -59,11 +59,15 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         StrategyManager.OnStrategyChanged += OnStrategyChanged;
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+
     }
 
     private void OnDisable()
     {
         StrategyManager.OnStrategyChanged -= OnStrategyChanged;
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
 
     public void Initialize()
@@ -246,7 +250,6 @@ public class UIManager : MonoBehaviour
             activeStatePanel.SetActive(true);
             passiveStatePanel.SetActive(false);
             waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            if (WaveManager.Instance.CurrentWave == WaveManager.Instance.waveLength)
             {
                 activeStateText.text = string.Empty;
                 activeStateText.text = "Destroy The Portal!";
@@ -304,16 +307,6 @@ public class UIManager : MonoBehaviour
         EventSystem.current.RaycastAll(eventData, results);
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
-    }
-    private void OnEnable()
-    {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-    }
-
-    private void OnDisable()
-    {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
 
     void HandleStateChanged(GameState state)

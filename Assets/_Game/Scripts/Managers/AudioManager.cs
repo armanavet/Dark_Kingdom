@@ -1,10 +1,7 @@
 ﻿using AudioSystem;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
@@ -19,7 +16,7 @@ public class AudioManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<AudioManager>();
+                _instance = FindFirstObjectByType<AudioManager>();
                 if (_instance == null)
                 {
                     Debug.LogError("AudioManager not found in the scene!");
@@ -55,6 +52,13 @@ public class AudioManager : MonoBehaviour
     {
         return sourceBank.GetData(soundDataType);
     }
+    public void Play<T>(T soundType, AudioSource data)
+        where T : Enum
+    {
+        if (data.clip != null) data.clip = null;
+        data.clip = soundBank.GetClip(soundType);
+        data.Play();
+    }
     public void Play<T>(T soundType, SoundData data, Transform target = null)
         where T : Enum
     {
@@ -63,11 +67,10 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound system is not configured correctly.");
             return;
         }
-
+        data.clip = null;
         data.clip = soundBank.GetClip(soundType);
 
         Vector3 position = target != null ? target.position : transform.position;
-
         SoundManager.Instance
             .CreateSoundBuilder()
             .WithPosition(position)

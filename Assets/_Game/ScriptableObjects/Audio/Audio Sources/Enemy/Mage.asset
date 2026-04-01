@@ -15,7 +15,7 @@ MonoBehaviour:
   entries:
   - Type: 3
     Data:
-      clip: {fileID: 8300000, guid: 486d6ff6d31ac174a845275b39d7dec1, type: 3}
+      clip: {fileID: 0}
       mixerGroup: {fileID: -5776180369375798997, guid: 067c64e07b6d5e14bb15ab2246372ea3,
         type: 2}
       loop: 0
