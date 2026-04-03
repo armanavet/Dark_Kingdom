@@ -14,10 +14,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] public HealthBar MainTowerHB;
     [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
+    [SerializeField] private Slider activeStateSlider, passiveStateSlider;
     [SerializeField] Transform activeStateWarningParent;
     [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
     [SerializeField] TextMeshProUGUI activeStateWarningText;
     [SerializeField] private float activeStateEnableDuration = 1f;
+    [SerializeField] private float activeStateUptime = 1.5f;
     [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
     [SerializeField] private float activeStateDisableDuration = 0.5f;
     [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
@@ -86,16 +88,17 @@ public class UIManager : MonoBehaviour
         mainCamera = Camera.main;
         UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
     }
+
     void LateUpdate()
     {
         goldText.text = EconomyManager.Instance.CurrentCrystal.ToString();
-        timerText.text = Mathf.Round(GameTimer).ToString();
-
     }
+
     void Update()
     {
         ChangeUiButtonVisibility();
         ShowTowerHealthBar();
+
         if (Input.GetMouseButtonDown(0))
         {
             if (IsClickOnTowerPanelUI()) { return; } // Check if the click was performed on the Tower UI panel
@@ -159,6 +162,23 @@ public class UIManager : MonoBehaviour
             if (activeBar != null) activeBar.SetActive(false);
         }
     }
+
+    public void UpdateTimer(float remaining, float total)
+    {
+        if (currentState != GameState.Passive) return;
+
+        timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
+                         $"{Mathf.FloorToInt(remaining % 60f)}";
+        passiveStateSlider.value = remaining / total;
+    }
+
+    public void UpdateEnemyCount(float remaining, float total)
+    {
+        if (currentState != GameState.Active) return;
+
+        activeStateSlider.value = remaining / total;
+    }
+
     void ShowTowerPanel(bool value, Transform selectedTower = null)
     {
         if (value == true)
@@ -252,17 +272,26 @@ public class UIManager : MonoBehaviour
         }
         else if (currentState == GameState.Active)
         {
-            activeStatePanel.SetActive(true);
-            passiveStatePanel.SetActive(false);
-            waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-
             activeStateWarningParent.gameObject.SetActive(true);
             activeStateWarningParent.localScale = Vector3.zero;
             Sequence seq = DOTween.Sequence();
             seq.Append(activeStateWarningParent.DOScale(1f, activeStateEnableDuration)).SetEase(activeStateEnableEase)
                .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.5f))
                .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.5f))
-               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.5f));
+               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.5f))
+               .AppendInterval(activeStateUptime)
+               .Append(activeStateWarningImage.DOFade(0.5f, activeStateDisableDuration))
+               .Join(activeStateWarningIcon.DOFade(0.5f, activeStateDisableDuration))
+               .Join(activeStateWarningText.DOFade(0.5f, activeStateDisableDuration))
+               .Append(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
+               .OnComplete(() =>
+               {
+                   activeStateWarningParent.gameObject.SetActive(false);
+                   activeStatePanel.SetActive(true);
+                   passiveStatePanel.SetActive(false);
+                   waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
+                   activeStateSlider.value = 1f;
+               });
         }
         else if (currentState == GameState.End)
         {

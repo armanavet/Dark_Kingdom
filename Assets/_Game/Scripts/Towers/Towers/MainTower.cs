@@ -49,7 +49,8 @@ public class MainTower : Tower
         model = Models[CurrentLevel];
         projectile = Projectiles[CurrentLevel];
         currentHP = currentHP == 0 ? maxHP : currentHP;
-        UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
+        UIManager.Instance.MainTowerHB.SetMaxHealth(maxHP);
+        UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         ApplyTowerPositionsForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
         UpdateCanvasHeight(CurrentLevel);
         foreach (var defender in Defender)
@@ -138,7 +139,8 @@ public class MainTower : Tower
             float hpPercent = currentHP / maxHP;
             maxHP = HP[CurrentLevel];
             currentHP = maxHP * hpPercent;
-            UIManager.Instance.MainTowerHB.SetMaxHealth(currentHP);
+            UIManager.Instance.MainTowerHB.SetMaxHealth(maxHP);
+            UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         }
 
     }

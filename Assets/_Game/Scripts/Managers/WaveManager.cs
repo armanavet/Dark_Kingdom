@@ -17,6 +17,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     bool lastEnemy = false;
     bool cantFindPath;
     bool isLastWave;
+    float totalEnemies, enemiesLeft;
     [Header("for testing")]
     public int waveLength;
 
@@ -97,7 +98,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     IEnumerator SpawnUnits(List<Portal> activePortals, Wave wave)
     {
-        int totalEnemies = wave.Enemies.Sum(e => e.Count);
+        enemiesLeft = totalEnemies = wave.Enemies.Sum(e => e.Count);
         int spawned = 0;
         int startIndex = Random.Range(0, activePortals.Count);
         foreach (var enemyType in wave.Enemies)
@@ -168,6 +169,8 @@ public class WaveManager : MonoBehaviour, ISaveable
         if (!spawnedEnemies.Contains(enemy)) return;
 
         spawnedEnemies.Remove(enemy);
+        enemiesLeft--;
+        UIManager.Instance.UpdateEnemyCount(enemiesLeft, totalEnemies);
         if (spawnedEnemies.Count <= 0 && lastEnemy == true)
             Check();
     }

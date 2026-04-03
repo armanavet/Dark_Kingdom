@@ -12,7 +12,7 @@ public class StateManager : MonoBehaviour
     [SerializeField] float[] TimeUntilNextWave;
     [HideInInspector] public GameState State;
     GameState PreviusState;
-    float Timer;
+    float Timer, Duration;
     public int timeMultiplier = 1;
     public event Action<GameState> OnGameStateChanged;
     #region Singleton
@@ -46,7 +46,7 @@ public class StateManager : MonoBehaviour
         if (State == GameState.Passive)
         {
             Timer -= Time.deltaTime * timeMultiplier;
-            UIManager.Instance.GameTimer = Timer;
+            UIManager.Instance.UpdateTimer(Timer, Duration);
             if (Timer <= 0) ChangeGameStateTo(GameState.Active);
         }
         else if (State == GameState.End)
@@ -66,7 +66,7 @@ public class StateManager : MonoBehaviour
         {
             State = GameState.Passive;
             PreviusState = State;
-            Timer = (WaveManager.Instance.CurrentWaveIndex <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWaveIndex] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
+            Timer = Duration = (WaveManager.Instance.CurrentWaveIndex <= TimeUntilNextWave.Length) ? TimeUntilNextWave[WaveManager.Instance.CurrentWaveIndex] : TimeUntilNextWave[TimeUntilNextWave.Length - 1];
             SaveManager.Save();
         }
         else if (newState == GameState.Paused)
