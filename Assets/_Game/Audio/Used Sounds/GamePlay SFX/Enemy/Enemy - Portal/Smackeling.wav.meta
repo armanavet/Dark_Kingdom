@@ -20,3 +20,10 @@ AudioImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101442
+  packageName: DemonicAltar HellGate
+  packageVersion: 3.0
+  assetPath: Assets/_Game/Audio/Used Sounds/GamePlay SFX/Enemy/Enemy - Portal/Smackeling.wav
+  uploadId: 594780

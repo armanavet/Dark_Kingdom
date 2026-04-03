@@ -88,7 +88,7 @@ public class UIManager : MonoBehaviour
     }
     void LateUpdate()
     {
-        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
+        goldText.text = EconomyManager.Instance.CurrentCrystal.ToString();
         timerText.text = Mathf.Round(GameTimer).ToString();
 
     }
@@ -124,7 +124,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
         {
             var tower = TowerManager.Instance.TowerPrefabs[i];
-            if (tower.PurchasePrice < EconomyManager.Instance.CurrentGold)
+            if (tower.PurchasePrice < EconomyManager.Instance.CurrentCrystal)
             {
                 towerPurchaseButtons[i].interactable = true;
             }

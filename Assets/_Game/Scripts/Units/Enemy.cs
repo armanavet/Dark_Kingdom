@@ -8,6 +8,7 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [Header("Enemy Parameters")]
+    [SerializeField] HealthBar healthBar = null;
     [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
     [SerializeField] protected UnitType unitType;
@@ -131,6 +132,9 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         attackSpeed = maxAttackSpeed;
         animator = GetComponent<Animator>();
         SetSoundData();
+        if (healthBar != null)
+            healthBar.SetMaxHealth(maxHP);
+
     }
     protected void SetSoundData()
     {
@@ -148,7 +152,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void ApplyDamage(float damage)
     {
         if (state == EnemyState.Dead) return;
-
+        if (healthBar != null) healthBar.SetHealth(damage);
         health -= damage;
         if (health <= 0)
         {

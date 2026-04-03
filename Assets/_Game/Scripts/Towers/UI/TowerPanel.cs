@@ -21,7 +21,7 @@ public class TowerPanel : MonoBehaviour
 
     void ChangeButtonVisibility()
     {
-        if (EconomyManager.Instance.CurrentGold < tower.UpgradePrice || tower.CurrentLevel > tower.LevelMax || StrategyManager.Instance.CurrentStrategy != StrategyType.Construction)
+        if (EconomyManager.Instance.CurrentCrystal < tower.UpgradePrice || tower.CurrentLevel > tower.LevelMax || StrategyManager.Instance.CurrentStrategy != StrategyType.Construction)
         {
             UpgradeButton.interactable = false;
         }

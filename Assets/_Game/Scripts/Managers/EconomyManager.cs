@@ -9,7 +9,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
     [SerializeField] int currentCrystal;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
     float timer = 0;
-    public int CurrentGold { get => currentCrystal; }
+    public int CurrentCrystal { get => currentCrystal; }
 
     #region Singleton 
     private static EconomyManager _instance;
