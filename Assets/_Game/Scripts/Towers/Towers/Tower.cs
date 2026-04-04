@@ -22,8 +22,6 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected GameObject[] Models;
     [SerializeField] protected GameObject[] effects;
     [SerializeField] protected SoundData towerSoundData;
-    [SerializeField] protected SoundData SD_TowerUpgrade;
-    [SerializeField] protected SoundData SD_TowerVfx;
     [SerializeField] protected HitPointPopup unitHitPointPopup;
     [SerializeField] protected List<float> canvasHeightByLevel;
     [SerializeField] protected HealthBar healthBar;
