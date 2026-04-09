@@ -36,7 +36,7 @@ public abstract class Tower : MonoBehaviour
     [HideInInspector] public Tile tile;
     [HideInInspector] public int SellPrice;
     [HideInInspector] public int UpgradePrice;
-    [HideInInspector] public int CrystelGenerated = 0;
+    [HideInInspector] public int CrystalGenerated = 0;
     [HideInInspector] public int LevelMax = 1;
     [HideInInspector] public int CurrentLevel = 0;
     [HideInInspector] public int PurchasePrice;

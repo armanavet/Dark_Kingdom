@@ -41,7 +41,7 @@ public class MainTower : Tower
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
-        CrystelGenerated = GoldGenerationList[CurrentLevel];
+        CrystalGenerated = GoldGenerationList[CurrentLevel];
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         damage = Damage[CurrentLevel];
@@ -123,7 +123,7 @@ public class MainTower : Tower
                 UpgradePrice = UpgradePrices[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
             damage = Damage[CurrentLevel];
-            CrystelGenerated = GoldGenerationList[CurrentLevel];
+            CrystalGenerated = GoldGenerationList[CurrentLevel];
 
             model.SetActive(false);
             model = Models[CurrentLevel];

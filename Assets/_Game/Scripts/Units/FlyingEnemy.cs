@@ -32,7 +32,6 @@ public class FlyingEnemy : Enemy
         }
         if (attackCooldown > 0)
         {
-            Debug.Log("1");
             attackCooldown -= Time.deltaTime;
         }
         if (isAttacking == true) return;
@@ -49,7 +48,6 @@ public class FlyingEnemy : Enemy
     }
     protected override void Attack()
     {
-        Debug.Log("3");
         isAttacking = true;
         animator.SetBool("isIdle", false);
         animator.SetBool("isAttacking", true);
@@ -57,7 +55,6 @@ public class FlyingEnemy : Enemy
     void HandleAttack()
     {
         if (attackCooldown > 0) return;
-        Debug.Log("2");
         Attack();
     }
     public void LaunchProjectile()
@@ -78,7 +75,6 @@ public class FlyingEnemy : Enemy
         attackCooldown = 1 / attackSpeed;
         animator.SetBool("isAttacking", false);
         animator.SetBool("isIdle", true);
-        Debug.Log("4");
     }
     void Spawn()
     {

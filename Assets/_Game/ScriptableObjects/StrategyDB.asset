@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StrategyDatabaseSO
   strategies:
   - Type: 0
-    Cooldown: 5
+    Cooldown: 0
   - Type: 1
-    Cooldown: 8
+    Cooldown: 0
   - Type: 2
-    Cooldown: 11
+    Cooldown: 0

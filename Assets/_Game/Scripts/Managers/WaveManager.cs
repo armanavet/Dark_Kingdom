@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using System.Linq;
 public class WaveManager : MonoBehaviour, ISaveable
 {
     [Header("Set Wave Parameters")]
     [SerializeField] Units units;
     [SerializeField] Wave[] waves;
     [SerializeField] float delayBetweenSpawns;
+    [SerializeField] int increaseBy;
     List<Enemy> spawnedEnemies = new List<Enemy>();
     Wave enemiesToSpawn;
 
@@ -50,6 +51,18 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
 
     #region Prepare The Spawn
+    int CountUnits(Wave wave)
+    {
+        int count = 0;
+        foreach (var enemy in wave.Enemies)
+        {
+            if (enemy.Type == UnitType.Worm)
+            {
+                count = enemy.Count;
+            }
+        }
+        return count;
+    }
     void TotalEnemiesInWave(int currentWave)
     {
         spawnedEnemies.Clear();
@@ -65,6 +78,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     public void StartSpawn()
     {
+        WormManager.Instance.CalculateSpawnPoints();
         foreach (var portal in PortalManager.Instance.ActivePortals) portal.SpawnTile.Corrupt();
         StartCoroutine(SpawnFlow(PortalManager.Instance.ActivePortals, enemiesToSpawn));
     }
@@ -72,6 +86,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     #region Spawn
     IEnumerator SpawnFlow(List<Portal> activePortals, Wave wave)
     {
+        WormManager.Instance.Spawn();
         yield return StartCoroutine(ManagePortalVisuals(activePortals, "activate"));
 
         yield return StartCoroutine(SpawnUnits(activePortals, wave));

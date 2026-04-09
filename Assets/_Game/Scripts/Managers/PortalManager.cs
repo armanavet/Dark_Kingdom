@@ -55,9 +55,6 @@ public class PortalManager : MonoBehaviour, ISaveable
         foreach (var spawnPoint in SpawnPoints)
         {
             Vector3 spawnPos = spawnPoint.transform.position + new Vector3(0, 0.2f, 0);
-            Quaternion lookRotation = Quaternion.identity;
-
-            if (id % 2 == 1) lookRotation = Quaternion.Euler(0, 90f, 0);
 
             Portal portal = Instantiate(portalPrefab, spawnPos, Quaternion.identity, transform);
 

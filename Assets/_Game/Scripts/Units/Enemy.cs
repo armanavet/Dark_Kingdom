@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDebuffable
 {
     [Header("Enemy Parameters")]
-    [SerializeField] HealthBar healthBar = null;
+    //[SerializeField] HealthBar healthBar = null;
     [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
     [SerializeField] protected UnitType unitType;
@@ -38,6 +38,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     [HideInInspector] public Vector3 CurrentPosition => model.position;
     [HideInInspector] public UnitType Type => unitType;
     [HideInInspector] public SoundData SoundData => enemySoundData;
+    public float Damage => damage;
 
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
@@ -126,17 +127,31 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     protected void SetParameters()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        SetSoundData();
-        if (healthBar != null)
-            healthBar.SetMaxHealth(maxHP);
-
+        ApplyStats();
+        SetupUI();
+        CacheComponents();
+        InitializeAudio();
     }
-    protected void SetSoundData()
+    private void ApplyStats()
+    {
+        currentSpeed = ValidateStat(maxSpeed, currentSpeed);
+        health = ValidateStat(maxHP, health);
+        damage = ValidateStat(maxDamage, damage);
+        attackSpeed = ValidateStat(maxAttackSpeed, attackSpeed);
+    }
+    private float ValidateStat(float maxValue, float fallback)
+    {
+        return maxValue > 0 ? maxValue : fallback;
+    }
+    private void SetupUI()
+    {
+        //healthBar?.SetMaxHealth(maxHP);
+    }
+    private void CacheComponents()
+    {
+        animator = GetComponent<Animator>();
+    }
+    private void InitializeAudio()
     {
         enemySoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
     }
@@ -152,7 +167,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void ApplyDamage(float damage)
     {
         if (state == EnemyState.Dead) return;
-        if (healthBar != null) healthBar.SetHealth(damage);
+        //if (healthBar != null) healthBar.SetHealth(damage);
         health -= damage;
         if (health <= 0)
         {
@@ -165,13 +180,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         if (animator != null)
         {
             animator?.SetBool("isDead", true);
-            Debug.Log("animation was triggered by");
-        }
-
-        else
-        {
-            Debug.Log("animator is null");
-            return;
         }
         enemySoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
@@ -179,7 +187,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     void DestroyModel()
     {
-        Debug.Log("destroed the model");
         DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }
@@ -216,5 +223,7 @@ public enum UnitType
     Flying,
     Illusionist,
     Illusion,
+    Worm,
+    Mushroom,
     Portal
 }

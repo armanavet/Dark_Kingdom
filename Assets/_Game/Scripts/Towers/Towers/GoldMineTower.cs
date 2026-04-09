@@ -6,12 +6,12 @@ using UnityEngine;
 public class GoldMineTower : Tower
 {
     [Header("Wizard Tower Parameters")]
-    [SerializeField] List<int> GoldGenerationList;
+    [SerializeField] List<int> CrystalGenerationList;
 
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
-        CrystelGenerated = GoldGenerationList[CurrentLevel];
+        CrystalGenerated = CrystalGenerationList[CurrentLevel];
         SellPrice = SellPrices[CurrentLevel];
         UpgradePrice = UpgradePrices[CurrentLevel];
         maxHP = HP[CurrentLevel];
@@ -34,7 +34,7 @@ public class GoldMineTower : Tower
             CurrentLevel++;
             if (CurrentLevel < UpgradePrices.Count)
                 UpgradePrice = UpgradePrices[CurrentLevel];
-            CrystelGenerated = GoldGenerationList[CurrentLevel];
+            CrystalGenerated = CrystalGenerationList[CurrentLevel];
             SellPrice = SellPrices[CurrentLevel];
 
             model.SetActive(false);
