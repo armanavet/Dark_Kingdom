@@ -32,6 +32,12 @@ MonoBehaviour:
     Entry: {fileID: 11400000, guid: 23c30741b980bbe45aec746a22332b67, type: 2}
   - Type: 8
     Entry: {fileID: 11400000, guid: 0d9b19388f1d4ce44983587dd3ebe49d, type: 2}
+  - Type: 9
+    Entry: {fileID: 11400000, guid: eae34e276af036340b93334677fd9bff, type: 2}
+  - Type: 10
+    Entry: {fileID: 11400000, guid: 99cfc1e25c7862c40a646dfb4795ecac, type: 2}
+  - Type: 11
+    Entry: {fileID: 11400000, guid: 736ddd17a9538f142969c53012c7830e, type: 2}
   tower:
   - Type: 1
     Entry: {fileID: 11400000, guid: dae5d559746811d4d963c7b57bfd72d2, type: 2}

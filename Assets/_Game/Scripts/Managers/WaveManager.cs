@@ -131,6 +131,7 @@ public class WaveManager : MonoBehaviour, ISaveable
                     (prefab,
                         portal.SpawnTile.transform.position,
                             portal.SpawnTile.pathDirection.GetRotation());
+
                 Enemy script = enemy.GetComponent<Enemy>();
                 spawnedEnemies.Add(script);
                 script.OnSpawn(portal.SpawnTile, 0f);
@@ -182,7 +183,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     public void OnEnemyDeath(Enemy enemy)
     {
         if (!spawnedEnemies.Contains(enemy)) return;
-
+        Debug.Log("enter");
         spawnedEnemies.Remove(enemy);
         enemiesLeft--;
         UIManager.Instance.UpdateEnemyCount(enemiesLeft, totalEnemies);
@@ -190,7 +191,7 @@ public class WaveManager : MonoBehaviour, ISaveable
             Check();
     }
     #endregion
-    #region Link with Portal Manager
+    #region Link with Managerd
     private void OnEnable()
     {
         StateManager.Instance.OnGameStateChanged += HandleGameStateChanged;

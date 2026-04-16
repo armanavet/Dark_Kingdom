@@ -30,8 +30,12 @@ MonoBehaviour:
     Entry: {fileID: 11400000, guid: d25f0077182c253429796fb9681e8316, type: 2}
   - Type: 8
     Entry: {fileID: 11400000, guid: 3418f7029297eb448b11ec16119cf922, type: 2}
-  - Type: 9
+  - Type: 11
     Entry: {fileID: 11400000, guid: 8c7cd6819ef49bd4a9cd8faf1463a6da, type: 2}
+  - Type: 9
+    Entry: {fileID: 11400000, guid: f9bfec3a203ca6d4f8bb22b77178056c, type: 2}
+  - Type: 10
+    Entry: {fileID: 11400000, guid: 3dad29c68dddec343a230d2456eec7f4, type: 2}
   tower:
   - Type: 1
     Entry: {fileID: 11400000, guid: 724fce74a77830844873267d76f00ec8, type: 2}

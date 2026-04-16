@@ -1,6 +1,7 @@
 using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Shell : MonoBehaviour
@@ -33,7 +34,15 @@ public class Shell : MonoBehaviour
         }
 
     }
-    public void Initialize(Vector3 launchPoint, Vector3 targetPoint, Vector3 launchVelocity, float blastRadius, float damage, List<Debuff> debuffs, HitPointPopup hitPointPopup, TowerType towerType)
+    public void Initialize(
+        Vector3 launchPoint,
+        Vector3 targetPoint,
+        Vector3 launchVelocity,
+        float blastRadius,
+        float damage,
+        List<Debuff> debuffs,
+        HitPointPopup hitPointPopup,
+        TowerType towerType)
     {
         this.launchPoint = launchPoint;
         this.targetPoint = targetPoint;
@@ -46,20 +55,23 @@ public class Shell : MonoBehaviour
     }
     void Explode()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, blastRadius, PortalMask);
-        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
+        Collider[] Targets = Physics.OverlapSphere(transform.position, blastRadius, PortalMask);
+        if (Targets.Length == 0) Targets = Physics.OverlapSphere(transform.position, blastRadius, EnemyMask);
 
-        if (targets.Length > 0)
+        if (Targets.Length > 0)
         {
-            foreach (var target in targets)
+            foreach (var Target in Targets)
             {
-                Enemy enemy = target.GetComponent<Enemy>();
-                UIManager.Instance.ShowDamage(hitPointPopup, enemy, damage);
-                enemy.ApplyDamage(damage);
-                foreach (var debuff in debuffs)
+                ITargetable target = Target.GetComponent<ITargetable>();
+                if (target is Enemy enemyTarget)
                 {
-                    DebuffManager.Instance.ApplyDebuff(enemy, debuff);
+                    UIManager.Instance.ShowDamage(hitPointPopup, enemyTarget, damage);
+                    foreach (var debuff in debuffs)
+                    {
+                        DebuffManager.Instance.ApplyDebuff(enemyTarget, debuff);
+                    }
                 }
+                target.ApplyDamage(damage);
             }
         }
         DestroyObject(effects);

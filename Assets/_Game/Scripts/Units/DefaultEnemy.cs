@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DefaultEnemy : Enemy
 {
+    public override int GetTargetPriority() => 40;
     void Start()
     {
         SetParameters();
@@ -15,8 +16,8 @@ public class DefaultEnemy : Enemy
     }
     protected override void Attack()
     {
-        animator.SetBool("isMoving", false);
-        animator.SetBool("isAttacking", true);
+        animator.SetBool(IsMoving, false);
+        animator.SetBool(IsAttacking, true);
         attackCooldown -= Time.deltaTime;
         if (target != null && attackCooldown <= 0)
         {

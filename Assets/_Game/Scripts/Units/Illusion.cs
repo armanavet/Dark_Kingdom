@@ -7,6 +7,8 @@ public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
     [SerializeField] float duration;
+    public override int GetTargetPriority() => 60;
+
     void Start()
     {
         currentSpeed = maxSpeed;

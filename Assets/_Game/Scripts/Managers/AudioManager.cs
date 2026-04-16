@@ -94,8 +94,7 @@ public class AudioManager : MonoBehaviour
 
         SoundManager.Instance
             .CreateSoundBuilder()
-            .WithPosition(transform.position)
-            .WithRandomPitch()
+            .WithPosition(position)
             .Play(data);
     }
     public void Stop()
@@ -156,7 +155,10 @@ public enum GamePlaySFX_Type
     PortalGate,
     PortalOrb,
     PortalTopFire,
-    PortalScreaming
+    PortalScreaming,
+    WormBreakingThrough,
+    WormDiveIn,
+    WormRoar,
 }
 //public enum AmbientType
 //{

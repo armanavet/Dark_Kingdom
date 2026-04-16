@@ -8,7 +8,7 @@ public class MainTowerDefender
 {
     public Transform turret;
     public Transform turretRoot;
-    [HideInInspector] public Enemy target;
+    [HideInInspector] public ITargetable target;
     [HideInInspector] public float cooldown;
 }
 
@@ -38,6 +38,8 @@ public class MainTower : Tower
 
     float damage;
     Vector3 range;
+    public override int GetTargetPriority() => 50;
+
     private void Start()
     {
         EconomyManager.Instance.OnEconomicStructureChange(this);
@@ -148,7 +150,7 @@ public class MainTower : Tower
     void Shoot(MainTowerDefender defender)
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, defender.turret.transform);
-        Vector3 point = defender.target.transform.position;
+        Vector3 point = defender.target.GetTransform().position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
         GameObject newProjectile = Instantiate(projectile, defender.turret.position, Quaternion.LookRotation(point - defender.turret.position));
@@ -158,37 +160,69 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
+        //Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, illusionMask);
+        //if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, enemyMask);
+        //if (PotentialTargets.Length > 0)
+        //{
+        //    if (defender.target == null)
+        //    {
+        //        Collider closestTarget = PotentialTargets[0];
+        //        float minDistance = Vector3.Distance(defender.turret.position, closestTarget.transform.position);
+        //        foreach (var potentialTargets in PotentialTargets)
+        //        {
+        //            float distance = Vector3.Distance(defender.turret.position, potentialTargets.transform.position);
+        //            if (distance < minDistance)
+        //            {
+        //                minDistance = distance;
+        //                closestTarget = potentialTargets;
+        //            }
+        //        }
+        //        if (closestTarget != null)
+        //        {
+        //            defender.target = closestTarget.GetComponent<Enemy>();
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
+        //defender.target = null;
+        //return false;
 
-        Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, illusionMask);
-        if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, enemyMask);
-        if (PotentialTargets.Length > 0)
+        Collider[] hits = Physics.OverlapSphere(defender.turretRoot.position, attackRange, hittabelMask);
+
+        ITargetable bestTarget = null;
+        float bestScore = float.MinValue;
+
+        foreach (var hit in hits)
         {
-            if (defender.target == null)
+            var targetable = hit.GetComponent<ITargetable>();
+            Debug.Log($"1 Target: {targetable}, {hit.gameObject}");
+            if (targetable == null)
+                continue;
+            Debug.Log($"2 Target is not null: {targetable}");
+
+            if (targetable.GetFaction() == this.GetFaction())
+                continue;
+            Debug.Log($"3 Target is not from the same faction: {targetable.GetFaction()}");
+
+            float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
+            float priority = targetable.GetTargetPriority();
+            float healthPrecent = targetable.GetHealthPrecent();
+
+            float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
+            if (score > bestScore)
             {
-                Collider closestTarget = PotentialTargets[0];
-                float minDistance = Vector3.Distance(defender.turret.position, closestTarget.transform.position);
-                foreach (var potentialTargets in PotentialTargets)
-                {
-                    float distance = Vector3.Distance(defender.turret.position, potentialTargets.transform.position);
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closestTarget = potentialTargets;
-                    }
-                }
-                if (closestTarget != null)
-                {
-                    defender.target = closestTarget.GetComponent<Enemy>();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                bestScore = score;
+                bestTarget = targetable;
+                Debug.Log($"Target: {targetable}, Score: {score}");
             }
         }
-        defender.target = null;
-        return false;
+
+        defender.target = bestTarget;
+        return defender.target != null;
     }
     void ApplyTowerPositionsForLevel(
         int currentLevel,
@@ -218,7 +252,8 @@ public class MainTower : Tower
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (defender.target != null)
         {
-            UIManager.Instance.ShowDamage(unitHitPointPopup, defender.target, damage);
+            if (defender.target is Enemy enemyTarget)
+                UIManager.Instance.ShowDamage(unitHitPointPopup, enemyTarget, damage);
             defender.target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);

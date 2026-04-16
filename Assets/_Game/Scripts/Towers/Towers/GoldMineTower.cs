@@ -7,6 +7,7 @@ public class GoldMineTower : Tower
 {
     [Header("Wizard Tower Parameters")]
     [SerializeField] List<int> CrystalGenerationList;
+    public override int GetTargetPriority() => 0;
 
     private void Start()
     {

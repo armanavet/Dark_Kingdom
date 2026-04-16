@@ -18,6 +18,9 @@ public class FlyingEnemy : Enemy
     Quaternion targetRotation;
     bool isAttacking;
     float rotationProgress;
+    private static readonly int IsIdle = Animator.StringToHash("isidle");
+    public override int GetTargetPriority() => 50;
+
     void Start()
     {
         SetParameters();
@@ -49,8 +52,8 @@ public class FlyingEnemy : Enemy
     protected override void Attack()
     {
         isAttacking = true;
-        animator.SetBool("isIdle", false);
-        animator.SetBool("isAttacking", true);
+        animator.SetBool(IsIdle, false);
+        animator.SetBool(IsAttacking, true);
     }
     void HandleAttack()
     {
@@ -73,8 +76,8 @@ public class FlyingEnemy : Enemy
     {
         isAttacking = false;
         attackCooldown = 1 / attackSpeed;
-        animator.SetBool("isAttacking", false);
-        animator.SetBool("isIdle", true);
+        animator.SetBool(IsAttacking, false);
+        animator.SetBool(IsIdle, true);
     }
     void Spawn()
     {

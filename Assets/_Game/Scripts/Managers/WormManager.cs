@@ -50,7 +50,7 @@ public class WormManager : MonoBehaviour
     {
         if (Input.GetKeyDown("space"))
         {
-            //test();
+            test();
         }
     }
     void test()
@@ -136,14 +136,11 @@ public class WormManager : MonoBehaviour
     {
         if (tergetTowers == null) return;
         else if (unit == null) return;
-        Debug.Log("spawn");
         foreach (var target in tergetTowers)
         {
-            Debug.Log(target);
             if (target == null) continue;
             var spawnPoint = target.tile.transform.position;
             Enemy enemy = Instantiate(unit, spawnPoint, Quaternion.Euler(new Vector3(spawnPoint.x, Random.Range(15, 280), spawnPoint.z)), transform);
-            Debug.Log(enemy);
             target.ApplyDamage(enemy.Damage);
         }
     }

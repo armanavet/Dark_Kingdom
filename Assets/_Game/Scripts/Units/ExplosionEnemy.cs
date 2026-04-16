@@ -10,6 +10,8 @@ public class ExplosionEnemy : Enemy
     [SerializeField] float radius;
     [SerializeField] GameObject[] Effects;
     List<GameObject> effectsToDestroy = new List<GameObject>();
+    public override int GetTargetPriority() => 40;
+
     void Start()
     {
         SetParameters();

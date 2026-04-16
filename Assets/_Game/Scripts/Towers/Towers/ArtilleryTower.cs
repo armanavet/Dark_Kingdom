@@ -15,12 +15,13 @@ public class ArtilleryTower : Tower
     [SerializeField, Range(1, 200)]
     float shellDamage = 30;
 
-    Enemy target;
+    ITargetable target;
     float TarggetRange = 2f;
     float g = 9.81f;
     float launchSpeed;
     float launchProgress = 0f;
     int shotsPerSecond = 1;
+    public override int GetTargetPriority() => 70;
 
     void Awake()
     {
@@ -59,7 +60,7 @@ public class ArtilleryTower : Tower
         }
     }
 
-    void Launch(Enemy target)
+    void Launch(ITargetable target)
     {
         if (target == null)
         {
@@ -67,7 +68,7 @@ public class ArtilleryTower : Tower
         }
         Vector2 dir;
         Vector3 launchPoint = mortal.position;
-        Vector3 TargetPoint = target.transform.position;
+        Vector3 TargetPoint = target.GetTransform().position;
         dir.x = TargetPoint.x - launchPoint.x;
         dir.y = TargetPoint.z - launchPoint.z;
         TargetPoint.y = 0;
@@ -98,37 +99,34 @@ public class ArtilleryTower : Tower
     }
     bool AcquireTarget()
     {
-        Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, TarggetPoint, portalMask);
-        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, illusionMask);
-        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
-        if (targets.Length > 0)
-        {
-            int ClosestTargetIndex = 0;
-            float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
-            for (int i = 1; i < targets.Length; i++)
-            {
-                if (MinDist <= MinDist + i)
-                {
-                    float dist = Vector3.Distance(transform.position, targets[i].transform.position);
-                    if (dist < MinDist)
-                    {
-                        MinDist = dist;
-                        ClosestTargetIndex = i;
-                    }
-                }
+        Collider[] hits = Physics.OverlapSphere(transform.position, TarggetPoint, hittabelMask);
 
-            }
-            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
-            if (target != null)
+        ITargetable bestTarget = null;
+        float bestScore = float.MaxValue;
+
+        foreach (var hit in hits)
+        {
+            var targetable = hit.GetComponent<ITargetable>();
+            if (targetable == null)
+                continue;
+
+            if (targetable.GetFaction() == GetFaction())
+                continue;
+
+            float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
+            float priority = targetable.GetTargetPriority();
+            float healthPrecent = targetable.GetHealthPrecent();
+
+            float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
+            if (score > bestScore)
             {
-                return true;
+                bestScore = score;
+                bestTarget = targetable;
             }
-            else
-                return false;
         }
-        target = null;
-        return false;
+
+        target = bestTarget;
+        return target != null;
     }
     public override void Upgrade()
     {
@@ -157,3 +155,50 @@ public class ArtilleryTower : Tower
         }
     }
 }
+
+//Collider[] targets;
+
+//if (!isCaptured)
+//{
+//    LayerMask[] priorityMasks = {  portalMask, illusionMask, enemyMask };
+
+//    targets = new Collider[0];
+
+//    foreach (var mask in priorityMasks)
+//    {
+//        targets = Physics.OverlapSphere(transform.position, TarggetPoint, mask);
+//        if (targets.Length > 0) break;
+//    }
+//}
+//else
+//{
+//    targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
+//}
+
+//if (targets.Length > 0)
+//{
+//    int ClosestTargetIndex = 0;
+//    float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
+//    for (int i = 1; i < targets.Length; i++)
+//    {
+//        if (MinDist <= MinDist + i)
+//        {
+//            float dist = Vector3.Distance(transform.position, targets[i].transform.position);
+//            if (dist < MinDist)
+//            {
+//                MinDist = dist;
+//                ClosestTargetIndex = i;
+//            }
+//        }
+
+//    }
+//    target = targets[ClosestTargetIndex].GetComponent<Enemy>();
+//    if (target != null)
+//    {
+//        return true;
+//    }
+//    else
+//        return false;
+//}
+//target = null;
+//return false;

@@ -37,6 +37,7 @@ public class Portal : Enemy
     float gateLightMaxIntencity = 5f
     //, gateAudioMaxVolume = 0.3f
     , fireAudioMaxVolume = 0.6f;
+    public override int GetTargetPriority() => 80;
 
     private void Start()
     {
@@ -84,7 +85,7 @@ public class Portal : Enemy
         newProjectile.GetComponent<Mage>()?.Initialize(projectileSpeed);
         StartCoroutine(HitTarget(newProjectile, travelTime));
     }
-    protected override bool AcquireTarget()
+    protected override bool AcquireTargets()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, attackRange, towerMask);
         if (targets.Length > 0)
@@ -250,7 +251,7 @@ public class Portal : Enemy
     {
         if (attackCooldown <= 0)
         {
-            if (AcquireTarget())
+            if (AcquireTargets())
             {
                 Shoot();
             }

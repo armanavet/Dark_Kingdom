@@ -15,6 +15,7 @@ public class MageEnemy : Enemy
     float rotationProgress;
     float initialRotation;
     bool facingPath = true;
+    public override int GetTargetPriority() => 40;
 
     private void OnDestroy()
     {
@@ -29,7 +30,7 @@ public class MageEnemy : Enemy
     }
     private void Update()
     {
-        bool targetAcquired = AcquireTarget();
+        bool targetAcquired = AcquireTargets();
         if (targetAcquired == false)
         {
             if (facingPath) Move();
@@ -57,8 +58,8 @@ public class MageEnemy : Enemy
     }
     protected override void Attack()
     {
-        animator.SetBool("isMoving", false);
-        animator.SetBool("isAttacking", true);
+        animator.SetBool(IsMoving, false);
+        animator.SetBool(IsAttacking, true);
     }
     public void LaunchProjectile()
     {
@@ -72,7 +73,7 @@ public class MageEnemy : Enemy
             StartCoroutine(HitTarget(arrow, travelTime));
         }
     }
-    protected override bool AcquireTarget()
+    protected override bool AcquireTargets()
     {
         if (target != null) return true;
         Collider[] targets = Physics.OverlapSphere(transform.position, TarggetPoint, towerMask);
@@ -143,7 +144,7 @@ public class MageEnemy : Enemy
         facingPath = true;
     }
 
-    void StartTurning()
+    void StartTurning(Tower target)
     {
         target.OnDestroyed -= StartTurning;
         StartCoroutine(FacePath());
