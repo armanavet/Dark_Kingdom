@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Mushroom
   m_EditorClassIdentifier: 
   Entries:
-  - Type: 6
-    Clips: []
   - Type: 7
     Clips:
     - {fileID: 8300000, guid: 97d472efed76cc74a80fb33a01d459ed, type: 3}

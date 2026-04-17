@@ -32,7 +32,6 @@ public class WormEnemy : Enemy
     }
     public void OnBrackThroughtComplete()
     {
-        Debug.LogWarning("Taunting is on");
         animator.SetBool(IsTaunting, true);
     }
     public void PlayEffect()
@@ -84,16 +83,15 @@ public class WormEnemy : Enemy
     }
     public void PlayBreakingThroughSFX()
     {
-        Debug.Log(Type);
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, enemySoundData, transform);
+        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, enemySoundData, transform);
     }
     public void PlayDiveInSFX()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, enemySoundData, transform);
+        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, enemySoundData, transform);
     }
     public void PlayRoarSFX()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, enemySoundData, transform);
+        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, enemySoundData, transform);
     }
     protected override void Attack() { }
     public override int GetTargetPriority() => 0;

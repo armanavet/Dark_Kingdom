@@ -76,11 +76,8 @@ public class ArcherTower : Tower
 
         if (AcquireTarget())
         {
-            Debug.Log($"Tower found enemy {target}. Start shooting.");
-
             timer = cooldown;
             Shoot();
-
             attackCooldown = 1f / attackSpeed;
         }
     }
@@ -105,14 +102,11 @@ public class ArcherTower : Tower
         foreach (var hit in hits)
         {
             var targetable = hit.GetComponent<ITargetable>();
-            Debug.Log($"1 Target: {targetable}, {hit.gameObject}");
             if (targetable == null)
                 continue;
-            Debug.Log($"2 Target is not null: {targetable}");
 
             if (targetable.GetFaction() == this.GetFaction())
                 continue;
-            Debug.Log($"3 Target is not from the same faction: {targetable.GetFaction()}");
 
             float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
             float priority = targetable.GetTargetPriority();

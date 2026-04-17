@@ -28,7 +28,6 @@ public class MushroomEnemy : Enemy
     private static readonly int IsCapturing = Animator.StringToHash("isCapturing");
 
     Vector3 start, end, pos;
-    bool isJumping;
     public override int GetTargetPriority() => 100;
 
     private void Start()
@@ -59,22 +58,9 @@ public class MushroomEnemy : Enemy
     {
         if (state == EnemyState.Dead) return;
 
-
-        if (AcquireTargets())
-        {
-            //Debug.Log("[2] 1. Targets were found. Start the capturing process.");
-            StartCapturing();
-        }
-        else if (CanMove())
-        {
-            //Debug.Log("[2] 2. There are no targets. Can move. ");
-            Move();
-        }
-        else
-        {
-            //Debug.Log("[2] 3. There aren't any new targets, but old ones still alive. I can't move. :" + capturedTargets);
-            Taunting();
-        }
+        if (AcquireTargets()) StartCapturing();
+        else if (CanMove()) Move();
+        else Taunting();
     }
     void Taunting()
     {
@@ -85,14 +71,12 @@ public class MushroomEnemy : Enemy
     {
         if (tileTo.DistanceToDestinationOriginal == 0) return false;
         if (capturedTargets.Count == 0) return true;
-        //Debug.Log($"[2] 4. There are still alive towers. {capturedTargets.Count}");
         return false;
     }
     protected override bool AcquireTargets()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, CaptureRange, towerMask);
 
-        //Debug.Log($"[2] 5. Targets were found {targets.Length}");
         if (targets.Length > 0)
         {
             bool foundAny = false;
@@ -103,7 +87,6 @@ public class MushroomEnemy : Enemy
                 if (tower.Type == TowerType.MainTower || tower.Type == TowerType.CrystalMine) continue;
                 if (capturedTargets.Add(tower))
                 {
-                    //Debug.Log($"[2] 6. Tower: {tower}");
                     tower.SetPriority(Faction.Enemy);
                     tower.OnDestroyed += OnTowerDestroyed;
                     foundAny = true;
@@ -152,54 +135,6 @@ public class MushroomEnemy : Enemy
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
-    //protected override void PrepareNextMove()
-    //{
-    //    AcquireTargets();
-    //    positionFrom = transform.position;
-    //    positionTo = tileFrom.exitPoint;
-
-    //    direction = tileFrom.pathDirection;
-
-    //    directionChange = DirectionChange.None;
-
-    //    // Optional: instantly align rotation OR let jump handle it
-    //    //transform.rotation = direction.GetRotation();
-
-    //}
-    //IEnumerator JumpRoutine()
-    //{
-    //    isJumping = true;
-
-    //    animator.SetBool(IsCapturing, false);
-    //    animator.SetBool(IsMoving, true);
-
-    //    float time = 0;
-
-    //    start = transform.position;
-    //    end = tileTo.transform.position;
-
-    //    while (time < duration)
-    //    {
-    //        float t = time / duration;
-    //        t = Mathf.SmoothStep(0, 1f, t);
-
-    //        Vector3 pos = Vector3.Lerp(start, end, t);
-    //        pos.y = jumpCurve.Evaluate(t);
-
-    //        transform.position = pos;
-
-    //        time += Time.deltaTime;
-    //        yield return null;
-    //    }
-
-    //    transform.position = end;
-
-    //    tileFrom = tileTo;
-    //    tileTo = tileFrom.NextOnPath;
-
-    //    PrepareNextMove();
-    //    isJumping = false;
-    //}
     protected override void Attack() { }
 
 }

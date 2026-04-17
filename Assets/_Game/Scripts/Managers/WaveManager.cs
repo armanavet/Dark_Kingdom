@@ -183,7 +183,6 @@ public class WaveManager : MonoBehaviour, ISaveable
     public void OnEnemyDeath(Enemy enemy)
     {
         if (!spawnedEnemies.Contains(enemy)) return;
-        Debug.Log("enter");
         spawnedEnemies.Remove(enemy);
         enemiesLeft--;
         UIManager.Instance.UpdateEnemyCount(enemiesLeft, totalEnemies);

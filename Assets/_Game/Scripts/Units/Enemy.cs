@@ -73,7 +73,6 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     }
     protected virtual void Move()
     {
-        //if (tileTo.DistanceToDestinationOriginal == 0) return;
         animator.SetBool(IsMoving, true);
         animator.SetBool(IsAttacking, false);
         progress += Time.deltaTime * progressFactor * currentSpeed;

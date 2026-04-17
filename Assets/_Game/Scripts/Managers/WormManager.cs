@@ -48,10 +48,10 @@ public class WormManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("space"))
-        {
-            test();
-        }
+        //if (Input.GetKeyDown("space"))
+        //{
+        //    test();
+        //}
     }
     void test()
     {
