@@ -87,8 +87,27 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound system is not configured correctly.");
             return;
         }
-
+        Debug.Log(data.volume);
         data.clip = soundBank.GetClip(sourcType, soundType);
+
+        Vector3 position = target != null ? target.position : transform.position;
+
+        SoundManager.Instance
+            .CreateSoundBuilder()
+            .WithPosition(position)
+            .Play(data);
+    }
+    public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, int index, SoundData data, Transform target)
+        where T_Sound : Enum
+            where T_Source : Enum
+    {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
+
+        data.clip = soundBank.GetClip(sourcType, soundType, index);
 
         Vector3 position = target != null ? target.position : transform.position;
 

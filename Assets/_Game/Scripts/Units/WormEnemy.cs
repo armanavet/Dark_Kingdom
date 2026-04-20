@@ -24,6 +24,7 @@ public class WormEnemy : Enemy
     }
     void Start()
     {
+        SetParameters();
         SpawnHole();
     }
     void SpawnHole()
@@ -83,15 +84,17 @@ public class WormEnemy : Enemy
     }
     public void PlayBreakingThroughSFX()
     {
-        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, enemySoundData, transform);
+        Debug.Log(Type);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, enemySoundData, transform);
     }
     public void PlayDiveInSFX()
     {
-        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 0, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 1, enemySoundData, transform);
     }
     public void PlayRoarSFX()
     {
-        //AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, enemySoundData, transform);
     }
     protected override void Attack() { }
     public override int GetTargetPriority() => 0;

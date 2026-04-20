@@ -159,13 +159,13 @@ public class Portal : Enemy
             if (transitionTimer >= rand1 && !orbParticlesL.isPlaying)
             {
                 orbParticlesL.Play();
-                AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesL.transform);
+                //AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesL.transform);
             }
 
             if (transitionTimer >= rand2 && !orbParticlesR.isPlaying)
             {
                 orbParticlesR.Play();
-                AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesR.transform);
+                //AudioManager.Instance.Play(GamePlaySFX_Type.PortalOrb, SoundData, orbParticlesR.transform);
             }
 
             gateMaterial.SetColor("_EmissionColor", emissionColor.Evaluate(transitionTimer));
@@ -188,8 +188,8 @@ public class Portal : Enemy
         fireParticles.Play();
         topFireData.volume = fireAudioMaxVolume;
 
-        AudioManager.Instance.Play(GamePlaySFX_Type.PortalTopFire, topFireData, orbParticlesR.transform);
-        AudioManager.Instance.Play(GamePlaySFX_Type.PortalScreaming, screamData, orbParticlesR.transform);
+        //AudioManager.Instance.Play(GamePlaySFX_Type.PortalTopFire, topFireData, orbParticlesR.transform);
+        //AudioManager.Instance.Play(GamePlaySFX_Type.PortalScreaming, screamData, orbParticlesR.transform);
         //AudioManager.Instance.Play(GamePlaySFX_Type.PortalGate, gateData, orbParticlesR.transform);
 
         while (transitionTimer < 1f)

@@ -53,6 +53,17 @@ public class SoundClipSet<T>
         #endregion
         return clips[Random.Range(0, clips.Length)];
     }
+    public AudioClip GetClip(T soundType, int index)
+    {
+        #region Error Check 
+        if (!dictionary.TryGetValue(soundType, out var clips))
+        {
+            Debug.LogError($"{soundType} type audio clip not found!");
+            return null;
+        }
+        #endregion
+        return clips[index];
+    }
 }
 
 public abstract class SoundLibrary<T> : ScriptableObject, ISoundProvider
@@ -126,6 +137,25 @@ public abstract class SoundLibrary<T> : ScriptableObject, ISoundProvider
         #endregion
         return clipsDictionary.GetClip(soundType);
     }
+    public AudioClip GetClip(Enum type, int index)
+    {
+        #region Error Check 
+        if (type is not T soundType)
+        {
+            Debug.LogError($"[{name}] invalid sound type '{type}'.", this);
+            return null;
+        }
+        if (clipsDictionary == null)
+        {
+            Debug.LogError(
+                $"[{name}] is not initialized.",
+                this
+            );
+            return null;
+        }
+        #endregion
+        return clipsDictionary.GetClip(soundType, index);
+    }
 }
 
 
@@ -143,10 +173,10 @@ public class SoundBank : ScriptableObject
     Dictionary<UnitType, GameplaySoundLibrary> enemyDict = new Dictionary<UnitType, GameplaySoundLibrary>();
     Dictionary<TowerType, GameplaySoundLibrary> towerDict = new Dictionary<TowerType, GameplaySoundLibrary>();
     Dictionary<Type, ISoundProvider> providerMap = new();
-    
+
     public void Build()
     {
-        enemyDict.Clear(); 
+        enemyDict.Clear();
         towerDict.Clear();
 
         foreach (var item in enemy)
@@ -164,7 +194,7 @@ public class SoundBank : ScriptableObject
     }
     public void Register(ISoundProvider provider)
     {
-        providerMap[provider.SoundType] = provider; 
+        providerMap[provider.SoundType] = provider;
     }
 
     public AudioClip GetClip<TSoundType>(TSoundType soundType)
@@ -193,6 +223,24 @@ public class SoundBank : ScriptableObject
             if (sourceType is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
             {
                 return tower.GetClip(gamePlaySFX_Type);
+            }
+        }
+        Debug.LogWarning($"I got the source '{sourceType}' and the sound '{soundType}'");
+        return null;
+    }
+    public AudioClip GetClip<TSourceType, TSoundType>(TSourceType sourceType, TSoundType soundType, int index)
+        where TSourceType : Enum
+        where TSoundType : Enum
+    {
+        if (soundType is GamePlaySFX_Type gamePlaySFX_Type)
+        {
+            if (sourceType is UnitType unitType && enemyDict.TryGetValue(unitType, out var enemy))
+            {
+                return enemy.GetClip(gamePlaySFX_Type, index);
+            }
+            if (sourceType is TowerType towerType && towerDict.TryGetValue(towerType, out var tower))
+            {
+                return tower.GetClip(gamePlaySFX_Type, index);
             }
         }
         Debug.LogWarning($"I got the source '{sourceType}' and the sound '{soundType}'");
