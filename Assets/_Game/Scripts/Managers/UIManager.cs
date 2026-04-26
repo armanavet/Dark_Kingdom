@@ -1,6 +1,5 @@
 using DG.Tweening;
 //using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -18,8 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform activeStateWarningParent;
     [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
     [SerializeField] TextMeshProUGUI activeStateWarningText;
-    [SerializeField] private float activeStateEnableDuration = 1f;
-    [SerializeField] private float activeStateUptime = 1.5f;
+    [SerializeField] private float activeStateEnableDuration = 3f;
+    [SerializeField] private float activeStateUptime = 15.5f;
     [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
     [SerializeField] private float activeStateDisableDuration = 0.5f;
     [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
@@ -276,14 +275,14 @@ public class UIManager : MonoBehaviour
             activeStateWarningParent.localScale = Vector3.zero;
             Sequence seq = DOTween.Sequence();
             seq.Append(activeStateWarningParent.DOScale(1f, activeStateEnableDuration)).SetEase(activeStateEnableEase)
-               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.5f))
-               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.5f))
-               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.5f))
+               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.25f))
                .AppendInterval(activeStateUptime)
-               .Append(activeStateWarningImage.DOFade(0.5f, activeStateDisableDuration))
-               .Join(activeStateWarningIcon.DOFade(0.5f, activeStateDisableDuration))
-               .Join(activeStateWarningText.DOFade(0.5f, activeStateDisableDuration))
-               .Append(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
+               .Append(activeStateWarningImage.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningIcon.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningText.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
                .OnComplete(() =>
                {
                    activeStateWarningParent.gameObject.SetActive(false);
