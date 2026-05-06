@@ -30,6 +30,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
 
+    [Header("ObjectivesPanel")]
+    [SerializeField] private Button objectivesButton;
+    [SerializeField] private RectTransform objectivesPanel;
+    [SerializeField] private Vector2 objectivesOpenedPosition = new Vector2(-190, -265);
+    [SerializeField] private Vector2 objectivesClosedPosition = new Vector2(-163, -58);
+    [SerializeField] private float objectivesEnableDuration = 0.3f;
+    [SerializeField] private float objectivesDisableDuration = 0.3f;
+    [SerializeField] private Ease objectivesEnableEase = Ease.OutExpo;
+    [SerializeField] private Ease objectivesDisableEase = Ease.InExpo;
+
     GameState currentState;
     Camera mainCamera;
     GameObject activePanel, previousHit, effect, activeBar;
@@ -66,7 +76,7 @@ public class UIManager : MonoBehaviour
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
         StrategyManager.OnStrategyChanged += OnStrategyChanged;
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-
+        objectivesButton.onClick.AddListener(ShowObjectivesPanel);
     }
 
     private void OnDisable()
@@ -74,6 +84,7 @@ public class UIManager : MonoBehaviour
         StrategyManager.OnStrategyChanged -= OnStrategyChanged;
         if (StateManager.Instance != null)
             StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+        objectivesButton.onClick.RemoveAllListeners();
     }
 
     public void Initialize()
@@ -86,6 +97,10 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
         UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
+
+        objectivesClosedPosition = objectivesButton.transform.position;
+        objectivesPanel.position = objectivesClosedPosition;
+        objectivesPanel.gameObject.SetActive(false);
     }
 
     void LateUpdate()
@@ -165,6 +180,11 @@ public class UIManager : MonoBehaviour
     public void UpdateTimer(float remaining, float total)
     {
         if (currentState != GameState.Passive) return;
+        if (remaining < 0)
+        {
+            timerText.gameObject.SetActive(false);
+            return;
+        }
 
         timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
                          $"{Mathf.FloorToInt(remaining % 60f)}";
@@ -176,6 +196,24 @@ public class UIManager : MonoBehaviour
         if (currentState != GameState.Active) return;
 
         activeStateSlider.value = remaining / total;
+    }
+
+    public void ShowObjectivesPanel()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        if (!objectivesPanel.gameObject.activeSelf)
+        {
+            seq.AppendCallback(() => objectivesPanel.gameObject.SetActive(true))
+               .Append(objectivesPanel.DOScale(1f, objectivesEnableDuration).SetEase(objectivesEnableEase))
+               .Join(objectivesPanel.DOAnchorPos(objectivesOpenedPosition, objectivesEnableDuration).SetEase(objectivesEnableEase));
+        }
+        else
+        {
+            seq.Append(objectivesPanel.DOScale(0, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .Join(objectivesPanel.DOMove(objectivesClosedPosition, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .AppendCallback(() => objectivesPanel.gameObject.SetActive(false));
+        }
     }
 
     void ShowTowerPanel(bool value, Transform selectedTower = null)
