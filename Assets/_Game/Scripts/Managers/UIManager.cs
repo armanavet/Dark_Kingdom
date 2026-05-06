@@ -180,11 +180,7 @@ public class UIManager : MonoBehaviour
     public void UpdateTimer(float remaining, float total)
     {
         if (currentState != GameState.Passive) return;
-        if (remaining < 0)
-        {
-            timerText.gameObject.SetActive(false);
-            return;
-        }
+        remaining = Mathf.Max(remaining, 0);
 
         timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
                          $"{Mathf.FloorToInt(remaining % 60f)}";
