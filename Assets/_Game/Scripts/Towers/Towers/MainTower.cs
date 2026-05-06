@@ -53,6 +53,7 @@ public class MainTower : Tower
         UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         ApplyTowerPositionsForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         foreach (var defender in Defender)
         {
             defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);

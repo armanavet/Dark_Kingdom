@@ -34,6 +34,7 @@ public class ArcherTower : Tower
         healthBar.SetMaxHealth(currentHP);
         attackCooldown = 1 / attackSpeed;
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         OnPlace();
         SetSoundData();
     }

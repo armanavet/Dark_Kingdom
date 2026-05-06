@@ -41,6 +41,7 @@ public class ArtilleryTower : Tower
         healthBar.SetMaxHealth(currentHP);
         OnPlace();
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         SetSoundData();
     }
 
