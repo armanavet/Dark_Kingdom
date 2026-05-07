@@ -8,6 +8,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private SettingsInstaller installer;
     [SerializeField] private DisplaySettings displaySettings;
     [SerializeField] private AudioSettings audioSettings;
+    [SerializeField] private ControlsSettings controlsSettings;
     [SerializeField]
     private Button
         B_apply,
@@ -28,6 +29,7 @@ public class SettingsManager : MonoBehaviour
 
         displaySettings.InitializeData(installer);
         audioSettings.InitializeData(installer);
+        controlsSettings.InitializeData(installer);
 
         B_apply.onClick.AddListener(OnApply);
         B_reset.onClick.AddListener(OnDefault);
@@ -36,6 +38,8 @@ public class SettingsManager : MonoBehaviour
         B_deny.onClick.AddListener(OnDeny);
 
         B_close.onClick.AddListener(CloseWarning);
+
+        P_warning?.SetActive(false);
 
         vm.OnChanged += Refresh;
         Refresh();
@@ -91,7 +95,7 @@ public class SettingsManager : MonoBehaviour
     void Refresh()
     {
         //P_Buttons.gameObject.SetActive(vm.HasChanges);
-        P_Buttons.gameObject.SetActive(true);
+        P_Buttons.gameObject.SetActive(vm.HasChanges);
     }
   
 }

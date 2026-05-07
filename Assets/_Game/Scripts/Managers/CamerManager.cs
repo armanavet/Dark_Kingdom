@@ -11,7 +11,7 @@ public class CamerManager : MonoBehaviour
     float initialCursorPosition;
     Vector2 initialMousePosition;
     [Header("Movement Settings")]
-    [Tooltip("Based movement speed of the camera")]
+    [Tooltip("Camera movement speed.")]
     [SerializeField] float speed;
 
     [Tooltip("Reference to the game board (Used as the game bounds).")]

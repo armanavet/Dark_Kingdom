@@ -102,11 +102,11 @@ public class UIManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (IsClickOnTowerPanelUI()) { return; } // Check if the click was performed on the Tower UI panel
-            if (EventSystem.current.IsPointerOverGameObject()) //Check if the click was performed on a UI element
-            {
-                ShowTowerPanel(false);
-                return;
-            }
+            //if (EventSystem.current.IsPointerOverGameObject()) //Check if the click was performed on a UI element
+            //{
+            //    ShowTowerPanel(false);
+            //    return;
+            //}
 
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 

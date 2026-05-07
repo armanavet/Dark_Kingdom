@@ -10,6 +10,12 @@ public static class ConstValues
     public const string PREF_MUSIC_VOLUME = "MusicVolume";
     public const string PREF_SFX_VOLUME = "SoundEffectsVolume";
 
+    public const string PREF_REBINDS = "Rebinds";
+    public const string PREF_MOVE_SPEED = "MoveSpeed";
+    public const string PREF_ROTATION_SPEED = "RotationSpeed";
+    public const string PREF_ZOOM_SPEED = "ZoomSpeed";
+    public const string PREF_MOUSE_DRAG_SPEED = "DragSpeed";
+
     //auido mixer group name 
     public const string MIXER_MASTER = "Master";
     public const string MIXER_MUSIC = "Music";
