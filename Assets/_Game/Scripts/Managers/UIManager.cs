@@ -40,6 +40,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Ease objectivesEnableEase = Ease.OutExpo;
     [SerializeField] private Ease objectivesDisableEase = Ease.InExpo;
 
+    [Header("Description Popup")]
+    [SerializeField] private GameObject descriptionPopup;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+
     GameState currentState;
     Camera mainCamera;
     GameObject activePanel, previousHit, effect, activeBar;
@@ -101,6 +105,8 @@ public class UIManager : MonoBehaviour
         objectivesClosedPosition = objectivesButton.transform.position;
         objectivesPanel.position = objectivesClosedPosition;
         objectivesPanel.gameObject.SetActive(false);
+
+        descriptionPopup.SetActive(false);
     }
 
     void LateUpdate()
@@ -112,6 +118,11 @@ public class UIManager : MonoBehaviour
     {
         ChangeUiButtonVisibility();
         ShowTowerHealthBar();
+
+        if (descriptionPopup.activeSelf)
+        {
+            descriptionPopup.transform.position = Input.mousePosition;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -363,6 +374,18 @@ public class UIManager : MonoBehaviour
         HitPointPopup.HitPointText(damage);
     }
 
+    public void ShowTowerDescription(int type)
+    {
+        descriptionPopup.SetActive(true);
+        string description = TowerManager.Instance.TowerDescriptions.GetByType((TowerType)type);
+        descriptionText.text = description;
+    }
+
+    public void HideDescription()
+    {
+        descriptionPopup.SetActive(false);
+    }
+
     Quaternion LookAtCamera(Transform cameraTransform)
     {
         return Quaternion.LookRotation(cameraTransform.forward);
@@ -383,4 +406,6 @@ public class UIManager : MonoBehaviour
     {
         currentState = state;
     }
+
+    
 }
