@@ -2,6 +2,7 @@ using AudioSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ArcherTower : Tower
@@ -16,8 +17,10 @@ public class ArcherTower : Tower
 
 
     float attackCooldown;
+    float timer;
     float damage;
-    Enemy target;
+    ITargetable target;
+    public override int GetTargetPriority() => 70;
 
     private void Start()
     {
@@ -26,6 +29,7 @@ public class ArcherTower : Tower
         damage = Damage[CurrentLevel];
         maxHP = HP[CurrentLevel];
         model = Models[CurrentLevel];
+        timer = cooldown;
         shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[CurrentLevel], transform.position.z);
         projectile = Projectiles[CurrentLevel];
         if (Debuffs[CurrentLevel] != null)
@@ -34,6 +38,7 @@ public class ArcherTower : Tower
         healthBar.SetMaxHealth(currentHP);
         attackCooldown = 1 / attackSpeed;
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         OnPlace();
         SetSoundData();
     }
@@ -41,22 +46,47 @@ public class ArcherTower : Tower
     void Update()
     {
         attackCooldown -= Time.deltaTime;
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
 
-        if (attackCooldown <= 0)
+        if (isCaptured)
         {
-            if (AcquireTarget())
-            {
-                Shoot();
-            }
-            attackCooldown = 1 / attackSpeed;
+            HandleCapturedState();
+        }
+
+        if (!isCaptured && StrategyManager.Instance.CurrentStrategy != StrategyType.Battle)
+        {
+            return;
+        }
+
+        HandleAttack();
+    }
+
+    void HandleCapturedState()
+    {
+        timer -= Time.deltaTime;
+
+        if (timer <= 0f)
+        {
+            Destroy();
+        }
+    }
+
+    void HandleAttack()
+    {
+        if (attackCooldown > 0f)
+            return;
+
+        if (AcquireTarget())
+        {
+            timer = cooldown;
+            Shoot();
+            attackCooldown = 1f / attackSpeed;
         }
     }
 
     void Shoot()
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
-        Vector3 point = target.transform.position;
+        Vector3 point = target.GetTransform().position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
         GameObject newProjectile = Instantiate(projectile, shootingPoint.position, Quaternion.LookRotation(point - shootingPoint.position));
@@ -65,38 +95,35 @@ public class ArcherTower : Tower
     }
     bool AcquireTarget()
     {
-        Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, attackRange, portalMask);
-        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if (targets.Length == 0) targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+        Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, hittabelMask);
 
-        if (targets.Length > 0)
+        ITargetable bestTarget = null;
+        float bestScore = float.MinValue;
+
+        foreach (var hit in hits)
         {
-            int ClosestTargetIndex = 0;
-            float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
-            for (int i = 1; i < targets.Length; i++)
-            {
-                if (MinDist <= MinDist + i)
-                {
-                    float dist = Vector3.Distance(transform.position, targets[i].transform.position);
-                    if (dist < MinDist)
-                    {
-                        MinDist = dist;
-                        ClosestTargetIndex = i;
-                    }
-                }
+            var targetable = hit.GetComponent<ITargetable>();
+            if (targetable == null)
+                continue;
 
-            }
-            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
-            if (target != null)
+            if (targetable.GetFaction() == this.GetFaction())
+                continue;
+
+            float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
+            float priority = targetable.GetTargetPriority();
+            float healthPrecent = targetable.GetHealthPrecent();
+
+            float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
+            if (score > bestScore)
             {
-                return true;
+                bestScore = score;
+                bestTarget = targetable;
+                Debug.Log($"Target: {targetable}, Score: {score}");
             }
-            else
-                return false;
         }
-        target = null;
-        return false;
+
+        target = bestTarget;
+        return target != null;
     }
 
     private void OnDrawGizmos()
@@ -107,7 +134,7 @@ public class ArcherTower : Tower
         Gizmos.color = Color.red;
         if (target != null)
         {
-            Gizmos.DrawLine(transform.position, target.transform.position);
+            Gizmos.DrawLine(transform.position, target.GetTransform().position);
         }
     }
 
@@ -160,13 +187,66 @@ public class ArcherTower : Tower
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
         if (target != null)
         {
-            UIManager.Instance.ShowDamage(unitHitPointPopup, target, damage);
-            target.ApplyDamage(damage);
-            foreach (var debuff in currentDebuffs)
+            Enemy enemyTarget = target as Enemy;
+            if (enemyTarget != null)
             {
-                DebuffManager.Instance.ApplyDebuff(target, debuff);
+                UIManager.Instance.ShowDamage(unitHitPointPopup, (Enemy)target, damage);
+                foreach (var debuff in currentDebuffs)
+                {
+                    DebuffManager.Instance.ApplyDebuff((Enemy)target, debuff);
+                }
             }
+            target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);
     }
 }
+
+//Collider[] targets;
+
+//if (!isCaptured)
+//{
+//    LayerMask[] priorityMasks = { capturedMask, portalMask, illusionMask, enemyMask };
+
+//    targets = new Collider[0];
+
+//    foreach (var mask in priorityMasks)
+//    {
+//        targets = Physics.OverlapSphere(transform.position, attackRange, mask);
+//        if (targets.Length > 0) break;
+//    }
+//    Debug.Log($"Captured: {isCaptured}.");
+//}
+//else
+//{
+//    targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
+//    Debug.Log($"Captured: {isCaptured}.");
+//}
+//Debug.Log("Targets were found - " + targets.Length);
+//if (targets.Length > 0)
+//{
+//    int ClosestTargetIndex = 0;
+//    float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
+//    for (int i = 1; i < targets.Length; i++)
+//    {
+//        if (MinDist <= MinDist + i)
+//        {
+//            float dist = Vector3.Distance(transform.position, targets[i].transform.position);
+//            if (dist < MinDist)
+//            {
+//                MinDist = dist;
+//                ClosestTargetIndex = i;
+//            }
+//        }
+
+//    }
+//    target = targets[ClosestTargetIndex].GetComponent<Enemy>();
+
+//    if (target != null)
+
+//        return true;
+//    else
+//        return false;
+//}
+//target = null;
+//return false;

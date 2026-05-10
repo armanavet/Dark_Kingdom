@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] SoundData music;
+    AudioSource music;
     static bool IsPaused;
     Coroutine musicRoutine;
     public event Action OnWaveIntroFinished;
@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<GameManager>();
+                _instance = FindFirstObjectByType<GameManager>();
             }
 
             return _instance;
@@ -31,7 +31,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AudioManager.Instance.Initialize();
-        music = AudioManager.Instance.SetData(SoundDataType.Music);
+        music = GetComponent<AudioSource>();
+        if (music == null)
+        {
+            Debug.LogError($"The {this} has no audio source!");
+        }
         UIManager.Instance.Initialize();
         PortalManager.Instance.Initialize();
         TowerManager.Instance.Initialize();
@@ -49,18 +53,11 @@ public class GameManager : MonoBehaviour
     }
     public void PlayMusic(GameState state)
     {
-        if (music == null)
-        {
-            Debug.LogError("Music data is null");
-            return;
-        }
-
         if (musicRoutine != null)
         {
             StopCoroutine(musicRoutine);
             musicRoutine = null;
         }
-
         musicRoutine = StartCoroutine(ChooseTheMusic(state));
     }
     public void PauseGame()
@@ -80,21 +77,21 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator ChooseTheMusic(GameState state)
     {
-        if (AudioManager.Instance == null || music == null)
+        if (AudioManager.Instance == null)
         {
-            Debug.LogWarning("I got null");
+            Debug.LogWarning($"The {AudioManager.Instance} is null");
             yield break;
         }
         if (state == GameState.Passive)
         {
-            AudioManager.Instance.Play(MusicType.InNormal, music, transform);
+            //AudioManager.Instance.Play(MusicType.InNormal, music);
         }
         else if (state == GameState.Active)
         {
-            AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music, transform);
-            yield return new WaitForSeconds(music.clip.length);
+            //AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music);
+            //yield return new WaitForSeconds(music.clip.length);
             OnWaveIntroFinished?.Invoke();
-            AudioManager.Instance.Play(MusicType.InWave, music, transform);
+            //AudioManager.Instance.Play(MusicType.InWave, music);
         }
     }
     void OnEnable()

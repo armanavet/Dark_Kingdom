@@ -10,6 +10,8 @@ public class ExplosionEnemy : Enemy
     [SerializeField] float radius;
     [SerializeField] GameObject[] Effects;
     List<GameObject> effectsToDestroy = new List<GameObject>();
+    public override int GetTargetPriority() => 40;
+
     void Start()
     {
         SetParameters();
@@ -25,6 +27,7 @@ public class ExplosionEnemy : Enemy
 
     private void Explode()
     {
+
         Collider[] targets = Physics.OverlapSphere(transform.position, radius, towerMask);
         if (targets.Length > 0)
         {
@@ -33,14 +36,40 @@ public class ExplosionEnemy : Enemy
                 targets[i].GetComponent<Tower>().ApplyDamage(damage);
             }
         }
+        DebuffManager.Instance.RemoveTarget(this);
         WaveManager.Instance.OnEnemyDeath(this);
         StartCoroutine(DestroyObject(Effects));
     }
+    public void StartScaling()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float length = stateInfo.length;
 
+        StartCoroutine(ScaleOverTime(new Vector3(2, 2, 2), length));
+    }
+    IEnumerator ScaleOverTime(Vector3 targetScale, float duration)
+    {
+        Vector3 startScale = transform.localScale;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            transform.localScale = Vector3.Lerp(
+                startScale,
+                targetScale,
+                time / duration
+            );
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = targetScale;
+    }
     IEnumerator DestroyObject(GameObject[] effects)
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
-        yield return new WaitForSeconds(SoundData.clip.length);
+        gameObject.SetActive(false);
         GameObject effect;
         foreach (var item in effects)
         {
@@ -48,7 +77,6 @@ public class ExplosionEnemy : Enemy
             effectsToDestroy.Add(effect);
         }
         yield return new WaitForSeconds(0.9f);
-        gameObject.SetActive(false);
         foreach (var item in effectsToDestroy)
         {
             Destroy(item.gameObject);

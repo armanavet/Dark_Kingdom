@@ -9,6 +9,7 @@ public class TowerManager : MonoBehaviour, ISaveable
 {
     public Tower[] TowerPrefabs;
     public TowerPreview[] TowerPreviews;
+    public TowerDescriptionsSO TowerDescriptions;
     Dictionary<TowerType, Tower> prefabsByType = new Dictionary<TowerType, Tower>();
     Dictionary<TowerType, TowerPreview> previewsByType = new Dictionary<TowerType, TowerPreview>();
     [HideInInspector] public List<Tower> Towers;
@@ -22,7 +23,7 @@ public class TowerManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<TowerManager>();
+                _instance = FindFirstObjectByType<TowerManager>();
             }
 
             return _instance;
@@ -64,7 +65,7 @@ public class TowerManager : MonoBehaviour, ISaveable
     public Tower BuildTower(TowerType type, Tile tile)
     {
         Tower prefab = GetPrefabByType(type);
-        Transform parentObject = FindObjectOfType<TowerManager>().transform;
+        Transform parentObject = FindFirstObjectByType<TowerManager>().transform;
 
         Tower tower = Instantiate(prefab, tile.transform.position, Quaternion.identity, parentObject);
         tower.tile = tile;

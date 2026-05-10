@@ -9,13 +9,13 @@ public class MageEnemy : Enemy
     [SerializeField] Mage mage;
     [SerializeField] Transform shootingPoint;
     [SerializeField] float projectileSpeed;
-    [SerializeField] Transform targetModel;
     [SerializeField] GameObject fire;
 
     float TarggetPoint = 2f;
     float rotationProgress;
     float initialRotation;
     bool facingPath = true;
+    public override int GetTargetPriority() => 40;
 
     private void OnDestroy()
     {
@@ -30,47 +30,36 @@ public class MageEnemy : Enemy
     }
     private void Update()
     {
-        bool targetAcquired = AcquireTarget();
+        bool targetAcquired = AcquireTargets();
         if (targetAcquired == false)
         {
             if (facingPath) Move();
         }
         else
         {
-            facingPath = false;
-            DirectionChange turnDirection = CalculateTurnDirection();
-            switch (turnDirection)
+            if (attackCooldown <= 0)
             {
-                case DirectionChange.TurnLeft:
-                    animator.SetBool("isTurningLeft", true);
-                    break;
-                case DirectionChange.TurnRight:
-                    animator.SetBool("isTurningRight", true);
-                    break;
-                case DirectionChange.None:
+                facingPath = false;
+                initialRotation = transform.eulerAngles.y;
+                bool facingTarget = FaceTarget();
+                if (facingTarget)
+                {
                     Attack();
-                    break;
-
-            }
-            initialRotation = transform.eulerAngles.y;
-            bool facingTarget = FaceTarget();
-            if (facingTarget)
-            {
-                Attack();
-            }
-            else
-            {
-                facingPath = true;
-                return;
+                    attackCooldown = 1 / attackSpeed;
+                }
+                else
+                {
+                    facingPath = true;
+                    return;
+                }
             }
         }
+        attackCooldown -= Time.deltaTime;
     }
     protected override void Attack()
     {
-        animator.SetBool("isTurningLeft", false);
-        animator.SetBool("isTurningRight", false);
-        animator.SetBool("isMoving", false);
-        animator.SetBool("isAttacking", true);
+        animator.SetBool(IsMoving, false);
+        animator.SetBool(IsAttacking, true);
     }
     public void LaunchProjectile()
     {
@@ -84,7 +73,7 @@ public class MageEnemy : Enemy
             StartCoroutine(HitTarget(arrow, travelTime));
         }
     }
-    protected override bool AcquireTarget()
+    protected override bool AcquireTargets()
     {
         if (target != null) return true;
         Collider[] targets = Physics.OverlapSphere(transform.position, TarggetPoint, towerMask);
@@ -121,19 +110,12 @@ public class MageEnemy : Enemy
     {
         yield return new WaitForSeconds(arriveTime);
 
-        GameObject fireObj = Instantiate(fire, target.transform.position, Quaternion.identity);
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
         if (target != null)
         {
+            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);
-
-        if (fireObj != null)
-        {
-            yield return new WaitForSeconds(3f);
-            Destroy(fireObj);
-        }
     }
 
     bool FaceTarget()
@@ -145,11 +127,10 @@ public class MageEnemy : Enemy
             float rotationTime = rotationDifference / rotationSpeed;
             rotationProgress += Time.deltaTime / rotationTime;
             float yRotation = Mathf.LerpAngle(model.eulerAngles.y, targetYRotation, rotationProgress);
-
-            return false;
+            model.rotation = Quaternion.Euler(model.rotation.x, yRotation, model.rotation.z);
+            return true;
         }
-        model.rotation = Quaternion.Euler(model.rotation.x, targetYRotation, model.rotation.z);
-        return true;
+        return false;
     }
     IEnumerator FacePath()
     {
@@ -163,7 +144,7 @@ public class MageEnemy : Enemy
         facingPath = true;
     }
 
-    void StartTurning()
+    void StartTurning(Tower target)
     {
         target.OnDestroyed -= StartTurning;
         StartCoroutine(FacePath());

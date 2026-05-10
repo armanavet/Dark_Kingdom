@@ -1,6 +1,5 @@
 using DG.Tweening;
 //using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,15 +7,21 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 using AudioSystem;
-using UnityEditor.UI;
-using UnityEngine.Rendering;
-using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] public HealthBar MainTowerHB;
-    [SerializeField] TextMeshProUGUI goldText, timerText, waveText, activeStateText;
+    [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
     [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
+    [SerializeField] private Slider activeStateSlider, passiveStateSlider;
+    [SerializeField] Transform activeStateWarningParent;
+    [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
+    [SerializeField] TextMeshProUGUI activeStateWarningText;
+    [SerializeField] private float activeStateEnableDuration = 3f;
+    [SerializeField] private float activeStateUptime = 15.5f;
+    [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
+    [SerializeField] private float activeStateDisableDuration = 0.5f;
+    [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
     [Tooltip("How far down the panel moves to hide behind the screen.")]
     [SerializeField] GameObject[] effects;
     [SerializeField] LayerMask towerMask, tileMask;
@@ -24,6 +29,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] float towerPanelYOffset;
     [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
+
+    [Header("ObjectivesPanel")]
+    [SerializeField] private Button objectivesButton;
+    [SerializeField] private RectTransform objectivesPanel;
+    [SerializeField] private Vector2 objectivesOpenedPosition = new Vector2(-190, -265);
+    [SerializeField] private Vector2 objectivesClosedPosition = new Vector2(-163, -58);
+    [SerializeField] private float objectivesEnableDuration = 0.3f;
+    [SerializeField] private float objectivesDisableDuration = 0.3f;
+    [SerializeField] private Ease objectivesEnableEase = Ease.OutExpo;
+    [SerializeField] private Ease objectivesDisableEase = Ease.InExpo;
+
+    [Header("Description Popup")]
+    [SerializeField] private GameObject descriptionPopup;
+    [SerializeField] private TextMeshProUGUI descriptionText;
 
     GameState currentState;
     Camera mainCamera;
@@ -44,7 +63,7 @@ public class UIManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<UIManager>();
+                _instance = FindFirstObjectByType<UIManager>();
             }
 
             return _instance;
@@ -58,12 +77,18 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
         StrategyManager.OnStrategyChanged += OnStrategyChanged;
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+        objectivesButton.onClick.AddListener(ShowObjectivesPanel);
     }
 
     private void OnDisable()
     {
         StrategyManager.OnStrategyChanged -= OnStrategyChanged;
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+        objectivesButton.onClick.RemoveAllListeners();
     }
 
     public void Initialize()
@@ -76,17 +101,29 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
         UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
+
+        objectivesClosedPosition = objectivesButton.transform.position;
+        objectivesPanel.position = objectivesClosedPosition;
+        objectivesPanel.gameObject.SetActive(false);
+
+        descriptionPopup.SetActive(false);
     }
+
     void LateUpdate()
     {
-        goldText.text = EconomyManager.Instance.CurrentGold.ToString();
-        timerText.text = Mathf.Round(GameTimer).ToString();
-
+        goldText.text = EconomyManager.Instance.CurrentCrystal.ToString();
     }
+
     void Update()
     {
         ChangeUiButtonVisibility();
         ShowTowerHealthBar();
+
+        if (descriptionPopup.activeSelf)
+        {
+            descriptionPopup.transform.position = Input.mousePosition;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (IsClickOnTowerPanelUI()) { return; } // Check if the click was performed on the Tower UI panel
@@ -115,7 +152,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
         {
             var tower = TowerManager.Instance.TowerPrefabs[i];
-            if (tower.PurchasePrice < EconomyManager.Instance.CurrentGold)
+            if (tower.PurchasePrice < EconomyManager.Instance.CurrentCrystal)
             {
                 towerPurchaseButtons[i].interactable = true;
             }
@@ -150,6 +187,42 @@ public class UIManager : MonoBehaviour
             if (activeBar != null) activeBar.SetActive(false);
         }
     }
+
+    public void UpdateTimer(float remaining, float total)
+    {
+        if (currentState != GameState.Passive) return;
+        remaining = Mathf.Max(remaining, 0);
+
+        timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
+                         $"{Mathf.FloorToInt(remaining % 60f)}";
+        passiveStateSlider.value = remaining / total;
+    }
+
+    public void UpdateEnemyCount(float remaining, float total)
+    {
+        if (currentState != GameState.Active) return;
+
+        activeStateSlider.value = remaining / total;
+    }
+
+    public void ShowObjectivesPanel()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        if (!objectivesPanel.gameObject.activeSelf)
+        {
+            seq.AppendCallback(() => objectivesPanel.gameObject.SetActive(true))
+               .Append(objectivesPanel.DOScale(1f, objectivesEnableDuration).SetEase(objectivesEnableEase))
+               .Join(objectivesPanel.DOAnchorPos(objectivesOpenedPosition, objectivesEnableDuration).SetEase(objectivesEnableEase));
+        }
+        else
+        {
+            seq.Append(objectivesPanel.DOScale(0, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .Join(objectivesPanel.DOMove(objectivesClosedPosition, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .AppendCallback(() => objectivesPanel.gameObject.SetActive(false));
+        }
+    }
+
     void ShowTowerPanel(bool value, Transform selectedTower = null)
     {
         if (value == true)
@@ -243,15 +316,26 @@ public class UIManager : MonoBehaviour
         }
         else if (currentState == GameState.Active)
         {
-            activeStatePanel.SetActive(true);
-            passiveStatePanel.SetActive(false);
-            waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            if (WaveManager.Instance.CurrentWave == WaveManager.Instance.waveLength)
-            {
-                activeStateText.text = string.Empty;
-                activeStateText.text = "Destroy The Portal!";
-                waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
-            }
+            activeStateWarningParent.gameObject.SetActive(true);
+            activeStateWarningParent.localScale = Vector3.zero;
+            Sequence seq = DOTween.Sequence();
+            seq.Append(activeStateWarningParent.DOScale(1f, activeStateEnableDuration)).SetEase(activeStateEnableEase)
+               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .AppendInterval(activeStateUptime)
+               .Append(activeStateWarningImage.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningIcon.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningText.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
+               .OnComplete(() =>
+               {
+                   activeStateWarningParent.gameObject.SetActive(false);
+                   activeStatePanel.SetActive(true);
+                   passiveStatePanel.SetActive(false);
+                   waveText.text = "Wave: " + WaveManager.Instance.CurrentWave.ToString();
+                   activeStateSlider.value = 1f;
+               });
         }
         else if (currentState == GameState.End)
         {
@@ -290,6 +374,18 @@ public class UIManager : MonoBehaviour
         HitPointPopup.HitPointText(damage);
     }
 
+    public void ShowTowerDescription(int type)
+    {
+        descriptionPopup.SetActive(true);
+        string description = TowerManager.Instance.TowerDescriptions.GetByType((TowerType)type);
+        descriptionText.text = description;
+    }
+
+    public void HideDescription()
+    {
+        descriptionPopup.SetActive(false);
+    }
+
     Quaternion LookAtCamera(Transform cameraTransform)
     {
         return Quaternion.LookRotation(cameraTransform.forward);
@@ -305,19 +401,11 @@ public class UIManager : MonoBehaviour
 
         return results.Any(r => r.gameObject.CompareTag("TowerUIPanel"));
     }
-    private void OnEnable()
-    {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-    }
-
-    private void OnDisable()
-    {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
-    }
 
     void HandleStateChanged(GameState state)
     {
         currentState = state;
     }
+
+    
 }

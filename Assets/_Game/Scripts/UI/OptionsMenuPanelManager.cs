@@ -14,7 +14,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
     [SerializeField] Slider volumeSlider = null;
     [SerializeField] GameObject confirmationPrompt = null;
     [SerializeField] float defaultVolume = 0.5f;
-    
+
 
     [Header("Graphic Setting")]
     [SerializeField] Slider brightnessSlider = null;
@@ -43,14 +43,26 @@ public class OptionsMenuPanelManager : MonoBehaviour
 
     void Awake()
     {
-        foreach (Button btn in FindObjectsOfType<Button>(true))
+        foreach (Button btn in FindObjectsByType<Button>(
+                               FindObjectsInactive.Include,
+                               FindObjectsSortMode.None))
+        {
             btn.onClick.AddListener(() => n_BTAudioPlay());
+        }
 
-        foreach (Toggle toggle in FindObjectsOfType<Toggle>(true))
+        foreach (Toggle toggle in FindObjectsByType<Toggle>(
+                                  FindObjectsInactive.Include,
+                                  FindObjectsSortMode.None))
+        {
             toggle.onValueChanged.AddListener((_) => n_BTAudioPlay());
+        }
 
-        foreach (Dropdown dropdown in FindObjectsOfType<Dropdown>(true))
+        foreach (Dropdown dropdown in FindObjectsByType<Dropdown>(
+                                      FindObjectsInactive.Include,
+                                      FindObjectsSortMode.None))
+        {
             dropdown.onValueChanged.AddListener((_) => n_BTAudioPlay());
+        }
     }
     private void Start()
     {
@@ -104,7 +116,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
             f_BTVolumeApply();
         }
 
-        if(MenuType == "Graphics")
+        if (MenuType == "Graphics")
         {
             brightnessSlider.value = defaultBrightness;
             brightnessTextVolume.text = defaultBrightness.ToString("0.0");
@@ -116,9 +128,9 @@ public class OptionsMenuPanelManager : MonoBehaviour
             Screen.fullScreen = false;
 
             Resolution currentResolution = Screen.currentResolution;
-            Screen.SetResolution(currentResolution.width, currentResolution.height,Screen.fullScreen);
+            Screen.SetResolution(currentResolution.width, currentResolution.height, Screen.fullScreen);
             resolutionDropdown.value = resolutions.Length;
-            
+
             k_BTGraphicsApply();
         }
     }
@@ -134,13 +146,13 @@ public class OptionsMenuPanelManager : MonoBehaviour
         volumeSlider.value = savedVolume;
         volumeTextValue.text = savedVolume.ToString("0.0");
     }
-    public void h_BTSetBrightness(float brightness) 
+    public void h_BTSetBrightness(float brightness)
     {
         _brightnessLevel = brightness;
         brightnessTextVolume.text = brightness.ToString("0.0");
     }
 
-    public void i_BTSetFullScreen(bool isFullscreen) 
+    public void i_BTSetFullScreen(bool isFullscreen)
     {
         _isFullScreen = isFullscreen;
     }
@@ -154,7 +166,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
         PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
         PlayerPrefs.SetInt("masterQuality", _qualityLevel);
         PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
-        
+
         QualitySettings.SetQualityLevel(_qualityLevel);
         Screen.fullScreen = _isFullScreen;
 
@@ -162,15 +174,15 @@ public class OptionsMenuPanelManager : MonoBehaviour
         savedQuality = _qualityLevel;
         savedFullscreen = _isFullScreen;
         savedResolutionIndex = resolutionDropdown.value;
-        
+
 
 
         StartCoroutine(ConfirmationBox());
     }
-    public void l_BTSetResolution(int resolutionIndex) 
+    public void l_BTSetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height,Screen.fullScreen);
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
     public void m_BTBackButtonGraphics()
     {
@@ -181,7 +193,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
         PlayerPrefs.SetFloat("masterBrightness", savedBrightness);
         brightnessSlider.value = savedBrightness;
         brightnessTextVolume.text = savedBrightness.ToString("0.0");
-        
+
         qualityDropdown.value = savedQuality;
         QualitySettings.SetQualityLevel(savedQuality);
 
@@ -192,7 +204,7 @@ public class OptionsMenuPanelManager : MonoBehaviour
         Resolution resolution = resolutions[savedResolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, savedFullscreen);
 
-        
+
     }
 
     public void n_BTAudioPlay()

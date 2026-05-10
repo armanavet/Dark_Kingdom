@@ -2,11 +2,13 @@ using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour, IDebuffable
+public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
 {
     [Header("Enemy Parameters")]
+    //[SerializeField] HealthBar healthBar = null;
     [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
     [SerializeField] protected UnitType unitType;
@@ -26,17 +28,30 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
+    protected static readonly int IsMoving = Animator.StringToHash("isMoving");
+    protected int IsAttacking;
+    protected Vector3 positionFrom, positionTo;
 
-    Vector3 positionFrom, positionTo;
-    Direction direction;
-    DirectionChange directionChange;
-    float directionAngleFrom, directionAngleTo;
-    float progress, progressFactor;
-    float positionOffset;
+    protected Direction direction;
+    protected DirectionChange directionChange;
+    protected float directionAngleFrom, directionAngleTo;
+    protected float progress, progressFactor;
+    protected float positionOffset;
+
     [HideInInspector] public Vector3 CurrentPosition => model.position;
     [HideInInspector] public UnitType Type => unitType;
     [HideInInspector] public SoundData SoundData => enemySoundData;
+    public float Damage => damage;
+    public Faction faction = Faction.Enemy;
 
+    public Transform GetTransform() => transform;
+
+    public Faction GetFaction() => faction;
+    public float GetHealthPrecent()
+    {
+        return health / maxHP;
+    }
+    public abstract int GetTargetPriority();
     public void OnSpawn(Tile startingTile, float positionOffset)
     {
         tileFrom = startingTile;
@@ -58,8 +73,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     protected virtual void Move()
     {
-        animator.SetBool("isMoving", true);
-        animator.SetBool("isAttacking", false);
+        animator.SetBool(IsMoving, true);
+        animator.SetBool(IsAttacking, false);
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -80,13 +95,12 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     void PrepareNextMove()
     {
-        model.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         positionFrom = positionTo;
         positionTo = tileFrom.exitPoint;
         directionChange = direction.ChangeDirectionTo(tileFrom.pathDirection);
         direction = tileFrom.pathDirection;
         directionAngleFrom = directionAngleTo;
-        AcquireTarget();
+        AcquireTargets();
         switch (directionChange)
         {
             case DirectionChange.None: PrepareMoveForward(); break;
@@ -124,19 +138,32 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     }
     protected void SetParameters()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
-        animator = GetComponent<Animator>();
-        SetSoundData();
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
     }
-    protected void SetSoundData()
+    private void ApplyStats()
+    {
+        currentSpeed = ValidateStat(maxSpeed, currentSpeed);
+        health = ValidateStat(maxHP, health);
+        damage = ValidateStat(maxDamage, damage);
+        attackSpeed = ValidateStat(maxAttackSpeed, attackSpeed);
+    }
+    private float ValidateStat(float maxValue, float fallback)
+    {
+        return maxValue > 0 ? maxValue : fallback;
+    }
+    private void CacheComponents()
+    {
+        animator = GetComponent<Animator>();
+        IsAttacking = Animator.StringToHash("isAttacking");
+    }
+    private void InitializeAudio()
     {
         enemySoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
     }
     protected abstract void Attack();
-    protected virtual bool AcquireTarget()
+    protected virtual bool AcquireTargets()
     {
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
         {
@@ -147,7 +174,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     public void ApplyDamage(float damage)
     {
         if (state == EnemyState.Dead) return;
-
+        //if (healthBar != null) healthBar.SetHealth(damage);
         health -= damage;
         if (health <= 0)
         {
@@ -157,8 +184,11 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
-        if (animator != null) animator?.SetBool("isDead", true);
-        else return;
+        if (animator != null)
+        {
+            animator?.SetBool("isDead", true);
+        }
+        enemySoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
@@ -200,5 +230,7 @@ public enum UnitType
     Flying,
     Illusionist,
     Illusion,
+    Worm,
+    Mushroom,
     Portal
 }

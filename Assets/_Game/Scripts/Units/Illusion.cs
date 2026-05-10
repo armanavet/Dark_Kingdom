@@ -7,13 +7,14 @@ public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
     [SerializeField] float duration;
+    public override int GetTargetPriority() => 60;
+
     void Start()
     {
         currentSpeed = maxSpeed;
         health = maxHP;
         animator = GetComponent<Animator>();
         Destroy(gameObject, duration);
-        //EnemySoundData = AudioManager.Instance.SetData(EnemySoundData, SoundDataType.Enemy, MixerType.Enemy, unitType);
     }
     void Update()
     {

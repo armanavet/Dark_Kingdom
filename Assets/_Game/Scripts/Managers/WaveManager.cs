@@ -1,25 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using System.Linq;
 public class WaveManager : MonoBehaviour, ISaveable
 {
     [Header("Set Wave Parameters")]
     [SerializeField] Units units;
     [SerializeField] Wave[] waves;
     [SerializeField] float delayBetweenSpawns;
+    [SerializeField] int increaseBy;
     List<Enemy> spawnedEnemies = new List<Enemy>();
     Wave enemiesToSpawn;
 
-    int currentWave = 0;
+    int currentWaveIndex = 0;
+    bool lastEnemy = false;
     bool cantFindPath;
     bool isLastWave;
+    float totalEnemies, enemiesLeft;
     [Header("for testing")]
     public int waveLength;
 
-    public int CurrentWave => currentWave;
+    public int CurrentWaveIndex => currentWaveIndex;
+    public int CurrentWave => currentWaveIndex + 1;
     #region Singleton 
     private static WaveManager _instance;
     public static WaveManager Instance
@@ -28,7 +32,7 @@ public class WaveManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<WaveManager>();
+                _instance = FindFirstObjectByType<WaveManager>();
             }
 
             return _instance;
@@ -47,6 +51,18 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
 
     #region Prepare The Spawn
+    int CountUnits(Wave wave)
+    {
+        int count = 0;
+        foreach (var enemy in wave.Enemies)
+        {
+            if (enemy.Type == UnitType.Worm)
+            {
+                count = enemy.Count;
+            }
+        }
+        return count;
+    }
     void TotalEnemiesInWave(int currentWave)
     {
         spawnedEnemies.Clear();
@@ -56,12 +72,13 @@ public class WaveManager : MonoBehaviour, ISaveable
     {
         if (waves == null || waves.Length == 0) return;
 
-        if (currentWave == waves.Length - 1) isLastWave = true;
-        TotalEnemiesInWave(currentWave);
-        PortalManager.Instance.CalculateActivePortals(currentWave);
+        if (currentWaveIndex == waves.Length - 1) isLastWave = true;
+        TotalEnemiesInWave(currentWaveIndex);
+        PortalManager.Instance.CalculateActivePortals(currentWaveIndex);
     }
     public void StartSpawn()
     {
+        WormManager.Instance.CalculateSpawnPoints();
         foreach (var portal in PortalManager.Instance.ActivePortals) portal.SpawnTile.Corrupt();
         StartCoroutine(SpawnFlow(PortalManager.Instance.ActivePortals, enemiesToSpawn));
     }
@@ -69,6 +86,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     #region Spawn
     IEnumerator SpawnFlow(List<Portal> activePortals, Wave wave)
     {
+        WormManager.Instance.Spawn();
         yield return StartCoroutine(ManagePortalVisuals(activePortals, "activate"));
 
         yield return StartCoroutine(SpawnUnits(activePortals, wave));
@@ -95,7 +113,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     IEnumerator SpawnUnits(List<Portal> activePortals, Wave wave)
     {
-        int totalEnemies = wave.Enemies.Sum(e => e.Count);
+        enemiesLeft = totalEnemies = wave.Enemies.Sum(e => e.Count);
         int spawned = 0;
         int startIndex = Random.Range(0, activePortals.Count);
         foreach (var enemyType in wave.Enemies)
@@ -113,6 +131,7 @@ public class WaveManager : MonoBehaviour, ISaveable
                     (prefab,
                         portal.SpawnTile.transform.position,
                             portal.SpawnTile.pathDirection.GetRotation());
+
                 Enemy script = enemy.GetComponent<Enemy>();
                 spawnedEnemies.Add(script);
                 script.OnSpawn(portal.SpawnTile, 0f);
@@ -122,6 +141,7 @@ public class WaveManager : MonoBehaviour, ISaveable
                 startIndex++;
                 spawned++;
                 if (spawned < totalEnemies) yield return new WaitForSeconds(delayBetweenSpawns);
+                else lastEnemy = true;
             }
         }
         yield break;
@@ -134,7 +154,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     void EndWave(bool endImmediately = false)
     {
-        currentWave++;
+        currentWaveIndex++;
         enemiesToSpawn = null;
         spawnedEnemies.Clear();
         PortalManager.Instance.Clear();
@@ -148,7 +168,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     }
     void RepeatLastWave()
     {
-        TotalEnemiesInWave(currentWave);
+        TotalEnemiesInWave(currentWaveIndex);
         StartCoroutine(SpawnUnits(PortalManager.Instance.ActivePortals, enemiesToSpawn));
     }
     void Check()
@@ -163,13 +183,14 @@ public class WaveManager : MonoBehaviour, ISaveable
     public void OnEnemyDeath(Enemy enemy)
     {
         if (!spawnedEnemies.Contains(enemy)) return;
-
         spawnedEnemies.Remove(enemy);
-        if (spawnedEnemies.Count <= 0)
+        enemiesLeft--;
+        UIManager.Instance.UpdateEnemyCount(enemiesLeft, totalEnemies);
+        if (spawnedEnemies.Count <= 0 && lastEnemy == true)
             Check();
     }
     #endregion
-    #region Link with Portal Manager
+    #region Link with Managerd
     private void OnEnable()
     {
         StateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
@@ -196,7 +217,6 @@ public class WaveManager : MonoBehaviour, ISaveable
                 break;
 
             case GameState.Active:
-                // spawning will be triggered by GameManager event
                 break;
         }
     }
@@ -216,14 +236,14 @@ public class WaveManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentWave = currentWave;
+        saveData.CurrentWave = currentWaveIndex;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentWave = saveData.CurrentWave;
+        currentWaveIndex = saveData.CurrentWave;
     }
 
 }

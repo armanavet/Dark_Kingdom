@@ -1,10 +1,7 @@
 ﻿using AudioSystem;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //public interface ISoundKey { }
 public class AudioManager : MonoBehaviour
@@ -19,10 +16,11 @@ public class AudioManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<AudioManager>();
+                _instance = FindFirstObjectByType<AudioManager>();
                 if (_instance == null)
                 {
-                    Debug.LogError("AudioManager not found in the scene!");
+                    //Debug.LogError("AudioManager not found in the scene!");
+                    Debug.LogWarning("AudioManager not found in the scene!");
                 }
             }
             return _instance;
@@ -55,6 +53,13 @@ public class AudioManager : MonoBehaviour
     {
         return sourceBank.GetData(soundDataType);
     }
+    public void Play<T>(T soundType, AudioSource data)
+        where T : Enum
+    {
+        if (data.clip != null) data.clip = null;
+        data.clip = soundBank.GetClip(soundType);
+        data.Play();
+    }
     public void Play<T>(T soundType, SoundData data, Transform target = null)
         where T : Enum
     {
@@ -63,11 +68,10 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound system is not configured correctly.");
             return;
         }
-
+        data.clip = null;
         data.clip = soundBank.GetClip(soundType);
 
         Vector3 position = target != null ? target.position : transform.position;
-
         SoundManager.Instance
             .CreateSoundBuilder()
             .WithPosition(position)
@@ -83,15 +87,33 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound system is not configured correctly.");
             return;
         }
-
+        Debug.Log(data.volume);
         data.clip = soundBank.GetClip(sourcType, soundType);
 
         Vector3 position = target != null ? target.position : transform.position;
 
         SoundManager.Instance
             .CreateSoundBuilder()
-            .WithPosition(transform.position)
-            .WithRandomPitch()
+            .WithPosition(position)
+            .Play(data);
+    }
+    public void Play<T_Sound, T_Source>(T_Source sourcType, T_Sound soundType, int index, SoundData data, Transform target)
+        where T_Sound : Enum
+            where T_Source : Enum
+    {
+        if (data == null || soundBank == null)
+        {
+            Debug.LogError("Sound system is not configured correctly.");
+            return;
+        }
+
+        data.clip = soundBank.GetClip(sourcType, soundType, index);
+
+        Vector3 position = target != null ? target.position : transform.position;
+
+        SoundManager.Instance
+            .CreateSoundBuilder()
+            .WithPosition(position)
             .Play(data);
     }
     public void Stop()
@@ -152,7 +174,10 @@ public enum GamePlaySFX_Type
     PortalGate,
     PortalOrb,
     PortalTopFire,
-    PortalScreaming
+    PortalScreaming,
+    WormBreakingThrough,
+    WormDiveIn,
+    WormRoar,
 }
 //public enum AmbientType
 //{

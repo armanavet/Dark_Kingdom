@@ -15,7 +15,7 @@ MonoBehaviour:
   Entries:
   - Type: 6
     Clips:
-    - {fileID: 8300000, guid: baf6e8e0d6a18ab42a4de406b96ac079, type: 3}
+    - {fileID: 8300000, guid: d4a6f875000f8804baf5b69443dfa28d, type: 3}
   - Type: 7
     Clips:
     - {fileID: 8300000, guid: 46be59a17acdc044da8f12dbdfe7b6ed, type: 3}
