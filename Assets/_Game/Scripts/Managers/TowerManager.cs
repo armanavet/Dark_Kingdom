@@ -9,6 +9,7 @@ public class TowerManager : MonoBehaviour, ISaveable
 {
     public Tower[] TowerPrefabs;
     public TowerPreview[] TowerPreviews;
+    public TowerDescriptionsSO TowerDescriptions;
     Dictionary<TowerType, Tower> prefabsByType = new Dictionary<TowerType, Tower>();
     Dictionary<TowerType, TowerPreview> previewsByType = new Dictionary<TowerType, TowerPreview>();
     [HideInInspector] public List<Tower> Towers;
