@@ -21,20 +21,23 @@ public class StrategyManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        ChangeStrategy(0);
     }
     #endregion
 
     [SerializeField] private StrategyDatabaseSO strategyDB;
     [SerializeField] private StrategyType currentStrategy;
     [SerializeField] private float timer;
+    private float cooldown;
     private bool canSwitch = true;
 
     public StrategyType CurrentStrategy => currentStrategy;
-    public static event Action<StrategyType> OnStrategyChanged;
+    public static event Action<Strategy> OnStrategyChanged;
 
     private void Update()
     {
         timer -= Time.deltaTime;
+        UIManager.Instance.UpdateStrategyCooldown(timer, cooldown);
         if (timer <= 0)
         {
             canSwitch = true;
@@ -54,10 +57,10 @@ public class StrategyManager : MonoBehaviour, ISaveable
 
         currentStrategy = newStrategy;
         Strategy s = strategyDB.GetByType(newStrategy);
-        timer = s.Cooldown;
+        timer = cooldown = s.Cooldown;
         canSwitch = false;
 
-        OnStrategyChanged?.Invoke(newStrategy);
+        UIManager.Instance.OnStrategyChanged(s);
     }
 
     public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
@@ -78,6 +81,6 @@ public class StrategyManager : MonoBehaviour, ISaveable
     {
         GeneralData saveData = data as GeneralData;
         currentStrategy = saveData.CurrentStrategy;
-        OnStrategyChanged?.Invoke(currentStrategy);
+        ChangeStrategy((int)currentStrategy);
     }
 }

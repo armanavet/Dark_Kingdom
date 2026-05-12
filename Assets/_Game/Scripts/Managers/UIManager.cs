@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
 
-    [Header("ObjectivesPanel")]
+    [Header("Objectives Panel")]
     [SerializeField] private Button objectivesButton;
     [SerializeField] private RectTransform objectivesPanel;
     [SerializeField] private Vector2 objectivesOpenedPosition = new Vector2(-190, -265);
@@ -39,6 +39,22 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float objectivesDisableDuration = 0.3f;
     [SerializeField] private Ease objectivesEnableEase = Ease.OutExpo;
     [SerializeField] private Ease objectivesDisableEase = Ease.InExpo;
+
+    [Header("Strategy Panel")]
+    [SerializeField] private RectTransform currentStrategy;
+    [SerializeField] private RectTransform allStrategies;
+    [SerializeField] private RectTransform strategyShadow;
+    [SerializeField] private Button changeStrategyButton;
+    [SerializeField] private Button[] allStrategyButtons;
+    [SerializeField] private UnityEngine.UI.Outline currentStrategyOutline;
+    [SerializeField] private Image currentStrategyIcon;
+    [SerializeField] private Image strategyCooldown;
+    [SerializeField] private float strategiesEnableDuration;
+    [SerializeField] private Ease strategiesEnableEase;
+    [SerializeField] private float strategiesDisableDuration;
+    [SerializeField] private Ease strategiesDisableEase;
+    private Sequence showStrategiesSeq;
+    private Sequence hideStrategiesSeq;
 
     [Header("Description Popup")]
     [SerializeField] private GameObject descriptionPopup;
@@ -78,14 +94,12 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-        StrategyManager.OnStrategyChanged += OnStrategyChanged;
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
         objectivesButton.onClick.AddListener(ShowObjectivesPanel);
     }
 
     private void OnDisable()
     {
-        StrategyManager.OnStrategyChanged -= OnStrategyChanged;
         if (StateManager.Instance != null)
             StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
         objectivesButton.onClick.RemoveAllListeners();
@@ -105,6 +119,8 @@ public class UIManager : MonoBehaviour
         objectivesClosedPosition = objectivesButton.transform.position;
         objectivesPanel.position = objectivesClosedPosition;
         objectivesPanel.gameObject.SetActive(false);
+
+        SetupStrategies();
 
         descriptionPopup.SetActive(false);
     }
@@ -196,6 +212,18 @@ public class UIManager : MonoBehaviour
         timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
                          $"{Mathf.FloorToInt(remaining % 60f)}";
         passiveStateSlider.value = remaining / total;
+    }
+
+    public void UpdateStrategyCooldown(float remaining, float total)
+    {
+        if (remaining <= 0)
+        {
+            strategyCooldown.fillAmount = 0;
+            changeStrategyButton.interactable = true;
+            return;
+        }
+
+        strategyCooldown.fillAmount = remaining / total;
     }
 
     public void UpdateEnemyCount(float remaining, float total)
@@ -352,9 +380,12 @@ public class UIManager : MonoBehaviour
          */
     }
 
-    private void OnStrategyChanged(StrategyType newStrategy)
+    public void OnStrategyChanged(Strategy newStrategy)
     {
-        if (newStrategy == StrategyType.Construction)
+        currentStrategyIcon.sprite = newStrategy.Icon;
+        changeStrategyButton.interactable = false;
+
+        if (newStrategy.Type == StrategyType.Construction)
         {
             ShowTowerPurchasePanel(true);
         }
@@ -362,6 +393,62 @@ public class UIManager : MonoBehaviour
         {
             ShowTowerPurchasePanel(false);
             PlaceTower(false);
+        }
+    }
+
+    private void SetupStrategies()
+    {
+        showStrategiesSeq = DOTween.Sequence().SetUpdate(true).SetAutoKill(false);
+        showStrategiesSeq.AppendCallback(() =>
+        {
+            currentStrategyOutline.enabled = false;
+            allStrategies.gameObject.SetActive(true);
+            strategyShadow.DOKill(false);
+            allStrategies.DOKill(false);
+        })
+        .Join(allStrategies.DOAnchorMax(Vector2.one, strategiesEnableDuration).From(new Vector2(1 / 3f, 1f)).SetEase(strategiesEnableEase))
+        .Join(strategyShadow.DOAnchorMax(Vector2.one, strategiesEnableDuration).From(new Vector2(1 / 3f, 1f)).SetEase(strategiesEnableEase))
+        .OnComplete(() =>
+        {
+            currentStrategy.gameObject.SetActive(false);
+        });
+        showStrategiesSeq.Pause();
+
+
+
+        hideStrategiesSeq = DOTween.Sequence().SetUpdate(true).SetAutoKill(false);
+        hideStrategiesSeq.AppendCallback(() =>
+        {
+            currentStrategy.gameObject.SetActive(true);
+            allStrategies.DOKill(false);
+            strategyShadow.DOKill(false);
+        })
+        .Join(allStrategies.DOAnchorMax(new Vector2(1 / 3f, 1f), strategiesDisableDuration).SetEase(strategiesDisableEase))
+        .Join(strategyShadow.DOAnchorMax(new Vector2(1 / 3f, 1f), strategiesDisableDuration).SetEase(strategiesDisableEase))
+        .OnComplete(() =>
+        {
+            allStrategyButtons[(int)StrategyManager.Instance.CurrentStrategy].transform.SetSiblingIndex(0);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(allStrategies);
+            allStrategies.gameObject.SetActive(false); currentStrategyOutline.enabled = true;
+        });
+        hideStrategiesSeq.Pause();
+
+        currentStrategy.gameObject.SetActive(true);
+        currentStrategyOutline.enabled = true;
+        strategyCooldown.fillAmount = 0;
+        changeStrategyButton.interactable = true;
+        allStrategies.gameObject.SetActive(false);
+    }
+
+    public void ShowStrategies(bool value)
+    {
+        if (value)
+        {
+            showStrategiesSeq.Restart();
+        }
+        else
+        {
+            hideStrategiesSeq.Restart();
         }
     }
 
@@ -407,5 +494,5 @@ public class UIManager : MonoBehaviour
         currentState = state;
     }
 
-    
+
 }
