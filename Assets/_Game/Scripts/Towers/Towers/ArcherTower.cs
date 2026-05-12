@@ -52,7 +52,7 @@ public class ArcherTower : Tower
             HandleCapturedState();
         }
 
-        if (!isCaptured && StrategyManager.Instance.CurrentStrategy != StrategyType.Battle)
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle)
         {
             return;
         }
