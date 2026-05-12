@@ -67,11 +67,10 @@ public class MainTower : Tower
 
     private void Update()
     {
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
-
         foreach (var defender in Defender)
         {
             defender.cooldown -= Time.deltaTime;
+            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) continue;
 
             if (defender.cooldown <= 0)
             {
