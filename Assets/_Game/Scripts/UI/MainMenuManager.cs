@@ -51,28 +51,29 @@ public class MainMenuManager : MonoBehaviour
     #endregion
     void Load()
     {
+        SettingsManager.Initialize();
+        B_start.onClick.AddListener(OnStartClikced);
+        B_settings.onClick.AddListener(OnSettingsClicked);
+        B_quit.onClick.AddListener(OnQuitClicked);
+        B_back_Start.onClick.AddListener(OnReturnFromStartGame);
+        B_back_Settings.onClick.AddListener(OnReturnFromSettings);
+
         P_main.SetActive(true);
         P_start.SetActive(false);
         P_settings.SetActive(false);
-        SettingsManager.Load();
     }
-    public event Action OnBackFromSettings;
     void OnStartClikced()
     {
-        //Close the Main Menu panel and open the start new game/load.
         P_main.SetActive(false);
         P_start.SetActive(true);
     }
     void OnSettingsClicked()
     {
-        //Close the Main Menu panel and open the Settings panel.
-        //SettingsManager.Instance.OnPlayerAction -= CloseSettingsMenu;
         P_main.SetActive(false);
         P_settings.SetActive(true);
     }
     void OnQuitClicked()
     {
-        //Quit the game.
         Application.Quit();
     }
 
@@ -110,32 +111,32 @@ public class MainMenuManager : MonoBehaviour
 
 }
 
-    //------ Old logic:
-    //public string _SceneToLoad;
-    //int id;
-    //[SerializeField] List<SavePanelInfo> savePanelInfos;
-    //private void Start()
-    //{
-    //    for (int i = 1; i <= savePanelInfos.Count; i++)
-    //    {
-    //        SaveMetaData data = SaveManager.LoadMetaData(i);
-    //        savePanelInfos[i - 1].test(data);
-    //    }
-    //}
-    //public void a_BTStartGame()
-    //{
+//------ Old logic:
+//public string _SceneToLoad;
+//int id;
+//[SerializeField] List<SavePanelInfo> savePanelInfos;
+//private void Start()
+//{
+//    for (int i = 1; i <= savePanelInfos.Count; i++)
+//    {
+//        SaveMetaData data = SaveManager.LoadMetaData(i);
+//        savePanelInfos[i - 1].test(data);
+//    }
+//}
+//public void a_BTStartGame()
+//{
 
-    //    SaveManager.SetSlot(id);
-    //    SaveManager.OnGameStart();
-    //    SceneManager.LoadScene(_SceneToLoad);
-    //}
+//    SaveManager.SetSlot(id);
+//    SaveManager.OnGameStart();
+//    SceneManager.LoadScene(_SceneToLoad);
+//}
 
-    //public void b_BTGetTheSaveSlotId(int id)
-    //{
-    //    this.id = id;
-    //}
-    //public void z_BTExitButton()
-    //{
-    //    Application.Quit();
-    //}
+//public void b_BTGetTheSaveSlotId(int id)
+//{
+//    this.id = id;
+//}
+//public void z_BTExitButton()
+//{
+//    Application.Quit();
+//}
 

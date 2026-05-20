@@ -1,101 +1,176 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 
 public class SettingsManager : MonoBehaviour
 {
     [SerializeField] private SettingsInstaller installer;
-    [SerializeField] private DisplaySettings displaySettings;
-    [SerializeField] private AudioSettings audioSettings;
-    [SerializeField] private ControlsSettings controlsSettings;
+    [SerializeField] private DisplayView displayView;
+    [SerializeField] private QualityView qualityView;
+    [SerializeField] private AudioView audioView;
+    [SerializeField] private ControlsView controlsView;
     [SerializeField]
     private Button
-        B_apply,
+        B_audio,
+        B_video,
+        B_controls,
+        B_save,
         B_reset,
         B_confirm,
         B_deny,
         B_close;
-    [SerializeField] private GameObject P_warning, P_Buttons;//P_Buttons refers to the Apply and reset to Default buttons.  
-    
-    private SettingsViewModel vm;
+    [SerializeField]
+    private GameObject
+        P_warning,
+        P_buttons,//P_buttons refers to the Apply and Revert to Last Saved buttons.  
+        P_audio,
+        P_video,
+        P_controls;
+    private IViewModel[] viewModels;
+    private ControlsViewModel controlsVM;
 
-    
-    public event Action onClosedRequested;
-    
-    public void Load()
+    private Action onApplyConfirmed;
+    private Action onDenyConfirmed;
+    private void OnDisable()
     {
-        vm = installer.ViewModel;
+        if (controlsVM != null && controlsVM.IsRebinding)
+            controlsVM.CancelRebind();
+    }
+    public void Initialize()
+    {
+        installer.Initialize();
 
-        displaySettings.InitializeData(installer);
-        audioSettings.InitializeData(installer);
-        controlsSettings.InitializeData(installer);
+        viewModels = installer.Sections;
+        controlsVM = installer.ControlsVM;
 
-        B_apply.onClick.AddListener(OnApply);
-        B_reset.onClick.AddListener(OnDefault);
+        displayView.InitializeData(installer);
+        audioView.InitializeData(installer);
+        controlsView.InitializeData(installer);
+        qualityView.InitializeData(installer);
 
-        B_confirm.onClick.AddListener(OnConfirm);
-        B_deny.onClick.AddListener(OnDeny);
+        SetListeners();
+
+        PanelsInitialState();
+
+        foreach (var section in viewModels)
+            section.OnChanged += Refresh;
+        Refresh();
+    }
+    void SetListeners()
+    {
+        B_audio.onClick.AddListener(OnAudioClicked);
+        B_video.onClick.AddListener(OnVideoClicked);
+        B_controls.onClick.AddListener(OnControlsClicked);
+
+        B_save.onClick.AddListener(OnSaveClicked);
+        B_reset.onClick.AddListener(OnDefaultClicked);
+
+        B_confirm.onClick.AddListener(OnWarningApply);
+        B_deny.onClick.AddListener(OnWarnignDeny);
 
         B_close.onClick.AddListener(CloseWarning);
-
-        P_warning?.SetActive(false);
-
-        vm.OnChanged += Refresh;
-        Refresh();
     }
     public void TryExit(Action onExitConfirmed)
     {
-        if (vm.HasChanges)
+        if (AnyHasChanges())
         {
-            onClosedRequested = onExitConfirmed;
-            OpenWarning();
+            ShowWarning(
+                onApply: () => { ApplyAll(); onExitConfirmed?.Invoke(); },
+                onDeny: () => { RevertAllToSaved(); onExitConfirmed?.Invoke(); }
+            );
         }
         else
         {
             onExitConfirmed?.Invoke();
         }
     }
-    void OpenWarning()
+    void OnSaveClicked()
     {
-        P_Buttons.SetActive(false);
-        P_warning.SetActive(true);
+        ShowWarning(
+            onApply: ApplyAll,
+            onDeny: RevertAllToSaved
+            );
+    }
+    void OnDefaultClicked()
+    {
+        foreach (var viewModel in viewModels)
+            viewModel.ResetToDefault();
+    }
+    bool AnyHasChanges()
+    {
+        foreach (var section in viewModels)
+            if (section.HasChanges) return true;
+        return false;
+    }
+    void ApplyAll()
+    {
+        foreach (var section in viewModels)
+            section.Apply();
+    }
+    void RevertAllToSaved()
+    {
+        foreach (var section in viewModels)
+            section?.RevertToSaved();
+    }
+    #region WARNING PANEL
+    void ShowWarning(Action onApply, Action onDeny)
+    {
+        onApplyConfirmed = onApply;
+        onDenyConfirmed = onDeny;
+        P_warning?.SetActive(true);
+    }
+    void HideWarning()
+    {
+        P_warning?.SetActive(false);
+        onApplyConfirmed = null;
+        onDenyConfirmed = null;
+    }
+    void OnWarningApply()
+    {
+        onApplyConfirmed?.Invoke();
+        HideWarning();
+    }
+    void OnWarnignDeny()
+    {
+        onDenyConfirmed?.Invoke();
+        HideWarning();
     }
     void CloseWarning()
     {
+        P_warning?.SetActive(false);
+    }
+    #endregion
+    #region Panels Manage
+    void PanelsInitialState()
+    {
+        P_audio.SetActive(true);
+        P_video.SetActive(false);
+        P_controls.SetActive(false);
         P_warning.SetActive(false);
-        P_Buttons.SetActive(true);
     }
-    void OnApply()
+    void OnAudioClicked()
     {
-        vm.Apply();
-        P_Buttons.SetActive(false);
+        P_video.SetActive(false);
+        P_controls.SetActive(false);
+        P_audio.SetActive(true);
     }
-    void OnDefault()
+    void OnVideoClicked()
     {
-        vm.ResetToDefault();
-        P_Buttons.SetActive(false);
+        P_audio.SetActive(false);
+        P_controls.SetActive(false);
+        P_video.SetActive(true);
     }
-    void OnConfirm()
+    void OnControlsClicked()
     {
-        vm.Apply();
-        ExitSettings();
+        P_audio.SetActive(false);
+        P_video.SetActive(false);
+        P_controls.SetActive(true);
     }
-    void OnDeny()
-    {
-        vm.DenyChanges();
-        ExitSettings();
-    }
-    void ExitSettings()
-    {
-        CloseWarning();
-        onClosedRequested?.Invoke();
-    }
-
+    #endregion
     void Refresh()
     {
-        //P_Buttons.gameObject.SetActive(vm.HasChanges);
-        P_Buttons.gameObject.SetActive(vm.HasChanges);
+        B_save.gameObject.SetActive(AnyHasChanges());
     }
-  
 }

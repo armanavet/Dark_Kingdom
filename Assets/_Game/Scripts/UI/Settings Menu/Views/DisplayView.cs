@@ -1,26 +1,25 @@
 using UnityEngine;
 using TMPro;
 using System.Linq;
-using System;
 using System.Collections.Generic;
-public class DisplaySettings : MonoBehaviour
+public class DisplayView: MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown resolutionDropdown, screenModeDropdown;
-    [Range(1f, 2f)][SerializeField] private float minAspectRatioSize = 1.5f;
-    private List<Resolution> filteredResolutions;
+    private List<Resolution> filteredResolutions = new();
 
     private List<string> screenModes = new List<string>()
     { "Exclusive Fullscreen", "Fullscreen", "Windowed" };
 
-    private SettingsViewModel viewModel;
+    private DisplayViewModel viewModel;
     public void InitializeData(SettingsInstaller installer)
     {
-        viewModel = installer.ViewModel;
+        viewModel = installer.DisplayVM;
         
         resolutionDropdown.ClearOptions();
         screenModeDropdown.ClearOptions();
 
-        filteredResolutions = installer.DisplayService.GetFilteredResolutions();
+        filteredResolutions = installer.DisplayVM.filteredResolutions;
+        Debug.Log(filteredResolutions);
         var options = filteredResolutions
         .Select(r => $"{r.width} x {r.height} @ {r.refreshRateRatio.value:F0}Hz")
         .ToList();
@@ -42,8 +41,8 @@ public class DisplaySettings : MonoBehaviour
     }
     void Refresh()
     {
-        resolutionDropdown.SetValueWithoutNotify(viewModel.PendingDisplayData.ResolutionIndex);
-        screenModeDropdown.SetValueWithoutNotify(viewModel.PendingDisplayData.ScreenModeIndex);
+        resolutionDropdown.SetValueWithoutNotify(viewModel.PendingData.ResolutionIndex);
+        screenModeDropdown.SetValueWithoutNotify(viewModel.PendingData.ScreenModeIndex);
 
         resolutionDropdown.RefreshShownValue();
         screenModeDropdown.RefreshShownValue();

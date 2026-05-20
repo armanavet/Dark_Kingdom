@@ -529,6 +529,8 @@ AudioMixerController:
     name: Music
   - guid: 2d6c08da5bcf1894eb1995e1b8b3f9e2
     name: SoundEffects
+  - guid: 0c0e95ff70c34a645b8d1ab84a9c6ce4
+    name: UI
   m_AudioMixerGroupViews:
   - guids:
     - db532ddc95cdc5640b0092613af61fc4

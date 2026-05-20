@@ -3,20 +3,21 @@ using UnityEngine.Audio;
 using TMPro;
 using UnityEngine.UI;
 
-public class AudioSettings : MonoBehaviour
+public class AudioView: MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer;
-    [SerializeField] private Slider master, music, sfx;
-    [SerializeField] private TextMeshProUGUI masterText, musicText, sfxText;
+    [SerializeField] private Slider master, music, sfx, ui;
+    [SerializeField] private TextMeshProUGUI masterText, musicText, sfxText,uiText;
 
-    private SettingsViewModel viewModel;
+    private AudioViewModel viewModel;
     public void InitializeData(SettingsInstaller installer) 
     {
-        viewModel = installer.ViewModel;
+        viewModel = installer.AudioVM;
 
         master.onValueChanged.AddListener(OnMasterChanged);
         music.onValueChanged.AddListener(OnMusicChanged);
         sfx.onValueChanged.AddListener(OnSFXChanged);
+        ui.onValueChanged.AddListener(OnUIChanged);
 
         viewModel.OnChanged += Refresh;
         Refresh();
@@ -38,21 +39,27 @@ public class AudioSettings : MonoBehaviour
         viewModel.SetSFX(value);
         UpdateLabel(sfxText, value);
     }
+    void OnUIChanged(float value)
+    {
+        viewModel.SetUI(value);
+        UpdateLabel(sfxText, value);
+    }
 
     void UpdateLabel(TextMeshProUGUI label, float value)
     {
-        Debug.Log("enter");
         label.text = Mathf.RoundToInt(value * 100).ToString();
     }
 
     void Refresh()
     {
-        master.SetValueWithoutNotify(viewModel.PendingAudioData.Master);
-        music.SetValueWithoutNotify(viewModel.PendingAudioData.Music);
-        sfx.SetValueWithoutNotify(viewModel.PendingAudioData.SFX);
+        master.SetValueWithoutNotify(viewModel.PendingData.Master);
+        music.SetValueWithoutNotify(viewModel.PendingData.Music);
+        sfx.SetValueWithoutNotify(viewModel.PendingData.SFX);
+        ui.SetValueWithoutNotify(viewModel.PendingData.UI);
 
-        UpdateLabel(masterText, viewModel.PendingAudioData.Master);
-        UpdateLabel(musicText, viewModel.PendingAudioData.Music);
-        UpdateLabel(sfxText, viewModel.PendingAudioData.SFX);
+        UpdateLabel(masterText, viewModel.PendingData.Master);
+        UpdateLabel(musicText, viewModel.PendingData.Music);
+        UpdateLabel(sfxText, viewModel.PendingData.SFX);
+        UpdateLabel(uiText, viewModel.PendingData.UI);
     }
 }

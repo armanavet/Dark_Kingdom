@@ -1,10 +1,6 @@
 using System;
 using UnityEngine.InputSystem;
 
-interface IDisposable
-{
-    public void Dispose();  
-}
 public class RebindOperation : IDisposable
 {
     public enum Result { Completed, Cancelled }

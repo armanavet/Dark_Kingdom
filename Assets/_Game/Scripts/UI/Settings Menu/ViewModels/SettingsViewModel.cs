@@ -1,73 +1,75 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SettingsViewModel
 {
-    private readonly ISettingsRepository repository;
-    private readonly IDisplayService displayService;
-    private readonly IAudioService audioService;
-    private readonly IInputService inputService;
+    private readonly ISettingsRepository _repository;       
+    private readonly IDisplayService _displayService;
+    private readonly IAudioService _audioService;
+    private readonly IInputService _inputService;
 
     public DisplaySettingsModel CurrentDisplayData { get; private set; }
     public AudioSettingsModel CurrentAudioData { get; private set; }
+    public ControlsSettingsModel CurrentControlsData { get; private set; }
     public DisplaySettingsModel PendingDisplayData { get; private set; }
     public AudioSettingsModel PendingAudioData { get; private set; }
-    public ControlsSettingsModel CurrentControlsData { get; private set; }
     public ControlsSettingsModel PendingControlsData { get; private set; }
-    public bool IsRebinding => inputService.IsRebinding;
-    //public InputActionId CurrentRebindingAction { get; private set; }
 
-    public event Action OnChanged;
-    public event Action OnRebindStarted;
-    public event Action OnRebindCompleted;
+    public List<Resolution> FilteredResolutions { get; private set; }
 
-    static int res_value, mode_value;
-    static float master_value = ConstValues.DEFAULT_MASTER_VOLUME;
-    static float music_value = ConstValues.DEFAULT_MUSIC_VOLUME;
-    static float sfx_value = ConstValues.DEFAULT_SFX_VOLUME;
+    //public event Action OnRebindStarted;
+    //public event Action OnRebindCompleted;
+
+    //static int res_value, mode_value;
+    //static float master_value = ConstValues.DEFAULT_MASTER_VOLUME;
+    //static float music_value = ConstValues.DEFAULT_MUSIC_VOLUME;
+    //static float sfx_value = ConstValues.DEFAULT_SFX_VOLUME;
+    public bool IsRebinding => _inputService.IsRebinding;
     public bool HasChanges =>
         PendingDisplayData.ResolutionIndex != CurrentDisplayData.ResolutionIndex ||
         PendingDisplayData.ScreenModeIndex != CurrentDisplayData.ScreenModeIndex ||
         PendingAudioData.Master != CurrentAudioData.Master ||
         PendingAudioData.Music != CurrentAudioData.Music ||
-        PendingAudioData.SFX != CurrentAudioData.SFX ||
-        PendingControlsData.MovementSpeed != CurrentControlsData.MovementSpeed ||
+        PendingAudioData.SFX != CurrentAudioData.SFX || PendingControlsData.MovementSpeed != CurrentControlsData.MovementSpeed ||
         PendingControlsData.RotationSpeed != CurrentControlsData.RotationSpeed ||
         PendingControlsData.ZoomSpeed != CurrentControlsData.ZoomSpeed ||
         PendingControlsData.DragSpeed != CurrentControlsData.DragSpeed ||
         PendingControlsData.RebindJson != CurrentControlsData.RebindJson;
 
+
+    public event Action OnChanged;
     public SettingsViewModel(
         ISettingsRepository repository,
         IDisplayService displayService,
         IAudioService audioService,
         IInputService inputService)
     {
-        this.repository = repository;
-        this.displayService = displayService;
-        this.audioService = audioService;
-        this.inputService = inputService;
+        _repository = repository;
+        _displayService = displayService;
+        _audioService = audioService;
+        _inputService = inputService;
 
         Load();
     }
     void Load()
     {
-        var filtered = displayService.GetFilteredResolutions();
-        res_value = displayService.GetCurrentResolutinIndex(filtered);
-        mode_value = displayService.GetCurrentScreenModeIndex();
+        FilteredResolutions = _displayService.GetFilteredResolutions();
+        int defaultResIndex = _displayService.GetDefaultResolutionIndex(FilteredResolutions);
+        int defaultModeIndex = _displayService.GetDefaultScreenModeIndex();
 
-        CurrentDisplayData = repository.LoadDesplay(res_value, mode_value);
-        CurrentAudioData = repository.LoadAudio();
-        CurrentControlsData = repository.LoadControls();
+        CurrentDisplayData = _repository.LoadDisplay(defaultResIndex, defaultModeIndex);
+        CurrentAudioData = _repository.LoadAudio();
+        CurrentControlsData = _repository.LoadControls();
 
-        inputService.LoadBindings(CurrentControlsData.RebindJson);
+        _inputService.LoadBindings(CurrentControlsData.RebindJson);
 
         PendingDisplayData = CurrentDisplayData.Clone();
         PendingAudioData = CurrentAudioData.Clone();
         PendingControlsData = CurrentControlsData.Clone();
     }
-    // ------ called by UI ------ \\
 
+    // ------ called by UI ------ \\
     public void SetResolution(int index)
     {
         PendingDisplayData.ResolutionIndex = index;
@@ -125,87 +127,71 @@ public class SettingsViewModel
 
     // ------ Commands ------ \\
 
-    public void StartRebind(InputActionId actionId, int bindingIndex)
-    {
-        if (IsRebinding) return;
-
-        var op = inputService.StartRebind(actionId, bindingIndex);
-        if (op == null) return;
-        op.OnFinished += result =>
-        {
-            PendingControlsData.RebindJson = inputService.SaveBindings();
-
-            OnChanged?.Invoke();
-        };
-
-        OnChanged?.Invoke();
-    }
-    public void CancelRebind()
-    {
-        if (IsRebinding) return;
-
-        inputService.CancelRebind();
-
-        OnChanged?.Invoke();
-    }
-    public string GetBindingDisplay(InputActionId actionId, int bindingIndex)
-    {
-        return inputService.GetBindingDidplay(actionId, bindingIndex);
-    }
     public void Apply()
     {
         CurrentDisplayData = PendingDisplayData.Clone();
         CurrentAudioData = PendingAudioData.Clone();
         CurrentControlsData = PendingControlsData.Clone();
 
-        displayService.Apply(CurrentDisplayData);
-        audioService.Apply(CurrentAudioData);
+        _displayService.Apply(CurrentDisplayData);
+        _audioService.Apply(CurrentAudioData);
+        _inputService.LoadBindings(CurrentControlsData.RebindJson);
 
-        inputService.LoadBindings(CurrentControlsData.RebindJson);
-
-        repository.Save(CurrentDisplayData, CurrentAudioData,CurrentControlsData);
-
-        OnChanged?.Invoke();
-    }
-
-    public void ResetToDefault()
-    {
-        PendingDisplayData = new DisplaySettingsModel
-        {
-            ResolutionIndex = res_value,
-            ScreenModeIndex = mode_value
-        };
-        PendingAudioData = new AudioSettingsModel
-        {
-            Master = master_value,
-            Music = music_value,
-            SFX = sfx_value
-        };
-
-        inputService.ResetToDefault();
-
-        PendingControlsData = new ControlsSettingsModel
-        {
-            RebindJson = inputService.SaveBindings(),
-            MovementSpeed = 1f,
-            RotationSpeed = 1f,
-            ZoomSpeed = 1f,
-            DragSpeed = 1f
-        };
+        //_repository.Save(CurrentDisplayData, CurrentAudioData, CurrentControlsData);
 
         OnChanged?.Invoke();
     }
-
-    public void DenyChanges()
+    public void RevertToSaved()
     {
         PendingDisplayData = CurrentDisplayData.Clone();
         PendingAudioData = CurrentAudioData.Clone();
         PendingControlsData = CurrentControlsData.Clone();
 
-        inputService.LoadBindings(CurrentControlsData.RebindJson);
+        _inputService.LoadBindings(CurrentControlsData.RebindJson);
 
         OnChanged?.Invoke();
     }
+    public void ResetToDefault()
+    {
+        int defaultResIndex = _displayService.GetDefaultResolutionIndex(FilteredResolutions);
+        int defaultModeIndex = _displayService.GetDefaultScreenModeIndex();
+
+        PendingDisplayData = DisplaySettingsModel.CreateDefault(defaultResIndex, defaultModeIndex);
+        PendingAudioData = AudioSettingsModel.CreateDefault();
+
+        _inputService.ResetAllBindingsToDefault();
+        PendingControlsData = ControlsSettingsModel.CreateDefault(_inputService.SaveBindings());
+
+        Apply();
+    }
+    public void StartRebind(InputActionId actionId, int bindingIndex)
+    {
+        if (IsRebinding) return;
+
+        var op = _inputService.StartRebind(actionId, bindingIndex);
+        if (op == null) return;
+        op.OnFinished += result =>
+        {
+            PendingControlsData.RebindJson = _inputService.SaveBindings();
+
+            OnChanged?.Invoke();
+        };
+
+        OnChanged?.Invoke();
+    }
+    public void ResetBindingToDefault(InputActionId actionId, int bindingIndex)
+    {
+        _inputService.ResetBindingToDefault(actionId, bindingIndex);
+
+        PendingControlsData.RebindJson = _inputService.SaveBindings();
+
+        OnChanged?.Invoke();
+    }
+    public string GetBindingDisplay(InputActionId actionId, int bindingIndex)
+        => _inputService.GetBindingPath(actionId, bindingIndex);
+    public void CancelRebind() => _inputService.CancelRebind();
+
+
 }
 public enum InputActionId
 {

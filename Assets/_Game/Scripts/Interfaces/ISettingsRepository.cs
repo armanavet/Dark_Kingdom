@@ -1,9 +1,14 @@
+using System;
 using UnityEngine;
 
 public interface ISettingsRepository
 {
-    DisplaySettingsModel LoadDesplay(int resIndex, int modeIndex);
+    DisplaySettingsModel LoadDisplay(int resIndex, int modeIndex);
+    QualitySettingsModel LoadQuality(int qualityIndex);
     AudioSettingsModel LoadAudio();
     ControlsSettingsModel LoadControls();
-    void Save(DisplaySettingsModel display, AudioSettingsModel audio, ControlsSettingsModel controls);
+    void SaveDisplay(DisplaySettingsModel display);
+    void SaveQuality(QualitySettingsModel quality);
+    void SaveAudio(AudioSettingsModel audio);
+    void SaveControls(ControlsSettingsModel controls);
 }

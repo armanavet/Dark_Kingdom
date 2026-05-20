@@ -6,8 +6,9 @@ public interface IInputService
     bool IsRebinding { get; }
     RebindOperation StartRebind(InputActionId actionId, int bindingIndex);
     void CancelRebind();
-    string GetBindingDidplay(InputActionId actionId, int bindingIndex);
+    void ResetBindingToDefault(InputActionId actionId, int bindingIndex);
+    void ResetAllBindingsToDefault();
     void LoadBindings(string json);
-    void ResetToDefault();
+    string GetBindingPath(InputActionId actionId, int bindingIndex);
     string SaveBindings();
 }

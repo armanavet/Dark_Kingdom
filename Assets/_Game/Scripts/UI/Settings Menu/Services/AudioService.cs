@@ -14,9 +14,10 @@ public class AudioService : IAudioService
     }
     public void Apply(AudioSettingsModel settings)
     {
-        mixer.SetFloat(ConstValues.PREF_MASTER_VOLUME, LinearToDB(settings.Master));
-        mixer.SetFloat(ConstValues.PREF_MUSIC_VOLUME, LinearToDB(settings.Music));
-        mixer.SetFloat(ConstValues.PREF_SFX_VOLUME, LinearToDB(settings.SFX));
+        mixer.SetFloat(ConstValues.MIXER_MASTER, LinearToDB(settings.Master));
+        mixer.SetFloat(ConstValues.MIXER_MUSIC, LinearToDB(settings.Music));
+        mixer.SetFloat(ConstValues.MIXER_SFX, LinearToDB(settings.SFX));
+        mixer.SetFloat(ConstValues.MIXER_UI, LinearToDB(settings.UI));
 
     }
 }

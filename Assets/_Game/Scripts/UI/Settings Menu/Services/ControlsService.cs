@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using System;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
@@ -30,8 +28,8 @@ public class ControlsService : IInputService
     }
     public void CancelRebind() => _activeOperation?.Cancel();
 
-    public string GetBindingDidplay(InputActionId actionId, int bindingIndex)
-        => _resolver.Resolve(actionId).GetBindingDisplayString(bindingIndex);
+    public string GetBindingPath(InputActionId actionId, int bindingIndex)
+        => _resolver.Resolve(actionId).bindings[bindingIndex].effectivePath;
 
     public void LoadBindings(string json)
     {
@@ -39,7 +37,7 @@ public class ControlsService : IInputService
             _actions.LoadBindingOverridesFromJson(json);
     }
 
-    public void ResetToDefault()
+    public void ResetAllBindingsToDefault()
     {
         foreach (var map in _actions.actionMaps)
         {
@@ -48,6 +46,11 @@ public class ControlsService : IInputService
                 action.RemoveAllBindingOverrides();
             }
         }
+    }
+    public void ResetBindingToDefault(InputActionId actionId, int bindingIndex)
+    {   
+        var action = _resolver.Resolve(actionId);
+        action.RemoveBindingOverride(bindingIndex);
     }
 
     public string SaveBindings() => _actions.SaveBindingOverridesAsJson();

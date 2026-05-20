@@ -3,8 +3,8 @@ using UnityEngine;
 
 public interface IDisplayService
 {
-    public List<Resolution> GetFilteredResolutions();
-    public int GetCurrentResolutinIndex(List<Resolution> filtered);
-    public int GetCurrentScreenModeIndex();
+    List<Resolution> GetFilteredResolutions();
+    int GetDefaultResolutionIndex(List<Resolution> filtered);
+    int GetDefaultScreenModeIndex();
     void Apply(DisplaySettingsModel settings);
 }
