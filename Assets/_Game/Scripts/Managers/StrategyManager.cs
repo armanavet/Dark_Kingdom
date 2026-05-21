@@ -21,7 +21,6 @@ public class StrategyManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
-        ChangeStrategy(0);
     }
     #endregion
 
@@ -33,6 +32,12 @@ public class StrategyManager : MonoBehaviour, ISaveable
 
     public StrategyType CurrentStrategy => currentStrategy;
     public static event Action<Strategy> OnStrategyChanged;
+
+    public void Initialize()
+    {
+        ChangeStrategy(0);
+        timer = cooldown = 0;
+    }
 
     private void Update()
     {

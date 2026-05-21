@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         TowerManager.Instance.Initialize();
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
+        StrategyManager.Instance.Initialize();
 
     }
     void Update()
