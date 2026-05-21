@@ -94,20 +94,16 @@ public class MainMenuManager : MonoBehaviour
     void OnEmptySLotClicked()
     {
         //Save the data and start a new game
+        //Recive a slot id. 
+        //Save the id.
     }
     void OnSetSlotCkicked()
     {
         //Load the data and start the game.
+        //Recive a slot id.
+        //Load the id data.
     }
 
-    void DetermineId()
-    {
-        //Determine the slot ID for save system.
-    }
-    void DetermineSceneToLoad()
-    {
-        //Determine the scene name where the main game takes place.
-    }
 
 }
 
