@@ -41,6 +41,7 @@ public class WizardTower : Tower
         currentHP = currentHP == 0 ? maxHP : currentHP;
         healthBar.SetMaxHealth(currentHP);
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         OnPlace();
         SetSoundData();
     }

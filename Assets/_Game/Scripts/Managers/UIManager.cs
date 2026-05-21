@@ -1,6 +1,5 @@
 using DG.Tweening;
 //using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -18,8 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform activeStateWarningParent;
     [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
     [SerializeField] TextMeshProUGUI activeStateWarningText;
-    [SerializeField] private float activeStateEnableDuration = 1f;
-    [SerializeField] private float activeStateUptime = 1.5f;
+    [SerializeField] private float activeStateEnableDuration = 3f;
+    [SerializeField] private float activeStateUptime = 15.5f;
     [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
     [SerializeField] private float activeStateDisableDuration = 0.5f;
     [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
@@ -30,6 +29,36 @@ public class UIManager : MonoBehaviour
     [SerializeField] float towerPanelYOffset;
     [SerializeField] SoundData UISoundData;
     [HideInInspector] public float GameTimer;
+
+    [Header("Objectives Panel")]
+    [SerializeField] private Button objectivesButton;
+    [SerializeField] private RectTransform objectivesPanel;
+    [SerializeField] private Vector2 objectivesOpenedPosition = new Vector2(-190, -265);
+    [SerializeField] private Vector2 objectivesClosedPosition = new Vector2(-163, -58);
+    [SerializeField] private float objectivesEnableDuration = 0.3f;
+    [SerializeField] private float objectivesDisableDuration = 0.3f;
+    [SerializeField] private Ease objectivesEnableEase = Ease.OutExpo;
+    [SerializeField] private Ease objectivesDisableEase = Ease.InExpo;
+
+    [Header("Strategy Panel")]
+    [SerializeField] private RectTransform currentStrategy;
+    [SerializeField] private RectTransform allStrategies;
+    [SerializeField] private RectTransform strategyShadow;
+    [SerializeField] private Button changeStrategyButton;
+    [SerializeField] private Button[] allStrategyButtons;
+    [SerializeField] private UnityEngine.UI.Outline currentStrategyOutline;
+    [SerializeField] private Image currentStrategyIcon;
+    [SerializeField] private Image strategyCooldown;
+    [SerializeField] private float strategiesEnableDuration;
+    [SerializeField] private Ease strategiesEnableEase;
+    [SerializeField] private float strategiesDisableDuration;
+    [SerializeField] private Ease strategiesDisableEase;
+    private Sequence showStrategiesSeq;
+    private Sequence hideStrategiesSeq;
+
+    [Header("Description Popup")]
+    [SerializeField] private GameObject descriptionPopup;
+    [SerializeField] private TextMeshProUGUI descriptionText;
 
     GameState currentState;
     Camera mainCamera;
@@ -65,16 +94,15 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-        StrategyManager.OnStrategyChanged += OnStrategyChanged;
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-
+        objectivesButton.onClick.AddListener(ShowObjectivesPanel);
     }
 
     private void OnDisable()
     {
-        StrategyManager.OnStrategyChanged -= OnStrategyChanged;
         if (StateManager.Instance != null)
             StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+        objectivesButton.onClick.RemoveAllListeners();
     }
 
     public void Initialize()
@@ -87,6 +115,14 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
         UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
+
+        objectivesClosedPosition = objectivesButton.transform.position;
+        objectivesPanel.position = objectivesClosedPosition;
+        objectivesPanel.gameObject.SetActive(false);
+
+        SetupStrategies();
+
+        descriptionPopup.SetActive(false);
     }
 
     void LateUpdate()
@@ -98,6 +134,11 @@ public class UIManager : MonoBehaviour
     {
         ChangeUiButtonVisibility();
         ShowTowerHealthBar();
+
+        if (descriptionPopup.activeSelf)
+        {
+            descriptionPopup.transform.position = Input.mousePosition;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -166,10 +207,23 @@ public class UIManager : MonoBehaviour
     public void UpdateTimer(float remaining, float total)
     {
         if (currentState != GameState.Passive) return;
+        remaining = Mathf.Max(remaining, 0);
 
         timerText.text = $"{Mathf.FloorToInt(remaining / 60)}:" +
                          $"{Mathf.FloorToInt(remaining % 60f)}";
         passiveStateSlider.value = remaining / total;
+    }
+
+    public void UpdateStrategyCooldown(float remaining, float total)
+    {
+        if (remaining <= 0)
+        {
+            strategyCooldown.fillAmount = 0;
+            changeStrategyButton.interactable = true;
+            return;
+        }
+
+        strategyCooldown.fillAmount = remaining / total;
     }
 
     public void UpdateEnemyCount(float remaining, float total)
@@ -177,6 +231,24 @@ public class UIManager : MonoBehaviour
         if (currentState != GameState.Active) return;
 
         activeStateSlider.value = remaining / total;
+    }
+
+    public void ShowObjectivesPanel()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        if (!objectivesPanel.gameObject.activeSelf)
+        {
+            seq.AppendCallback(() => objectivesPanel.gameObject.SetActive(true))
+               .Append(objectivesPanel.DOScale(1f, objectivesEnableDuration).SetEase(objectivesEnableEase))
+               .Join(objectivesPanel.DOAnchorPos(objectivesOpenedPosition, objectivesEnableDuration).SetEase(objectivesEnableEase));
+        }
+        else
+        {
+            seq.Append(objectivesPanel.DOScale(0, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .Join(objectivesPanel.DOMove(objectivesClosedPosition, objectivesDisableDuration).SetEase(objectivesDisableEase))
+               .AppendCallback(() => objectivesPanel.gameObject.SetActive(false));
+        }
     }
 
     void ShowTowerPanel(bool value, Transform selectedTower = null)
@@ -276,14 +348,14 @@ public class UIManager : MonoBehaviour
             activeStateWarningParent.localScale = Vector3.zero;
             Sequence seq = DOTween.Sequence();
             seq.Append(activeStateWarningParent.DOScale(1f, activeStateEnableDuration)).SetEase(activeStateEnableEase)
-               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.5f))
-               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.5f))
-               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.5f))
+               .Join(activeStateWarningImage.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningIcon.DOFade(1f, activeStateEnableDuration).From(0.25f))
+               .Join(activeStateWarningText.DOFade(1f, activeStateEnableDuration).From(0.25f))
                .AppendInterval(activeStateUptime)
-               .Append(activeStateWarningImage.DOFade(0.5f, activeStateDisableDuration))
-               .Join(activeStateWarningIcon.DOFade(0.5f, activeStateDisableDuration))
-               .Join(activeStateWarningText.DOFade(0.5f, activeStateDisableDuration))
-               .Append(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
+               .Append(activeStateWarningImage.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningIcon.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningText.DOFade(0.25f, activeStateDisableDuration))
+               .Join(activeStateWarningParent.DOScale(0f, activeStateDisableDuration).SetEase(activeStateDisableEase))
                .OnComplete(() =>
                {
                    activeStateWarningParent.gameObject.SetActive(false);
@@ -308,9 +380,12 @@ public class UIManager : MonoBehaviour
          */
     }
 
-    private void OnStrategyChanged(StrategyType newStrategy)
+    public void OnStrategyChanged(Strategy newStrategy)
     {
-        if (newStrategy == StrategyType.Construction)
+        currentStrategyIcon.sprite = newStrategy.Icon;
+        changeStrategyButton.interactable = false;
+
+        if (newStrategy.Type == StrategyType.Construction)
         {
             ShowTowerPurchasePanel(true);
         }
@@ -321,6 +396,62 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void SetupStrategies()
+    {
+        showStrategiesSeq = DOTween.Sequence().SetUpdate(true).SetAutoKill(false);
+        showStrategiesSeq.AppendCallback(() =>
+        {
+            currentStrategyOutline.enabled = false;
+            allStrategies.gameObject.SetActive(true);
+            strategyShadow.DOKill(false);
+            allStrategies.DOKill(false);
+        })
+        .Join(allStrategies.DOAnchorMax(Vector2.one, strategiesEnableDuration).From(new Vector2(1 / 3f, 1f)).SetEase(strategiesEnableEase))
+        .Join(strategyShadow.DOAnchorMax(Vector2.one, strategiesEnableDuration).From(new Vector2(1 / 3f, 1f)).SetEase(strategiesEnableEase))
+        .OnComplete(() =>
+        {
+            currentStrategy.gameObject.SetActive(false);
+        });
+        showStrategiesSeq.Pause();
+
+
+
+        hideStrategiesSeq = DOTween.Sequence().SetUpdate(true).SetAutoKill(false);
+        hideStrategiesSeq.AppendCallback(() =>
+        {
+            currentStrategy.gameObject.SetActive(true);
+            allStrategies.DOKill(false);
+            strategyShadow.DOKill(false);
+        })
+        .Join(allStrategies.DOAnchorMax(new Vector2(1 / 3f, 1f), strategiesDisableDuration).SetEase(strategiesDisableEase))
+        .Join(strategyShadow.DOAnchorMax(new Vector2(1 / 3f, 1f), strategiesDisableDuration).SetEase(strategiesDisableEase))
+        .OnComplete(() =>
+        {
+            allStrategyButtons[(int)StrategyManager.Instance.CurrentStrategy].transform.SetSiblingIndex(0);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(allStrategies);
+            allStrategies.gameObject.SetActive(false); currentStrategyOutline.enabled = true;
+        });
+        hideStrategiesSeq.Pause();
+
+        currentStrategy.gameObject.SetActive(true);
+        currentStrategyOutline.enabled = true;
+        strategyCooldown.fillAmount = 0;
+        changeStrategyButton.interactable = true;
+        allStrategies.gameObject.SetActive(false);
+    }
+
+    public void ShowStrategies(bool value)
+    {
+        if (value)
+        {
+            showStrategiesSeq.Restart();
+        }
+        else
+        {
+            hideStrategiesSeq.Restart();
+        }
+    }
+
     public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
     {
         if (damageTextPopup == null || target == null || target.hitPointStartPos == null) return;
@@ -328,6 +459,18 @@ public class UIManager : MonoBehaviour
         HitPointPopup HitPointPopup = Instantiate(damageTextPopup, top, Quaternion.identity);
         HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);
         HitPointPopup.HitPointText(damage);
+    }
+
+    public void ShowTowerDescription(int type)
+    {
+        descriptionPopup.SetActive(true);
+        string description = TowerManager.Instance.TowerDescriptions.GetByType((TowerType)type);
+        descriptionText.text = description;
+    }
+
+    public void HideDescription()
+    {
+        descriptionPopup.SetActive(false);
     }
 
     Quaternion LookAtCamera(Transform cameraTransform)
@@ -350,4 +493,6 @@ public class UIManager : MonoBehaviour
     {
         currentState = state;
     }
+
+
 }

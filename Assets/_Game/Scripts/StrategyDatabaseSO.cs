@@ -49,4 +49,5 @@ public class Strategy
 {
     public StrategyType Type;
     public float Cooldown;
+    public Sprite Icon;
 }

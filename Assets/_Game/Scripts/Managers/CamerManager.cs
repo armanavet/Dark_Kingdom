@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
 
 public class CamerManager : MonoBehaviour
 {
@@ -10,6 +7,8 @@ public class CamerManager : MonoBehaviour
     float fieldOfView;
     float initialCursorPosition;
     Vector2 initialMousePosition;
+    Vector3 cameraStartingPosition;
+    [SerializeField] private Button resetButton;
     [Header("Movement Settings")]
     [Tooltip("Camera movement speed.")]
     [SerializeField] float speed;
@@ -41,10 +40,21 @@ public class CamerManager : MonoBehaviour
     [Tooltip("How fast the camera moves when dragging with the left mouse button pressed.")]
     [SerializeField] float mouseDragSpeed;
 
+    private void OnEnable()
+    {
+        resetButton.onClick.AddListener(ResetPosition);
+    }
+
+    private void OnDisable()
+    {
+        resetButton.onClick.RemoveAllListeners();
+    }
+
     private void Start()
     {
         mainCamera = Camera.main;
         fieldOfView = mainCamera.fieldOfView;
+        cameraStartingPosition = mainCamera.transform.position;
     }
     private void Update()
     {
@@ -105,5 +115,10 @@ public class CamerManager : MonoBehaviour
             initialCursorPosition = Input.mousePosition.x;
         }
 
+    }
+
+    private void ResetPosition()
+    {
+        mainCamera.transform.position = cameraStartingPosition;
     }
 }

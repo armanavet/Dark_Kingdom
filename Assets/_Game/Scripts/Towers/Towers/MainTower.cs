@@ -55,6 +55,7 @@ public class MainTower : Tower
         UIManager.Instance.MainTowerHB.SetHealth(currentHP);
         ApplyTowerPositionsForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
         UpdateCanvasHeight(CurrentLevel);
+        towerCanvas.SetActive(false);
         foreach (var defender in Defender)
         {
             defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
@@ -66,10 +67,11 @@ public class MainTower : Tower
 
     private void Update()
     {
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
+
         foreach (var defender in Defender)
         {
             defender.cooldown -= Time.deltaTime;
-            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) continue;
 
             if (defender.cooldown <= 0)
             {
