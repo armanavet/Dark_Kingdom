@@ -31,12 +31,12 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     protected static readonly int IsMoving = Animator.StringToHash("isMoving");
     protected int IsAttacking;
     protected Vector3 positionFrom, positionTo;
+    protected Vector3 positionOffset;
 
     protected Direction direction;
     protected DirectionChange directionChange;
     protected float directionAngleFrom, directionAngleTo;
     protected float progress, progressFactor;
-    protected float positionOffset;
 
     [HideInInspector] public Vector3 CurrentPosition => model.position;
     [HideInInspector] public UnitType Type => unitType;
@@ -52,7 +52,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         return health / maxHP;
     }
     public abstract int GetTargetPriority();
-    public void OnSpawn(Tile startingTile, float positionOffset)
+    public void OnSpawn(Tile startingTile, Vector3 positionOffset)
     {
         tileFrom = startingTile;
         tileTo = tileFrom.NextOnPath;
@@ -66,15 +66,15 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         positionTo = tileFrom.exitPoint;
         direction = tileFrom.pathDirection;
         directionChange = DirectionChange.None;
-        model.localPosition = new Vector3(positionOffset, 0, 0);
+        model.localPosition = positionOffset;
         directionAngleFrom = directionAngleTo = direction.GetAngle();
         transform.localRotation = direction.GetRotation();
         progressFactor = 2;
     }
     protected virtual void Move()
     {
-        animator.SetBool(IsMoving, true);
         animator.SetBool(IsAttacking, false);
+        animator.SetBool(IsMoving, true);
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -113,27 +113,27 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     {
         transform.localRotation = direction.GetRotation();
         directionAngleFrom = direction.GetAngle();
-        model.localPosition = new Vector3(positionOffset, 0, 0);
+        model.localPosition = positionOffset;
         progressFactor = 1;
     }
     void PrepareTurnRight()
     {
         directionAngleTo = directionAngleFrom + 90;
-        model.localPosition = new Vector3(positionOffset - 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x - 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom + direction.GetHalfVector();
-        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset));
+        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
     void PrepareTurnLeft()
     {
         directionAngleTo = directionAngleFrom - 90;
-        model.localPosition = new Vector3(positionOffset + 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x + 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom + direction.GetHalfVector();
-        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset));
+        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
     void PrepareTurnAround()
     {
         directionAngleTo = directionAngleFrom + 180;
-        model.localPosition = new Vector3(positionOffset - 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x - 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom;
     }
     protected void SetParameters()

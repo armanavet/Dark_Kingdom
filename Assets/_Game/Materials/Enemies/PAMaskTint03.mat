@@ -26,19 +26,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_1d75964074f841a6a59fe0aee3c4ee05:
-        m_Texture: {fileID: 2800000, guid: 02e9f372d53fcda45ac39cc739ed4195, type: 3}
+        m_Texture: {fileID: 2800000, guid: d84cc81065ac4648aceaf93b68ea05cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_48F7EBCA:
-        m_Texture: {fileID: 2800000, guid: c0167a11f6e5e1341ab388e0a009e694, type: 3}
+        m_Texture: {fileID: 2800000, guid: c601ddfcb6934adf83886fee2ba9ad04, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_55FDBEBE:
-        m_Texture: {fileID: 2800000, guid: c4e61ffb1ad7321409391331fd899292, type: 3}
+        m_Texture: {fileID: 2800000, guid: 956b49f59147498aa59dff0c107cac03, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_811EFFB:
-        m_Texture: {fileID: 2800000, guid: bc5e71feee7a40d44a5e476ec0a83da9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3107e2afcb02411d902c3f3b12faa750, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Albedo:
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask03:
-        m_Texture: {fileID: 2800000, guid: eb756e7f945a4ae428bd9bab964363f1, type: 3}
+        m_Texture: {fileID: 2800000, guid: 03197a20c1284e9a8a66793b14b02f76, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicSmoothness:

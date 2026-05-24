@@ -47,6 +47,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
     [HideInInspector] public int PurchasePrice;
     [HideInInspector] public TowerType Type => towerType;
     [HideInInspector] public TowerData saveData;
+    [HideInInspector] public bool IsDestroyed;
 
     [HideInInspector] public GameObject TowerPanel => towerCanvas;
     [HideInInspector] public GameObject HealthBar => healthBarCanvas;
@@ -98,6 +99,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
         {
             //StateManager.Instance.ChangeGameStateTo();
         }
+        IsDestroyed = true;
         TowerManager.Instance.Towers.Remove(this);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         tile.isEmpty = true;

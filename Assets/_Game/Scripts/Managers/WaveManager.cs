@@ -11,6 +11,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     [SerializeField] Wave[] waves;
     [SerializeField] float delayBetweenSpawns;
     [SerializeField] int increaseBy;
+    [SerializeField] private Vector3 positionOffset;
     List<Enemy> spawnedEnemies = new List<Enemy>();
     Wave enemiesToSpawn;
 
@@ -134,7 +135,7 @@ public class WaveManager : MonoBehaviour, ISaveable
 
                 Enemy script = enemy.GetComponent<Enemy>();
                 spawnedEnemies.Add(script);
-                script.OnSpawn(portal.SpawnTile, 0f);
+                script.OnSpawn(portal.SpawnTile, positionOffset);
 
                 PortalManager.Instance.DestroyPath(portal);
 
