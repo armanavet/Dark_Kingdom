@@ -103,7 +103,7 @@ public class WizardTower : Tower
         Collider[] hits = Physics.OverlapSphere(transform.position, TarggetPoint, hittabelMask);
 
         ITargetable bestTarget = null;
-        float bestScore = float.MaxValue;
+        float bestScore = float.MinValue;
 
         foreach (var hit in hits)
         {
