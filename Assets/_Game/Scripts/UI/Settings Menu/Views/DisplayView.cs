@@ -11,12 +11,20 @@ public class DisplayView: MonoBehaviour
     { "Exclusive Fullscreen", "Fullscreen", "Windowed" };
 
     private DisplayViewModel viewModel;
+
+    private void OnDestroy()
+    {
+        if (viewModel == null) return;
+        viewModel.OnChanged -= Refresh;
+    }
     public void InitializeData(SettingsInstaller installer)
     {
         viewModel = installer.DisplayVM;
         
         resolutionDropdown.ClearOptions();
         screenModeDropdown.ClearOptions();
+        resolutionDropdown.onValueChanged.RemoveAllListeners();
+        resolutionDropdown.onValueChanged.RemoveAllListeners();
 
         filteredResolutions = installer.DisplayVM.filteredResolutions;
         Debug.Log(filteredResolutions);

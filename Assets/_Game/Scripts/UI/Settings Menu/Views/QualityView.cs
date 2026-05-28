@@ -8,11 +8,17 @@ public class QualityView: MonoBehaviour
     {"Low","Medium","High","Ultra"};
     private QualityViewModel viewModel;
 
+    private void OnDestroy()
+    {
+        if(viewModel == null) return;
+        viewModel.OnChanged -= Refresh;
+    }
     public void InitializeData(SettingsInstaller installer)
     {
         viewModel = installer.QualityVM;
         
         qualityLevels.ClearOptions();
+        qualityLevels.onValueChanged.RemoveAllListeners();
 
         qualityLevels.AddOptions(options);
         qualityLevels.RefreshShownValue();
@@ -22,6 +28,7 @@ public class QualityView: MonoBehaviour
         viewModel.OnChanged += Refresh;
         Refresh();
     }
+
     void Refresh()
     {
         qualityLevels.SetValueWithoutNotify(viewModel.PendingData.QualityIndex);

@@ -114,7 +114,7 @@ public class UIManager : MonoBehaviour
         passiveStatePanel.SetActive(false);
 
         mainCamera = Camera.main;
-        UISoundData = AudioManager.Instance.SetData(SoundDataType.UI);
+        UISoundData = AudioManager.Instance.GetData(SoundDataType.UI);
 
         objectivesClosedPosition = objectivesButton.transform.position;
         objectivesPanel.position = objectivesClosedPosition;

@@ -142,7 +142,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
     }
     protected void SetSoundData()
     {
-        towerSoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+        towerSoundData = AudioManager.Instance.GetData(Type, SoundDataType.Gameplay);
     }
     protected void OnUpgrade()
     {

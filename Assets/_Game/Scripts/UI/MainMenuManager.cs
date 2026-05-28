@@ -76,7 +76,6 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
-
     void OnReturnFromStartGame()
     {
         P_main.SetActive(true);

@@ -72,12 +72,12 @@ public class StateManager : MonoBehaviour
         else if (newState == GameState.Paused)
         {
             State = GameState.Paused;
-            PauseMenuManager.Instance.ShowPauseMenu(true);
+            PauseMenuManager.Instance.PauseMenuState(true);
         }
         else if (newState == GameState.Resume)
         {
             State = PreviusState;
-            PauseMenuManager.Instance.ShowPauseMenu(false);
+            PauseMenuManager.Instance.PauseMenuState(false);
         }
         else if (newState == GameState.End)
         {

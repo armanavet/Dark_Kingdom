@@ -32,11 +32,14 @@ public class GameManager : MonoBehaviour
     {
         AudioManager.Instance.Initialize();
         music = GetComponent<AudioSource>();
+        
         if (music == null)
         {
             Debug.LogError($"The {this} has no audio source!");
         }
+
         UIManager.Instance.Initialize();
+        PauseMenuManager.Instance.Initialize();
         PortalManager.Instance.Initialize();
         TowerManager.Instance.Initialize();
         WaveManager.Instance.Initialize();

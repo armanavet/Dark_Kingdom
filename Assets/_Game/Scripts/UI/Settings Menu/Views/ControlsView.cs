@@ -46,6 +46,11 @@ public class ControlsView : MonoBehaviour
 
     public const int DEFAULT_BINDING_INDEX = 0;
 
+    private void OnDestroy()
+    {
+        if (viewModel == null) return;
+        viewModel.OnChanged -= Refresh;
+    }
     //const int UP = 1;
     //const int DOWN = 2;
     //const int LEFT = 3;
@@ -63,8 +68,27 @@ public class ControlsView : MonoBehaviour
 
         Refresh();
     }
+    void RemoveAllListeners()
+    {
+        B_rebindForward.onClick.RemoveAllListeners();
+        B_rebindBackward.onClick.RemoveAllListeners();
+        B_rebindLeft.onClick.RemoveAllListeners();
+        B_rebindRight.onClick.RemoveAllListeners();
+
+        B_defaultForward.onClick.RemoveAllListeners();
+        B_defaultBackward.onClick.RemoveAllListeners();
+        B_defaultLeft.onClick.RemoveAllListeners();
+        B_defaultRight.onClick.RemoveAllListeners();
+
+        movement.onValueChanged.RemoveAllListeners();
+        rotation.onValueChanged.RemoveAllListeners();
+        zoom.onValueChanged.RemoveAllListeners();
+        mouseDrag.onValueChanged.RemoveAllListeners();
+    }
     void SetListeners()
     {
+        RemoveAllListeners();
+
         B_rebindForward.onClick.AddListener(() => TryStartRebind(InputActionId.MoveForward, forwardLabel));
         B_rebindBackward.onClick.AddListener(() => TryStartRebind(InputActionId.MoveBackward, backwardLabel));
         B_rebindLeft.onClick.AddListener(() => TryStartRebind(InputActionId.MoveLeft, leftLabel));
@@ -111,7 +135,7 @@ public class ControlsView : MonoBehaviour
         backwardKeyLabel.text = "S";
         leftKeyLabel.text = "A";
         rightKeyLabel.text = "D";
-        
+
         moveSpeedText.text = "Movement";
         rotationSpeedText.text = "Rotation";
         zoomSpeedText.text = "Zoom";

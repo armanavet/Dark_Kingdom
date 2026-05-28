@@ -31,7 +31,7 @@ public class StrategyManager : MonoBehaviour, ISaveable
     private bool canSwitch = true;
 
     public StrategyType CurrentStrategy => currentStrategy;
-    public static event Action<Strategy> OnStrategyChanged;
+
 
     public void Initialize()
     {

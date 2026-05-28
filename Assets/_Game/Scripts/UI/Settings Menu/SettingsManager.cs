@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 
 public class SettingsManager : MonoBehaviour
@@ -33,13 +32,23 @@ public class SettingsManager : MonoBehaviour
 
     private Action onApplyConfirmed;
     private Action onDenyConfirmed;
+
+    private bool initialized;
     private void OnDisable()
     {
         if (controlsVM != null && controlsVM.IsRebinding)
             controlsVM.CancelRebind();
     }
+    private void OnDestroy()
+    {
+        if (viewModels == null) return;
+
+        foreach (var section in viewModels)
+            section.OnChanged -= Refresh;
+    }
     public void Initialize()
     {
+                
         installer.Initialize();
 
         viewModels = installer.Sections;
@@ -58,8 +67,20 @@ public class SettingsManager : MonoBehaviour
             section.OnChanged += Refresh;
         Refresh();
     }
+    void RemoveAllListeners()
+    {
+        B_audio.onClick.RemoveAllListeners();
+        B_video.onClick.RemoveAllListeners();
+        B_controls.onClick.RemoveAllListeners();
+        B_save.onClick.RemoveAllListeners();
+        B_reset.onClick.RemoveAllListeners();
+        B_confirm.onClick.RemoveAllListeners();
+        B_deny.onClick.RemoveAllListeners();
+        B_close.onClick.RemoveAllListeners();
+    }
     void SetListeners()
     {
+        RemoveAllListeners();   
         B_audio.onClick.AddListener(OnAudioClicked);
         B_video.onClick.AddListener(OnVideoClicked);
         B_controls.onClick.AddListener(OnControlsClicked);
@@ -145,13 +166,15 @@ public class SettingsManager : MonoBehaviour
     #region Panels Manage
     void PanelsInitialState()
     {
-        P_audio.SetActive(true);
-        P_video.SetActive(false);
-        P_controls.SetActive(false);
-        P_warning.SetActive(false);
+        P_audio?.SetActive(true);
+
+        P_video?.SetActive(false);
+        P_controls?.SetActive(false);
+        P_warning?.SetActive(false);
     }
     void OnAudioClicked()
     {
+        Debug.Log("opned");
         P_video.SetActive(false);
         P_controls.SetActive(false);
         P_audio.SetActive(true);

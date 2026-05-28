@@ -44,12 +44,12 @@ public class AudioManager : MonoBehaviour
         soundBank.Build();
         sourceBank.Build();
     }
-    public SoundData SetData<T>(T sourceType, SoundDataType soundDataType)
+    public SoundData GetData<T>(T sourceType, SoundDataType soundDataType)
         where T : Enum
     {
         return sourceBank.GetData(sourceType, soundDataType);
     }
-    public SoundData SetData(SoundDataType soundDataType)
+    public SoundData GetData(SoundDataType soundDataType)
     {
         return sourceBank.GetData(soundDataType);
     }
@@ -87,7 +87,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound system is not configured correctly.");
             return;
         }
-        Debug.Log(data.volume);
         data.clip = soundBank.GetClip(sourcType, soundType);
 
         Vector3 position = target != null ? target.position : transform.position;

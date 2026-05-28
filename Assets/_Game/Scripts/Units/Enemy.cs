@@ -160,7 +160,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     }
     private void InitializeAudio()
     {
-        enemySoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+        enemySoundData = AudioManager.Instance.GetData(Type, SoundDataType.Gameplay);
     }
     protected abstract void Attack();
     protected virtual bool AcquireTargets()
