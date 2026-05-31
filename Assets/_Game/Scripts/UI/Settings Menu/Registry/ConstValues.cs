@@ -4,6 +4,7 @@ public static class ConstValues
 {
     public const string PREF_RESOLUTION_INDEX = "ResolutionIdex";
     public const string PREF_SCREEN_MODE_INDEX = "ScreenModeIdex";
+    public const string PREF_QUALITY_INDEX = "QualityIndex";
 
     //player prefs value's name
     public const string PREF_MASTER_VOLUME = "MasterVolume";
@@ -17,7 +18,6 @@ public static class ConstValues
     public const string PREF_ZOOM_SPEED = "ZoomSpeed";
     public const string PREF_MOUSE_DRAG_SPEED = "DragSpeed";
 
-    public const string PREF_QUALITY_INDEX = "QualityIndex";
     //auido mixer group name 
     public const string MIXER_MASTER = "Master";
     public const string MIXER_MUSIC = "Music";

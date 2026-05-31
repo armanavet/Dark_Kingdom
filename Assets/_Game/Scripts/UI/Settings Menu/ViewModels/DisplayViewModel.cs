@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DisplayViewModel : IViewModel
 {
-    private readonly ISettingsRepository repository;
-    private readonly IDisplayService service;
+    private readonly ISettingsRepository _repository;
+    private readonly IDisplayService _service;
     public DisplaySettingsModel CurrentData { get; private set; }
     public DisplaySettingsModel PendingData { get; private set; }
 
@@ -19,18 +19,25 @@ public class DisplayViewModel : IViewModel
         ISettingsRepository repository,
         IDisplayService service) 
     {
-        this.repository = repository;   
-        this.service = service;
+        _repository = repository;   
+        _service = service;
 
         Load();
     }
     void Load()
     {
-        filteredResolutions = service.GetFilteredResolutions();
-        int defaultResIndex = service.GetDefaultResolutionIndex(filteredResolutions);
-        int defaultModeIndex = service.GetDefaultScreenModeIndex();
+        filteredResolutions = _service.GetFilteredResolutions();
+        int defaultResIndex = _service.GetDefaultResolutionIndex(filteredResolutions);
+        int defaultModeIndex = _service.GetDefaultScreenModeIndex();
 
-        CurrentData = repository.LoadDisplay(defaultResIndex, defaultModeIndex);
+        if (!_repository.HasDisplaySave())
+        {
+            var bootstrapped = DisplaySettingsModel.CreateDefault(defaultResIndex, defaultModeIndex);
+            _repository.SaveDisplay(bootstrapped);
+        }
+
+        CurrentData = _repository.LoadDisplay(defaultResIndex, defaultModeIndex);
+            _service.Apply(CurrentData);
         PendingData = CurrentData.Clone();
     }
 
@@ -44,21 +51,21 @@ public class DisplayViewModel : IViewModel
         PendingData.ScreenModeIndex = index;
         OnChanged?.Invoke();
     }
-    public List<Resolution> GetResolutions() => service.GetFilteredResolutions();
+    public List<Resolution> GetResolutions() => _service.GetFilteredResolutions();
     public void Apply()
     {
         CurrentData = PendingData.Clone();
 
-        service.Apply(CurrentData);
+        _service.Apply(CurrentData);
 
-        repository.SaveDisplay(CurrentData);
+        _repository.SaveDisplay(CurrentData);
         OnChanged?.Invoke();
     }
     
     public void ResetToDefault()
     {
-        int defaultResIndex = service.GetDefaultResolutionIndex(filteredResolutions);
-        int defaultModeIndex = service.GetDefaultScreenModeIndex();
+        int defaultResIndex = _service.GetDefaultResolutionIndex(filteredResolutions);
+        int defaultModeIndex = _service.GetDefaultScreenModeIndex();
 
         PendingData = DisplaySettingsModel.CreateDefault(defaultResIndex, defaultModeIndex);
         

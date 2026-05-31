@@ -48,7 +48,6 @@ public class SettingsManager : MonoBehaviour
     }
     public void Initialize()
     {
-                
         installer.Initialize();
 
         viewModels = installer.Sections;

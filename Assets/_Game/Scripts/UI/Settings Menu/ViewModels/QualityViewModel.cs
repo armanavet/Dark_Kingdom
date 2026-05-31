@@ -5,7 +5,7 @@ using UnityEngine;
 public class QualityViewModel : IViewModel
 {
     private readonly ISettingsRepository _repository;
-    private readonly IQualityService _qualityService;
+    private readonly IQualityService _service;
 
     public QualitySettingsModel CurrentData { get; private set; }
     public QualitySettingsModel PendingData { get; private set; }
@@ -17,17 +17,22 @@ public class QualityViewModel : IViewModel
         IQualityService qualityService)
     {
         _repository = repositroy;
-        _qualityService = qualityService;
+        _service = qualityService;
 
         Load();
     }
     private void Load()
     {
-        qualityLevels = _qualityService.GetAllLevels(); // to define the default one;
+        qualityLevels = _service.GetAllLevels(); // to define the default one;
 
-        int defaultIndex = _qualityService.GetDefaultQualityIndex();
-
+        int defaultIndex = _service.GetDefaultQualityIndex();
+        if (!_repository.HasQualitySave())
+        {
+            var bootstrapped = QualitySettingsModel.CreateDefault(defaultIndex);
+            _repository.SaveQuality(bootstrapped);
+        }
         CurrentData = _repository.LoadQuality(defaultIndex);
+        _service.Apply(CurrentData);
         PendingData = CurrentData.Clone();
     }
     public void SetQualityLevel(int index)
@@ -38,15 +43,16 @@ public class QualityViewModel : IViewModel
     public void Apply()
     {
         CurrentData = PendingData.Clone();
-        _qualityService.Apply(CurrentData);
+        _service.Apply(CurrentData);
         _repository.SaveQuality(CurrentData);
         OnChanged?.Invoke();
     }
     public void ResetToDefault()
     {
-        int defaultIndex = _qualityService.GetDefaultQualityIndex();
+        int defaultIndex = _service.GetDefaultQualityIndex();
         PendingData = QualitySettingsModel.CreateDefault(defaultIndex);
-        OnChanged?.Invoke();
+        //OnChanged?.Invoke();
+        Apply();
     }
     public void RevertToSaved()
     {

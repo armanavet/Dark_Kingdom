@@ -3,6 +3,10 @@ using UnityEngine;
 
 public interface ISettingsRepository
 {
+    bool HasDisplaySave();
+    bool HasQualitySave();
+    bool HasAudioSave();
+    bool HasControlsSave();
     DisplaySettingsModel LoadDisplay(int resIndex, int modeIndex);
     QualitySettingsModel LoadQuality(int qualityIndex);
     AudioSettingsModel LoadAudio();

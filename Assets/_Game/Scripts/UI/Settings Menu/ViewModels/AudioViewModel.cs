@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class AudioViewModel : IViewModel
 {
-    private readonly ISettingsRepository repository;
-    private readonly IAudioService service;
+    private readonly ISettingsRepository _repository;
+    private readonly IAudioService _service;
     public AudioSettingsModel CurrentData { get; private set; }
     public AudioSettingsModel PendingData { get; private set; }
     public bool HasChanges =>
@@ -18,15 +18,20 @@ public class AudioViewModel : IViewModel
     ISettingsRepository repository,
     IAudioService service)
     {
-        this.repository = repository;
-        this.service = service;
+        _repository = repository;
+        _service = service;
 
         Load();
     }
     void Load()
     {
-        CurrentData = repository.LoadAudio();
-
+        if (!_repository.HasAudioSave())
+        {
+            var bootstrapped = AudioSettingsModel.CreateDefault();
+            _repository.SaveAudio(bootstrapped);
+        }
+        CurrentData = _repository.LoadAudio();
+        _service.Apply(CurrentData);
         PendingData = CurrentData.Clone();
     }
     public void SetMaster(float value)
@@ -53,9 +58,9 @@ public class AudioViewModel : IViewModel
     {
         CurrentData = PendingData.Clone();
 
-        service.Apply(CurrentData);
+        _service.Apply(CurrentData);
 
-        repository.SaveAudio(CurrentData);
+        _repository.SaveAudio(CurrentData);
 
         OnChanged?.Invoke();
     }

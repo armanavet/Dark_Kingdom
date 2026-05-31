@@ -18,6 +18,5 @@ public class AudioService : IAudioService
         mixer.SetFloat(ConstValues.MIXER_MUSIC, LinearToDB(settings.Music));
         mixer.SetFloat(ConstValues.MIXER_SFX, LinearToDB(settings.SFX));
         mixer.SetFloat(ConstValues.MIXER_UI, LinearToDB(settings.UI));
-
     }
 }

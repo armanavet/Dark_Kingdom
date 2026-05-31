@@ -15,6 +15,11 @@ public class PlayerPrefsSettingsRepository : ISettingsRepository
     private const string KeyDrag = ConstValues.PREF_MOUSE_DRAG_SPEED;
     private const string KeyQuality = ConstValues.PREF_QUALITY_INDEX;
 
+    public bool HasDisplaySave() => PlayerPrefs.HasKey(KeyResolution);
+    public bool HasQualitySave() => PlayerPrefs.HasKey(KeyQuality);
+    public bool HasAudioSave() => PlayerPrefs.HasKey(KeyMaster);
+    public bool HasControlsSave() => PlayerPrefs.HasKey(KeyRebinds);
+
     public DisplaySettingsModel LoadDisplay(int defaultResIndex, int defaultModeIndex)
     {
         return new DisplaySettingsModel
@@ -83,4 +88,5 @@ public class PlayerPrefsSettingsRepository : ISettingsRepository
 
         PlayerPrefs.Save();
     }
+
 }
