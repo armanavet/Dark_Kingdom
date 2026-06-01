@@ -14,7 +14,6 @@ public class Shell : MonoBehaviour
     List<Debuff> debuffs;
     Vector3 launchPoint, targetPoint, launchVelocity;
     float age, blastRadius, damage;
-    HitPointPopup hitPointPopup;
     TowerType towerType;
     private void Start()
     {
@@ -41,7 +40,6 @@ public class Shell : MonoBehaviour
         float blastRadius,
         float damage,
         List<Debuff> debuffs,
-        HitPointPopup hitPointPopup,
         TowerType towerType)
     {
         this.launchPoint = launchPoint;
@@ -50,7 +48,6 @@ public class Shell : MonoBehaviour
         this.blastRadius = blastRadius;
         this.damage = damage;
         this.debuffs = debuffs;
-        this.hitPointPopup = hitPointPopup;
         this.towerType = towerType;
     }
     void Explode()
@@ -65,7 +62,7 @@ public class Shell : MonoBehaviour
                 ITargetable target = Target.GetComponent<ITargetable>();
                 if (target is Enemy enemyTarget)
                 {
-                    UIManager.Instance.ShowDamage(hitPointPopup, enemyTarget, damage);
+                    UIManager.Instance.ShowDamage(enemyTarget, damage);
                     foreach (var debuff in debuffs)
                     {
                         DebuffManager.Instance.ApplyDebuff(enemyTarget, debuff);

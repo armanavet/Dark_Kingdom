@@ -1,8 +1,4 @@
 using AudioSystem;
-using System.Collections;
-using System.Collections.Generic;
-using TreeEditor;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
@@ -11,13 +7,11 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     //[SerializeField] HealthBar healthBar = null;
     [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
-    [SerializeField] protected UnitType unitType;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
-    [SerializeField] protected SoundData enemySoundData;
 
     protected Animator animator;
     protected float currentSpeed;
@@ -38,22 +32,21 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     protected float directionAngleFrom, directionAngleTo;
     protected float progress, progressFactor;
 
-    [HideInInspector] public Vector3 CurrentPosition => model.position;
-    [HideInInspector] public UnitType Type => unitType;
-    [HideInInspector] public SoundData SoundData => enemySoundData;
+    [field: SerializeField] public UnitType Type { get; protected set; }
+    [field: SerializeField] public int TargetPriority { get; protected set; }
+    [field: SerializeField] public SoundData SoundData { get; protected set; }
+    public Faction Faction => Faction.Enemy;
+    public Transform Transform => transform;
+    public Vector3 CurrentPosition => model.position;
+    public float HealthPercent => health / maxHP;
     public float Damage => damage;
-    public Faction faction = Faction.Enemy;
 
-    public Transform GetTransform() => transform;
-
-    public Faction GetFaction() => faction;
-    public float GetHealthPrecent()
-    {
-        return health / maxHP;
-    }
-    public abstract int GetTargetPriority();
     public void OnSpawn(Tile startingTile, Vector3 positionOffset)
     {
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
+
         tileFrom = startingTile;
         tileTo = tileFrom.NextOnPath;
         this.positionOffset = positionOffset;
@@ -130,18 +123,21 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         transform.localPosition = positionFrom + direction.GetHalfVector();
         progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
+
     void PrepareTurnAround()
     {
         directionAngleTo = directionAngleFrom + 180;
         model.localPosition = new Vector3(positionOffset.x - 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom;
     }
+
     protected void SetParameters()
     {
         ApplyStats();
         CacheComponents();
         InitializeAudio();
     }
+
     private void ApplyStats()
     {
         currentSpeed = ValidateStat(maxSpeed, currentSpeed);
@@ -160,7 +156,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     }
     private void InitializeAudio()
     {
-        enemySoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+        SoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
     }
     protected abstract void Attack();
     protected virtual bool AcquireTargets()
@@ -188,7 +184,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         {
             animator?.SetBool("isDead", true);
         }
-        enemySoundData = new SoundData();
+        SoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
@@ -204,11 +200,11 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     }
     protected void PlayAttackSound()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
     }
     protected void PlayMovingSound()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyMove, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyMove, SoundData, transform);
     }
 }
 

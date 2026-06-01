@@ -85,17 +85,17 @@ public class WormEnemy : Enemy
     public void PlayBreakingThroughSFX()
     {
         Debug.Log(Type);
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, SoundData, transform);
     }
     public void PlayDiveInSFX()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 0, enemySoundData, transform);
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 1, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 0, SoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 1, SoundData, transform);
     }
     public void PlayRoarSFX()
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, enemySoundData, transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, SoundData, transform);
     }
     protected override void Attack() { }
-    public override int GetTargetPriority() => 0;
+    //public override int GetTargetPriority() => 0;
 }

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02576f10117ea744bb161b112638e246, type: 3}
+  m_Name: Archer
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDataSO
+  <Type>k__BackingField: 1
+  <Faction>k__BackingField: 0
+  <PurchasePrice>k__BackingField: 50
+  <Cooldown>k__BackingField: 0.5
+  <Range>k__BackingField: 3
+  <TargetPriority>k__BackingField: 70
+  <BuildEffectHigh>k__BackingField: {fileID: 7698345367346486304, guid: ec8556b1463987e468cf844835a1fb1a,
+    type: 3}
+  <BuildEffectLow>k__BackingField: {fileID: 8596581299401022538, guid: d953a767871ff6445b6d743e9675e646,
+    type: 3}
+  <UpgradeEffect>k__BackingField: {fileID: 7840045698185058945, guid: 9e0b83a20870ddb49b589d22f3622a91,
+    type: 3}
+  <Levels>k__BackingField:
+  - <Projectile>k__BackingField: {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 0}
+    <UpgradePrice>k__BackingField: 100
+    <SellPrice>k__BackingField: 35
+    <HP>k__BackingField: 70
+    <Damage>k__BackingField: 10
+    <CrystalsGenerated>k__BackingField: 0
+    <CanvasHeight>k__BackingField: 2
+  - <Projectile>k__BackingField: {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af,
+      type: 2}
+    <UpgradePrice>k__BackingField: 150
+    <SellPrice>k__BackingField: 85
+    <HP>k__BackingField: 100
+    <Damage>k__BackingField: 15
+    <CrystalsGenerated>k__BackingField: 0
+    <CanvasHeight>k__BackingField: 2.4
+  - <Projectile>k__BackingField: {fileID: 6171265629823123270, guid: b2c62bc029caf7a4d89b626c853317e2,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 11400000, guid: cefa31c790da25645b9f0b74883b1ecc,
+      type: 2}
+    <UpgradePrice>k__BackingField: 0
+    <SellPrice>k__BackingField: 125
+    <HP>k__BackingField: 120
+    <Damage>k__BackingField: 20
+    <CrystalsGenerated>k__BackingField: 0
+    <CanvasHeight>k__BackingField: 2.7

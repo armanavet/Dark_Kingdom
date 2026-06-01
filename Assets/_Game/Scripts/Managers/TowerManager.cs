@@ -68,7 +68,7 @@ public class TowerManager : MonoBehaviour, ISaveable
         Transform parentObject = FindFirstObjectByType<TowerManager>().transform;
 
         Tower tower = Instantiate(prefab, tile.transform.position, Quaternion.identity, parentObject);
-        tower.tile = tile;
+        tower.Tile = tile;
         tile.isEmpty = false;
         if (type != TowerType.MainTower) tile.ClaimSurroundingTiles();
         Towers.Add(tower);

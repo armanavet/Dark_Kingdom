@@ -28,7 +28,6 @@ public class MushroomEnemy : Enemy
     private static readonly int IsCapturing = Animator.StringToHash("isCapturing");
 
     Vector3 start, end, pos;
-    public override int GetTargetPriority() => 100;
 
     private void Start()
     {
@@ -87,7 +86,7 @@ public class MushroomEnemy : Enemy
                 if (tower.Type == TowerType.MainTower || tower.Type == TowerType.CrystalMine) continue;
                 if (capturedTargets.Add(tower))
                 {
-                    tower.SetPriority(Faction.Enemy);
+                    //tower.SetFaction(Faction.Enemy);
                     tower.OnDestroyed += OnTowerDestroyed;
                     foundAny = true;
                 }
@@ -114,7 +113,7 @@ public class MushroomEnemy : Enemy
         {
             foreach (var target in capturedTargets)
             {
-                target.SetPriority(Faction.Player);
+                //target.SetFaction(Faction.Player);
                 target.OnDestroyed -= OnTowerDestroyed;
             }
             capturedTargets.Clear();
@@ -131,7 +130,7 @@ public class MushroomEnemy : Enemy
         }
 
         ReleaseCapturedTargets();
-        enemySoundData = new SoundData();
+        SoundData = new SoundData();
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }

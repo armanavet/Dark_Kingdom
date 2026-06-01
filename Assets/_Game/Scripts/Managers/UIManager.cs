@@ -11,23 +11,36 @@ using AudioSystem;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] public HealthBar MainTowerHB;
-    [SerializeField] TextMeshProUGUI goldText, timerText, waveText;
-    [SerializeField] GameObject activeStatePanel, passiveStatePanel, towerPurchasePanel;
-    [SerializeField] private Slider activeStateSlider, passiveStateSlider;
-    [SerializeField] Transform activeStateWarningParent;
-    [SerializeField] Image activeStateWarningImage, activeStateWarningIcon;
-    [SerializeField] TextMeshProUGUI activeStateWarningText;
+    [SerializeField] private TextMeshProUGUI goldText;
+
+    [Header("World UI")]
+    [SerializeField] private LayerMask towerMask;
+    [SerializeField] private LayerMask tileMask;
+    [SerializeField] private HitPointPopup unitHitPopUp;
+
+    [Header("Tower Purchase Panel")]
+    [SerializeField] private GameObject towerPurchasePanel;
+    [SerializeField] private TextMeshProUGUI[] towerPrices;
+    [Tooltip("How far down the panel moves to hide behind the screen.")]
+    [SerializeField] private float towerPurchasePanelYHidden;
+    private float TowerPurchasePanelYInitial;
+    private Button[] towerPurchaseButtons;
+
+    [Header("State Manager Panel")]
+    [SerializeField] private GameObject activeStatePanel;
+    [SerializeField] private GameObject passiveStatePanel;
+    [SerializeField] private Slider activeStateSlider;
+    [SerializeField] private Slider passiveStateSlider;
+    [SerializeField] private Transform activeStateWarningParent;
+    [SerializeField] private Image activeStateWarningImage, activeStateWarningIcon;
+    [SerializeField] private TextMeshProUGUI activeStateWarningText;
+    [SerializeField] private TextMeshProUGUI timerText, waveText;
     [SerializeField] private float activeStateEnableDuration = 3f;
     [SerializeField] private float activeStateUptime = 15.5f;
     [SerializeField] private Ease activeStateEnableEase = Ease.OutBack;
     [SerializeField] private float activeStateDisableDuration = 0.5f;
     [SerializeField] private Ease activeStateDisableEase = Ease.InBack;
-    [Tooltip("How far down the panel moves to hide behind the screen.")]
-    [SerializeField] GameObject[] effects;
-    [SerializeField] LayerMask towerMask, tileMask;
-    [SerializeField] float towerPurchasePanelYHidden;
-    [SerializeField] float towerPanelYOffset;
-    [SerializeField] SoundData UISoundData;
+    [SerializeField] private SoundData UISoundData;
     [HideInInspector] public float GameTimer;
 
     [Header("Objectives Panel")]
@@ -64,11 +77,9 @@ public class UIManager : MonoBehaviour
     Camera mainCamera;
     GameObject activePanel, previousHit, effect, activeBar;
     TowerPreview towerPreview;
-    Button[] towerPurchaseButtons;
 
     Dictionary<TowerType, float> towerOffset;
 
-    float TowerPurchasePanelYInitial;
 
     bool isPanelActive = false;
     #region Singleton 
@@ -132,6 +143,12 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        //TODO change to Start
+        for (int i = 0; i < towerPrices.Length; i++)
+        {
+            towerPrices[i].text = TowerManager.Instance.GetPrefabByType((TowerType)(i + 1)).PurchasePrice.ToString();
+        }
+
         ChangeUiButtonVisibility();
         ShowTowerHealthBar();
 
@@ -192,7 +209,7 @@ public class UIManager : MonoBehaviour
             Tower tower = towerHit.transform.GetComponent<Tower>();
             if (tower.Type == TowerType.MainTower) return;
 
-            GameObject healthBar = tower.HealthBar;
+            GameObject healthBar = tower.HealthBar.gameObject;
             if (healthBar == null) return;
 
             activeBar = healthBar;
@@ -256,7 +273,7 @@ public class UIManager : MonoBehaviour
         if (value == true)
         {
             Tower tower = selectedTower.GetComponent<Tower>();
-            GameObject towerPanel = tower.TowerPanel;
+            GameObject towerPanel = tower.TowerPanel.gameObject;
             if (towerPanel == null) return;
             if (activePanel != null) activePanel.SetActive(false);
 
@@ -317,7 +334,6 @@ public class UIManager : MonoBehaviour
             if (towerPreview.canPlace)
             {
                 Tower tower = TowerManager.Instance.BuildTower(towerPreview.Type, towerPreview.tile);
-                EconomyManager.Instance.ChangeCrystelAmount(-tower.PurchasePrice);
                 Destroy(towerPreview.gameObject);
                 ShowTowerPurchasePanel(true);
             }
@@ -452,11 +468,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowDamage(HitPointPopup damageTextPopup, Enemy target, float damage)
+    public void ShowDamage(Enemy target, float damage)
     {
-        if (damageTextPopup == null || target == null || target.hitPointStartPos == null) return;
+        if (target == null || target.hitPointStartPos == null) return;
+
         Vector3 top = target.hitPointStartPos.transform.position;
-        HitPointPopup HitPointPopup = Instantiate(damageTextPopup, top, Quaternion.identity);
+        HitPointPopup HitPointPopup = Instantiate(unitHitPopUp, top, Quaternion.identity);
         HitPointPopup.transform.rotation = LookAtCamera(mainCamera.transform);
         HitPointPopup.HitPointText(damage);
     }

@@ -139,7 +139,7 @@ public class WormManager : MonoBehaviour
         foreach (var target in tergetTowers)
         {
             if (target == null) continue;
-            var spawnPoint = target.tile.transform.position;
+            var spawnPoint = target.Tile.transform.position;
             Enemy enemy = Instantiate(unit, spawnPoint, Quaternion.Euler(new Vector3(spawnPoint.x, Random.Range(15, 280), spawnPoint.z)), transform);
             target.ApplyDamage(enemy.Damage);
         }

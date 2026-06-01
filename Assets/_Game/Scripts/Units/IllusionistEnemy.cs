@@ -12,7 +12,6 @@ public class IllusionistEnemy : Enemy
     [SerializeField] float illusionSpawnTime;
     float illusionCooldown;
     Illusion illusion;
-    public override int GetTargetPriority() => 40;
 
     void Start()
     {

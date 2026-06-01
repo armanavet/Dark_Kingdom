@@ -17,7 +17,6 @@ public class MageEnemy : Enemy
     Tween faceTargetTween, facePathTween;
     bool facingTarget, facingPath = true;
 
-    public override int GetTargetPriority() => 40;
 
     private void OnDisable()
     {
@@ -122,7 +121,7 @@ public class MageEnemy : Enemy
 
         if (target != null)
         {
-            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, enemySoundData, target.transform);
+            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, target.transform);
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile.gameObject);

@@ -19,7 +19,6 @@ public class FlyingEnemy : Enemy
     bool isAttacking;
     float rotationProgress;
     private static readonly int IsIdle = Animator.StringToHash("isidle");
-    public override int GetTargetPriority() => 50;
 
     void Start()
     {

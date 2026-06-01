@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class DefaultEnemy : Enemy
 {
-    public override int GetTargetPriority() => 40;
     void Start()
     {
         SetParameters();

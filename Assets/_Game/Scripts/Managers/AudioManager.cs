@@ -1,7 +1,6 @@
 ﻿using AudioSystem;
 using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 //public interface ISoundKey { }
 public class AudioManager : MonoBehaviour

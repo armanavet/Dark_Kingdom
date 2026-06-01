@@ -1,65 +1,43 @@
-using AudioSystem;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WizardTower : Tower
 {
     [Header("Wizard Tower Parameters")]
-    [SerializeField] Transform mortal;
-    [SerializeField] Shell shell;
-    [SerializeField, Range(1, 10f)]
-    float TarggetPoint = 2f;
+    [SerializeField] Transform shootingPoint;
     [SerializeField, Range(0.5f, 5f)]
     float shellBlastRadius = 1;
-    [SerializeField, Range(1, 200)]
-    float shellDamage;
 
     ITargetable target;
-    float TarggetRange = 2f;
-    float g = 9.81f;
+    float g => Mathf.Abs(Physics.gravity.y);
     float launchSpeed;
-    float launchProgress = 0f;
-    int shotsPerSecond = 1;
-    public override int GetTargetPriority() => 70;
+    float timer;
 
     private void Awake()
     {
-        float x = TarggetRange + 0.250001f;
-        float y = -mortal.position.y;
+        float x = range + 0.250001f;
+        float y = -shootingPoint.position.y;
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
     }
-    void Start()
-    {
-        SellPrice = SellPrices[CurrentLevel];
-        UpgradePrice = UpgradePrices[CurrentLevel];
-        shellDamage = Damage[CurrentLevel];
-        maxHP = HP[CurrentLevel];
-        model = Models[CurrentLevel];
-        if (Debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(Debuffs[CurrentLevel]);
-        currentHP = currentHP == 0 ? maxHP : currentHP;
-        healthBar.SetMaxHealth(currentHP);
-        UpdateCanvasHeight(CurrentLevel);
-        towerCanvas.SetActive(false);
-        OnPlace();
-        SetSoundData();
-    }
+    //void Start()
+    //{
+    //    soundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+    //    UpdateData();
+    //    OnPlace();
+    //}
 
     void Update()
     {
-        launchProgress += shotsPerSecond * Time.deltaTime;
+        timer -= Time.deltaTime;
         if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
 
-        if (launchProgress > 4)
+        if (timer <= 0 && AcquireTarget())
         {
-            if (AcquireTarget())
-            {
-                Launch(target);
-            }
-            launchProgress = 0;
+            Launch(target);
+            timer = cooldown;
         }
     }
+
     void Launch(ITargetable target)
     {
         if (target == null)
@@ -67,8 +45,8 @@ public class WizardTower : Tower
             return;
         }
         Vector2 dir;
-        Vector3 launchPoint = mortal.position;
-        Vector3 TargetPoint = target.GetTransform().position;
+        Vector3 launchPoint = shootingPoint.position;
+        Vector3 TargetPoint = target.Transform.position;
         dir.x = TargetPoint.x - launchPoint.x;
         dir.y = TargetPoint.z - launchPoint.z;
         TargetPoint.y = 0;
@@ -85,22 +63,28 @@ public class WizardTower : Tower
         float CosTheta = Mathf.Cos(theta);
         float sinTheta = Mathf.Sin(theta);
 
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, transform);
-        Shell sh = Instantiate(shell);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, soundData, transform);
+        Shell sh = Instantiate(projectile).GetComponent<Shell>();
+
+        if (sh == null)
+        {
+            Debug.LogError($"Attach a Shell script to {name} projectile!");
+            return;
+        }
+
         sh.Initialize
             (launchPoint
             , TargetPoint
             , new Vector3(s * CosTheta * dir.x, s * sinTheta, s * CosTheta * dir.y)
             , shellBlastRadius
-            , shellDamage
-            , currentDebuffs
-            , unitHitPointPopup
-            , towerType);
-
+            , damage
+            , currentDebuffs.Values.ToList()
+            , Type);
     }
+
     bool AcquireTarget()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, TarggetPoint, hittabelMask);
+        Collider[] hits = Physics.OverlapSphere(transform.position, range, TargetMask);
 
         ITargetable bestTarget = null;
         float bestScore = float.MinValue;
@@ -111,12 +95,12 @@ public class WizardTower : Tower
             if (targetable == null)
                 continue;
 
-            if (targetable.GetFaction() == GetFaction())
+            if (targetable.Faction == Faction)
                 continue;
 
-            float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
-            float priority = targetable.GetTargetPriority();
-            float healthPrecent = targetable.GetHealthPrecent();
+            float dist = Vector3.Distance(transform.position, targetable.Transform.position);
+            float priority = targetable.TargetPriority;
+            float healthPrecent = targetable.HealthPercent;
 
             float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
             if (score > bestScore)
@@ -130,90 +114,4 @@ public class WizardTower : Tower
         return target != null;
 
     }
-    public override void Upgrade()
-    {
-        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
-        {
-            OnUpgrade();
-            UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
-
-            CurrentLevel++;
-            if (CurrentLevel < UpgradePrices.Count)
-                UpgradePrice = UpgradePrices[CurrentLevel];
-            shellDamage = Damage[CurrentLevel];
-            SellPrice = SellPrices[CurrentLevel];
-
-            model.SetActive(false);
-            model = Models[CurrentLevel];
-            model.SetActive(true);
-            UpdateCanvasHeight(CurrentLevel);
-
-
-            float hpPercent = currentHP / maxHP;
-            maxHP = HP[CurrentLevel];
-            currentHP = maxHP * hpPercent;
-            healthBar.SetMaxHealth(currentHP);
-
-            Debuff currentDebuff = Debuffs[CurrentLevel];
-            if (currentDebuff != null)
-            {
-                foreach (var debuff in currentDebuffs)
-                {
-                    if (debuff.Type == currentDebuff.Type)
-                    {
-                        currentDebuffs.Remove(debuff);
-                        break;
-                    }
-                }
-                currentDebuffs.Add(currentDebuff);
-            }
-        }
-    }
 }
-
-//Collider[] targets;
-
-//if (!isCaptured)
-//{
-//    LayerMask[] priorityMasks = { portalMask, illusionMask, enemyMask };
-
-//    targets = new Collider[0];
-
-//    foreach (var mask in priorityMasks)
-//    {
-//        targets = Physics.OverlapSphere(transform.position, TarggetPoint, mask);
-//        if (targets.Length > 0) break;
-//    }
-//}
-//else
-//{
-//    targets = Physics.OverlapSphere(transform.position, TarggetPoint, enemyMask);
-//}
-//if (targets.Length > 0)
-//{
-//    int ClosestTargetIndex = 0;
-//    float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
-//    for (int i = 1; i < targets.Length; i++)
-//    {
-//        if (MinDist <= MinDist + i)
-//        {
-//            float dist = Vector3.Distance(transform.position, targets[i].transform.position);
-//            if (dist < MinDist)
-//            {
-//                MinDist = dist;
-//                ClosestTargetIndex = i;
-//            }
-//        }
-
-//    }
-//    target = targets[ClosestTargetIndex].GetComponent<Enemy>();
-//    if (target != null)
-//    {
-//        return true;
-//    }
-//    else
-//        return false;
-//}
-//target = null;
-//return false;

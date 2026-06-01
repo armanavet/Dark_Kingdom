@@ -2,11 +2,11 @@ using UnityEngine;
 
 public interface ITargetable
 {
-    public Transform GetTransform();
     void ApplyDamage(float damage);
-    float GetHealthPrecent();
-    int GetTargetPriority();
-    Faction GetFaction();
+    public Transform Transform { get; }
+    public Faction Faction { get; }
+    public int TargetPriority { get; }
+    public float HealthPercent { get; }
 }
 
 public enum Faction

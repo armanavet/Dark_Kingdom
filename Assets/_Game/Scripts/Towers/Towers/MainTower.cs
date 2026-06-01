@@ -1,4 +1,3 @@
-using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,137 +21,57 @@ public class TowersRootPointPositions
 public class MainTower : Tower
 {
     [Header("Main Tower Parameters")]
-    [SerializeField] List<int> GoldGenerationList;
-    [SerializeField] private List<MainTowerDefender> Defender;
-    [SerializeField] List<float> ShootingPointPositions;
-    [SerializeField] List<Transform> TowersRootPoints;
+    [SerializeField] private List<MainTowerDefender> Defenders;
     [SerializeField] private TowersRootPointPositions[] TowersRootPointPositions;
-    [SerializeField] float ProjectileSpeed;
-    [SerializeField] float AttackSpeed;
-    [SerializeField, Range(1, 10f)]
-    float attackRange = 2f;
+    [SerializeField] private List<float> ShootingPointPositions;
+    [SerializeField] private List<Transform> TowersRootPoints;
+    [SerializeField] private float ProjectileSpeed;
 
-    public Vector3 size = Vector3.one;
-    [Range(0f, 1f)]
-    public float alpha = 0.5f;
-
-    float damage;
-    Vector3 range;
-    public override int GetTargetPriority() => 50;
-
-    private void Start()
+    protected override void Start()
     {
-        EconomyManager.Instance.OnEconomicStructureChange(this);
-        CrystalGenerated = GoldGenerationList[CurrentLevel];
-        SellPrice = SellPrices[CurrentLevel];
-        UpgradePrice = UpgradePrices[CurrentLevel];
-        damage = Damage[CurrentLevel];
-        maxHP = HP[CurrentLevel];
-        model = Models[CurrentLevel];
-        projectile = Projectiles[CurrentLevel];
-        currentHP = currentHP == 0 ? maxHP : currentHP;
-        UIManager.Instance.MainTowerHB.SetMaxHealth(maxHP);
-        UIManager.Instance.MainTowerHB.SetHealth(currentHP);
-        ApplyTowerPositionsForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
-        UpdateCanvasHeight(CurrentLevel);
-        towerCanvas.SetActive(false);
-        foreach (var defender in Defender)
-        {
-            defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
-            defender.cooldown = 1 / AttackSpeed;
-        }
-        range = new Vector3(attackRange, attackRange, attackRange);
-        SetSoundData();
+        soundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+        worldCanvas.worldCamera = Camera.main;
+        TowerPanel.gameObject.SetActive(false);
+        TowerPanel.Tower = this;
+        currentHP = maxHP;
+        UpdateData();
     }
 
     private void Update()
     {
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
-
-        foreach (var defender in Defender)
+        foreach (var defender in Defenders)
         {
             defender.cooldown -= Time.deltaTime;
 
-            if (defender.cooldown <= 0)
+            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
+
+            if (defender.cooldown <= 0 && AcquireTarget(defender))
             {
-                if (AcquireTarget(defender))
-                {
-                    Shoot(defender);
-                }
-                defender.cooldown = 1 / AttackSpeed;
+                Shoot(defender);
+                defender.cooldown = cooldown;
             }
         }
     }
-    private void OnDrawGizmos()
+
+    protected override void UpdateData()
     {
-        //Gizmos.color = Color.yellow;
-        //foreach (var defender in Defender)
-        //{
-        //    position = defender.turretRoot.position;
-        //    Gizmos.DrawCube(position, attackRange);
-        //}
-        ////Vector3 posiion = transform.position;
-        //Gizmos.color = Color.red;
-        ////if (target != null)
-        ////{
-        ////    Gizmos.DrawLine(transform.position, target.transform.position);
-        ////}
-        ///
+        base.UpdateData();
 
+        UIManager.Instance.MainTowerHB.SetMaxHealth(maxHP);
+        UIManager.Instance.MainTowerHB.SetHealth(currentHP);
 
-        // Set the color with custom alpha.
-        Gizmos.color = new Color(0f, 1f, 0f, alpha); // Green with custom alpha
-        Vector3 position = new Vector3();
-
-        // Draw the cube.
-        foreach (var defender in Defender)
+        ApplyTowerPositionsForLevel(currentLevel, TowersRootPoints, TowersRootPointPositions);
+        foreach (var defender in Defenders)
         {
-            position = defender.turretRoot.position;
-            Gizmos.DrawCube(position, size);
+            defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[currentLevel], defender.turret.position.z);
+            defender.cooldown = cooldown;
         }
-        // Draw a wire cube outline.
-        //Gizmos.color = Color.white;
-        //Gizmos.DrawWireCube(position, size);
-    }
-    public override void Upgrade()
-    {
-        if (CurrentLevel < UpgradePrices.Count)
-        {
-            OnUpgrade();
-            UpgradePrice = UpgradePrices[CurrentLevel];
-            EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
-
-            CurrentLevel++;
-            if (CurrentLevel < UpgradePrices.Count)
-                UpgradePrice = UpgradePrices[CurrentLevel];
-            SellPrice = SellPrices[CurrentLevel];
-            damage = Damage[CurrentLevel];
-            CrystalGenerated = GoldGenerationList[CurrentLevel];
-
-            model.SetActive(false);
-            model = Models[CurrentLevel];
-            ApplyTowerPositionsForLevel(CurrentLevel, TowersRootPoints, TowersRootPointPositions);
-            foreach (var defender in Defender)
-            {
-                defender.turret.position = new Vector3(defender.turret.position.x, (defender.turret.position.y * 0) + ShootingPointPositions[CurrentLevel], defender.turret.position.z);
-            }
-            model.SetActive(true);
-
-            UpdateCanvasHeight(CurrentLevel);
-
-            float hpPercent = currentHP / maxHP;
-            maxHP = HP[CurrentLevel];
-            currentHP = maxHP * hpPercent;
-            UIManager.Instance.MainTowerHB.SetMaxHealth(maxHP);
-            UIManager.Instance.MainTowerHB.SetHealth(currentHP);
-        }
-
     }
 
     void Shoot(MainTowerDefender defender)
     {
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, SoundData, defender.turret.transform);
-        Vector3 point = defender.target.GetTransform().position;
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, soundData, defender.turret.transform);
+        Vector3 point = defender.target.Transform.position;
         float travelDistance = Vector3.Distance(defender.turret.position, point);
         float travelTime = travelDistance / ProjectileSpeed;
         GameObject newProjectile = Instantiate(projectile, defender.turret.position, Quaternion.LookRotation(point - defender.turret.position));
@@ -162,38 +81,7 @@ public class MainTower : Tower
 
     bool AcquireTarget(MainTowerDefender defender)
     {
-        //Collider[] PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, illusionMask);
-        //if (PotentialTargets.Length == 0) PotentialTargets = Physics.OverlapBox(defender.turretRoot.position, range, Quaternion.identity, enemyMask);
-        //if (PotentialTargets.Length > 0)
-        //{
-        //    if (defender.target == null)
-        //    {
-        //        Collider closestTarget = PotentialTargets[0];
-        //        float minDistance = Vector3.Distance(defender.turret.position, closestTarget.transform.position);
-        //        foreach (var potentialTargets in PotentialTargets)
-        //        {
-        //            float distance = Vector3.Distance(defender.turret.position, potentialTargets.transform.position);
-        //            if (distance < minDistance)
-        //            {
-        //                minDistance = distance;
-        //                closestTarget = potentialTargets;
-        //            }
-        //        }
-        //        if (closestTarget != null)
-        //        {
-        //            defender.target = closestTarget.GetComponent<Enemy>();
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //}
-        //defender.target = null;
-        //return false;
-
-        Collider[] hits = Physics.OverlapSphere(defender.turretRoot.position, attackRange, hittabelMask);
+        Collider[] hits = Physics.OverlapSphere(defender.turretRoot.position, range, TargetMask);
 
         ITargetable bestTarget = null;
         float bestScore = float.MinValue;
@@ -206,13 +94,13 @@ public class MainTower : Tower
                 continue;
             Debug.Log($"2 Target is not null: {targetable}");
 
-            if (targetable.GetFaction() == this.GetFaction())
+            if (targetable.Faction == Faction)
                 continue;
-            Debug.Log($"3 Target is not from the same faction: {targetable.GetFaction()}");
+            Debug.Log($"3 Target is not from the same faction: {targetable.Faction}");
 
-            float dist = Vector3.Distance(transform.position, targetable.GetTransform().position);
-            float priority = targetable.GetTargetPriority();
-            float healthPrecent = targetable.GetHealthPrecent();
+            float dist = Vector3.Distance(transform.position, targetable.Transform.position);
+            float priority = targetable.TargetPriority;
+            float healthPrecent = targetable.TargetPriority;
 
             float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
             if (score > bestScore)
@@ -226,6 +114,7 @@ public class MainTower : Tower
         defender.target = bestTarget;
         return defender.target != null;
     }
+
     void ApplyTowerPositionsForLevel(
         int currentLevel,
         List<Transform> towersRootPoints,
@@ -247,15 +136,16 @@ public class MainTower : Tower
             point.localPosition = new Vector3(levelData.x[i], pos.y, levelData.y[i]);
         }
     }
+
     IEnumerator HitTarget(MainTowerDefender defender, GameObject currentProjectile, float arriveTime)
     {
         yield return new WaitForSeconds(arriveTime);
 
-        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, currentProjectile.transform);
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, soundData, currentProjectile.transform);
         if (defender.target != null)
         {
             if (defender.target is Enemy enemyTarget)
-                UIManager.Instance.ShowDamage(unitHitPointPopup, enemyTarget, damage);
+                UIManager.Instance.ShowDamage(enemyTarget, damage);
             defender.target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);

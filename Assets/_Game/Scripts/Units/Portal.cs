@@ -37,7 +37,6 @@ public class Portal : Enemy
     float gateLightMaxIntencity = 5f
     //, gateAudioMaxVolume = 0.3f
     , fireAudioMaxVolume = 0.6f;
-    public override int GetTargetPriority() => 80;
 
     private void Start()
     {

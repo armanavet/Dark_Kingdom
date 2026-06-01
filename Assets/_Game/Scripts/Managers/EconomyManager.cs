@@ -67,7 +67,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
         foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;
-            ChangeCrystelAmount(building.CrystalGenerated);
+            ChangeCrystelAmount(building.CrystalsGenerated);
         }
     }
 
