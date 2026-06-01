@@ -7,6 +7,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     //[SerializeField] HealthBar healthBar = null;
     [SerializeField] public Transform hitPointStartPos;
     [SerializeField] protected Transform model;
+    [SerializeField] protected HealthBar healthBar;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
@@ -144,6 +145,12 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         health = ValidateStat(maxHP, health);
         damage = ValidateStat(maxDamage, damage);
         attackSpeed = ValidateStat(maxAttackSpeed, attackSpeed);
+
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(health);
+            healthBar.SetMaxHealth(health);
+        }
     }
     private float ValidateStat(float maxValue, float fallback)
     {
@@ -170,8 +177,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     public void ApplyDamage(float damage)
     {
         if (state == EnemyState.Dead) return;
-        //if (healthBar != null) healthBar.SetHealth(damage);
         health -= damage;
+        if (healthBar != null) healthBar.SetHealth(health);
         if (health <= 0)
         {
             OnDeath();
