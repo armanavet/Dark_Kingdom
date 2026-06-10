@@ -1,14 +1,9 @@
-using AudioSystem;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class IllusionistEnemy : Enemy
 {
     [Header("Illusionist Enemy Parameters")]
     [SerializeField] Illusion illusionPrefab;
-    [SerializeField] float detectionRange;
     [SerializeField] float illusionSpawnTime;
     float illusionCooldown;
     Illusion illusion;
@@ -17,18 +12,11 @@ public class IllusionistEnemy : Enemy
     {
         SetParameters();
     }
+
     void Update()
     {
         if (state == EnemyState.Dead) return;
 
-        if (illusionCooldown <= 0)
-        {
-            if (DetectTowers())
-            {
-                SpawnIllusion();
-                illusionCooldown = illusionSpawnTime;
-            }
-        }
         illusionCooldown -= Time.deltaTime;
         state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
         if (state == EnemyState.Moving) Move();
@@ -46,16 +34,22 @@ public class IllusionistEnemy : Enemy
             attackCooldown = 1 / attackSpeed;
         }
     }
-    bool DetectTowers()
+
+    public Illusion OnDetected(out bool targetIllusion)
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, detectionRange, towerMask);
-        return targets.Length > 0;
+        targetIllusion = SpawnIllusion();
+        return illusion;
     }
-    void SpawnIllusion()
+
+    private bool SpawnIllusion()
     {
-        if (illusion == null)
-        {
-            illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
-        }
+        if (illusion != null) return false;
+        if (illusionCooldown > 0) return false;
+
+        illusion = Instantiate(illusionPrefab, transform.position, transform.rotation);
+        illusion.Model.position = model.position;
+        illusion.Model.rotation = model.rotation;
+        illusionCooldown = illusionSpawnTime;
+        return true;
     }
 }

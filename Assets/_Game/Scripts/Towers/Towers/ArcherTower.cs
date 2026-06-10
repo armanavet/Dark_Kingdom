@@ -79,6 +79,14 @@ public class ArcherTower : Tower
             }
         }
 
+        if (target is IllusionistEnemy illusionist && !target.IsDead)
+        {
+            var illusion = illusionist.OnDetected(out bool targetIllusion);
+            if (illusion != null && targetIllusion)
+            {
+                target = illusion;
+            }
+        }
     }
 
     private void OnDrawGizmos()

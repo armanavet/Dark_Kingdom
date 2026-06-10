@@ -109,6 +109,14 @@ public class MainTower : Tower
             }
         }
 
+        if (defender.target is IllusionistEnemy illusionist && !defender.target.IsDead)
+        {
+            var illusion = illusionist.OnDetected(out bool targetIllusion);
+            if (illusion != null && targetIllusion)
+            {
+                defender.target = illusion;
+            }
+        }
     }
 
     void ApplyTowerPositionsForLevel(

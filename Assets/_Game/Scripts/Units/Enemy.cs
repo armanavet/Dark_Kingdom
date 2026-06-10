@@ -139,7 +139,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         InitializeAudio();
     }
 
-    private void ApplyStats()
+    protected void ApplyStats()
     {
         currentSpeed = ValidateStat(maxSpeed, currentSpeed);
         health = ValidateStat(maxHP, health);
@@ -152,16 +152,16 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
             healthBar.SetMaxHealth(health);
         }
     }
-    private float ValidateStat(float maxValue, float fallback)
+    protected float ValidateStat(float maxValue, float fallback)
     {
         return maxValue > 0 ? maxValue : fallback;
     }
-    private void CacheComponents()
+    protected void CacheComponents()
     {
         animator = GetComponent<Animator>();
         IsAttacking = Animator.StringToHash("isAttacking");
     }
-    private void InitializeAudio()
+    protected void InitializeAudio()
     {
         SoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
     }

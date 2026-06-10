@@ -107,6 +107,14 @@ public class WizardTower : Tower
             }
         }
 
+        if (target is IllusionistEnemy illusionist && !target.IsDead)
+        {
+            var illusion = illusionist.OnDetected(out bool targetIllusion);
+            if (illusion != null && targetIllusion)
+            {
+                target = illusion;
+            }
+        }
     }
 
     protected override void CheckStrategy()

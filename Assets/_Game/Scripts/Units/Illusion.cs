@@ -1,23 +1,48 @@
-using AudioSystem;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
-    [SerializeField] float duration;
+    [SerializeField] private float duration;
+    private float timer;
+    public Transform Model => model;
+
+    private void OnEnable()
+    {
+        StateManager.Instance.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        StateManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+    }
 
     void Start()
     {
-        currentSpeed = maxSpeed;
-        health = maxHP;
-        animator = GetComponent<Animator>();
-        Destroy(gameObject, duration);
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
     }
+
     void Update()
     {
         if (state == EnemyState.Dead) return;
+
+        timer += Time.deltaTime;
+
+        if (timer >= duration)
+        {
+            OnDeath();
+        }
     }
+
     protected override void Attack() { }
+
+    private void OnGameStateChanged(GameState state)
+    {
+        if (state == GameState.Passive)
+        {
+            OnDeath();
+        }
+    }
 }
