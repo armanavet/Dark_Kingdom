@@ -34,13 +34,13 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     protected float progress, progressFactor;
 
     [field: SerializeField] public UnitType Type { get; protected set; }
-    [field: SerializeField] public int TargetPriority { get; protected set; }
     [field: SerializeField] public SoundData SoundData { get; protected set; }
     public Faction Faction => Faction.Enemy;
     public Transform Transform => transform;
     public Vector3 CurrentPosition => model.position;
     public float HealthPercent => health / maxHP;
     public float Damage => damage;
+    public bool IsDead => state == EnemyState.Dead;
 
     public void OnSpawn(Tile startingTile, Vector3 positionOffset)
     {

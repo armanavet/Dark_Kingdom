@@ -25,8 +25,10 @@ public class WizardTower : Tower
     {
         timer -= Time.deltaTime;
         CheckStrategy();
+        AcquireTarget();
+        if (target == null || target.IsDead) return;
 
-        if (canAttack && timer <= 0 && AcquireTarget())
+        if (canAttack && timer <= 0)
         {
             Launch(target);
             timer = cooldown;
@@ -77,36 +79,33 @@ public class WizardTower : Tower
             , Type);
     }
 
-    bool AcquireTarget()
+    private void AcquireTarget()
     {
+        if (target != null && !target.IsDead) return;
+
+        float minDist = float.MaxValue;
         Collider[] hits = Physics.OverlapSphere(transform.position, range, TargetMask);
-
-        ITargetable bestTarget = null;
-        float bestScore = float.MinValue;
-
         foreach (var hit in hits)
         {
             var targetable = hit.GetComponent<ITargetable>();
-            if (targetable == null)
+            if (targetable == null || targetable.IsDead)
                 continue;
 
-            if (targetable.Faction == Faction)
-                continue;
+            //Priority targets, in order
+            if (targetable is Illusion ||
+                targetable is MushroomEnemy)
+            {
+                target = targetable;
+            }
 
             float dist = Vector3.Distance(transform.position, targetable.Transform.position);
-            float priority = targetable.TargetPriority;
-            float healthPrecent = targetable.HealthPercent;
-
-            float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
-            if (score > bestScore)
+            if (dist < minDist)
             {
-                bestScore = score;
-                bestTarget = targetable;
+                minDist = dist;
+                target = targetable;
+                Debug.Log($"Target: {targetable}");
             }
         }
-
-        target = bestTarget;
-        return target != null;
 
     }
 

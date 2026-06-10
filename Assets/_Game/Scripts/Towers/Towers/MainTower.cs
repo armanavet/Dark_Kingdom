@@ -44,8 +44,10 @@ public class MainTower : Tower
         foreach (var defender in Defenders)
         {
             defender.cooldown -= Time.deltaTime;
+            AcquireTarget(defender);
+            if (defender.target == null || defender.target.IsDead) continue;
 
-            if (canAttack && defender.cooldown <= 0 && AcquireTarget(defender))
+            if (canAttack && defender.cooldown <= 0)
             {
                 Shoot(defender);
                 defender.cooldown = cooldown;
@@ -79,40 +81,34 @@ public class MainTower : Tower
         StartCoroutine(HitTarget(defender, newProjectile, travelTime));
     }
 
-    bool AcquireTarget(MainTowerDefender defender)
+    private void AcquireTarget(MainTowerDefender defender)
     {
+        if (defender.target != null && !defender.target.IsDead) return;
+
+        float minDist = float.MaxValue;
         Collider[] hits = Physics.OverlapSphere(defender.turretRoot.position, range, TargetMask);
-
-        ITargetable bestTarget = null;
-        float bestScore = float.MinValue;
-
         foreach (var hit in hits)
         {
             var targetable = hit.GetComponent<ITargetable>();
-            Debug.Log($"1 Target: {targetable}, {hit.gameObject}");
-            if (targetable == null)
+            if (targetable == null || targetable.IsDead)
                 continue;
-            Debug.Log($"2 Target is not null: {targetable}");
 
-            if (targetable.Faction == Faction)
-                continue;
-            Debug.Log($"3 Target is not from the same faction: {targetable.Faction}");
+            //Priority targets, in order
+            if (targetable is Illusion ||
+                targetable is MushroomEnemy)
+            {
+                defender.target = targetable;
+            }
 
             float dist = Vector3.Distance(transform.position, targetable.Transform.position);
-            float priority = targetable.TargetPriority;
-            float healthPrecent = targetable.TargetPriority;
-
-            float score = priority * 1000f - dist * 2f - (healthPrecent * 200f);
-            if (score > bestScore)
+            if (dist < minDist)
             {
-                bestScore = score;
-                bestTarget = targetable;
-                Debug.Log($"Target: {targetable}, Score: {score}");
+                minDist = dist;
+                defender.target = targetable;
+                Debug.Log($"Target: {targetable}");
             }
         }
 
-        defender.target = bestTarget;
-        return defender.target != null;
     }
 
     void ApplyTowerPositionsForLevel(

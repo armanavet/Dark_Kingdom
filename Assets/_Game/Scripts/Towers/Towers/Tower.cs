@@ -16,14 +16,14 @@ public abstract class Tower : MonoBehaviour, ITargetable
     public LayerMask TargetMask;
 
 
-    //TODO remove ALL serialization below
     [Header("General data")]
-    [SerializeField] protected SoundData soundData;
-    [SerializeField] protected float currentHP;
+    protected float currentHP;
     protected int currentLevel = 1;
-    [SerializeField] protected Dictionary<DebuffType, Debuff> currentDebuffs = new();
+    protected SoundData soundData;
+    protected Dictionary<DebuffType, Debuff> currentDebuffs = new();
     protected float range { get => data.Range; }
     protected float cooldown { get => data.Cooldown; }
+
 
     [Header("Level-based data")]
     protected GameObject projectile { get => data.Levels[currentLevel - 1].Projectile; }
@@ -31,17 +31,18 @@ public abstract class Tower : MonoBehaviour, ITargetable
     protected float damage { get => data.Levels[currentLevel - 1].Damage; }
     protected int sellPrice { get => data.Levels[currentLevel - 1].SellPrice; }
 
+
     [Header("Public data")]
     public TowerType Type { get => data.Type; }
     public Faction Faction { get => data.Faction; }
     public Transform Transform { get => transform; }
-    public int TargetPriority { get => data.TargetPriority; }
     public int PurchasePrice { get => data.PurchasePrice; }
     public int UpgradePrice { get => data.Levels[currentLevel - 1].UpgradePrice; }
     public int CrystalsGenerated { get => data.Levels[currentLevel - 1].CrystalsGenerated; }
     public float HealthPercent { get => currentHP / maxHP; }
     public bool IsMaxLevel { get => currentLevel >= data.Levels.Length; }
     public bool IsDestroyed { get; protected set; }
+    public bool IsDead { get => IsDestroyed; }
 
 
     public event Action<Tower> OnDestroyed;
