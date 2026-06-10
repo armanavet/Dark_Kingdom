@@ -87,7 +87,7 @@ public class WaveManager : MonoBehaviour, ISaveable
     #region Spawn
     IEnumerator SpawnFlow(List<Portal> activePortals, Wave wave)
     {
-        WormManager.Instance.Spawn();
+        WormManager.Instance.Spawn(currentWaveIndex);
         yield return StartCoroutine(ManagePortalVisuals(activePortals, "activate"));
 
         yield return StartCoroutine(SpawnUnits(activePortals, wave));

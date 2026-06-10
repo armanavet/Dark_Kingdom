@@ -15,6 +15,7 @@ public class WormManager : MonoBehaviour
 
     [SerializeField] GameObject plane;
     [SerializeField] Enemy unit;
+    [SerializeField] private int startingWave = 6;
     [SerializeField] int amountPerWave = 3;
     [SerializeField] bool multiply;
     [SerializeField] float increaseBy = 1;
@@ -132,8 +133,9 @@ public class WormManager : MonoBehaviour
             (isMiner ? minerTowers : actionTowers).Add(tower);
         }
     }
-    public void Spawn()
+    public void Spawn(int waveIndex)
     {
+        if (waveIndex < startingWave) return;
         if (tergetTowers == null) return;
         else if (unit == null) return;
         foreach (var target in tergetTowers)
