@@ -8,10 +8,11 @@ public class ArtilleryTower : Tower
     [SerializeField, Range(0.5f, 5f)]
     float shellBlastRadius = 1;
 
-    ITargetable target;
-    float g => Mathf.Abs(Physics.gravity.y);
-    float launchSpeed;
-    float timer;
+    private ITargetable target;
+    private float g => Mathf.Abs(Physics.gravity.y);
+    private float launchSpeed;
+    private float timer;
+    private bool canAttack = true;
 
     void Awake()
     {
@@ -20,20 +21,12 @@ public class ArtilleryTower : Tower
         launchSpeed = Mathf.Sqrt(g * (y + Mathf.Sqrt(x * x + y * y)));
     }
 
-    //void Start()
-    //{
-    //    soundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
-    //    UpdateData();
-    //    OnPlace();
-    //}
-
     void Update()
     {
         timer -= Time.deltaTime;
+        CheckStrategy();
 
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
-
-        if (timer <= 0 && AcquireTarget())
+        if (canAttack && timer <= 0 && AcquireTarget())
         {
             Launch(target);
             timer = cooldown;
@@ -114,5 +107,25 @@ public class ArtilleryTower : Tower
 
         target = bestTarget;
         return target != null;
+    }
+
+    protected override void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Battle)
+        {
+            canAttack = true;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(false);
+            }
+        }
+        else
+        {
+            canAttack = false;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(true);
+            }
+        }
     }
 }

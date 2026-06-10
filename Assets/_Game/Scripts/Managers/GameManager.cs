@@ -85,14 +85,15 @@ public class GameManager : MonoBehaviour
         }
         if (state == GameState.Passive)
         {
-            //AudioManager.Instance.Play(MusicType.InNormal, music);
+            yield return new WaitForSeconds(1f);
+            AudioManager.Instance.Play(MusicType.InNormal, music);
         }
         else if (state == GameState.Active)
         {
-            //AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music);
-            //yield return new WaitForSeconds(music.clip.length);
+            AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music);
+            yield return new WaitForSeconds(music.clip.length);
             OnWaveIntroFinished?.Invoke();
-            //AudioManager.Instance.Play(MusicType.InWave, music);
+            AudioManager.Instance.Play(MusicType.InWave, music);
         }
     }
     void OnEnable()

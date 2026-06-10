@@ -21,7 +21,7 @@ public class TowerPanel : MonoBehaviour
 
     void ChangeButtonVisibility()
     {
-        if (EconomyManager.Instance.CurrentCrystal < Tower.UpgradePrice ||
+        if (EconomyManager.Instance.CurrentCrystals < Tower.UpgradePrice ||
             Tower.IsMaxLevel || 
             StrategyManager.Instance.CurrentStrategy != StrategyType.Construction)
         {

@@ -26,6 +26,7 @@ public class MainTower : Tower
     [SerializeField] private List<float> ShootingPointPositions;
     [SerializeField] private List<Transform> TowersRootPoints;
     [SerializeField] private float ProjectileSpeed;
+    private bool canAttack = true;
 
     protected override void Start()
     {
@@ -39,13 +40,12 @@ public class MainTower : Tower
 
     private void Update()
     {
+        CheckStrategy();
         foreach (var defender in Defenders)
         {
             defender.cooldown -= Time.deltaTime;
 
-            if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
-
-            if (defender.cooldown <= 0 && AcquireTarget(defender))
+            if (canAttack && defender.cooldown <= 0 && AcquireTarget(defender))
             {
                 Shoot(defender);
                 defender.cooldown = cooldown;
@@ -120,10 +120,10 @@ public class MainTower : Tower
         List<Transform> towersRootPoints,
         TowersRootPointPositions[] towersRootPointPositions)
     {
-        if (currentLevel < 0 || currentLevel >= towersRootPointPositions.Length)
+        if (currentLevel < 1 || currentLevel >= towersRootPointPositions.Length)
             return;
 
-        var levelData = towersRootPointPositions[currentLevel];
+        var levelData = towersRootPointPositions[currentLevel - 1];
 
         for (int i = 0; i < towersRootPoints.Count; i++)
         {
@@ -149,5 +149,25 @@ public class MainTower : Tower
             defender.target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);
+    }
+
+    protected override void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Battle)
+        {
+            canAttack = true;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(false);
+            }
+        }
+        else
+        {
+            canAttack = false;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(true);
+            }
+        }
     }
 }

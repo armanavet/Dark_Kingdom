@@ -1,5 +1,4 @@
 using DG.Tweening;
-//using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -138,7 +137,7 @@ public class UIManager : MonoBehaviour
 
     void LateUpdate()
     {
-        goldText.text = EconomyManager.Instance.CurrentCrystal.ToString();
+        goldText.text = EconomyManager.Instance.CurrentCrystals.ToString();
     }
 
     void Update()
@@ -185,7 +184,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < towerPurchaseButtons.Length; i++)
         {
             var tower = TowerManager.Instance.TowerPrefabs[i];
-            if (tower.PurchasePrice < EconomyManager.Instance.CurrentCrystal)
+            if (tower.PurchasePrice < EconomyManager.Instance.CurrentCrystals)
             {
                 towerPurchaseButtons[i].interactable = true;
             }

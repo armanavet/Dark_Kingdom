@@ -9,6 +9,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
     [SerializeField] protected TowerDataSO data;
     [SerializeField] protected GameObject[] models;
     [SerializeField] protected Canvas worldCanvas;
+    [SerializeField] protected GameObject[] sleepFX;
     [HideInInspector] public Tile Tile;
     public TowerPanel TowerPanel;
     public HealthBar HealthBar;
@@ -55,7 +56,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
 
     public void Sell()
     {
-        EconomyManager.Instance.ChangeCrystelAmount(sellPrice);
+        EconomyManager.Instance.ChangeCrystals(sellPrice);
         Destroy();
     }
 
@@ -97,7 +98,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
     {
         if (IsMaxLevel) return;
 
-        EconomyManager.Instance.ChangeCrystelAmount(-UpgradePrice);
+        EconomyManager.Instance.ChangeCrystals(-UpgradePrice);
         models[currentLevel - 1].SetActive(false);
         float hpPercent = HealthPercent;
         currentLevel++;
@@ -127,7 +128,7 @@ public abstract class Tower : MonoBehaviour, ITargetable
         currentHP = maxHP;
         TowerPanel.Tower = this;
         TowerPanel.gameObject.SetActive(false);
-        EconomyManager.Instance.ChangeCrystelAmount(-data.PurchasePrice);
+        EconomyManager.Instance.ChangeCrystals(-data.PurchasePrice);
         EconomyManager.Instance.OnEconomicStructureChange(this);
         AudioManager.Instance.Play(GamePlaySFX_Type.TowerPlace, soundData, transform);
         soundData.volume = 1f;
@@ -136,6 +137,8 @@ public abstract class Tower : MonoBehaviour, ITargetable
         Instantiate(data.BuildEffectLow, new Vector3(transform.position.x, 0.15f, transform.position.z), Quaternion.identity);
         Instantiate(data.BuildEffectHigh, new Vector3(transform.position.x, 0.8f, transform.position.z), Quaternion.identity);
     }
+
+    protected abstract void CheckStrategy();
 
     public TowerData OnSave()
     {

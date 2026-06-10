@@ -10,26 +10,19 @@ public class ArcherTower : Tower
     [SerializeField] float projectileSpeed;
     private ITargetable target;
     private float timer;
-
-    //private void Start()
-    //{
-    //    soundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
-    //    UpdateData();
-    //    OnPlace();
-    //}
+    private bool canAttack = true;
 
     void Update()
     {
         timer -= Time.deltaTime;
+        CheckStrategy();
 
         //if (IsCaptured)
         //{
         //    HandleCapturedState();
         //}
 
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Battle) return;
-
-        if (timer <= 0 && AcquireTarget())
+        if (canAttack && timer <= 0 && AcquireTarget())
         {
             timer = cooldown;
             Shoot();
@@ -128,5 +121,25 @@ public class ArcherTower : Tower
             target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);
+    }
+
+    protected override void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Battle)
+        {
+            canAttack = true;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(false);
+            }
+        }
+        else
+        {
+            canAttack = false;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(true);
+            }
+        }
     }
 }

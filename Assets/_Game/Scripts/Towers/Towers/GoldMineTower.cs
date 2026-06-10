@@ -1,10 +1,23 @@
 
 public class GoldMineTower : Tower
 {
-    //private void Start()
-    //{
-    //    soundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
-    //    UpdateData();
-    //    OnPlace();
-    //}
+    private void Update()
+    {
+        CheckStrategy();
+    }
+
+    protected override void CheckStrategy()
+    {
+        foreach (var effect in sleepFX)
+        {
+            if (StrategyManager.Instance.CurrentStrategy == StrategyType.Economy)
+            {
+                effect.SetActive(false);
+            }
+            else
+            {
+                effect.SetActive(true);
+            }
+        }
+    }
 }

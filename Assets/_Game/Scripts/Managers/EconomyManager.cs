@@ -6,10 +6,11 @@ using TMPro;
 
 public class EconomyManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] int currentCrystal;
+    [SerializeField] int currentCrystals;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
     float timer = 0;
-    public int CurrentCrystal { get => currentCrystal; }
+    public int CurrentCrystals { get => currentCrystals; }
+    private bool canGenerate;
 
     #region Singleton 
     private static EconomyManager _instance;
@@ -35,16 +36,18 @@ public class EconomyManager : MonoBehaviour, ISaveable
     void Update()
     {
         timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
-        if (timer >= 1)
+
+        CheckStrategy();
+        if (timer >= 1 && canGenerate)
         {
-            CurrentCrystel();
+            GenerateCrystals();
             timer = 0;
         }
     }
 
-    public void ChangeCrystelAmount(int amount)
+    public void ChangeCrystals(int amount)
     {
-        currentCrystal += amount;
+        currentCrystals += amount;
     }
 
     public void OnEconomicStructureChange(Tower structure)
@@ -60,14 +63,24 @@ public class EconomyManager : MonoBehaviour, ISaveable
         EconomicBuildings.Add(structure);
     }
 
-    void CurrentCrystel()
+    void GenerateCrystals()
     {
-        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Economy) return;
-
         foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;
-            ChangeCrystelAmount(building.CrystalsGenerated);
+            ChangeCrystals(building.CrystalsGenerated);
+        }
+    }
+
+    private void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Economy)
+        {
+            canGenerate = true;
+        }
+        else
+        {
+            canGenerate = false;
         }
     }
 
@@ -81,14 +94,14 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentCrystals = currentCrystal;
+        saveData.CurrentCrystals = currentCrystals;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentCrystal = saveData.CurrentCrystals;
+        currentCrystals = saveData.CurrentCrystals;
     }
 }
 
