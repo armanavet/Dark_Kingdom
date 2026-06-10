@@ -129,6 +129,7 @@ public class Portal : Enemy
     {
         if (IsDestroyed) return;
         IsDestroyed = true;
+        state = EnemyState.Dead;
 
         StopAllCoroutines();
 
