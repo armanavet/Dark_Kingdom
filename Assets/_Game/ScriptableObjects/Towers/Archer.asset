@@ -33,7 +33,7 @@ MonoBehaviour:
     <HP>k__BackingField: 70
     <Damage>k__BackingField: 10
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 2
+    <CanvasHeight>k__BackingField: 3.4
   - <Projectile>k__BackingField: {fileID: 1391574063814312, guid: 1e94d3f5fa76afc4680e38ea5dc5084e,
       type: 3}
     <Debuff>k__BackingField: {fileID: 11400000, guid: e39c612f6ef91b44b93fec38adc5f9af,
@@ -43,7 +43,7 @@ MonoBehaviour:
     <HP>k__BackingField: 100
     <Damage>k__BackingField: 15
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 2.4
+    <CanvasHeight>k__BackingField: 3.75
   - <Projectile>k__BackingField: {fileID: 6171265629823123270, guid: b2c62bc029caf7a4d89b626c853317e2,
       type: 3}
     <Debuff>k__BackingField: {fileID: 11400000, guid: cefa31c790da25645b9f0b74883b1ecc,
@@ -53,4 +53,4 @@ MonoBehaviour:
     <HP>k__BackingField: 120
     <Damage>k__BackingField: 20
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 2.7
+    <CanvasHeight>k__BackingField: 4

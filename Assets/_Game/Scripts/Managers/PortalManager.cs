@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,7 +15,7 @@ public class PortalManager : MonoBehaviour, ISaveable
     Dictionary<int, Portal> portalsByID;
     GameState currentState;
     public delegate void PortalsDestroyed();
-    public event PortalsDestroyed OnAllPortalsDestroyed;
+    public static event PortalsDestroyed OnAllPortalsDestroyed;
     #region Singleton 
     private static PortalManager _instance;
     public static PortalManager Instance
@@ -41,13 +40,12 @@ public class PortalManager : MonoBehaviour, ISaveable
 
     private void OnEnable()
     {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+        StateManager.OnGameStateChanged += HandleStateChanged;
     }
 
     private void OnDisable()
     {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+        StateManager.OnGameStateChanged -= HandleStateChanged;
     }
 
     public void Initialize()

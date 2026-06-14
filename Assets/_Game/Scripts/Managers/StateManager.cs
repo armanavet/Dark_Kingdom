@@ -1,17 +1,17 @@
 using AudioSystem;
 using System;
-using System.Resources;
 using UnityEngine;
 
 public class StateManager : MonoBehaviour
 {
+    [SerializeField] private StateUIManager uiManager;
     [SerializeField] SoundData StateSoundData;
     [SerializeField] float[] TimeUntilNextWave;
     [HideInInspector] public GameState State;
     GameState PreviousState;
     float Timer, Duration;
     public int timeMultiplier = 1;
-    public event Action<GameState> OnGameStateChanged;
+    public static event Action<GameState> OnGameStateChanged;
     #region Singleton
     private static StateManager _instance;
     public static StateManager Instance
@@ -34,6 +34,7 @@ public class StateManager : MonoBehaviour
 
     public void Initialize()
     {
+        uiManager.Initialize();
         ChangeGameStateTo(GameState.Passive);
     }
 
@@ -43,7 +44,7 @@ public class StateManager : MonoBehaviour
         if (State == GameState.Passive)
         {
             Timer -= Time.deltaTime * timeMultiplier;
-            UIManager.Instance.UpdateTimer(Timer, Duration);
+            uiManager.UpdateTimer(Timer, Duration);
             if (Timer <= 0) ChangeGameStateTo(GameState.Active);
         }
         else if (State == GameState.End)
@@ -70,8 +71,8 @@ public class StateManager : MonoBehaviour
         {
             State = GameState.End;
         }
+        uiManager.OnGameStateChanged(newState);
         OnGameStateChanged?.Invoke(newState);
-        UIManager.Instance.OnGameStateChanged();
     }
 
     public void OnGamePaused()

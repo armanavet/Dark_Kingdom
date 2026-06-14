@@ -194,22 +194,17 @@ public class WaveManager : MonoBehaviour, ISaveable
     #region Link with Managerd
     private void OnEnable()
     {
-        StateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
-        GameManager.Instance.OnWaveIntroFinished += StartSpawn;
-        PortalManager.Instance.OnAllPortalsDestroyed += HandleAllPortalsDestroyed;
+        StateManager.OnGameStateChanged += OnGameStateChanged;
+        GameManager.OnWaveIntroFinished += StartSpawn;
+        PortalManager.OnAllPortalsDestroyed += HandleAllPortalsDestroyed;
     }
     private void OnDisable()
     {
-        if (PortalManager.Instance != null)
-            PortalManager.Instance.OnAllPortalsDestroyed -= HandleAllPortalsDestroyed;
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnWaveIntroFinished -= StartSpawn;
-
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        PortalManager.OnAllPortalsDestroyed -= HandleAllPortalsDestroyed;
+        GameManager.OnWaveIntroFinished -= StartSpawn;
+        StateManager.OnGameStateChanged -= OnGameStateChanged;
     }
-    void HandleGameStateChanged(GameState state)
+    private void OnGameStateChanged(GameState state)
     {
         switch (state)
         {

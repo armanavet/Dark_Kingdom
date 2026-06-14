@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Mine
   m_EditorClassIdentifier: Assembly-CSharp::TowerDataSO
   <Type>k__BackingField: 4
+  <Faction>k__BackingField: 0
   <PurchasePrice>k__BackingField: 60
   <Cooldown>k__BackingField: 0
   <Range>k__BackingField: 0
   <TargetPriority>k__BackingField: 0
-  <UnitHitPointPopup>k__BackingField: {fileID: 8130200052441249841, guid: 712da09042ba8bc4585bb1ca83c9ee85,
-    type: 3}
   <BuildEffectHigh>k__BackingField: {fileID: 7698345367346486304, guid: ec8556b1463987e468cf844835a1fb1a,
     type: 3}
   <BuildEffectLow>k__BackingField: {fileID: 8596581299401022538, guid: d953a767871ff6445b6d743e9675e646,
@@ -33,7 +32,7 @@ MonoBehaviour:
     <HP>k__BackingField: 100
     <Damage>k__BackingField: 0
     <CrystalsGenerated>k__BackingField: 100
-    <CanvasHeight>k__BackingField: 1
+    <CanvasHeight>k__BackingField: 2.5
   - <Projectile>k__BackingField: {fileID: 0}
     <Debuff>k__BackingField: {fileID: 0}
     <UpgradePrice>k__BackingField: 0
@@ -41,7 +40,7 @@ MonoBehaviour:
     <HP>k__BackingField: 125
     <Damage>k__BackingField: 0
     <CrystalsGenerated>k__BackingField: 100
-    <CanvasHeight>k__BackingField: 1
+    <CanvasHeight>k__BackingField: 2.5
   - <Projectile>k__BackingField: {fileID: 0}
     <Debuff>k__BackingField: {fileID: 0}
     <UpgradePrice>k__BackingField: 0
@@ -49,4 +48,4 @@ MonoBehaviour:
     <HP>k__BackingField: 150
     <Damage>k__BackingField: 0
     <CrystalsGenerated>k__BackingField: 100
-    <CanvasHeight>k__BackingField: 1.2
+    <CanvasHeight>k__BackingField: 2.675

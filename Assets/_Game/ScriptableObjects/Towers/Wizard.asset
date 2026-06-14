@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Wizard
   m_EditorClassIdentifier: Assembly-CSharp::TowerDataSO
   <Type>k__BackingField: 2
+  <Faction>k__BackingField: 0
   <PurchasePrice>k__BackingField: 75
   <Cooldown>k__BackingField: 4
   <Range>k__BackingField: 2
   <TargetPriority>k__BackingField: 70
-  <UnitHitPointPopup>k__BackingField: {fileID: 8130200052441249841, guid: 712da09042ba8bc4585bb1ca83c9ee85,
-    type: 3}
   <BuildEffectHigh>k__BackingField: {fileID: 7698345367346486304, guid: ec8556b1463987e468cf844835a1fb1a,
     type: 3}
   <BuildEffectLow>k__BackingField: {fileID: 8596581299401022538, guid: d953a767871ff6445b6d743e9675e646,
@@ -35,7 +34,7 @@ MonoBehaviour:
     <HP>k__BackingField: 60
     <Damage>k__BackingField: 5
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 1.9
+    <CanvasHeight>k__BackingField: 3.3
   - <Projectile>k__BackingField: {fileID: 1777402069902847104, guid: 7e0078554bc8e7d4d9d3c391cad14a8e,
       type: 3}
     <Debuff>k__BackingField: {fileID: 0}
@@ -44,7 +43,7 @@ MonoBehaviour:
     <HP>k__BackingField: 70
     <Damage>k__BackingField: 10
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 2.25
+    <CanvasHeight>k__BackingField: 3.5
   - <Projectile>k__BackingField: {fileID: 1777402069902847104, guid: 7e0078554bc8e7d4d9d3c391cad14a8e,
       type: 3}
     <Debuff>k__BackingField: {fileID: 11400000, guid: 1571ac825c02bb449ac3275b3c66442e,
@@ -54,4 +53,4 @@ MonoBehaviour:
     <HP>k__BackingField: 100
     <Damage>k__BackingField: 15
     <CrystalsGenerated>k__BackingField: 0
-    <CanvasHeight>k__BackingField: 2.3
+    <CanvasHeight>k__BackingField: 3.575

@@ -10,12 +10,12 @@ public class Illusion : Enemy
 
     private void OnEnable()
     {
-        StateManager.Instance.OnGameStateChanged += OnGameStateChanged;
+        StateManager.OnGameStateChanged += OnGameStateChanged;
     }
 
     private void OnDisable()
     {
-        StateManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+        StateManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
     void Start()

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     AudioSource music;
     static bool IsPaused;
     Coroutine musicRoutine;
-    public event Action OnWaveIntroFinished;
+    public static event Action OnWaveIntroFinished;
     #region Singleton
     private static GameManager _instance;
     public static GameManager Instance
@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError($"The {this} has no audio source!");
         }
+        TowerManager.Instance.Initialize();
         UIManager.Instance.Initialize();
         PortalManager.Instance.Initialize();
-        TowerManager.Instance.Initialize();
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
         StrategyManager.Instance.Initialize();
@@ -102,13 +102,12 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+        StateManager.OnGameStateChanged += HandleStateChanged;
     }
 
     void OnDisable()
     {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+        StateManager.OnGameStateChanged -= HandleStateChanged;
     }
 
     void HandleStateChanged(GameState state)

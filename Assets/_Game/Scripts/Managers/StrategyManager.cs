@@ -24,9 +24,10 @@ public class StrategyManager : MonoBehaviour, ISaveable
     }
     #endregion
 
+    [SerializeField] private StrategyUIManager uiManager;
     [SerializeField] private StrategyDatabaseSO strategyDB;
     [SerializeField] private StrategyType currentStrategy;
-    [SerializeField] private float timer;
+    private float timer;
     private float cooldown;
     private bool canSwitch = true;
 
@@ -35,6 +36,7 @@ public class StrategyManager : MonoBehaviour, ISaveable
 
     public void Initialize()
     {
+        uiManager.Initialize();
         ChangeStrategy(0);
         timer = cooldown = 0;
     }
@@ -44,7 +46,7 @@ public class StrategyManager : MonoBehaviour, ISaveable
         if (StateManager.Instance.State == GameState.Paused) return;
 
         timer -= Time.deltaTime;
-        UIManager.Instance.UpdateStrategyCooldown(timer, cooldown);
+        uiManager.UpdateCooldown(timer, cooldown);
         if (timer <= 0)
         {
             canSwitch = true;
@@ -67,7 +69,8 @@ public class StrategyManager : MonoBehaviour, ISaveable
         timer = cooldown = s.Cooldown;
         canSwitch = false;
 
-        UIManager.Instance.OnStrategyChanged(s);
+        OnStrategyChanged.Invoke(s);
+        uiManager.OnStrategyChanged(s);
     }
 
     public void RegisterSaveable() => SaveManager.RegisterSaveable(this);

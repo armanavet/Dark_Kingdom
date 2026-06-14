@@ -1,13 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class EconomyManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] int currentCrystals;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
+    [SerializeField] private TextMeshProUGUI crystalsText;
+    [SerializeField] int currentCrystals;
     float timer = 0;
     public int CurrentCrystals { get => currentCrystals; }
     private bool canGenerate;
@@ -33,6 +32,11 @@ public class EconomyManager : MonoBehaviour, ISaveable
     }
     #endregion
 
+    private void Start()
+    {
+        crystalsText.text = currentCrystals.ToString();
+    }
+
     void Update()
     {
         if (StateManager.Instance.State == GameState.Paused) return;
@@ -50,6 +54,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public void ChangeCrystals(int amount)
     {
         currentCrystals += amount;
+        crystalsText.text = currentCrystals.ToString();
     }
 
     public void OnEconomicStructureChange(Tower structure)
@@ -104,6 +109,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
     {
         GeneralData saveData = data as GeneralData;
         currentCrystals = saveData.CurrentCrystals;
+        crystalsText.text = currentCrystals.ToString();
     }
 }
 
