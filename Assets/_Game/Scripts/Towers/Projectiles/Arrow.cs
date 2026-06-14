@@ -8,6 +8,8 @@ public class Arrow : MonoBehaviour
     
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         transform.position += transform.forward * Time.deltaTime * speed;
     }
     public void Initialize(float speed)

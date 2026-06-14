@@ -14,6 +14,8 @@ public class ArcherTower : Tower
 
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         timer -= Time.deltaTime;
         CheckStrategy();
         AcquireTarget();

@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using AudioSystem;
-using System.Collections;
-using Unity.VisualScripting;
+
 
 public class MushroomEnemy : Enemy
 {
@@ -55,6 +54,7 @@ public class MushroomEnemy : Enemy
     }
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
         if (state == EnemyState.Dead) return;
 
         if (AcquireTargets()) StartCapturing();

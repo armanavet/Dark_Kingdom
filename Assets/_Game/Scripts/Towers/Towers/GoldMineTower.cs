@@ -3,6 +3,8 @@ public class GoldMineTower : Tower
 {
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         CheckStrategy();
     }
 

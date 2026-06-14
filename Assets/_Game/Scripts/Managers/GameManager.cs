@@ -1,4 +1,3 @@
-using AudioSystem;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -28,6 +27,7 @@ public class GameManager : MonoBehaviour
         _instance = this;
     }
     #endregion
+
     void Start()
     {
         AudioManager.Instance.Initialize();
@@ -42,16 +42,16 @@ public class GameManager : MonoBehaviour
         WaveManager.Instance.Initialize();
         StateManager.Instance.Initialize();
         StrategyManager.Instance.Initialize();
-
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            IsPaused = !IsPaused;
-            PauseGame();
+            TogglePause();
         }
     }
+
     public void PlayMusic(GameState state)
     {
         if (musicRoutine != null)
@@ -61,21 +61,24 @@ public class GameManager : MonoBehaviour
         }
         musicRoutine = StartCoroutine(ChooseTheMusic(state));
     }
-    public void PauseGame()
+
+    public void TogglePause()
     {
+        IsPaused = !IsPaused;
         if (IsPaused)
         {
-            Time.timeScale = 0f;
-            StateManager.Instance.ChangeGameStateTo(GameState.Paused);
+            PauseMenuManager.Instance.ShowPauseMenu(true);
+            StateManager.Instance.OnGamePaused();
             AudioListener.pause = true;
         }
         else
         {
-            Time.timeScale = 1f;
-            StateManager.Instance.ChangeGameStateTo(GameState.Resume);
+            PauseMenuManager.Instance.ShowPauseMenu(false);
+            StateManager.Instance.OnGameResumed();
             AudioListener.pause = false;
         }
     }
+
     IEnumerator ChooseTheMusic(GameState state)
     {
         if (AudioManager.Instance == null)
@@ -96,6 +99,7 @@ public class GameManager : MonoBehaviour
             AudioManager.Instance.Play(MusicType.InWave, music);
         }
     }
+
     void OnEnable()
     {
         StateManager.Instance.OnGameStateChanged += HandleStateChanged;
@@ -106,6 +110,7 @@ public class GameManager : MonoBehaviour
         if (StateManager.Instance != null)
             StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
+
     void HandleStateChanged(GameState state)
     {
         PlayMusic(state);

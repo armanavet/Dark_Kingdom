@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using AudioSystem;
-using UnityEditor.Experimental.GraphView;
+
 
 public class FlyingEnemy : Enemy
 {
@@ -27,11 +26,13 @@ public class FlyingEnemy : Enemy
     }
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
         if (state == EnemyState.Dead)
         {
             Fall();
             return;
         }
+
         if (attackCooldown > 0)
         {
             attackCooldown -= Time.deltaTime;
@@ -107,20 +108,3 @@ public class FlyingEnemy : Enemy
         Destroy(currentProjectile.gameObject);
     }
 }
-
-//bool FaceTarget()
-//{
-//    float rotationDifference = targetRotation.eulerAngles.y - transform.rotation.y;
-//    float rotationTime = rotationDifference / rotationSpeed;
-//    rotationProgress += Time.deltaTime / rotationTime;
-//    if (rotationProgress >= 1) return false;
-//    float yRotation = Mathf.LerpAngle(transform.rotation.y, targetRotation.eulerAngles.y, rotationProgress);
-//    return true;
-//}
-//bool FlyUp()
-//{
-
-//    if (transform.position.y >= height) return false;
-//    transform.Translate(transform.up * flyUpSpeed * Time.deltaTime);
-//    return true;
-//}

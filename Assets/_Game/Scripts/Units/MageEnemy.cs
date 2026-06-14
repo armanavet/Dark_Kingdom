@@ -1,8 +1,7 @@
-using AudioSystem;
 using DG.Tweening;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class MageEnemy : Enemy
 {
@@ -30,8 +29,12 @@ public class MageEnemy : Enemy
     {
         SetParameters();
     }
+
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+        if (state == EnemyState.Dead) return;
+
         attackCooldown -= Time.deltaTime;
         if (AcquireTargets())
         {

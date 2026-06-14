@@ -58,6 +58,8 @@ public class CamerManager : MonoBehaviour
     }
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         CameraMove();
         CameraZoom();
         CameraRotate();

@@ -35,6 +35,8 @@ public class EconomyManager : MonoBehaviour, ISaveable
 
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
 
         CheckStrategy();

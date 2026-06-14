@@ -37,10 +37,24 @@ public class PortalManager : MonoBehaviour, ISaveable
         RegisterSaveable();
     }
     #endregion
+
+
+    private void OnEnable()
+    {
+        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (StateManager.Instance != null)
+            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
+    }
+
     public void Initialize()
     {
         StorePortals();
     }
+
     void StorePortals()
     {
         SpawnPortals();
@@ -48,6 +62,7 @@ public class PortalManager : MonoBehaviour, ISaveable
         portalsByID = new Dictionary<int, Portal>();
         foreach (var portal in allPortals) portalsByID.Add(portal.ID, portal);
     }
+
     void SpawnPortals()
     {
         int id = 0;
@@ -67,6 +82,7 @@ public class PortalManager : MonoBehaviour, ISaveable
             id++;
         }
     }
+
     int GetPortalCountForWave(int wave)
     {
         if (wave < 3) return 1;
@@ -74,7 +90,9 @@ public class PortalManager : MonoBehaviour, ISaveable
         if (wave < 9) return 3;
         return 4;
     }
+
     public bool HasActivePortal() => allPortals.Any(p => !p.IsDestroyed);
+
     public void Clear()
     {
         if (ActivePortals == null) return;
@@ -84,6 +102,7 @@ public class PortalManager : MonoBehaviour, ISaveable
         }
         ActivePortals.Clear();
     }
+
     public void CalculateActivePortals(int waveIndex)
     {
         if (allPortals == null)
@@ -103,6 +122,7 @@ public class PortalManager : MonoBehaviour, ISaveable
         ActivePortals = available.ToList();
         DrawEnemyPath();
     }
+
     public void DrawEnemyPath()
     {
         if (ActivePortals == null) return;
@@ -122,6 +142,7 @@ public class PortalManager : MonoBehaviour, ISaveable
             }
         }
     }
+
     public Portal GetAvailablePortal(int startIndex)
     {
         if (ActivePortals.Count == 0) return null;
@@ -135,6 +156,7 @@ public class PortalManager : MonoBehaviour, ISaveable
 
         return null;
     }
+
     public void OnPortalDestroy(Portal portal)
     {
         if (ActivePortals.Contains(portal))
@@ -146,6 +168,7 @@ public class PortalManager : MonoBehaviour, ISaveable
         }
         SyncActivePortals();
     }
+
     void FindMissingPortals()
     {
         int missing = numberOfActivePortals - ActivePortals.Count;
@@ -166,6 +189,7 @@ public class PortalManager : MonoBehaviour, ISaveable
             DrawEnemyPath();
         }
     }
+
     void SyncActivePortals()
     {
         bool anyPortalLeft = allPortals.Any(p => !p.IsDestroyed);
@@ -182,10 +206,12 @@ public class PortalManager : MonoBehaviour, ISaveable
                 OnAllPortalsDestroyed?.Invoke();
         }
     }
+
     void CheckAllPortals()
     {
         if (!allPortals.Any(p => !p.IsDestroyed)) OnAllPortalsDestroyed?.Invoke();
     }
+
     public void DestroyPath(Portal portal)
     {
         if (portal.path == null) return;
@@ -194,17 +220,6 @@ public class PortalManager : MonoBehaviour, ISaveable
             Destroy(path);
         }
         portal.path.Clear();
-    }
-
-    private void OnEnable()
-    {
-        StateManager.Instance.OnGameStateChanged += HandleStateChanged;
-    }
-
-    private void OnDisable()
-    {
-        if (StateManager.Instance != null)
-            StateManager.Instance.OnGameStateChanged -= HandleStateChanged;
     }
 
     void HandleStateChanged(GameState state)

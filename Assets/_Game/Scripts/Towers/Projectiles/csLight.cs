@@ -11,6 +11,8 @@ public class csLight : MonoBehaviour
 
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         _time += Time.deltaTime;
 
         if (_time > Delay)

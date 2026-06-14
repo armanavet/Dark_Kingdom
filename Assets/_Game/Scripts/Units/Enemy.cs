@@ -1,6 +1,7 @@
 using AudioSystem;
 using UnityEngine;
 
+
 public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
 {
     [Header("Enemy Parameters")]
@@ -42,6 +43,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
     public float Damage => damage;
     public bool IsDead => state == EnemyState.Dead;
 
+
     public void OnSpawn(Tile startingTile, Vector3 positionOffset)
     {
         ApplyStats();
@@ -54,6 +56,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         PrepareInitialMove();
         progress = 0;
     }
+
     void PrepareInitialMove()
     {
         positionFrom = tileFrom.transform.position;
@@ -65,6 +68,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         transform.localRotation = direction.GetRotation();
         progressFactor = 2;
     }
+
     protected virtual void Move()
     {
         animator.SetBool(IsAttacking, false);
@@ -87,6 +91,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
             transform.localRotation = Quaternion.Euler(0, angle, 0);
         }
     }
+
     void PrepareNextMove()
     {
         positionFrom = positionTo;
@@ -103,6 +108,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
             default: PrepareTurnAround(); break;
         }
     }
+
     void PrepareMoveForward()
     {
         transform.localRotation = direction.GetRotation();
@@ -110,6 +116,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         model.localPosition = positionOffset;
         progressFactor = 1;
     }
+
     void PrepareTurnRight()
     {
         directionAngleTo = directionAngleFrom + 90;
@@ -117,6 +124,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         transform.localPosition = positionFrom + direction.GetHalfVector();
         progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
+
     void PrepareTurnLeft()
     {
         directionAngleTo = directionAngleFrom - 90;
@@ -152,20 +160,25 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
             healthBar.SetMaxHealth(health);
         }
     }
+
     protected float ValidateStat(float maxValue, float fallback)
     {
         return maxValue > 0 ? maxValue : fallback;
     }
+
     protected void CacheComponents()
     {
         animator = GetComponent<Animator>();
         IsAttacking = Animator.StringToHash("isAttacking");
     }
+
     protected void InitializeAudio()
     {
         SoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
     }
+
     protected abstract void Attack();
+
     protected virtual bool AcquireTargets()
     {
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
@@ -174,6 +187,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         }
         return true;
     }
+
     public void ApplyDamage(float damage)
     {
         if (state == EnemyState.Dead) return;
@@ -184,6 +198,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
             OnDeath();
         }
     }
+
     protected virtual void OnDeath()
     {
         state = EnemyState.Dead;
@@ -195,20 +210,24 @@ public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
         WaveManager.Instance.OnEnemyDeath(this);
         gameObject.layer = 0;
     }
+
     void DestroyModel()
     {
         DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }
+
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
         attackSpeed = maxAttackSpeed * (1 - slow);
     }
+
     protected void PlayAttackSound()
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
     }
+
     protected void PlayMovingSound()
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyMove, SoundData, transform);

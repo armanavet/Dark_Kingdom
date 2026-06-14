@@ -54,16 +54,19 @@ public class WormManager : MonoBehaviour
         //    test();
         //}
     }
+
     void test()
     {
         var point = plane.transform.position;
         Instantiate(unit, point, Quaternion.Euler(new Vector3(point.x, 180f, point.z)), transform);
     }
+
     void GetAmountInWave(int currentWave)
     {
         if (multiply) amountPerWave = (int)(amountPerWave * increaseBy);
         else amountPerWave = (int)(amountPerWave + increaseBy);
     }
+
     void AdjustCountsForAvailability(
     ref int minerCount,
     ref int actionCount,
@@ -87,6 +90,7 @@ public class WormManager : MonoBehaviour
         minerCount = Mathf.Min(minerCount, minerAvailable);
         actionCount = Mathf.Min(actionCount, actionAvailable);
     }
+
     void Shuffle<T>(List<T> list)
     {
         for (int i = 0; i < list.Count; i++)
@@ -98,6 +102,7 @@ public class WormManager : MonoBehaviour
             list[randomIndex] = temp;
         }
     }
+
     public void CalculateSpawnPoints()
     {
         GetTergets();
@@ -115,9 +120,8 @@ public class WormManager : MonoBehaviour
         tergetTowers.AddRange(actionTowers.GetRange(0, Mathf.Min(actionCount, actionTowers.Count)));
 
         Shuffle(tergetTowers);
-
-
     }
+
     void GetTergets()
     {
         actionTowers.Clear();
@@ -133,6 +137,7 @@ public class WormManager : MonoBehaviour
             (isMiner ? minerTowers : actionTowers).Add(tower);
         }
     }
+
     public void Spawn(int waveIndex)
     {
         if (waveIndex < startingWave) return;
@@ -146,5 +151,4 @@ public class WormManager : MonoBehaviour
             target.ApplyDamage(enemy.Damage);
         }
     }
-
 }

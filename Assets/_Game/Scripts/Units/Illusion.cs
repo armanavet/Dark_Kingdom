@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Illusion : Enemy
 {
     [Header("Illusion Parameters")]
@@ -26,6 +27,7 @@ public class Illusion : Enemy
 
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
         if (state == EnemyState.Dead) return;
 
         timer += Time.deltaTime;

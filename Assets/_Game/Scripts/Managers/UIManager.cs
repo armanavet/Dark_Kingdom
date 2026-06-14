@@ -137,11 +137,15 @@ public class UIManager : MonoBehaviour
 
     void LateUpdate()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         goldText.text = EconomyManager.Instance.CurrentCrystals.ToString();
     }
 
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         //TODO change to Start
         for (int i = 0; i < towerPrices.Length; i++)
         {

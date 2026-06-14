@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class DefaultEnemy : Enemy
 {
     void Start()
@@ -8,7 +9,9 @@ public class DefaultEnemy : Enemy
     }
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
         if (state == EnemyState.Dead) return;
+
         state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
         if (state == EnemyState.Moving) Move();
         else if (state == EnemyState.Attacking) Attack();

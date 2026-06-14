@@ -21,6 +21,8 @@ public class Shell : MonoBehaviour
     }
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         age += Time.deltaTime;
         Vector3 p = launchPoint + launchVelocity * age;
         p.y -= 0.5f * 9.81f * age * age;

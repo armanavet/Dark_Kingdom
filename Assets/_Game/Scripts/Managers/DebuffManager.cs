@@ -30,6 +30,8 @@ public class DebuffManager : MonoBehaviour
     #endregion
     void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         Tick();
     }
 

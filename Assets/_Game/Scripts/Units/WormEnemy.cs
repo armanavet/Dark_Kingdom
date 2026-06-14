@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+
+
 public class WormEnemy : Enemy
 {
     [SerializeField] GameObject spawnHole;
@@ -22,24 +24,29 @@ public class WormEnemy : Enemy
             return;
         }
     }
+
     void Start()
     {
         SetParameters();
         SpawnHole();
     }
+
     void SpawnHole()
     {
         currentHole = Instantiate(spawnHole, transform.position, Quaternion.identity, transform);
     }
+
     public void OnBrackThroughtComplete()
     {
         animator.SetBool(IsTaunting, true);
     }
+
     public void PlayEffect()
     {
         if (currentEffect != null) currentEffect = null;
         currentEffect = Instantiate(effect, transform.position, Quaternion.identity, transform);
     }
+
     public void OnTauntFinished()
     {
         animator.SetBool(IsTaunting, false);
@@ -78,24 +85,29 @@ public class WormEnemy : Enemy
         if (onComplete != null)
             onComplete?.Invoke();
     }
+
     void OnComplete()
     {
         Destroy(gameObject);
     }
+
     public void PlayBreakingThroughSFX()
     {
         Debug.Log(Type);
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormBreakingThrough, SoundData, transform);
     }
+
     public void PlayDiveInSFX()
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 0, SoundData, transform);
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormDiveIn, 1, SoundData, transform);
     }
+
     public void PlayRoarSFX()
     {
         AudioManager.Instance.Play(Type, GamePlaySFX_Type.WormRoar, SoundData, transform);
     }
+
     protected override void Attack() { }
     //public override int GetTargetPriority() => 0;
 }

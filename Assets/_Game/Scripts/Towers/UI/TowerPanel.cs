@@ -16,6 +16,8 @@ public class TowerPanel : MonoBehaviour
 
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         ChangeButtonVisibility();
     }
 

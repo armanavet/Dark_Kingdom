@@ -40,6 +40,8 @@ public class MainTower : Tower
 
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         CheckStrategy();
         foreach (var defender in Defenders)
         {

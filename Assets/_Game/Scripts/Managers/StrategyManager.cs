@@ -41,6 +41,8 @@ public class StrategyManager : MonoBehaviour, ISaveable
 
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         timer -= Time.deltaTime;
         UIManager.Instance.UpdateStrategyCooldown(timer, cooldown);
         if (timer <= 0)

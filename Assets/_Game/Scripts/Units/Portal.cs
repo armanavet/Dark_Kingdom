@@ -1,8 +1,8 @@
 ﻿using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class Portal : Enemy
 {
@@ -59,6 +59,9 @@ public class Portal : Enemy
     }
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+        if (state == EnemyState.Dead) return;
+
         if (!IsDestroyed && health <= 0) OnDestroyed();
         Attack();
     }
