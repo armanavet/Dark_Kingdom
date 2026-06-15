@@ -21,7 +21,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PAMaskTint01
-  m_Shader: {fileID: -6465566751694194690, guid: 29193446d6a6e1f49bda1c6a5d3945cc, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 29193446d6a6e1f49bda1c6a5d3945cc,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -38,7 +39,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_1d75964074f841a6a59fe0aee3c4ee05:
-        m_Texture: {fileID: 2800000, guid: d84cc81065ac4648aceaf93b68ea05cf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1f839f2cf111e1f46803ec9bc32f136a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_48F7EBCA:
@@ -134,7 +135,8 @@ Material:
     - Color_B672769A: {r: 1, g: 0.029074922, b: 0, a: 0}
     - Color_C5D962E7: {r: 0.8962264, g: 0.06328322, b: 0.054957304, a: 0}
     - Color_E64BA0E: {r: 1, g: 0, b: 0.009498596, a: 0}
-    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 47.937256, g: 47.937256, b: 47.937256, a: 0}
+    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 47.937256, g: 47.937256, b: 47.937256,
+        a: 0}
     - _Color01: {r: 0.990566, g: 0.30583555, b: 0, a: 0}
     - _Color02: {r: 0.8584906, g: 0.084991075, b: 0, a: 0}
     - _Color03: {r: 0.8490566, g: 0.2700404, b: 0, a: 0}
