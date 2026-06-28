@@ -28,24 +28,24 @@ MonoBehaviour:
   - <Projectile>k__BackingField: {fileID: 0}
     <Debuff>k__BackingField: {fileID: 0}
     <UpgradePrice>k__BackingField: 0
-    <SellPrice>k__BackingField: 0
+    <SellPrice>k__BackingField: 50
     <HP>k__BackingField: 100
     <Damage>k__BackingField: 0
-    <CrystalsGenerated>k__BackingField: 100
+    <CrystalsGenerated>k__BackingField: 2
     <CanvasHeight>k__BackingField: 2.5
   - <Projectile>k__BackingField: {fileID: 0}
     <Debuff>k__BackingField: {fileID: 0}
     <UpgradePrice>k__BackingField: 0
-    <SellPrice>k__BackingField: 0
+    <SellPrice>k__BackingField: 75
     <HP>k__BackingField: 125
     <Damage>k__BackingField: 0
-    <CrystalsGenerated>k__BackingField: 100
+    <CrystalsGenerated>k__BackingField: 4
     <CanvasHeight>k__BackingField: 2.5
   - <Projectile>k__BackingField: {fileID: 0}
     <Debuff>k__BackingField: {fileID: 0}
     <UpgradePrice>k__BackingField: 0
-    <SellPrice>k__BackingField: 0
+    <SellPrice>k__BackingField: 90
     <HP>k__BackingField: 150
     <Damage>k__BackingField: 0
-    <CrystalsGenerated>k__BackingField: 100
+    <CrystalsGenerated>k__BackingField: 6
     <CanvasHeight>k__BackingField: 2.675
