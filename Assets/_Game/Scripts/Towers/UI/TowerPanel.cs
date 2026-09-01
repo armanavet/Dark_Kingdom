@@ -1,39 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
+using AudioSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TowerPanel : MonoBehaviour
 {
     [SerializeField] Button UpgradeButton;
-    Tower tower;
+    [SerializeField] Button SellButton;
+    public Tower Tower;
+    private SoundData soundData;
 
     private void Start()
     {
-        tower = GetComponent<Tower>();
+        soundData = AudioManager.Instance.SetData(Tower.Type, SoundDataType.Gameplay);
     }
+
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         ChangeButtonVisibility();
     }
+
     void ChangeButtonVisibility()
     {
-        if (EconomyManager.Instance.CurrentGold < tower.UpgradePrice || tower.CurrentLevel > tower.MaxLevel)
+        if (EconomyManager.Instance.CurrentCrystals < Tower.UpgradePrice ||
+            Tower.IsMaxLevel || 
+            StrategyManager.Instance.CurrentStrategy != StrategyType.Construction)
         {
             UpgradeButton.interactable = false;
-        } 
-        else 
+        }
+        else
         {
             UpgradeButton.interactable = true;
         }
+
+        if (Tower.Type != TowerType.MainTower && StrategyManager.Instance.CurrentStrategy != StrategyType.Construction)
+        {
+            SellButton.interactable = false;
+        }
+        else if (Tower.Type != TowerType.MainTower)
+        {
+            SellButton.interactable = true;
+        }
     }
+
     public void ButtonTowerSell()
     {
-        EconomyManager.Instance.ChangeGoldAmount(tower.SellPrice);
-        tower.Sell();
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Construction) return;
+
+        AudioManager.Instance.Play(UISFX_Type.TowerSellButton, soundData);
+        Tower.Sell();
     }
+
     public void ButtonTowerUpgrade()
     {
-        tower.Upgrade();
+        if (StrategyManager.Instance.CurrentStrategy != StrategyType.Construction) return;
+
+        AudioManager.Instance.Play(UISFX_Type.TowerUpgradeButton, soundData);
+        Tower.Upgrade();
     }
 }

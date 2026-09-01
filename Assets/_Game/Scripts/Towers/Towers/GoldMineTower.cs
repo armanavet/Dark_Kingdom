@@ -1,33 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class GoldMineTower : Tower
 {
-    [SerializeField] List<int> GoldGenerationList;
-
-    private void Start()
+    private void Update()
     {
-        EconomyManager.Instance.OnEconomicStructureChange(this);
-        GoldGenerated = GoldGenerationList[CurrentLevel];
-        SellPrice = SellPrices[CurrentLevel];
-        UpgradePrice = UpgradePrices[CurrentLevel];
-        maxHP = HP[CurrentLevel];
-        currentHP = currentHP == 0 ? maxHP : currentHP;
+        if (StateManager.Instance.State == GameState.Paused) return;
+
+        CheckStrategy();
     }
 
-    public override void Upgrade()
+    protected override void CheckStrategy()
     {
-        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
+        foreach (var effect in sleepFX)
         {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            UpgradePrice = UpgradePrices[CurrentLevel];
-            CurrentLevel++;
-            GoldGenerated = GoldGenerationList[CurrentLevel];
-            SellPrice = SellPrices[CurrentLevel];
-            float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
-            maxHP = HP[CurrentLevel];
+            if (StrategyManager.Instance.CurrentStrategy == StrategyType.Economy)
+            {
+                effect.SetActive(false);
+            }
+            else
+            {
+                effect.SetActive(true);
+            }
         }
     }
 }

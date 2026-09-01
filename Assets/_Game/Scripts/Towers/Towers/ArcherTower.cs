@@ -1,50 +1,51 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ArcherTower : Tower
 {
+    [Header("Archer Tower Parameters")]
     [SerializeField] Transform shootingPoint;
+    [SerializeField] List<float> shootingPointPositions;
     [SerializeField] float projectileSpeed;
-    [SerializeField] float attackSpeed;
-    [SerializeField, Range(1, 10f)]
-    float attackRange = 2f;
-    float attackCooldown;
-    float damage;
-    Enemy target;
-
-    private void Start()
-    {
-        SellPrice = SellPrices[CurrentLevel];
-        UpgradePrice = UpgradePrices[CurrentLevel];
-        damage = Damage[CurrentLevel];
-        maxHP = HP[CurrentLevel];
-        projectile = Projectiles[CurrentLevel];
-        if (debuffs[CurrentLevel] != null)
-            currentDebuffs.Add(debuffs[CurrentLevel]);
-        currentHP = currentHP == 0 ? maxHP : currentHP;
-        attackCooldown = 1 / attackSpeed;
-
-    }
+    private ITargetable target;
+    private float timer;
+    private bool canAttack = true;
 
     void Update()
     {
-        if (attackCooldown <= 0)
-        { 
-            if (AcquireTarget())
-            {
-                Shoot();
-            }
-            attackCooldown = 1 / attackSpeed;
-        }
-        attackCooldown -= Time.deltaTime;
+        if (StateManager.Instance.State == GameState.Paused) return;
 
+        timer -= Time.deltaTime;
+        CheckStrategy();
+        AcquireTarget();
+        if (target == null || target.IsDead) return;
+        //if (IsCaptured)
+        //{
+        //    HandleCapturedState();
+        //}
+
+        if (canAttack && timer <= 0)
+        {
+            timer = cooldown;
+            Shoot();
+        }
     }
+
+    //void HandleCapturedState()
+    //{
+    //    timer -= Time.deltaTime;
+
+    //    if (timer <= 0f)
+    //    {
+    //        Destroy();
+    //    }
+    //}
 
     void Shoot()
     {
-        Vector3 point = target.transform.position;
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.TowerShoot, soundData, transform);
+        Vector3 point = target.Transform.position;
         float travelDistance = Vector3.Distance(shootingPoint.position, point);
         float travelTime = travelDistance / projectileSpeed;
         GameObject newProjectile = Instantiate(projectile, shootingPoint.position, Quaternion.LookRotation(point - shootingPoint.position));
@@ -52,93 +53,101 @@ public class ArcherTower : Tower
         StartCoroutine(HitTarget(newProjectile, travelTime));
     }
 
-    bool AcquireTarget()
+    private void AcquireTarget()
     {
-        Collider[] targets;
-        targets = Physics.OverlapSphere(transform.position, attackRange, illusionMask);
-        if(targets.Length == 0)
-        {
-            targets = Physics.OverlapSphere(transform.position, attackRange, enemyMask);
-        }
-        if (targets.Length > 0)
-        {
-            int ClosestTargetIndex = 0;
-            float MinDist = Vector3.Distance(transform.position, targets[ClosestTargetIndex].transform.position);
-            for (int i = 1; i < targets.Length; i++)
-            {
-                if (MinDist <= MinDist + i)
-                {
-                    float dist = Vector3.Distance(transform.position, targets[i].transform.position);
-                    if (dist < MinDist)
-                    {
-                        MinDist = dist;
-                        ClosestTargetIndex = i;
-                    }
-                }
+        if (target != null && !target.IsDead) return;
 
-            }
-            target = targets[ClosestTargetIndex].GetComponent<Enemy>();
-            if (target != null)
+        float minDist = float.MaxValue;
+        Collider[] hits = Physics.OverlapSphere(transform.position, range, TargetMask);
+        foreach (var hit in hits)
+        {
+            var targetable = hit.GetComponent<ITargetable>();
+            if (targetable == null || targetable.IsDead)
+                continue;
+
+            //Priority targets, in order
+            if (targetable is Illusion ||
+                targetable is MushroomEnemy)
             {
-                return true;
+                target = targetable;
             }
-            else
-                return false;
+
+            float dist = Vector3.Distance(transform.position, targetable.Transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                target = targetable;
+                Debug.Log($"Target: {targetable}");
+            }
         }
-        target = null;
-        return false;
+
+        if (target is IllusionistEnemy illusionist && !target.IsDead)
+        {
+            var illusion = illusionist.OnDetected(out bool targetIllusion);
+            if (illusion != null && targetIllusion)
+            {
+                target = illusion;
+            }
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Vector3 posiion = transform.position;
-        Gizmos.DrawWireSphere(posiion, attackRange);
+        Gizmos.DrawWireSphere(posiion, range);
         Gizmos.color = Color.red;
         if (target != null)
         {
-            Gizmos.DrawLine(transform.position, target.transform.position);
+            Gizmos.DrawLine(transform.position, target.Transform.position);
         }
     }
 
-    public override void Upgrade()
+    protected override void UpdateData()
     {
-        if (CurrentLevel < SellPrices.Count - 1 && CurrentLevel < UpgradePrices.Count)
-        {
-            EconomyManager.Instance.ChangeGoldAmount(-UpgradePrice);
-            UpgradePrice = UpgradePrices[CurrentLevel];
-            CurrentLevel++;
-            SellPrice = SellPrices[CurrentLevel];
-            damage = Damage[CurrentLevel];
-            projectile = Projectiles[CurrentLevel];
-            float hpPercent = currentHP / maxHP;
-            currentHP = maxHP * hpPercent;
-            maxHP = HP[CurrentLevel];
+        base.UpdateData();
 
-            Debuff newDebuff = debuffs[CurrentLevel];
-            if (newDebuff != null)
-            {
-                foreach (var debuff in currentDebuffs)
-                {
-                    if (debuff.Type == newDebuff.Type)
-                    {
-                        currentDebuffs.Remove(debuff);
-                        break;
-                    }
-                }
-                currentDebuffs.Add(newDebuff);
-            }
-        }
+        shootingPoint.position = new Vector3(transform.position.x, shootingPointPositions[currentLevel - 1], transform.position.z);
     }
 
     IEnumerator HitTarget(GameObject currentProjectile, float arriveTime)
     {
         yield return new WaitForSeconds(arriveTime);
-        target.ApplyDamage(damage);
-        foreach (var debuff in currentDebuffs)
+
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, soundData, currentProjectile.transform);
+        if (target != null)
         {
-            DebuffManager.Instance.ApplyDebuff(target, debuff);
+            Enemy enemyTarget = target as Enemy;
+            if (enemyTarget != null)
+            {
+                UIManager.Instance.ShowDamage(enemyTarget, damage);
+                foreach (var debuff in currentDebuffs)
+                {
+                    DebuffManager.Instance.ApplyDebuff((Enemy)target, debuff.Value);
+                }
+            }
+            target.ApplyDamage(damage);
         }
         Destroy(currentProjectile);
+    }
+
+    protected override void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Battle)
+        {
+            canAttack = true;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(false);
+            }
+        }
+        else
+        {
+            canAttack = false;
+            foreach (var effect in sleepFX)
+            {
+                effect.SetActive(true);
+            }
+        }
     }
 }

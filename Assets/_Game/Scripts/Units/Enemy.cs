@@ -1,32 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
+using AudioSystem;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour, IDebuffable
+
+public abstract class Enemy : MonoBehaviour, IDebuffable, ITargetable
 {
-    [SerializeField] Transform model;
+    [Header("Enemy Parameters")]
+    //[SerializeField] HealthBar healthBar = null;
+    [SerializeField] public Transform hitPointStartPos;
+    [SerializeField] protected Transform model;
+    [SerializeField] protected HealthBar healthBar;
     [SerializeField] protected LayerMask towerMask;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float maxDamage;
     [SerializeField] protected float maxAttackSpeed;
+
+    protected Animator animator;
     protected float currentSpeed;
-    protected float help;
+    protected float health;
     protected float damage;
     protected float attackSpeed;
     protected float attackCooldown;
     protected Tile tileFrom, tileTo;
     protected EnemyState state;
     protected Tower target;
-    Vector3 positionFrom, positionTo;
-    Direction direction;
-    DirectionChange directionChange;
-    float directionAngleFrom, directionAngleTo;
-    float progress, progressFactor;
-    float positionOffset;
+    protected static readonly int IsMoving = Animator.StringToHash("isMoving");
+    protected int IsAttacking;
+    protected Vector3 positionFrom, positionTo;
+    protected Vector3 positionOffset;
+
+    protected Direction direction;
+    protected DirectionChange directionChange;
+    protected float directionAngleFrom, directionAngleTo;
+    protected float progress, progressFactor;
+
+    [field: SerializeField] public UnitType Type { get; protected set; }
+    [field: SerializeField] public SoundData SoundData { get; protected set; }
+    public Faction Faction => Faction.Enemy;
+    public Transform Transform => transform;
     public Vector3 CurrentPosition => model.position;
-    public void OnSpawn(Tile startingTile, float positionOffset)
+    public float HealthPercent => health / maxHP;
+    public float Damage => damage;
+    public bool IsDead => state == EnemyState.Dead;
+
+
+    public void OnSpawn(Tile startingTile, Vector3 positionOffset)
     {
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
+
         tileFrom = startingTile;
         tileTo = tileFrom.NextOnPath;
         this.positionOffset = positionOffset;
@@ -40,7 +63,7 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
         positionTo = tileFrom.exitPoint;
         direction = tileFrom.pathDirection;
         directionChange = DirectionChange.None;
-        model.localPosition = new Vector3(positionOffset, 0, 0);
+        model.localPosition = positionOffset;
         directionAngleFrom = directionAngleTo = direction.GetAngle();
         transform.localRotation = direction.GetRotation();
         progressFactor = 2;
@@ -48,6 +71,8 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
 
     protected virtual void Move()
     {
+        animator.SetBool(IsAttacking, false);
+        animator.SetBool(IsMoving, true);
         progress += Time.deltaTime * progressFactor * currentSpeed;
         if (progress > 1)
         {
@@ -69,13 +94,12 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
 
     void PrepareNextMove()
     {
-        model.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         positionFrom = positionTo;
         positionTo = tileFrom.exitPoint;
         directionChange = direction.ChangeDirectionTo(tileFrom.pathDirection);
         direction = tileFrom.pathDirection;
         directionAngleFrom = directionAngleTo;
-        AcquireTarget();
+        AcquireTargets();
         switch (directionChange)
         {
             case DirectionChange.None: PrepareMoveForward(); break;
@@ -84,76 +108,151 @@ public abstract class Enemy : MonoBehaviour, IDebuffable
             default: PrepareTurnAround(); break;
         }
     }
+
     void PrepareMoveForward()
     {
         transform.localRotation = direction.GetRotation();
         directionAngleFrom = direction.GetAngle();
-        model.localPosition = new Vector3(positionOffset, 0, 0);
+        model.localPosition = positionOffset;
         progressFactor = 1;
     }
+
     void PrepareTurnRight()
     {
         directionAngleTo = directionAngleFrom + 90;
-        model.localPosition = new Vector3(positionOffset - 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x - 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom + direction.GetHalfVector();
-        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset));
+        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
+
     void PrepareTurnLeft()
     {
         directionAngleTo = directionAngleFrom - 90;
-        model.localPosition = new Vector3(positionOffset + 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x + 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom + direction.GetHalfVector();
-        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset));
+        progressFactor = 1 / (Mathf.PI * 0.5f * (0.5f - positionOffset.x));
     }
+
     void PrepareTurnAround()
     {
         directionAngleTo = directionAngleFrom + 180;
-        model.localPosition = new Vector3(positionOffset - 0.5f, 0, 0);
+        model.localPosition = new Vector3(positionOffset.x - 0.5f, positionOffset.y, positionOffset.z);
         transform.localPosition = positionFrom;
     }
 
+    protected void SetParameters()
+    {
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
+    }
+
+    protected void ApplyStats()
+    {
+        currentSpeed = ValidateStat(maxSpeed, currentSpeed);
+        health = ValidateStat(maxHP, health);
+        damage = ValidateStat(maxDamage, damage);
+        attackSpeed = ValidateStat(maxAttackSpeed, attackSpeed);
+
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(health);
+            healthBar.SetMaxHealth(health);
+        }
+    }
+
+    protected float ValidateStat(float maxValue, float fallback)
+    {
+        return maxValue > 0 ? maxValue : fallback;
+    }
+
+    protected void CacheComponents()
+    {
+        animator = GetComponent<Animator>();
+        IsAttacking = Animator.StringToHash("isAttacking");
+    }
+
+    protected void InitializeAudio()
+    {
+        SoundData = AudioManager.Instance.SetData(Type, SoundDataType.Gameplay);
+    }
+
     protected abstract void Attack();
-    protected virtual bool AcquireTarget()
+
+    protected virtual bool AcquireTargets()
     {
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, Mathf.Infinity, towerMask))
         {
             target = hitInfo.transform.GetComponent<Tower>();
-           
-        } 
+        }
         return true;
     }
+
     public void ApplyDamage(float damage)
     {
-        help -= damage;
-        if (help <= 0)
+        if (state == EnemyState.Dead) return;
+        health -= damage;
+        if (healthBar != null) healthBar.SetHealth(health);
+        if (health <= 0)
         {
             OnDeath();
         }
     }
+
     protected virtual void OnDeath()
     {
-        WaveManager.Instance.OnEnemyDeath();
+        state = EnemyState.Dead;
+        if (animator != null)
+        {
+            animator?.SetBool("isDead", true);
+        }
+        SoundData = new SoundData();
+        WaveManager.Instance.OnEnemyDeath(this);
+        gameObject.layer = 0;
+    }
+
+    void DestroyModel()
+    {
+        DebuffManager.Instance.RemoveTarget(this);
         Destroy(gameObject);
     }
+
     public void ApplySlow(float slow)
     {
         currentSpeed = maxSpeed * (1 - slow);
-        attackSpeed = maxAttackSpeed*(1-slow);
+        attackSpeed = maxAttackSpeed * (1 - slow);
+    }
+
+    protected void PlayAttackSound()
+    {
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyAttack, SoundData, transform);
+    }
+
+    protected void PlayMovingSound()
+    {
+        AudioManager.Instance.Play(Type, GamePlaySFX_Type.EnemyMove, SoundData, transform);
     }
 }
+
 
 public enum EnemyState
 {
     Attacking,
-    Moving
+    Moving,
+    Dead
 }
 public enum UnitType
 {
-   Regular,
-   Fast,
-   Tank,
-   Mage,
-   Kamikadze,
-   Flying,
-   Illusionist
+    Null,
+    Regular,
+    Fast,
+    Tank,
+    Mage,
+    Kamikadze,
+    Flying,
+    Illusionist,
+    Illusion,
+    Worm,
+    Mushroom,
+    Portal
 }

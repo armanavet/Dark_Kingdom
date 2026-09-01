@@ -1,0 +1,117 @@
+using System;
+using System.Collections;
+using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    AudioSource music;
+    static bool IsPaused;
+    Coroutine musicRoutine;
+    public static event Action OnWaveIntroFinished;
+    #region Singleton
+    private static GameManager _instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<GameManager>();
+            }
+
+            return _instance;
+        }
+    }
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
+
+    void Start()
+    {
+        AudioManager.Instance.Initialize();
+        music = GetComponent<AudioSource>();
+        if (music == null)
+        {
+            Debug.LogError($"The {this} has no audio source!");
+        }
+        TowerManager.Instance.Initialize();
+        UIManager.Instance.Initialize();
+        PortalManager.Instance.Initialize();
+        WaveManager.Instance.Initialize();
+        StateManager.Instance.Initialize();
+        StrategyManager.Instance.Initialize();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+    }
+
+    public void PlayMusic(GameState state)
+    {
+        if (musicRoutine != null)
+        {
+            StopCoroutine(musicRoutine);
+            musicRoutine = null;
+        }
+        musicRoutine = StartCoroutine(ChooseTheMusic(state));
+    }
+
+    public void TogglePause()
+    {
+        IsPaused = !IsPaused;
+        if (IsPaused)
+        {
+            PauseMenuManager.Instance.ShowPauseMenu(true);
+            StateManager.Instance.OnGamePaused();
+            AudioListener.pause = true;
+        }
+        else
+        {
+            PauseMenuManager.Instance.ShowPauseMenu(false);
+            StateManager.Instance.OnGameResumed();
+            AudioListener.pause = false;
+        }
+    }
+
+    IEnumerator ChooseTheMusic(GameState state)
+    {
+        if (AudioManager.Instance == null)
+        {
+            Debug.LogWarning($"The {AudioManager.Instance} is null");
+            yield break;
+        }
+        if (state == GameState.Passive)
+        {
+            yield return new WaitForSeconds(1f);
+            AudioManager.Instance.Play(MusicType.InNormal, music);
+        }
+        else if (state == GameState.Active)
+        {
+            AudioManager.Instance.Play(GamePlaySFX_Type.WaveStart, music);
+            yield return new WaitForSeconds(music.clip.length);
+            OnWaveIntroFinished?.Invoke();
+            AudioManager.Instance.Play(MusicType.InWave, music);
+        }
+    }
+
+    void OnEnable()
+    {
+        StateManager.OnGameStateChanged += HandleStateChanged;
+    }
+
+    void OnDisable()
+    {
+        StateManager.OnGameStateChanged -= HandleStateChanged;
+    }
+
+    void HandleStateChanged(GameState state)
+    {
+        PlayMusic(state);
+    }
+}

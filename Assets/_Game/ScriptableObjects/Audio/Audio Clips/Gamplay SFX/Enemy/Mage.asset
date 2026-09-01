@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 727932114c39cd44b9d2ad9455382be0, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: 
+  Entries:
+  - Type: 6
+    Clips:
+    - {fileID: 8300000, guid: e9f48155200459c409385dc4ac56581a, type: 3}
+  - Type: 7
+    Clips:
+    - {fileID: 8300000, guid: 660ef931ccf88f44e91bc1cff53f8a5a, type: 3}
+    - {fileID: 8300000, guid: 71e6e3c87e7a50541883f134fb825886, type: 3}
+    - {fileID: 8300000, guid: a75384cb29f458943a084ffcee965a1f, type: 3}
+    - {fileID: 8300000, guid: 21a505f3de91ad841a3df367f802a0b2, type: 3}
+    - {fileID: 8300000, guid: 5f5ea4689759b204eabea6cda43a4db2, type: 3}
+    - {fileID: 8300000, guid: 60897292801620e43af50cdb718c85d8, type: 3}
+    - {fileID: 8300000, guid: 009e7b08817e74d479094c9cc2ea9b43, type: 3}
+    - {fileID: 8300000, guid: 65cd99608c3e95745807041aae658cc8, type: 3}
+    - {fileID: 8300000, guid: 6d41cc106aeb3a24c9c73d8e114b936f, type: 3}
+    - {fileID: 8300000, guid: 6472dde9fe98ac34c9fe38d013294e06, type: 3}
+  - Type: 5
+    Clips:
+    - {fileID: 8300000, guid: 486d6ff6d31ac174a845275b39d7dec1, type: 3}
+    - {fileID: 8300000, guid: eebad62397f26024497eb6575aa8e56c, type: 3}
+    - {fileID: 8300000, guid: 02c951f9fda7ec24eb1c49b00153fcd7, type: 3}

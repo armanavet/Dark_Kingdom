@@ -10,6 +10,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/[Pp]roject[Ss]ettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -36,6 +37,7 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+*.slnx
 *.suo
 *.tmp
 *.user
@@ -73,5 +75,19 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 ProjectSettings/ProjectVersion.txt
-ProjectSettings/ProjectVersion.txt
 /[Aa]ssets/[Gg]abrielAguiarProductions
+/Assets/FBX format
+Assets/FBX format.meta
+/Assets/UniqueProjectiles
+/Assets/UniqueProjectiles.meta
+/Assets/Layer Lab
+/Assets/Layer Lab.meta
+/Assets/kenney_tower-defense-kit
+/Assets/RPGMonsterBundlePolyart
+/Assets/Settings
+/Assets/DefaultVolumeProfile.asset
+/Assets/RPGMonsterBundlePolyart.meta
+/Assets/UniversalRenderPipelineGlobalSettings.asset
+/Assets/TwoUncleVFX
+/Assets/TextMesh Pro
+/Assets/Epic Toon FX

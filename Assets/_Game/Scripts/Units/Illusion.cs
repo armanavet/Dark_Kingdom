@@ -1,20 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Illusion : Enemy
 {
-    [SerializeField] float duration;
+    [Header("Illusion Parameters")]
+    [SerializeField] private float duration;
+    private float timer;
+    public Transform Model => model;
+
+    private void OnEnable()
+    {
+        StateManager.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        StateManager.OnGameStateChanged -= OnGameStateChanged;
+    }
+
     void Start()
     {
-        currentSpeed = maxSpeed;
-        help = maxHP;
-        Destroy(gameObject,duration);
+        ApplyStats();
+        CacheComponents();
+        InitializeAudio();
     }
+
     void Update()
     {
-        state = tileFrom.isEmpty ? EnemyState.Moving : EnemyState.Attacking;
-        if (state == EnemyState.Moving) Move();
+        if (StateManager.Instance.State == GameState.Paused) return;
+        if (state == EnemyState.Dead) return;
+
+        timer += Time.deltaTime;
+
+        if (timer >= duration)
+        {
+            OnDeath();
+        }
     }
-    protected override void Attack(){}
+
+    protected override void Attack() { }
+
+    private void OnGameStateChanged(GameState state)
+    {
+        if (state == GameState.Passive)
+        {
+            OnDeath();
+        }
+    }
 }

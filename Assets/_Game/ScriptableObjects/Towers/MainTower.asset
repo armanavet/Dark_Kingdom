@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02576f10117ea744bb161b112638e246, type: 3}
+  m_Name: MainTower
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDataSO
+  <Type>k__BackingField: 5
+  <Faction>k__BackingField: 0
+  <PurchasePrice>k__BackingField: 0
+  <Cooldown>k__BackingField: 1
+  <Range>k__BackingField: 2
+  <TargetPriority>k__BackingField: 50
+  <BuildEffectHigh>k__BackingField: {fileID: 0}
+  <BuildEffectLow>k__BackingField: {fileID: 0}
+  <UpgradeEffect>k__BackingField: {fileID: 7840045698185058945, guid: 9e0b83a20870ddb49b589d22f3622a91,
+    type: 3}
+  <Levels>k__BackingField:
+  - <Projectile>k__BackingField: {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 0}
+    <UpgradePrice>k__BackingField: 1000
+    <SellPrice>k__BackingField: 0
+    <HP>k__BackingField: 500
+    <Damage>k__BackingField: 2.5
+    <CrystalsGenerated>k__BackingField: 2
+    <CanvasHeight>k__BackingField: 3
+  - <Projectile>k__BackingField: {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 0}
+    <UpgradePrice>k__BackingField: 2000
+    <SellPrice>k__BackingField: 0
+    <HP>k__BackingField: 750
+    <Damage>k__BackingField: 5
+    <CrystalsGenerated>k__BackingField: 3
+    <CanvasHeight>k__BackingField: 3.2
+  - <Projectile>k__BackingField: {fileID: 3763443671515703615, guid: 2aef56d5bb04b1f46b5a3feb89ad47ab,
+      type: 3}
+    <Debuff>k__BackingField: {fileID: 0}
+    <UpgradePrice>k__BackingField: 0
+    <SellPrice>k__BackingField: 0
+    <HP>k__BackingField: 1000
+    <Damage>k__BackingField: 10
+    <CrystalsGenerated>k__BackingField: 4
+    <CanvasHeight>k__BackingField: 3.5

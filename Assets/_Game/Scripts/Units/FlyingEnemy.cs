@@ -1,61 +1,110 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class FlyingEnemy : Enemy
 {
+    [Header("Flying Enemy Parameters")]
     [SerializeField] Mage mage;
     [SerializeField] float height;
     [SerializeField] float rotationSpeed;
     [SerializeField] float flyUpSpeed;
     [SerializeField] float distanceToAttack;
+    [SerializeField] float projectileSpeed;
+    [SerializeField] Transform shootingPoint;
+
     Vector3 targetPoint;
     Quaternion targetRotation;
+    bool isAttacking;
     float rotationProgress;
+    private static readonly int IsIdle = Animator.StringToHash("isidle");
+
     void Start()
+    {
+        SetParameters();
+        Spawn();
+    }
+    void Update()
+    {
+        if (StateManager.Instance.State == GameState.Paused) return;
+        if (state == EnemyState.Dead)
+        {
+            Fall();
+            return;
+        }
+
+        if (attackCooldown > 0)
+        {
+            attackCooldown -= Time.deltaTime;
+        }
+        if (isAttacking == true) return;
+        if (Vector3.Distance(transform.position, targetPoint) > distanceToAttack)
+        {
+            Move();
+            return;
+        }
+        HandleAttack();
+    }
+    protected override void Move()
+    {
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+    }
+    protected override void Attack()
+    {
+        isAttacking = true;
+        animator.SetBool(IsIdle, false);
+        animator.SetBool(IsAttacking, true);
+    }
+    void HandleAttack()
+    {
+        if (attackCooldown > 0) return;
+        Attack();
+    }
+    public void LaunchProjectile()
+    {
+        if (target != null)
+        {
+            Vector3 targetPosition = target.transform.position;
+            float travelDistance = Vector3.Distance(shootingPoint.position, targetPosition);
+            float travelTime = travelDistance / projectileSpeed;
+            Mage fireBall = Instantiate(mage, shootingPoint.position, Quaternion.LookRotation(targetPosition - transform.position));
+            fireBall.Initialize(projectileSpeed);
+            StartCoroutine(HitTarget(fireBall, travelTime));
+        }
+    }
+    public void OnAttackFinished()
+    {
+        isAttacking = false;
+        attackCooldown = 1 / attackSpeed;
+        animator.SetBool(IsAttacking, false);
+        animator.SetBool(IsIdle, true);
+    }
+    void Spawn()
     {
         target = TowerManager.Instance.Towers[0];
         targetPoint = target.transform.position + new Vector3(0, height, 0);
         targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-        currentSpeed = maxSpeed;
-        help = maxHP;
-        damage = maxDamage;
-        attackSpeed = maxAttackSpeed;
+
+        transform.position = new Vector3(transform.position.x, height, transform.position.z);
+
+        transform.rotation = Quaternion.Euler(transform.rotation.x, targetRotation.eulerAngles.y, transform.rotation.z);
+
     }
-    void Update()
+    void Fall()
     {
-        if (FlyUp()) return;
-        else if (FaceTarget()) return;
-        else if (Vector3.Distance(transform.position, targetPoint) > distanceToAttack) Move();
-        else Attack();
+        if (transform.position.y <= 0) return;
+        transform.Translate(-transform.up * flyUpSpeed * Time.deltaTime);
     }
-    protected override void Move()
+
+    IEnumerator HitTarget(Mage currentProjectile, float arriveTime)
     {
-        transform.Translate(Vector3.forward * currentSpeed*Time.deltaTime);
-    }
-    protected override void Attack()
-    {
-        attackCooldown -= Time.deltaTime;
-        if (target != null && attackCooldown <= 0)
+        yield return new WaitForSeconds(arriveTime);
+
+        if (target != null)
         {
-            Mage arrow = Instantiate(mage, transform.position, Quaternion.LookRotation(targetPoint - transform.position));
-            arrow.Initialize(attackSpeed, transform.position, targetPoint, target, damage);
-            attackCooldown = 1 / attackSpeed;
+            AudioManager.Instance.Play(Type, GamePlaySFX_Type.ProjectileHit, SoundData, transform);
+            target.ApplyDamage(damage);
         }
-    }
-    bool FaceTarget()
-    {
-        Debug.Log(targetRotation.eulerAngles.y);
-        float rotationDifference = targetRotation.eulerAngles.y - transform.rotation.y;
-        float rotationTime=rotationDifference/rotationSpeed;
-        rotationProgress += Time.deltaTime / rotationTime;
-        if(rotationProgress>=1)return false;
-        float yRotation=Mathf.LerpAngle(transform.rotation.y,targetRotation.eulerAngles.y,rotationProgress);
-        transform.rotation = Quaternion.Euler(transform.rotation.x, yRotation, transform.rotation.z);
-        return true;
-    }
-    bool FlyUp()
-    {
-        if (transform.position.y>=height) return false;
-        transform.Translate(transform.up * flyUpSpeed*Time.deltaTime);
-        return true;
+        Destroy(currentProjectile.gameObject);
     }
 }

@@ -17,7 +17,7 @@ public class GameBoard : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<GameBoard>();
+                _instance = FindFirstObjectByType<GameBoard>();
             }
 
             return _instance;
@@ -26,16 +26,11 @@ public class GameBoard : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
 
-    private void Start()
-    {
-        SaveManager.RegisterSaveable(this);
-        Initialize();
-    }
-
-    void Initialize()
+    public void Initialize()
     {
         for (int i = 0, y = 0; y < Tiles.Count / Width; y++)
         {
@@ -55,6 +50,8 @@ public class GameBoard : MonoBehaviour, ISaveable
         foreach (var tile in Tiles)
         {
             tile.SetNeighbors();
+            tile.SetSurroundingTiles();
+            tile.SetModel();
         }
     }
 
@@ -81,6 +78,8 @@ public class GameBoard : MonoBehaviour, ISaveable
             SearchFrontier.Enqueue(tile.GrowPathWest(ignoreTowers));
         }
     }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {

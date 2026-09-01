@@ -20,7 +20,7 @@ public static class SaveManager
 
     public static void RegisterSaveable(ISaveable saveable)
     {
-        if (!objectsToSave.Contains(saveable)) 
+        if (!objectsToSave.Contains(saveable))
             objectsToSave.Add(saveable);
     }
 
@@ -78,8 +78,8 @@ public static class SaveManager
             Directory.CreateDirectory(folderPath);
         }
         GeneralData economyData = (GeneralData)saveData.Get(nameof(EconomyManager));
-        GeneralData stateData = (GeneralData)saveData.Get(nameof(StateManager));
-        SaveMetaData metaData = new SaveMetaData(69420, economyData.CurrentGold, stateData.CurrentWave);
+        GeneralData waveData = (GeneralData)saveData.Get(nameof(WaveManager));
+        SaveMetaData metaData = new SaveMetaData(69420, economyData.CurrentCrystals, waveData.CurrentWave);
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream(metaFilePath, FileMode.Create))
         {
@@ -115,7 +115,7 @@ public static class SaveManager
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    
+
     public static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;

@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
 
 public class CamerManager : MonoBehaviour
 {
@@ -10,23 +7,59 @@ public class CamerManager : MonoBehaviour
     float fieldOfView;
     float initialCursorPosition;
     Vector2 initialMousePosition;
+    Vector3 cameraStartingPosition;
+    [SerializeField] private Button resetButton;
+    [Header("Movement Settings")]
+    [Tooltip("Based movement speed of the camera")]
     [SerializeField] float speed;
+
+    [Tooltip("Reference to the game board (Used as the game bounds).")]
     [SerializeField] GameBoard Map;
+
+    [Header("Zoom Settings")]
+    [Tooltip("Minimum allowed zoom (closest to the board).")]
     [SerializeField] float minZoom;
+
+    [Tooltip("Maximum allowed zoom (farthest from the board).")]
     [SerializeField] float maxZoom;
+
+    [Tooltip("Minimum allowed field of view for the perspective camera.")]
     [SerializeField] float minFieldOfView;
+
+    [Tooltip("Maximum allowed field of view for the perspective camera.")]
     [SerializeField] float maxFieldOfView;
+
+    [Tooltip("How quickly the camera zoomes in/out.")]
     [SerializeField] float zoomSpeed;
+
+    [Header("Rotation Settings")]
+    [Tooltip("How quickly the caera rotates around it's pivot.")]
     [SerializeField] float rotationSpeed;
-    [SerializeField] float mouseMovmentSpeedDifference;
+
+    [Header("Mouse Settings")]
+    [Tooltip("How fast the camera moves when dragging with the left mouse button pressed.")]
+    [SerializeField] float mouseDragSpeed;
+
+    private void OnEnable()
+    {
+        resetButton.onClick.AddListener(ResetPosition);
+    }
+
+    private void OnDisable()
+    {
+        resetButton.onClick.RemoveAllListeners();
+    }
 
     private void Start()
     {
         mainCamera = Camera.main;
         fieldOfView = mainCamera.fieldOfView;
+        cameraStartingPosition = mainCamera.transform.position;
     }
     private void Update()
     {
+        if (StateManager.Instance.State == GameState.Paused) return;
+
         CameraMove();
         CameraZoom();
         CameraRotate();
@@ -48,8 +81,8 @@ public class CamerManager : MonoBehaviour
             Vector2 newMausePos = Input.mousePosition;
             Vector2 finalMousePos = newMausePos - initialMousePosition;
 
-            movementX = -finalMousePos.x / mouseMovmentSpeedDifference;
-            movementZ = -finalMousePos.y / mouseMovmentSpeedDifference;
+            movementX = -finalMousePos.x / mouseDragSpeed;
+            movementZ = -finalMousePos.y / mouseDragSpeed;
             initialMousePosition = Input.mousePosition;
         }
         Vector3 newPosition = transform.position + (right * movementX + forward * movementZ) * speed * Time.deltaTime;//Get A D and W S
@@ -84,5 +117,10 @@ public class CamerManager : MonoBehaviour
             initialCursorPosition = Input.mousePosition.x;
         }
 
+    }
+
+    private void ResetPosition()
+    {
+        mainCamera.transform.position = cameraStartingPosition;
     }
 }

@@ -1,15 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class EconomyManager : MonoBehaviour, ISaveable
 {
-    [SerializeField] int currentGold;
     [SerializeField] List<Tower> EconomicBuildings = new List<Tower>();
+    [SerializeField] private TextMeshProUGUI crystalsText;
+    [SerializeField] int currentCrystals;
     float timer = 0;
-    public int CurrentGold { get => currentGold; }
+    public int CurrentCrystals { get => currentCrystals; }
+    private bool canGenerate;
 
     #region Singleton 
     private static EconomyManager _instance;
@@ -19,7 +19,7 @@ public class EconomyManager : MonoBehaviour, ISaveable
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<EconomyManager>();
+                _instance = FindFirstObjectByType<EconomyManager>();
             }
 
             return _instance;
@@ -28,32 +28,40 @@ public class EconomyManager : MonoBehaviour, ISaveable
     private void Awake()
     {
         _instance = this;
+        RegisterSaveable();
     }
     #endregion
 
-    void Start()
+    private void Start()
     {
-        SaveManager.RegisterSaveable(this);
+        crystalsText.text = currentCrystals.ToString();
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
-        if(timer >= 1)
+        if (StateManager.Instance.State == GameState.Paused) return;
+
+        timer += Time.deltaTime * StateManager.Instance.timeMultiplier;
+
+        CheckStrategy();
+        if (timer >= 1 && canGenerate)
         {
-            GenerateGold();
+            GenerateCrystals();
             timer = 0;
         }
     }
-    
-    public void ChangeGoldAmount(int amount)
+
+    public void ChangeCrystals(int amount)
     {
-        currentGold += amount;
+        currentCrystals += amount;
+        crystalsText.text = currentCrystals.ToString();
     }
 
     public void OnEconomicStructureChange(Tower structure)
     {
-        if (structure.Type != TowerType.GoldMine && structure.Type != TowerType.MainTower) return;
+        if (structure == null) return;
+        if (structure.Type != TowerType.CrystalMine && structure.Type != TowerType.MainTower) return;
+
         if (EconomicBuildings.Contains(structure))
         {
             EconomicBuildings.Remove(structure);
@@ -62,14 +70,28 @@ public class EconomyManager : MonoBehaviour, ISaveable
         EconomicBuildings.Add(structure);
     }
 
-    void GenerateGold()
+    void GenerateCrystals()
     {
         foreach (var building in EconomicBuildings)
         {
             if (building == null) continue;
-            ChangeGoldAmount(building.GoldGenerated);
+            ChangeCrystals(building.CrystalsGenerated);
         }
     }
+
+    private void CheckStrategy()
+    {
+        if (StrategyManager.Instance.CurrentStrategy == StrategyType.Economy)
+        {
+            canGenerate = true;
+        }
+        else
+        {
+            canGenerate = false;
+        }
+    }
+
+    public void RegisterSaveable() => SaveManager.RegisterSaveable(this);
 
     public string GetUniqueSaveID()
     {
@@ -79,14 +101,15 @@ public class EconomyManager : MonoBehaviour, ISaveable
     public ISaveData SaveState()
     {
         GeneralData saveData = new GeneralData();
-        saveData.CurrentGold = currentGold;
+        saveData.CurrentCrystals = currentCrystals;
         return saveData;
     }
 
     public void LoadState(ISaveData data)
     {
         GeneralData saveData = data as GeneralData;
-        currentGold = saveData.CurrentGold;
+        currentCrystals = saveData.CurrentCrystals;
+        crystalsText.text = currentCrystals.ToString();
     }
 }
 
